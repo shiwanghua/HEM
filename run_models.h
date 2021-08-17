@@ -2,7 +2,7 @@
 #ifndef _RUN_MODELS_H
 #define _RUN_MODELS_H
 
-#include "Constant.h"
+#include "constant.h"
 #include "rein.h"
 #include "ReinBits.h"
 #include <numeric> 

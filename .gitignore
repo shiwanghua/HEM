@@ -50,3 +50,7 @@ x64
 *.vcxproj
 *.filters
 *.user
+Rein.txt
+ReinBits.txt
+ReinBucketSize.txt
+ReinBitsBucketSize.txt

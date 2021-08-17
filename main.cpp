@@ -1,5 +1,4 @@
 #include "run_models.h"
-ulimit -s unlimited
 int main(int argc, char** argv)
 {
 
