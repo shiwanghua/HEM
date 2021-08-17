@@ -22,7 +22,7 @@ ReinBits::ReinBits(int valDom, int numSubscription, int numDim, int numBuck, int
 }
 
 ReinBits::~ReinBits() {
-	delete endBucket[0], endBucket[1], bitsID[0], bitsID[1];
+	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1];
 	delete[] endBucket, bitsID;
 }
 
@@ -43,14 +43,14 @@ void ReinBits::insert(IntervalSub sub)
 
 void ReinBits::initBits() {
 
-	_for(i, 0, numDimension) {
+	/*_for(i, 0, numDimension) {
 		fix[0][i][numBucket - 1] = data[0][i][numBucket - 1].size();
 		fix[1][i][0] = data[1][i][0].size();
 		_for(j, 1, numBucket) {
 			fix[0][i][numBucket - 1 - j] = fix[0][i][numBucket - j] + data[0][i][numBucket - 1 - j].size();
 			fix[1][i][j] = fix[1][i][j - 1] + data[0][i][j].size();
 		}
-	}
+	}*/
 
 	if (numBits == 1) {                           // 只有一个bits时特判，因为后面默认0号bits代表0~1的全局bits
 		_for(i, 0, numDimension) {                // 每个维度
@@ -63,16 +63,17 @@ void ReinBits::initBits() {
 		}
 		_for(i, 0, numBucket >> 1) {
 			bitsID[0][i] = 0;                     // 此时的0号代表0.5~1, 不是0~1
-			bitsID[1][i] = 1;                     // 此时用不到bits数组, 1表示非法
+			bitsID[1][i] = -1;                    // 此时用不到bits数组, -1表示非法
 			endBucket[0][i] = numBucket >> 1;     // 标记时遍历到小于这个值
 			endBucket[1][i] = 0;                  // 标记时遍历到大于等于这个值
 		}
 		_for(i, numBucket >> 1, numBucket) {
-			bitsID[0][i] = 1;
+			bitsID[0][i] = -1;
 			bitsID[1][i] = 0;
 			endBucket[0][i] = numBucket;
 			endBucket[1][i] = numBucket >> 1;
 		}
+		cout << "Stop.\n";
 		return;
 	}
 
@@ -99,6 +100,10 @@ void ReinBits::initBits() {
 		bitsID[1][i] = numBits - 1 - bitsID[0][i];
 		endBucket[0][i] = numBucket - bitsID[0][i] * bitStep;
 		endBucket[1][i] = bitsID[1][i] * bitStep;
+		if (bitsID[0][i] == 0) // 真正的0号bits是留给全覆盖的bits的编号
+			bitsID[0][i] = -1; // -1表示此时用不到bits数组
+		if (bitsID[1][i] == 0) // 这两个if要放到最后，因为求endBucket会用到
+			bitsID[1][i] = -1;
 	}
 	cout << "Stop.\n";
 }
@@ -129,10 +134,10 @@ void ReinBits::match(const Pub& pub, int& matchSubs)
 		markTime += (double)markStart.elapsed_nano();
 
 		Timer orStart;
-		if (bitsID[0][buck] == 0)
-			b = b | bits[0][i][0];
-		if (bitsID[1][buck] == 0)
-			b = b | bits[1][i][0];
+		if (bitsID[0][buck] != -1)
+			b = b | bits[0][i][bitsID[0][buck]]; // 此时如果bitsID[0][buck]为0，不是表示覆盖所有桶的bits数组，而是表示只有1个bits数组(覆盖一半桶)的情况
+		if (bitsID[1][buck] != -1)
+			b = b | bits[1][i][bitsID[1][buck]];
 		orTime += (double)orStart.elapsed_nano();
 	}
 

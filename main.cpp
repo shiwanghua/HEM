@@ -1,5 +1,5 @@
 #include "run_models.h"
-ulimit -s unlimited
+
 int main(int argc, char** argv)
 {
 
@@ -7,7 +7,6 @@ int main(int argc, char** argv)
 	//cin >> subs >> pubs >> atts >> cons>> buks >> m >> attDis >> valDis >> valDom;
 	//cin >> alpha >> width;
 	//m = atts; // Note that Rein requires m == atts.
-
 
 	// Initiate generator
 	intervalGenerator gen(subs, pubs, atts, cons, m, attDis, valDis, valDom, alpha, width);
