@@ -24,7 +24,7 @@ ReinBits::ReinBits(int valDom, int numSubscription, int numDim, int numBuck, int
 
 ReinBits::~ReinBits() {
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1];
-	delete[] endBucket, bitsID;
+	//delete[] endBucket, bitsID; // 不是new出来的
 }
 
 void ReinBits::insert(IntervalSub sub)

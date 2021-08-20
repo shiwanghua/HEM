@@ -1,14 +1,15 @@
 RB=linuxRB
-CC?=g++
-all:${RB}
+CC=g++
 
 deps = $(shell find ./ -name "*.h")
 src = $(shell find ./ -name "*.cpp")
 obj = $(src:%.cpp=%.o)
 
+all: ${RB}
 $(RB): $(obj)
-    $(cc) -o $(RB) $(obj) -lm
+	$(CC) -std=c++11 -O3 -o $(RB) $(obj) #-lm
+	rm -rf $(obj)
 %.o: %.c $(deps)
-    $(cc) -c $< -o $@
+	$(CC) -c $< -o $@
 clean:
 	rm -rf $(obj) $(RB)

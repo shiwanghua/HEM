@@ -1,3 +1,8 @@
+65	memory=152MB	AvgMatchNum=6.020000	AvgInsertTime=0.002129ms	AvgMatchTime=247.289991ms	AvgCmpTime=0.663771ms	AvgMarkTime=227.584165ms	AvgBitTime=19.025687ms	numBuk=1000	numSub=1000000	numPub=500
+65	memory=152MB	AvgMatchNum=6.020000	AvgInsertTime=0.002080ms	AvgMatchTime=247.162314ms	AvgCmpTime=0.664091ms	AvgMarkTime=227.452183ms	AvgBitTime=19.030955ms	numBuk=1000	numSub=1000000	numPub=500
+65	memory=152MB	AvgMatchNum=6.020000	AvgInsertTime=0.002180ms	AvgMatchTime=246.742583ms	AvgCmpTime=0.663793ms	AvgMarkTime=227.061594ms	AvgBitTime=19.002929ms	numBuk=1000	numSub=1000000	numPub=500
+65	memory=152MB	AvgMatchNum=6.020000	AvgInsertTime=0.002172ms	AvgMatchTime=247.313560ms	AvgCmpTime=0.668007ms	AvgMarkTime=227.599522ms	AvgBitTime=19.029148ms	numBuk=1000	numSub=1000000	numPub=500
+65	memory=152MB	AvgMatchNum=6.020000	AvgInsertTime=0.002061ms	AvgMatchTime=246.140516ms	AvgCmpTime=0.656107ms	AvgMarkTime=226.460622ms	AvgBitTime=19.011177ms	numBuk=1000	numSub=1000000	numPub=500
 65	memory=152MB	AvgMatchNum=6.020000	AvgInsertTime=0.001037ms	AvgMatchTime=18.151704ms	AvgCmpTime=0.097050ms	AvgMarkTime=17.064805ms	AvgBitTime=0.982599ms	numBuk=1000	numSub=1000000	numPub=500
 65	memory=152MB	AvgMatchNum=6.020000	AvgInsertTime=0.001025ms	AvgMatchTime=19.280056ms	AvgCmpTime=0.100653ms	AvgMarkTime=18.189293ms	AvgBitTime=0.982765ms	numBuk=1000	numSub=1000000	numPub=500
 65	memory=152MB	AvgMatchNum=6.020000	AvgInsertTime=0.002250ms	AvgMatchTime=246.358150ms	AvgCmpTime=0.662283ms	AvgMarkTime=226.683538ms	AvgBitTime=18.999301ms	numBuk=1000	numSub=1000000	numPub=500
