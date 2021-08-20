@@ -105,7 +105,10 @@ void Rein::match(const Pub& pub, int& matchSubs)
 	Timer bitStart;
 	for (int i = 0; i < numSub; i++)
 		if (!bits[i])
+		{
 			++matchSubs;
+			//cout << "rein: " << i << endl;
+		}
 	bitTime += (double)bitStart.elapsed_nano();
 }
 

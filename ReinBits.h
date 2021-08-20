@@ -18,11 +18,11 @@
 class ReinBits
 {
 private:
-	int maxValue, numSub, numDimension, buckStep, numBits, bitStep;
+	int maxValue, numSub, numDimension, buckStep, numBits, bitStep; // 让前面的bits数组差距都是bitStep，多余的都留给最后一个bits数组
 	vector<vector<vector<Combo>>> data[2];  // 0:left parenthesis, 1:right parenthesis
 	vector<vector<bitset<subs>>> bits[2];   // 需要提前知道订阅个数...
 	int* endBucket[2],*bitsID[2];           // 落入这个bucket的事件标记时终止于哪一个bucket、用到的bits数组的下标
-	vector<vector<int>> fix[2];             // 0是low上的后缀和，1是high上的前缀和
+	//vector<vector<int>> fix[2];             // 0是low上的后缀和，1是high上的前缀和
 public:
 	int numBucket;
 	double compareTime = 0.0;               // 所有维度上事件值落入的那个cell里逐个精确比较的时间
@@ -36,12 +36,12 @@ public:
 	//void insert(Sub sub);
 	void insert(IntervalSub sub);
 	//void match(const Pub& pub, int& matchSubs, const vector<Sub>& subList);
-	void match(const Pub& pub, int& matchSubs);
+	void match(const Pub& pub, int& matchSubs, const intervalGenerator&);
 
 	void initBits();      // 插入完后初始化bits数组
 	void calBucketSize(); // 计算bucketSize
 	int calMemory();      // 计算占用内存大小
-	
+	void printRelation(); // 打印映射关系
 };
 
 #endif

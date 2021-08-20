@@ -13,7 +13,7 @@ int main(int argc, char** argv)
 	gen.GenSubList();
 	gen.GenPubList();
 
-	//run_rein(gen);
+	run_rein(gen);
 	run_ReinBits(gen);
 
 	cout << "Done.\n";
