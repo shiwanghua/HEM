@@ -44,15 +44,12 @@ public:
 
 class intervalGenerator {
     void GenUniformAtts(IntervalSub &sub, int atts);
-
     void GenUniformAtts(Pub &pub, int atts);
 
     void GenZipfAtts(IntervalSub &sub, int atts, double alpha);
-
     void GenZipfAtts(Pub &pub, int atts, double alpha);
 
     void GenUniformValues(IntervalSub &sub, int valDom);
-
     void GenUniformValues(Pub &pub, int valDom);
 
     bool CheckExist(vector<int> a, int x);
@@ -70,6 +67,9 @@ public:
     vector<Pub> pubList;
     int subs, pubs, atts, cons, m, attDis, valDis, valDom;
     double alpha, width;
+    // 0 -- fixed width, 1 -- maxWidth, -1 -- minWidth
+    // 0 ~ [width,width], 1 ~ [0,width], -1 ~ [width,1]
+    int widthType; 
 
     intervalGenerator(int subs, int pubs, int atts, int cons, int m, int attDis, int valDis, int valDom, double alpha,
                       double width = 0.5) :

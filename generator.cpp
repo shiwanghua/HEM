@@ -57,10 +57,12 @@ IntervalSub intervalGenerator::GenOneSub(int id, int size, int atts, int attDis,
     IntervalSub sub;
     sub.id = id;
     sub.size = size;
+
     if (attDis == 0)
         GenUniformAtts(sub, atts);
     else if (attDis == 1)
         GenZipfAtts(sub, atts, alpha);
+        
     if (valDis == 0)
         GenUniformValues(sub, valDom);
     return sub;

@@ -77,7 +77,7 @@ void ReinBits::initBits() {
 				bits[0][i][0][data[0][i][j][k].subID] = 1;  // high, i维, 0号bits, subID
 		}
 
-		cout << "Stop.\n";
+		//cout << "Stop.\n";
 		return;
 	}
 
@@ -143,7 +143,7 @@ void ReinBits::initBits() {
 		if (bitsID[1][i] == 0)      // 这两个if要放到最后，因为求endBucket会用到bitsID
 			bitsID[1][i] = -1;
 	}
-	cout << "Stop.\n";
+	//cout << "Stop.\n";
 }
 
 void ReinBits::match(const Pub& pub, int& matchSubs, const intervalGenerator& gen)
@@ -152,9 +152,6 @@ void ReinBits::match(const Pub& pub, int& matchSubs, const intervalGenerator& ge
 	int value, att, buck;
 	_for(i, 0, pub.size)
 	{
-		/*if (i == 3) {
-			cout << " 333\n";
-		}*/
 		Timer compareStart;
 		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 		_for(k, 0, data[0][att][buck].size())

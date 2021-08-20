@@ -8,7 +8,6 @@ int main(int argc, char** argv)
 	//cin >> alpha >> width;
 	//m = atts; // Note that Rein requires m == atts.
 
-	// Initiate generator
 	intervalGenerator gen(subs, pubs, atts, cons, m, attDis, valDis, valDom, alpha, width);
 	gen.GenSubList();
 	gen.GenPubList();
@@ -18,7 +17,7 @@ int main(int argc, char** argv)
 
 	cout << "Done.\n";
 	system("pause");
-	// check
+
 	//Util::Check(gen, "rein");
 
 	return 0;

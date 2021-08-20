@@ -49,15 +49,15 @@ void run_rein(const intervalGenerator& gen) {
 		+ "\tnumPub=" + Util::Int2String(pubs);
 	Util::WriteData(outputFileName.c_str(), content);
 
-	//outputFileName = "ReinBucketSize.txt";
-	//rein.calBucketSize();
-	//content = expID + "\tnumBucket=" + Util::Int2String(rein.numBucket)
-	//	//+ "\tsumBukSetSize=" + to_string(accumulate(rein.bucketSub.begin(), rein.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
-	//	+ "\tmaxBukSetSize=" + to_string((*max_element(rein.bucketSub.begin(), rein.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
-	//	+ "\tminBukSetSize=" + to_string(min_element(rein.bucketSub.begin(), rein.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + "\tBucketSize:";
-	//_for(i, 0, rein.numBucket)
-	//	content += " " + to_string(rein.bucketSub[i].size());
-	//Util::WriteData(outputFileName.c_str(), content);
+	outputFileName = "ReinBucketSize.txt";
+	rein.calBucketSize();
+	content = expID + "\tnumBucket=" + Util::Int2String(rein.numBucket)
+		//+ "\tsumBukSetSize=" + to_string(accumulate(rein.bucketSub.begin(), rein.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
+		+ "\tmaxBukSetSize=" + to_string((*max_element(rein.bucketSub.begin(), rein.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
+		+ "\tminBukSetSize=" + to_string(min_element(rein.bucketSub.begin(), rein.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + "\tBucketSize:";
+	_for(i, 0, rein.numBucket)
+		content += " " + to_string(rein.bucketSub[i].size());
+	Util::WriteData(outputFileName.c_str(), content);
 }
 
 void run_ReinBits(const intervalGenerator& gen) {
@@ -119,13 +119,13 @@ void run_ReinBits(const intervalGenerator& gen) {
 		+ "\tnumPub=" + Util::Int2String(pubs);
 	Util::WriteData(outputFileName.c_str(), content);
 
-	//outputFileName = "ReinBitsBucketSize.txt";
-	//rb.calBucketSize();
-	//content = expID + "\tnumBucket=" + Util::Int2String(rb.numBucket)
-	//	//+ "\tsumBukSetSize=" + to_string(accumulate(rein.bucketSub.begin(), rein.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
-	//	+ "\tmaxBukSetSize=" + to_string((*max_element(rb.bucketSub.begin(), rb.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
-	//	+ "\tminBukSetSize=" + to_string(min_element(rb.bucketSub.begin(), rb.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + "\tBucketSize:";
-	//_for(i, 0, rb.numBucket)
-	//	content += " " + to_string(rb.bucketSub[i].size());
-	//Util::WriteData(outputFileName.c_str(), content);
+	outputFileName = "ReinBitsBucketSize.txt";
+	rb.calBucketSize();
+	content = expID + "\tnumBucket=" + Util::Int2String(rb.numBucket)
+		//+ "\tsumBukSetSize=" + to_string(accumulate(rein.bucketSub.begin(), rein.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
+		+ "\tmaxBukSetSize=" + to_string((*max_element(rb.bucketSub.begin(), rb.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
+		+ "\tminBukSetSize=" + to_string(min_element(rb.bucketSub.begin(), rb.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + "\tBucketSize:";
+	_for(i, 0, rb.numBucket)
+		content += " " + to_string(rb.bucketSub[i].size());
+	Util::WriteData(outputFileName.c_str(), content);
 }
