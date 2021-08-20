@@ -9,7 +9,7 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 # 编译子文件夹的CMakeLists.txt
 # add_subdirectory(proto_pb2)
 
-set(SOURCE_FILES main.cpp chrono_time.h data_structure.h generator.h generator.cpp printer.cpp printer.h util.h util.cpp rein.h rein.cpp)
+set(SOURCE_FILES *.cpp *.h data_structure.h generator.h generator.cpp printer.cpp printer.h util.h util.cpp rein.h rein.cpp)
 add_executable(main ${SOURCE_FILES})
 
 
