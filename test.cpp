@@ -3,7 +3,7 @@
 
 int main2(int argc, char** argv)
 {
-	Timer s;
+	/*Timer s;
 	bool bits[100000000] = { 0 };
 	for (int i = 0; i < 100000000; i++)
 		bits[rand() % 100000000] = rand()%2;
@@ -18,12 +18,15 @@ int main2(int argc, char** argv)
 	Timer s3;
 	for(int i=0;i<100000000;i++)
 		bits[i] |= bits2[i];
-	cout << s3.elapsed_nano()<<endl;
+	cout << s3.elapsed_nano()<<endl;*/
+
 	//cout << bits2[10934] << endl;
 	//system("pause");
 	/*Timer s3;
 	int bits3[1000000];
 	cout << s3.elapsed_nano()<<endl;*/
+
+	cout << sizeof(bitset<subs>);
 
 	system("pause");
 	return 0;

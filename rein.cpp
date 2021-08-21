@@ -79,11 +79,12 @@ void Rein::insert(IntervalSub sub)
 void Rein::match(const Pub& pub, int& matchSubs)
 {
 	vector<bool> bits(numSub, false);
-
+	vector<bool> attExist(numDimension, false);
 	for (int i = 0; i < pub.size; i++)
 	{
 		Timer compareStart;
 		int value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
+		attExist[att] = true;
 		for (int k = 0; k < data[0][att][buck].size(); k++)
 			if (data[0][att][buck][k].val > value)
 				bits[data[0][att][buck][k].subID] = true;
@@ -101,6 +102,14 @@ void Rein::match(const Pub& pub, int& matchSubs)
 				bits[data[1][att][j][k].subID] = true;
 		markTime += (double)markStart.elapsed_nano();
 	}
+
+	Timer markStart;
+	for (int i = 0; i < numDimension; i++)
+		if (!attExist[i])
+			for (int j = 0; j < numBucket; j++)
+				for (int k = 0; k < data[0][i][j].size(); k++)
+					bits[data[0][i][j][k].subID] = true;
+	markTime += (double)markStart.elapsed_nano();
 
 	Timer bitStart;
 	for (int i = 0; i < numSub; i++)

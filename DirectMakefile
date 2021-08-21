@@ -1,5 +1,5 @@
 RB=linuxRB
-CC=gcc
+CC=g++
 
 deps = $(shell find ./ -name "*.h")
 src = $(shell find ./ -name "*.cpp")
