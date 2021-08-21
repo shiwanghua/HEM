@@ -10,6 +10,6 @@ $(RB): $(obj)
 	$(CC) -std=c++11 -O3 -o $(RB) $(obj) #-lm
 	rm -rf $(obj)
 %.o: %.c $(deps)
-	$(CC) -c $< -o $@
+	$(CC) -c $< -o $@ -O3
 clean:
 	rm -rf $(obj) $(RB)

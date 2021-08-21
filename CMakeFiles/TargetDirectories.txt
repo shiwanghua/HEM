@@ -1,0 +1,3 @@
+D:/codes/c++/Rein-Bits/Rein-Bits/CMakeFiles/main.dir
+D:/codes/c++/Rein-Bits/Rein-Bits/CMakeFiles/ALL_BUILD.dir
+D:/codes/c++/Rein-Bits/Rein-Bits/CMakeFiles/ZERO_CHECK.dir
