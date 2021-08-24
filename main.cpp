@@ -2,7 +2,6 @@
 
 int main(int argc, char** argv)
 {
-
 	//freopen("paras.txt", "r", stdin);
 	//cin >> subs >> pubs >> atts >> cons>> buks >> m >> attDis >> valDis >> valDom;
 	//cin >> alpha >> width;
@@ -14,6 +13,7 @@ int main(int argc, char** argv)
 
 	run_rein(gen);
 	run_ReinBits(gen);
+	run_ReinBits2(gen);
 
 	cout << "Done.\n";
 	system("pause");

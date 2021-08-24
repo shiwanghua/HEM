@@ -1,7 +1,7 @@
 #include "rein.h"
 #include "ReinBits.h"
 
-int main2(int argc, char** argv)
+int masin(int argc, char** argv)
 {
 	/*Timer s;
 	bool bits[100000000] = { 0 };
@@ -26,7 +26,8 @@ int main2(int argc, char** argv)
 	int bits3[1000000];
 	cout << s3.elapsed_nano()<<endl;*/
 
-	cout << sizeof(bitset<subs>);
+	bool* q;
+	delete q;
 
 	system("pause");
 	return 0;
