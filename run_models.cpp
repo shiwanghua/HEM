@@ -102,7 +102,7 @@ void run_ReinBits(const intervalGenerator& gen) {
 			cout << "ReinBits Event" << i << " is matched.\n";
 	}
 
-	//rb.printRelation();
+	rb.printRelation();
 	// output
 	string outputFileName = "ReinBits.txt";
 	string content = expID

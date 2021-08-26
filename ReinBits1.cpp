@@ -1,9 +1,9 @@
-#include "ReinBits2.h"
+#include "ReinBits1.h"
 
-ReinBits2::ReinBits2(int valDom, int numSubscription, int numDim, int numBuck, int b) :maxValue(valDom), numSub(numSubscription), numDimension(numDim) {
+ReinBits1::ReinBits1(int valDom, int numSubscription, int numDim, int numBuck, int b) :maxValue(valDom), numSub(numSubscription), numDimension(numDim) {
 	buckStep = (valDom - 1) / numBuck + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
-	cout << "ReinBits2: bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
+	cout << "ReinBits1: bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
 
 	// 如果桶数会变化，以下代码也要放入init函数里
 	//bucketSub.resize(numBucket);
@@ -36,17 +36,17 @@ ReinBits2::ReinBits2(int valDom, int numSubscription, int numDim, int numBuck, i
 		bitsID[1][i] = new int[numBucket];
 	}
 
-	fix[0].resize(numDimension, vector<int>(numBucket + 1, 0));
-	fix[1].resize(numDimension, vector<int>(numBucket + 1, 0));
+	//fix[0].resize(numDimension, vector<int>(numBucket + 1, 0));
+	//fix[1].resize(numDimension, vector<int>(numBucket + 1, 0));
 }
 
-ReinBits2::~ReinBits2() {
+ReinBits1::~ReinBits1() {
 	_for(i, 0, numDimension)
 		delete[] doubleReverse[0][i], doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1], doubleReverse[0], doubleReverse[1];
 }
 
-void ReinBits2::insert(IntervalSub sub)
+void ReinBits1::insert(IntervalSub sub)
 {
 	for (int i = 0; i < sub.size; i++)
 	{
@@ -62,7 +62,7 @@ void ReinBits2::insert(IntervalSub sub)
 }
 
 // fullBits单独存储的版本
-void ReinBits2::initBits() {
+void ReinBits1::initBits() {
 
 	// 如果有多次初始化
 	_for(i, 0, numDimension)
@@ -86,16 +86,16 @@ void ReinBits2::initBits() {
 	bits[0].resize(numDimension, vector<bitset<subs>>(numBits > 1 ? numBits - 1 : 1));
 	bits[1].resize(numDimension, vector<bitset<subs>>(max(numBits - 1, 1)));
 
-	// 前缀和、后缀和数组, 不包括本身
-	_for(i, 0, numDimension) {
-		_for(j, 1, numBucket) {
-			fix[0][i][numBucket - 1 - j] = fix[0][i][numBucket - j] + data[0][i][numBucket - j].size();
-			fix[1][i][j] = fix[1][i][j - 1] + data[1][i][j - 1].size();
-		}
-		// 整个数组的和存在最后一个元素上
-		fix[0][i][numBucket] = fix[0][i][0] + data[0][i][0].size();
-		fix[1][i][numBucket] = fix[1][i][numBucket] + data[1][i][numBucket - 1].size();
-	}
+	//// 前缀和、后缀和数组, 不包括本身
+	//_for(i, 0, numDimension) {
+	//	_for(j, 1, numBucket) {
+	//		fix[0][i][numBucket - 1 - j] = fix[0][i][numBucket - j] + data[0][i][numBucket - j].size();
+	//		fix[1][i][j] = fix[1][i][j - 1] + data[1][i][j - 1].size();
+	//	}
+	//	// 整个数组的和存在最后一个元素上
+	//	fix[0][i][numBucket] = fix[0][i][0] + data[0][i][0].size();
+	//	fix[1][i][numBucket] = fix[1][i][numBucket] + data[1][i][numBucket - 1].size();
+	//}
 
 	if (numBits == 1) {                           // 只有一个bits时特判，不用fullBits
 
@@ -107,8 +107,9 @@ void ReinBits2::initBits() {
 				doubleReverse[0][i][j] = false;          // Bug：这个也要赋值（没初始化），找了一个多小时
 				int bid1 = -1, bid2 = 0;
 				int bktid1 = 0, bktid2 = bitStep;
-				int workload1 = fix[1][i][j], workload2 = fix[1][i][bktid2] - fix[1][i][j]; // 第j个桶也需要把1变成0，后进行比较
-				if (workload1 <= workload2) {
+				int midid = (bktid1 + bktid2) / 2;
+
+				if (j<=midid) {
 					bitsID[1][i][j] = bid1;              // 为-1时表示确实用不到bits数组
 					endBucket[1][i][j] = bktid1;         // 往左标记1时从 j-1 遍历到 bktid1 号桶
 					doubleReverse[1][i][j] = false;
@@ -123,12 +124,12 @@ void ReinBits2::initBits() {
 				// 此时high这一端一定用到也只能用到0号bits数组
 				bitsID[1][i][j] = 0;
 				endBucket[1][i][j] = bitStep;            // 标记时遍历到等于这个值
-				doubleReverse[1][i][j] = false;          
+				doubleReverse[1][i][j] = false;
 
 				int bid1 = -1, bid2 = 0;
 				int bktid1 = numBucket, bktid2 = numBucket - bitStep;// 1000-500
-				int workload1 = fix[0][i][j], workload2 = fix[0][i][bktid2 - 1] - fix[0][i][j];
-				if (workload1 <= workload2) {
+				int midid = (bktid1 + bktid2) / 2;
+				if (j <= midid) {
 					bitsID[0][i][j] = bid1;              // 为-1时表示确实用不到bits数组
 					endBucket[0][i][j] = bktid1;         // 往右标记1时从 j+1 遍历到 bktid1-1 号桶
 					doubleReverse[0][i][j] = false;
@@ -158,8 +159,8 @@ void ReinBits2::initBits() {
 		_for(j, 0, numBucket) {
 		int bid1 = j / bitStep - 1, bid2 = bid1 + 1;   // 62/63-1=-1, 63/63-1=0, -1+1=0     945/63-1=14, 15代表用fullBits
 		int bktid1 = (bid1 + 1) * bitStep, bktid2 = min(bktid1 + bitStep, numBucket); // (-1+1)*63=0 <= 62, (0+1)*63=63>62
-		int workload1 = fix[1][i][j] - fix[1][i][bktid1], workload2 = fix[1][i][bktid2] - fix[1][i][j]; // 第j个桶也需要把1变成0，后进行比较
-		if (workload1 <= workload2) {
+		int midid = (bktid1 + bktid2) / 2;
+		if (j <= midid) {
 			bitsID[1][i][j] = bid1;      // 为-1时表示确实用不到bits数组
 			endBucket[1][i][j] = bktid1; // 往左标记1时从 j-1 遍历到 bktid1 号桶
 			doubleReverse[1][i][j] = false;
@@ -177,9 +178,8 @@ void ReinBits2::initBits() {
 		bktid1 = bktid1 ^ bktid2;
 		bktid2 = bktid1 ^ bktid2;
 		bktid1 = bktid1 ^ bktid2;
-		workload1 = fix[0][i][j] - fix[0][i][bktid1 - 1];
-		workload2 = fix[0][i][bktid2 > 0 ? bktid2 - 1 : numBucket] - fix[0][i][j];
-		if (workload1 <= workload2) {
+		int midid = (bktid1 + bktid2) / 2;
+		if (j <= midid) {
 			bitsID[0][i][j] = bid1;
 			endBucket[0][i][j] = bktid1;
 			doubleReverse[0][i][j] = false; // Bug: 此数组没初始化，可能为true！
@@ -217,129 +217,7 @@ void ReinBits2::initBits() {
 	//cout << "Stop.\n";
 }
 
-// 调整顺序版本：buck标记时间在比较时一并进行 
-// 标记时间虽然减少了一点，但比较时间多了一倍！
-//void ReinBits2::match(const Pub& pub, int& matchSubs)
-//{
-//	bitset<subs> b, bLocal;
-//	vector<bool> attExist(numDimension, false);
-//	int value, att, buck;
-//
-//	_for(i, 0, pub.size)
-//	{
-//		Timer compareStart;
-//		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
-//		attExist[att] = true;
-//		_for(k, 0, data[0][att][buck].size())
-//			if (data[0][att][buck][k].val > value)
-//				b[data[0][att][buck][k].subID] = 1;
-//		_for(k, 0, data[1][att][buck].size())
-//			if (data[1][att][buck][k].val < value)
-//				b[data[1][att][buck][k].subID] = 1;
-//		compareTime += (double)compareStart.elapsed_nano();
-//
-//		if (doubleReverse[0][att][buck]) {
-//			Timer markStart;
-//			if (bitsID[0][att][buck] == numBits - 1 && numBits > 1)
-//				bLocal = fullBits[att];
-//			else
-//				bLocal = bits[0][att][bitsID[0][att][buck]];
-//			_for(j, endBucket[0][att][buck], buck)  // buck留到比较时再标记
-//				_for(k, 0, data[0][att][j].size())
-//				bLocal[data[0][att][j][k].subID] = 0;
-//			markTime += (double)markStart.elapsed_nano();
-//
-//			Timer compareStart;
-//			_for(k, 0, data[0][att][buck].size())
-//				if (data[0][att][buck][k].val > value) {
-//					b[data[0][att][buck][k].subID] = 1;
-//					bLocal[data[0][att][buck][k].subID] = 0;
-//				}
-//			compareTime += (double)compareStart.elapsed_nano();
-//
-//			Timer orStart;
-//			b = b | bLocal;
-//			orTime += (double)orStart.elapsed_nano();
-//		}
-//		else {
-//			Timer compareStart;
-//			_for(k, 0, data[0][att][buck].size())
-//				if (data[0][att][buck][k].val > value)
-//					b[data[0][att][buck][k].subID] = 1;
-//			compareTime += (double)compareStart.elapsed_nano();
-//
-//			Timer markStart;
-//			_for(j, buck + 1, endBucket[0][att][buck])
-//				_for(k, 0, data[0][att][j].size())
-//				b[data[0][att][j][k].subID] = 1;
-//			markTime += (double)markStart.elapsed_nano();
-//
-//			Timer orStart;
-//			if (bitsID[0][att][buck] != -1)
-//				b = b | bits[0][att][bitsID[0][att][buck]];
-//			orTime += (double)orStart.elapsed_nano();
-//		}
-//
-//		if (doubleReverse[1][att][buck]) {
-//			Timer markStart;
-//			if (bitsID[1][att][buck] == numBits - 1 && numBits > 1)
-//				bLocal = fullBits[att];
-//			else
-//				bLocal = bits[1][att][bitsID[1][att][buck]];
-//			_for(j, buck+1, endBucket[1][att][buck]) // buck留到比较时标记
-//				_for(k, 0, data[1][att][j].size())
-//				bLocal[data[1][att][j][k].subID] = 0;
-//			markTime += (double)markStart.elapsed_nano();
-//
-//			Timer compareStart;
-//			_for(k, 0, data[1][att][buck].size())
-//				if (data[1][att][buck][k].val < value) {
-//					b[data[1][att][buck][k].subID] = 1;
-//					bLocal[data[1][att][buck][k].subID] = 0;
-//				}		
-//			compareTime += (double)compareStart.elapsed_nano();
-//
-//			Timer orStart;
-//			b = b | bLocal;
-//			orTime += (double)orStart.elapsed_nano();
-//		}
-//		else {
-//			Timer compareStart;
-//			_for(k, 0, data[1][att][buck].size())
-//				if (data[1][att][buck][k].val < value)
-//					b[data[1][att][buck][k].subID] = 1;
-//			compareTime += (double)compareStart.elapsed_nano();
-//
-//			Timer markStart;
-//			_for(j, endBucket[1][att][buck], buck)
-//				_for(k, 0, data[1][att][j].size())
-//				b[data[1][att][j][k].subID] = 1;
-//			markTime += (double)markStart.elapsed_nano();
-//
-//			Timer orStart;
-//			if (bitsID[1][att][buck] != -1)
-//				b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
-//			orTime += (double)orStart.elapsed_nano();
-//		}
-//	}
-//
-//	Timer orStart;
-//	_for(i, 0, numDimension)
-//		if (!attExist[i])
-//			b = b | fullBits[i];
-//	orTime += (double)orStart.elapsed_nano();
-//
-//	Timer bitStart;
-//	_for(i, 0, numSub)
-//		if (!b[i])
-//		{
-//			++matchSubs;
-//			//cout << "reinbits2 matches sub: " << i << endl;
-//		}
-//	bitTime += (double)bitStart.elapsed_nano();
-//}
-
-void ReinBits2::match(const Pub& pub, int& matchSubs)
+void ReinBits1::match(const Pub& pub, int& matchSubs)
 {
 	bitset<subs> b, bLocal;
 	vector<bool> attExist(numDimension, false);
@@ -428,7 +306,7 @@ void ReinBits2::match(const Pub& pub, int& matchSubs)
 	bitTime += (double)bitStart.elapsed_nano();
 }
 
-//void ReinBits2::calBucketSize() {
+//void ReinBits1::calBucketSize() {
 //	bucketSub.clear();
 //	bucketSub.resize(numBucket);
 //	_for(i, 0, numDimension)
@@ -441,7 +319,7 @@ void ReinBits2::match(const Pub& pub, int& matchSubs)
 //		}
 //}
 
-int ReinBits2::calMemory() {
+int ReinBits1::calMemory() {
 	long long size = 0; // Byte
 	_for(i, 0, numDimension) {
 		// 若每个维度上bits数组个数一样就是 2*sizeof(bitset<subs>)*numDimension*numBits
@@ -461,7 +339,7 @@ int ReinBits2::calMemory() {
 	return (int)size;
 }
 
-void ReinBits2::printRelation(int dimension_i) {
+void ReinBits1::printRelation(int dimension_i) {
 	cout << "\n\nReinBitsMap\n";
 	if (dimension_i == -1)
 		_for(i, 0, numDimension) {
@@ -470,12 +348,12 @@ void ReinBits2::printRelation(int dimension_i) {
 			cout << "Low Bucket" << j << ": bitsID=" << bitsID[0][i][j] << ", endBucket=" << endBucket[0][i][j] << ", doubleReverse=" << doubleReverse[0][i][j] << endl;
 	}
 	else {
-		cout << "\nDimension: " << dimension_i << "    LowBucket Predicates: " << fix[0][dimension_i][numBucket] << "   ----------------\n";
+		cout << "\nDimension: " << dimension_i << "    LowBucket   ----------------\n";
 		_for(i, 0, numBucket) {
-			cout << "LBkt" << i << ": bID=" << bitsID[0][dimension_i][i] << ", eBkt=" << endBucket[0][dimension_i][i] << ", dRvs=" << doubleReverse[0][dimension_i][i]<<"; ";
+			cout << "LBkt" << i << ": bID=" << bitsID[0][dimension_i][i] << ", eBkt=" << endBucket[0][dimension_i][i] << ", dRvs=" << doubleReverse[0][dimension_i][i] << "; ";
 			if (i % 5 == 0 && i > 0)cout << "\n";
 		}
-		cout << "\n\nDimension: " << dimension_i << "    HighBucket Predicates: " << fix[1][dimension_i][numBucket] << "   ----------------\n";
+		cout << "\n\nDimension: " << dimension_i << "    HighBucket   ----------------\n";
 		_for(i, 0, numBucket) {
 			cout << "HBkt" << i << ": bID=" << bitsID[1][dimension_i][i] << ", eBkt=" << endBucket[1][dimension_i][i] << ", dRvs=" << doubleReverse[1][dimension_i][i] << "; ";
 			if (i % 5 == 0 && i > 0)cout << "\n";
@@ -483,4 +361,3 @@ void ReinBits2::printRelation(int dimension_i) {
 	}
 	cout << "\n\n";
 }
- 

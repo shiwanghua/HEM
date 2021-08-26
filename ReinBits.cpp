@@ -75,29 +75,21 @@ void ReinBits::initBits() {
 		}
 	}*/
 
-	// 这个映射关系可以兼容下面numBits为1的情况，numBits为1时bitStep为500
-	_for(i, 0, numBucket) {
-		bitsID[0][i] = (numBucket - i - 1) / bitStep - 1; // (1000-499-1)/500=1, (1000-749-1)/250=1, (1000-936-1)/63=1, (1000-873-1)/63=2, (1000-54-1)/63=15
-		bitsID[1][i] = i / bitStep - 1; // 750/250=3, 63/63=1
-		endBucket[0][i] = numBucket - (bitsID[0][i] + 1) * bitStep; // 1000-1*63=937, 1000-2*63=874, 1000-15*63=55
-		endBucket[1][i] = (bitsID[1][i] + 1) * bitStep;
-	}
-
 	if (numBits == 1) {                           // 只有一个bits时特判，不用fullBits
 
 		// 以下代码已被上面的for循环兼容
-		//_for(i, 0, numBucket >> 1) {
-		//	bitsID[0][i] = 0;                     // 此时的0号代表0.5~1, 不是0~1
-		//	bitsID[1][i] = -1;                    // 此时用不到bits数组, -1表示非法
-		//	endBucket[0][i] = numBucket >> 1;     // 标记时遍历到小于这个值
-		//	endBucket[1][i] = 0;                  // 标记时遍历到大于等于这个值
-		//}
-		//_for(i, numBucket >> 1, numBucket) {
-		//	bitsID[0][i] = -1;
-		//	bitsID[1][i] = 0;
-		//	endBucket[0][i] = numBucket;
-		//	endBucket[1][i] = numBucket >> 1;
-		//}
+		_for(i, 0, numBucket >> 1) {
+			bitsID[0][i] = 0;                     // 此时的0号代表0.5~1, 不是0~1
+			bitsID[1][i] = -1;                    // 此时用不到bits数组, -1表示非法
+			endBucket[0][i] = numBucket >> 1;     // 标记时遍历到小于这个值
+			endBucket[1][i] = 0;                  // 标记时遍历到大于等于这个值
+		}
+		_for(i, numBucket >> 1, numBucket) {
+			bitsID[0][i] = -1;
+			bitsID[1][i] = 0;
+			endBucket[0][i] = numBucket;
+			endBucket[1][i] = numBucket >> 1;
+		}
 
 		_for(i, 0, numDimension) {                // 每个维度
 			_for(j, 0, numBucket >> 1)            // 每个左半部分的桶
@@ -112,6 +104,16 @@ void ReinBits::initBits() {
 		return;
 	}
 
+	_for(i, 0, numBucket) {
+		//bitsID[0][i] = (numBucket - i - 1) / bitStep - 1; // (1000-499-1)/500=1, (1000-749-1)/250=1, (1000-936-1)/63=1, (1000-873-1)/63=2, (1000-54-1)/63=15 // 这个映射关系可以兼容numBits为1的情况，numBits为1时bitStep为500
+		bitsID[1][i] = i / bitStep - 1; // 750/250=3, 63/63=1
+		bitsID[0][i] = numBits - 3 - bitsID[1][i]; // 保证共用同一套cell
+
+		//endBucket[0][i] = numBucket - (bitsID[0][i] + 1) * bitStep; // 1000-1*63=937, 1000-2*63=874, 1000-15*63=55
+		endBucket[1][i] = (bitsID[1][i] + 1) * bitStep;
+		endBucket[0][i] = min(numBucket, endBucket[1][i] + bitStep);
+	}
+	
 	int subID, b;   // 起始标记数组的下标
 	_for(i, 0, numDimension) {      // 每个维度
 		_for(j, 0, numBucket) {     // 每个桶
@@ -337,8 +339,15 @@ int ReinBits::calMemory() {
 }
 
 void ReinBits::printRelation() {
-	cout << "\n\nReinBitsMap\n";
-	_for(i, 0, numBucket) 
-		cout << "Low Bucket" << i << ": bitsID=" << bitsID[0][i] << ", endBucket=" << endBucket[0][i] << endl;
+	cout << "\n\nReinBitsMap LowBucket\n";
+	_for(i, 0, numBucket) {
+		cout << "LBkt" << i << ": bID=" << bitsID[0][i] << ", eBkt=" << endBucket[0][i]<<"; ";
+		if (i % 5 == 0 && i > 0)cout << "\n";
+	}
+	cout << "\n\nReinBitsMap HighBucket\n";
+	_for(i, 0, numBucket) {
+		cout << "HBkt" << i << ": bID=" << bitsID[1][i] << ", eBkt=" << endBucket[1][i] << "; ";
+		if (i % 5 == 0 && i > 0)cout << "\n";
+	}
 	cout << "\n\n";
 }
