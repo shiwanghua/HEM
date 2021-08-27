@@ -54,10 +54,10 @@ void run_rein(const intervalGenerator& gen) {
 
 	//outputFileName = "ReinBucketSize.txt";
 	//rein.calBucketSize();
-	//content = expID + "\tnumBucket=" + Util::Int2String(rein.numBucket)
-	//	//+ "\tsumBukSetSize=" + to_string(accumulate(rein.bucketSub.begin(), rein.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
-	//	+ "\tmaxBukSetSize=" + to_string((*max_element(rein.bucketSub.begin(), rein.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
-	//	+ "\tminBukSetSize=" + to_string(min_element(rein.bucketSub.begin(), rein.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + "\tBucketSize:";
+	//content = expID + "\tnumBucket= " + Util::Int2String(rein.numBucket)
+	//	//+ "\tsumBukSetSize= " + to_string(accumulate(rein.bucketSub.begin(), rein.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
+	//	+ "\tmaxBukSetSize= " + to_string((*max_element(rein.bucketSub.begin(), rein.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
+	//	+ "\tminBukSetSize= " + to_string(min_element(rein.bucketSub.begin(), rein.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + "\tBucketSize:";
 	//_for(i, 0, rein.numBucket)
 	//	content += " " + to_string(rein.bucketSub[i].size());
 	//Util::WriteData(outputFileName.c_str(), content);
@@ -106,10 +106,10 @@ void run_ReinBits(const intervalGenerator& gen) {
 	// output
 	string outputFileName = "ReinBits.txt";
 	string content = expID
-		+ "\tbits=" + Util::Int2String(bits)
-		+ "\tmemory=" + Util::Int2String(rb.calMemory())
-		+ "MB\tAvgMatchNum=" + Util::Double2String(Util::Average(matchSubList))
-		+ "\tAvgInsertTime=" + Util::Double2String(Util::Average(insertTimeList))
+		+ "\tbits= " + Util::Int2String(bits)
+		+ "\tmemory= " + Util::Int2String(rb.calMemory())
+		+ "MB\tAvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+		+ "\tAvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 		+ "ms\tInitTime=" + Util::Double2String(initTime)
 		+ "ms\tNewAvgInsertTime=" + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
 		+ "ms\tAvgMatchTime=" + Util::Double2String(Util::Average(matchTimeList))
