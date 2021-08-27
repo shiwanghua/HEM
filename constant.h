@@ -1,4 +1,6 @@
-#pragma once
+//#pragma once
+#ifndef _CONST_H
+#define _CONST_H
 #include<iostream>
 using namespace std;
 
@@ -18,7 +20,8 @@ const double width = 0.3;   // Width of a predicate.
 const int buks = 1000;      // Number of buckets.
 
 // ReinBits：Rein2
-int bits = 4;         // 每个维度上 2 * 2^bits个bits数组, -1表示用桶数做为bits数组组数
+static int bits = 4;         // 每个维度上 2 * 2^bits个bits数组, -1表示用桶数做为bits数组组数
 
 // Tama
 const int level = 11;
+#endif

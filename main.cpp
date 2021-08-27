@@ -7,7 +7,7 @@ int main(int argc, char** argv)
 	//cin >> alpha >> width;
 	//m = atts; // Note that Rein requires m == atts.
 
-	if (argc == 1) { // 输入一个bits指数
+	if (argc == 2) { // 输入一个bits指数
 		bits = atoi(argv[1]);
 	}
 	intervalGenerator gen(subs, pubs, atts, cons, m, attDis, valDis, valDom, alpha, width);
