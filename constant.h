@@ -18,7 +18,7 @@ const double width = 0.3;   // Width of a predicate.
 const int buks = 1000;      // Number of buckets.
 
 // ReinBits：Rein2
-const int bits = 4;         // 每个维度上 2 * 2^bits个bits数组, -1表示用桶数做为bits数组组数
+int bits = 4;         // 每个维度上 2 * 2^bits个bits数组, -1表示用桶数做为bits数组组数
 
 // Tama
 const int level = 11;
