@@ -4,7 +4,7 @@
 #include<iostream>
 using namespace std;
 
-static string expID = "132";  // 记录实验id
+static string expID = "133";  // 记录实验id
 const int subs = 1000000;   // Number of subscriptions.
 const int pubs = 500;       // Number of publications.
 const int atts = 20;        // Total number of attributes, i.e. dimensions.
