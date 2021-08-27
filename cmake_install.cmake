@@ -1,4 +1,4 @@
-# Install script for directory: /root/MyCodes/Rein-Bits
+# Install script for directory: /home/customer/Desktop/Swhua/ReinBits
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/root/MyCodes/Rein-Bits/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/customer/Desktop/Swhua/ReinBits/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

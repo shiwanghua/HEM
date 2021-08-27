@@ -1,0 +1,3 @@
+/home/customer/Desktop/Swhua/ReinBits/CMakeFiles/rebuild_cache.dir
+/home/customer/Desktop/Swhua/ReinBits/CMakeFiles/cmakeRB.dir
+/home/customer/Desktop/Swhua/ReinBits/CMakeFiles/edit_cache.dir
