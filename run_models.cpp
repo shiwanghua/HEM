@@ -37,19 +37,19 @@ void run_rein(const intervalGenerator& gen) {
 	// output
 	string outputFileName = "Rein.txt";
 	string content = expID
-		+ "\tmemory=" + Util::Int2String(rein.calMemory())
-		+ "MB\tAvgMatchNum=" + Util::Double2String(Util::Average(matchSubList))
-		+ "\tAvgInsertTime=" + Util::Double2String(Util::Average(insertTimeList))
-		+ "ms\tAvgMatchTime=" + Util::Double2String(Util::Average(matchTimeList))
-		+ "ms\tAvgCmpTime=" + to_string(rein.compareTime / pubs / 1000000)
-		+ "ms\tAvgMarkTime=" + to_string(rein.markTime / pubs / 1000000)
-		+ "ms\tAvgBitTime=" + to_string(rein.bitTime / pubs / 1000000)
-		+ "ms\tnumBuk=" + Util::Int2String(rein.numBucket)
-		+ "\tnumSub=" + Util::Int2String(subs)
-		+ "\tsubSize=" + Util::Int2String(cons)
-		+ "\tnumPub=" + Util::Int2String(pubs)
-		+ "\tpubSize=" + Util::Int2String(m)
-		+ "\tattTypes=" + Util::Int2String(atts);
+		+ "\tmemory= " + Util::Int2String(rein.calMemory())
+		+ " MB\tAvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+		+ "\tAvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+		+ " ms\tAvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+		+ " ms\tAvgCmpTime= " + to_string(rein.compareTime / pubs / 1000000)
+		+ " ms\tAvgMarkTime= " + to_string(rein.markTime / pubs / 1000000)
+		+ " ms\tAvgBitTime= " + to_string(rein.bitTime / pubs / 1000000)
+		+ " ms\tnumBuk= " + Util::Int2String(rein.numBucket)
+		+ "\tnumSub= " + Util::Int2String(subs)
+		+ "\tsubSize= " + Util::Int2String(cons)
+		+ "\tnumPub= " + Util::Int2String(pubs)
+		+ "\tpubSize= " + Util::Int2String(m)
+		+ "\tattTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
 
 	//outputFileName = "ReinBucketSize.txt";
