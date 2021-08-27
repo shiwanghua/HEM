@@ -13,7 +13,11 @@ int main(int argc, char** argv)
 
 	run_rein(gen);
 	run_ReinBits(gen);
+	run_ReinBits1(gen);
 	run_ReinBits2(gen);
+	//run_ReinBits3(gen);
+	//run_ReinBits4(gen);
+	//run_ReinBits5(gen);
 
 	cout << "Done.\n";
 	system("pause");
