@@ -1,3 +1,3 @@
 ulimit -s unlimited
-chmod 777 linuxRB
+chmod 777 linuxRB cmakeRB
 ./cmakeRB
