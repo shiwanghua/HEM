@@ -285,6 +285,33 @@ ReinBits5.cpp.s:
 	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/ReinBits5.cpp.s
 .PHONY : ReinBits5.cpp.s
 
+constant.o: constant.cpp.o
+
+.PHONY : constant.o
+
+# target to build an object file
+constant.cpp.o:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/constant.cpp.o
+.PHONY : constant.cpp.o
+
+constant.i: constant.cpp.i
+
+.PHONY : constant.i
+
+# target to preprocess a source file
+constant.cpp.i:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/constant.cpp.i
+.PHONY : constant.cpp.i
+
+constant.s: constant.cpp.s
+
+.PHONY : constant.s
+
+# target to generate assembly for a file
+constant.cpp.s:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/constant.cpp.s
+.PHONY : constant.cpp.s
+
 generator.o: generator.cpp.o
 
 .PHONY : generator.o
@@ -501,6 +528,9 @@ help:
 	@echo "... ReinBits5.o"
 	@echo "... ReinBits5.i"
 	@echo "... ReinBits5.s"
+	@echo "... constant.o"
+	@echo "... constant.i"
+	@echo "... constant.s"
 	@echo "... generator.o"
 	@echo "... generator.i"
 	@echo "... generator.s"

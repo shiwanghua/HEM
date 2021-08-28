@@ -1,11 +1,11 @@
 ulimit -s unlimited
 sudo chmod 777 cmakeRB
 #./cmakeRB
-$expID=$1
+expID=$1
 
-for((bits=0;bits<=7;bits++));  #括号不能省
+for((bits=0;bits<=8;bits++));  #括号不能省
 do  
-expID=`expr $expID + 1`
 sudo ./cmakeRB $expID $bits
 echo Experiment $expID \done. #$(expr $i \* 3 + 1); 
+expID=`expr $expID + 1`
 done
