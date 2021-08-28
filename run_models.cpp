@@ -64,7 +64,7 @@ void run_rein(const intervalGenerator& gen) {
 }
 
 void run_ReinBits(const intervalGenerator& gen) {
-	ReinBits rb(valDom, subs, atts, buks, bits);
+	ReinBits rb(valDom, subs, atts, buks, be);
 
 	vector<double> insertTimeList;
 	vector<double> matchTimeList;
@@ -106,7 +106,7 @@ void run_ReinBits(const intervalGenerator& gen) {
 	// output
 	string outputFileName = "ReinBits.txt";
 	string content = expID
-		+ "\tbits= " + Util::Int2String(bits)
+		+ "\tbits= " + Util::Int2String(be)
 		+ "\tmemory= " + Util::Int2String(rb.calMemory())
 		+ " MB\tAvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 		+ "\tAvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
@@ -138,7 +138,7 @@ void run_ReinBits(const intervalGenerator& gen) {
 
 // 静静模式
 void run_ReinBits1(const intervalGenerator& gen) {
-	ReinBits1 rb1(valDom, subs, atts, buks, bits);
+	ReinBits1 rb1(valDom, subs, atts, buks, be);
 
 	vector<double> insertTimeList;
 	vector<double> matchTimeList;
@@ -180,7 +180,7 @@ void run_ReinBits1(const intervalGenerator& gen) {
 	// output
 	string outputFileName = "ReinBits1.txt";
 	string content = expID
-		+ "\tbits= " + Util::Int2String(bits)
+		+ "\tbits= " + Util::Int2String(be)
 		+ "\tmemory= " + Util::Int2String(rb1.calMemory())
 		+ " MB\tAvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 		+ "\tAvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
@@ -213,7 +213,7 @@ void run_ReinBits1(const intervalGenerator& gen) {
 
 // 静动模式
 void run_ReinBits2(const intervalGenerator& gen) {
-	ReinBits2 rb2(valDom, subs, atts, buks, bits);
+	ReinBits2 rb2(valDom, subs, atts, buks, be);
 
 	vector<double> insertTimeList;
 	vector<double> matchTimeList;
@@ -255,7 +255,7 @@ void run_ReinBits2(const intervalGenerator& gen) {
 	// output
 	string outputFileName = "ReinBits2.txt";
 	string content = expID
-		+ "\tbits= " + Util::Int2String(bits)
+		+ "\tbits= " + Util::Int2String(be)
 		+ "\tmemory= " + Util::Int2String(rb2.calMemory())
 		+ " MB\tAvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 		+ "\tAvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))

@@ -4,7 +4,7 @@
 #include<iostream>
 using namespace std;
 
-static string expID = "133";  // 记录实验id
+static string expID = "135";  // 记录实验id
 const int subs = 1000000;   // Number of subscriptions.
 const int pubs = 500;       // Number of publications.
 const int atts = 20;        // Total number of attributes, i.e. dimensions.
@@ -20,7 +20,7 @@ const double width = 0.3;   // Width of a predicate.
 const int buks = 1000;      // Number of buckets.
 
 // ReinBits：Rein2
-static int bits = 4;         // 每个维度上 2 * 2^bits个bits数组, -1表示用桶数做为bits数组组数
+static int be = 4;         // 每个维度上 2 * 2^bits个bits数组, -1表示用桶数做为bits数组组数
 
 // Tama
 const int level = 11;

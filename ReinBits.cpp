@@ -3,7 +3,7 @@
 ReinBits::ReinBits(int valDom, int numSubscription, int numDim, int numBuck, int b) :maxValue(valDom), numSub(numSubscription), numDimension(numDim) {
 	buckStep = (valDom - 1) / numBuck + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
-	cout << "ReinBits: bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
+	cout <<"ExpID = "<<expID<< ". ReinBits: bit exponent = "<< be<<", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
 	
 	//bucketSub.resize(numBucket);
 	data[0].resize(numDimension, vector<vector<Combo>>(numBucket));

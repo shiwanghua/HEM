@@ -3,8 +3,7 @@
 ReinBits1::ReinBits1(int valDom, int numSubscription, int numDim, int numBuck, int b) :maxValue(valDom), numSub(numSubscription), numDimension(numDim) {
 	buckStep = (valDom - 1) / numBuck + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
-	cout << "ReinBits1: bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
-
+        cout <<"ExpID = "<<expID<< ". ReinBits1: bit exponent = "<< be<<", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
 	// 如果桶数会变化，以下代码也要放入init函数里
 	//bucketSub.resize(numBucket);
 	data[0].resize(numDimension, vector<vector<Combo>>(numBucket));

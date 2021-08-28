@@ -6,10 +6,11 @@ int main(int argc, char** argv)
 	//cin >> subs >> pubs >> atts >> cons>> buks >> m >> attDis >> valDis >> valDom;
 	//cin >> alpha >> width;
 	//m = atts; // Note that Rein requires m == atts.
-
+	cout<<"argc="<<argc<<endl;
+	cout<<argv[0]<<"  "<<argv[1]<<"  "<<argv[2]<<endl;
 	if (argc == 3) { // 输入一个bits指数
 		expID=to_string(atoi(argv[1]));
-		bits = atoi(argv[2]);
+		be = atoi(argv[2]);
 	}
 	intervalGenerator gen(subs, pubs, atts, cons, m, attDis, valDis, valDom, alpha, width);
 	gen.GenSubList();
