@@ -1,18 +1,20 @@
 #include "ReinBits1.h"
 
-ReinBits1::ReinBits1(int valDom, int numSubscription, int numDim, int numBuck, int b) :maxValue(valDom), numSub(numSubscription), numDimension(numDim) {
-	buckStep = (valDom - 1) / numBuck + 1;
+ReinBits1::ReinBits1(){
+	numSub = subs;
+	numDimension = atts;
+	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
-        cout <<"ExpID = "<<expID<< ". ReinBits1: bit exponent = "<< be<<", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
+    cout <<"ExpID = "<<expID<< ". ReinBits1: bit exponent = "<< be<<", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
 	// 如果桶数会变化，以下代码也要放入init函数里
 	//bucketSub.resize(numBucket);
 	data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
 	data[1].resize(numDimension, vector<vector<Combo>>(numBucket));
 
-	if (b == -1)
+	if (be == -1)
 		numBits = numBucket;
 	else
-		numBits = pow(2, b);  // 每个维度上lowValue对应的bits数组个数
+		numBits = pow(2, be);  // 每个维度上lowValue对应的bits数组个数
 	if (numBits > 1) {
 		fullBits.resize(numDimension);  // 维度总数永远不变，所以只需要resize一次
 		bitStep = (numBucket + numBits - 1) / numBits;  // 每过这么远新设一个bits
@@ -317,12 +319,12 @@ int ReinBits1::calMemory() {
 }
 
 void ReinBits1::printRelation(int dimension_i) {
-	cout << "\n\nReinBitsMap\n\n    LowBucket   ----------------\n";
+	cout << "\n\nReinBits1Map    LowBucket   ----------------\n";
 	_for(i, 0, numBucket) {
 		cout << "LBkt" << i << ": bID=" << bitsID[0][i] << ", eBkt=" << endBucket[0][i] << ", dRvs=" << doubleReverse[0][i] << "; ";
 		if (i % 5 == 0 && i > 0)cout << "\n";
 	}
-	cout << "\n\n    HighBucket   ----------------\n";
+	cout << "\n\nReinBits1Map    HighBucket   ----------------\n";
 	_for(i, 0, numBucket) {
 		cout << "HBkt" << i << ": bID=" << bitsID[1][i] << ", eBkt=" << endBucket[1][i] << ", dRvs=" << doubleReverse[1][i] << "; ";
 		if (i % 5 == 0 && i > 0)cout << "\n";

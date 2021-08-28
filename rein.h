@@ -2,6 +2,7 @@
 #define _REIN_H
 #include <cstring>
 #include "util.h"
+#include "constant.h"
 #include <algorithm>
 #include <unordered_set>
 
@@ -29,7 +30,7 @@ public:
 	Rein(int valDom, int numSubscription, int numDim, int numBuck) :numSub(numSubscription), numDimension(numDim) {
 		buckStep = (valDom - 1) / numBuck + 1;
 		numBucket = (valDom - 1) / buckStep + 1;
-		cout << "Rein: bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
+		cout << "ExpID = " << expID << ". Rein: bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
 		bucketSub.resize(numBucket);
 		data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
 		data[1].resize(numDimension, vector<vector<Combo>>(numBucket));

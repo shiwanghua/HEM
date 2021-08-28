@@ -4,24 +4,25 @@
 #include<iostream>
 using namespace std;
 
-static string expID = "135";  // 记录实验id
+extern string expID;       // 记录实验id
+extern bool display;       // 是否打印映射关系
 const int subs = 1000000;   // Number of subscriptions.
-const int pubs = 500;       // Number of publications.
-const int atts = 20;        // Total number of attributes, i.e. dimensions.
-const int cons = 10;        // Number of constraints(predicates) in one sub.
-const int m = 20;           // Number of constraints in one pub.
-const int attDis = 0;       // The distribution of attributes in subs and pubs. 0:uniform distribution | 1:Zipf distribution
-const int valDis = 0;       // The distribution of values in subs and pubs. 0:uniform
-const int valDom = 1000000; // Cardinality of values.
-const double alpha = 0;   // Parameter for Zipf distribution.
-const double width = 0.3;   // Width of a predicate.
+extern const int pubs;       // Number of publications.
+extern const int atts;        // Total number of attributes, i.e. dimensions.
+extern const int cons;        // Number of constraints(predicates) in one sub.
+extern const int m;           // Number of constraints in one pub.
+extern const int attDis;       // The distribution of attributes in subs and pubs. 0:uniform distribution | 1:Zipf distribution
+extern const int valDis;       // The distribution of values in subs and pubs. 0:uniform
+extern const int valDom; // Cardinality of values.
+extern const double alpha;     // Parameter for Zipf distribution.
+extern const double width;   // Width of a predicate.
 
 // Rein
-const int buks = 1000;      // Number of buckets.
+extern const int buks;      // Number of buckets.
 
 // ReinBits：Rein2
-static int be = 4;         // 每个维度上 2 * 2^bits个bits数组, -1表示用桶数做为bits数组组数
+extern int be;         // 每个维度上 2 * 2^bits个bits数组, -1表示用桶数做为bits数组组数
 
 // Tama
-const int level = 11;
+extern const int level;
 #endif

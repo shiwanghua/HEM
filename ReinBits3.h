@@ -18,7 +18,7 @@
 class ReinBits3
 {
 private:
-	int maxValue, numSub, numDimension, buckStep, numBits, bitStep; // 让前面的bits数组差距都是bitStep，多余的都留给最后一个bits数组
+	int numSub, numDimension, buckStep, numBits, bitStep; // 让前面的bits数组差距都是bitStep，多余的都留给最后一个bits数组
 	vector<vector<vector<Combo>>> data[2];  // 0:left parenthesis, 1:right parenthesis
 	vector<vector<bitset<subs>>> bits[2];   // 需要提前知道订阅个数...
 	vector<bitset<subs>> fullBits;          // 全覆盖的bits单独存，因为只要存一次
@@ -32,7 +32,7 @@ public:
 	double bitTime = 0.0;                   // 遍历bits数组得到结果所需的时间
 	//vector<unordered_set<int>> bucketSub;   // id相同的桶存储的不同订阅个数的和
 
-	ReinBits3(int valDom, int numSubscription, int numDim, int numBuck, int b);
+	ReinBits3();
 	~ReinBits3();
 
 	//void insert(Sub sub);

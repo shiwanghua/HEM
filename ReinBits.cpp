@@ -1,7 +1,9 @@
 #include "ReinBits.h"
 
-ReinBits::ReinBits(int valDom, int numSubscription, int numDim, int numBuck, int b) :maxValue(valDom), numSub(numSubscription), numDimension(numDim) {
-	buckStep = (valDom - 1) / numBuck + 1;
+ReinBits::ReinBits(){
+	numSub = subs;
+	numDimension = atts;
+	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
 	cout <<"ExpID = "<<expID<< ". ReinBits: bit exponent = "<< be<<", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
 	
@@ -9,10 +11,10 @@ ReinBits::ReinBits(int valDom, int numSubscription, int numDim, int numBuck, int
 	data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
 	data[1].resize(numDimension, vector<vector<Combo>>(numBucket));
 
-	if (b == -1)
+	if (be == -1)
 		numBits = numBucket;
 	else
-		numBits = pow(2, b);  // 每个维度上lowValue对应的bits数组个数
+		numBits = pow(2, be);  // 每个维度上lowValue对应的bits数组个数
 	if (numBits > 1) {
 		fullBits.resize(numDimension);  // 维度总数永远不变，所以只需要resize一次
 		bitStep = (numBucket + numBits - 1) / numBits;  // 每过这么远新设一个bits

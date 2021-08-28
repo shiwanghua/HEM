@@ -64,7 +64,7 @@ void run_rein(const intervalGenerator& gen) {
 }
 
 void run_ReinBits(const intervalGenerator& gen) {
-	ReinBits rb(valDom, subs, atts, buks, be);
+	ReinBits rb;
 
 	vector<double> insertTimeList;
 	vector<double> matchTimeList;
@@ -102,7 +102,8 @@ void run_ReinBits(const intervalGenerator& gen) {
 			cout << "ReinBits Event" << i << " is matched.\n";
 	}
 
-	rb.printRelation();
+	if (display)
+		rb.printRelation();
 	// output
 	string outputFileName = "ReinBits.txt";
 	string content = expID
@@ -138,7 +139,7 @@ void run_ReinBits(const intervalGenerator& gen) {
 
 // 静静模式
 void run_ReinBits1(const intervalGenerator& gen) {
-	ReinBits1 rb1(valDom, subs, atts, buks, be);
+	ReinBits1 rb1;
 
 	vector<double> insertTimeList;
 	vector<double> matchTimeList;
@@ -175,8 +176,8 @@ void run_ReinBits1(const intervalGenerator& gen) {
 		if (i % 100 == 0)
 			cout << "ReinBits1 Event" << i << " is matched.\n";
 	}
-
-	rb1.printRelation(0);
+	if(display)
+		rb1.printRelation(0);
 	// output
 	string outputFileName = "ReinBits1.txt";
 	string content = expID
@@ -213,7 +214,7 @@ void run_ReinBits1(const intervalGenerator& gen) {
 
 // 静动模式
 void run_ReinBits2(const intervalGenerator& gen) {
-	ReinBits2 rb2(valDom, subs, atts, buks, be);
+	ReinBits2 rb2;
 
 	vector<double> insertTimeList;
 	vector<double> matchTimeList;
@@ -251,7 +252,8 @@ void run_ReinBits2(const intervalGenerator& gen) {
 			cout << "ReinBits2 Event" << i << " is matched.\n";
 	}
 
-	rb2.printRelation(0);
+	if (display)
+	    rb2.printRelation(0);
 	// output
 	string outputFileName = "ReinBits2.txt";
 	string content = expID

@@ -1,18 +1,21 @@
 #include "ReinBits2.h"
 
-ReinBits2::ReinBits2(int valDom, int numSubscription, int numDim, int numBuck, int b) :maxValue(valDom), numSub(numSubscription), numDimension(numDim) {
-	buckStep = (valDom - 1) / numBuck + 1;
+ReinBits2::ReinBits2(){
+	numSub = subs;
+	numDimension = atts;
+	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
-        cout <<"ExpID = "<<expID<< ". ReinBits2: bit exponent = "<< be<<", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
-	// È  ç¹ûÍ°Êı»á±ä»¯£¬ÒÔÏÂ´úÂëÒ²Òª·ÅÈëinitº¯ÊıÀï
+	cout << "ExpID = " << expID << ". ReinBits2: bit exponent = " << be << ", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
+
+	// Èç¹ûÍ°Êı»á±ä»¯£¬ÒÔÏÂ´úÂëÒ²Òª·ÅÈëinitº¯ÊıÀï
 	//bucketSub.resize(numBucket);
 	data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
 	data[1].resize(numDimension, vector<vector<Combo>>(numBucket));
 
-	if (b == -1)
+	if (be == -1)
 		numBits = numBucket;
 	else
-		numBits = pow(2, b);  // Ã¿¸öÎ¬¶ÈÉÏlowValue¶ÔÓ¦µÄbitsÊı×é¸öÊı
+		numBits = pow(2, be);  // Ã¿¸öÎ¬¶ÈÉÏlowValue¶ÔÓ¦µÄbitsÊı×é¸öÊı
 	if (numBits > 1) {
 		fullBits.resize(numDimension);  // Î¬¶È×ÜÊıÓÀÔ¶²»±ä£¬ËùÒÔÖ»ĞèÒªresizeÒ»´Î
 		bitStep = (numBucket + numBits - 1) / numBits;  // Ã¿¹ıÕâÃ´Ô¶ĞÂÉèÒ»¸öbits
@@ -461,7 +464,7 @@ int ReinBits2::calMemory() {
 }
 
 void ReinBits2::printRelation(int dimension_i) {
-	cout << "\n\nReinBitsMap\n";
+	cout << "\n\nReinBits2Map\n";
 	if (dimension_i == -1)
 		_for(i, 0, numDimension) {
 		cout << "\nDimension " << i << "   ----------------\n";
