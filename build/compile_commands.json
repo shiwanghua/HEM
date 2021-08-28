@@ -1,0 +1,72 @@
+[
+{
+  "directory": "D:/codes/c++/Rein-Bits/Rein-Bits/build",
+  "command": "D:\\VSIDE\\VC\\Tools\\MSVC\\14.30.30401\\bin\\Hostx86\\x86\\cl.exe  /nologo /TP /DWIN32 /D_WINDOWS /W3 /GR /EHsc -O3 -std=c++0x /MDd /Zi /Ob0 /Od /RTC1 /FoCMakeFiles\\cmakeRB.dir\\ReinBits.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\ReinBits.cpp",
+  "file": "D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\ReinBits.cpp"
+},
+{
+  "directory": "D:/codes/c++/Rein-Bits/Rein-Bits/build",
+  "command": "D:\\VSIDE\\VC\\Tools\\MSVC\\14.30.30401\\bin\\Hostx86\\x86\\cl.exe  /nologo /TP /DWIN32 /D_WINDOWS /W3 /GR /EHsc -O3 -std=c++0x /MDd /Zi /Ob0 /Od /RTC1 /FoCMakeFiles\\cmakeRB.dir\\ReinBits1.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\ReinBits1.cpp",
+  "file": "D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\ReinBits1.cpp"
+},
+{
+  "directory": "D:/codes/c++/Rein-Bits/Rein-Bits/build",
+  "command": "D:\\VSIDE\\VC\\Tools\\MSVC\\14.30.30401\\bin\\Hostx86\\x86\\cl.exe  /nologo /TP /DWIN32 /D_WINDOWS /W3 /GR /EHsc -O3 -std=c++0x /MDd /Zi /Ob0 /Od /RTC1 /FoCMakeFiles\\cmakeRB.dir\\ReinBits2.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\ReinBits2.cpp",
+  "file": "D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\ReinBits2.cpp"
+},
+{
+  "directory": "D:/codes/c++/Rein-Bits/Rein-Bits/build",
+  "command": "D:\\VSIDE\\VC\\Tools\\MSVC\\14.30.30401\\bin\\Hostx86\\x86\\cl.exe  /nologo /TP /DWIN32 /D_WINDOWS /W3 /GR /EHsc -O3 -std=c++0x /MDd /Zi /Ob0 /Od /RTC1 /FoCMakeFiles\\cmakeRB.dir\\ReinBits3.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\ReinBits3.cpp",
+  "file": "D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\ReinBits3.cpp"
+},
+{
+  "directory": "D:/codes/c++/Rein-Bits/Rein-Bits/build",
+  "command": "D:\\VSIDE\\VC\\Tools\\MSVC\\14.30.30401\\bin\\Hostx86\\x86\\cl.exe  /nologo /TP /DWIN32 /D_WINDOWS /W3 /GR /EHsc -O3 -std=c++0x /MDd /Zi /Ob0 /Od /RTC1 /FoCMakeFiles\\cmakeRB.dir\\ReinBits4.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\ReinBits4.cpp",
+  "file": "D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\ReinBits4.cpp"
+},
+{
+  "directory": "D:/codes/c++/Rein-Bits/Rein-Bits/build",
+  "command": "D:\\VSIDE\\VC\\Tools\\MSVC\\14.30.30401\\bin\\Hostx86\\x86\\cl.exe  /nologo /TP /DWIN32 /D_WINDOWS /W3 /GR /EHsc -O3 -std=c++0x /MDd /Zi /Ob0 /Od /RTC1 /FoCMakeFiles\\cmakeRB.dir\\ReinBits5.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\ReinBits5.cpp",
+  "file": "D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\ReinBits5.cpp"
+},
+{
+  "directory": "D:/codes/c++/Rein-Bits/Rein-Bits/build",
+  "command": "D:\\VSIDE\\VC\\Tools\\MSVC\\14.30.30401\\bin\\Hostx86\\x86\\cl.exe  /nologo /TP /DWIN32 /D_WINDOWS /W3 /GR /EHsc -O3 -std=c++0x /MDd /Zi /Ob0 /Od /RTC1 /FoCMakeFiles\\cmakeRB.dir\\constant.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\constant.cpp",
+  "file": "D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\constant.cpp"
+},
+{
+  "directory": "D:/codes/c++/Rein-Bits/Rein-Bits/build",
+  "command": "D:\\VSIDE\\VC\\Tools\\MSVC\\14.30.30401\\bin\\Hostx86\\x86\\cl.exe  /nologo /TP /DWIN32 /D_WINDOWS /W3 /GR /EHsc -O3 -std=c++0x /MDd /Zi /Ob0 /Od /RTC1 /FoCMakeFiles\\cmakeRB.dir\\generator.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\generator.cpp",
+  "file": "D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\generator.cpp"
+},
+{
+  "directory": "D:/codes/c++/Rein-Bits/Rein-Bits/build",
+  "command": "D:\\VSIDE\\VC\\Tools\\MSVC\\14.30.30401\\bin\\Hostx86\\x86\\cl.exe  /nologo /TP /DWIN32 /D_WINDOWS /W3 /GR /EHsc -O3 -std=c++0x /MDd /Zi /Ob0 /Od /RTC1 /FoCMakeFiles\\cmakeRB.dir\\main.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\main.cpp",
+  "file": "D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\main.cpp"
+},
+{
+  "directory": "D:/codes/c++/Rein-Bits/Rein-Bits/build",
+  "command": "D:\\VSIDE\\VC\\Tools\\MSVC\\14.30.30401\\bin\\Hostx86\\x86\\cl.exe  /nologo /TP /DWIN32 /D_WINDOWS /W3 /GR /EHsc -O3 -std=c++0x /MDd /Zi /Ob0 /Od /RTC1 /FoCMakeFiles\\cmakeRB.dir\\printer.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\printer.cpp",
+  "file": "D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\printer.cpp"
+},
+{
+  "directory": "D:/codes/c++/Rein-Bits/Rein-Bits/build",
+  "command": "D:\\VSIDE\\VC\\Tools\\MSVC\\14.30.30401\\bin\\Hostx86\\x86\\cl.exe  /nologo /TP /DWIN32 /D_WINDOWS /W3 /GR /EHsc -O3 -std=c++0x /MDd /Zi /Ob0 /Od /RTC1 /FoCMakeFiles\\cmakeRB.dir\\rein.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\rein.cpp",
+  "file": "D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\rein.cpp"
+},
+{
+  "directory": "D:/codes/c++/Rein-Bits/Rein-Bits/build",
+  "command": "D:\\VSIDE\\VC\\Tools\\MSVC\\14.30.30401\\bin\\Hostx86\\x86\\cl.exe  /nologo /TP /DWIN32 /D_WINDOWS /W3 /GR /EHsc -O3 -std=c++0x /MDd /Zi /Ob0 /Od /RTC1 /FoCMakeFiles\\cmakeRB.dir\\run_models.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\run_models.cpp",
+  "file": "D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\run_models.cpp"
+},
+{
+  "directory": "D:/codes/c++/Rein-Bits/Rein-Bits/build",
+  "command": "D:\\VSIDE\\VC\\Tools\\MSVC\\14.30.30401\\bin\\Hostx86\\x86\\cl.exe  /nologo /TP /DWIN32 /D_WINDOWS /W3 /GR /EHsc -O3 -std=c++0x /MDd /Zi /Ob0 /Od /RTC1 /FoCMakeFiles\\cmakeRB.dir\\test.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\test.cpp",
+  "file": "D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\test.cpp"
+},
+{
+  "directory": "D:/codes/c++/Rein-Bits/Rein-Bits/build",
+  "command": "D:\\VSIDE\\VC\\Tools\\MSVC\\14.30.30401\\bin\\Hostx86\\x86\\cl.exe  /nologo /TP /DWIN32 /D_WINDOWS /W3 /GR /EHsc -O3 -std=c++0x /MDd /Zi /Ob0 /Od /RTC1 /FoCMakeFiles\\cmakeRB.dir\\util.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\util.cpp",
+  "file": "D:\\codes\\c++\\Rein-Bits\\Rein-Bits\\util.cpp"
+}
+]
