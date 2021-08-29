@@ -10,7 +10,7 @@ const int subs = 1000000;   // Number of subscriptions.
 extern const int pubs;       // Number of publications.
 extern const int atts;        // Total number of attributes, i.e. dimensions.
 extern const int cons;        // Number of constraints(predicates) in one sub.
-extern const int m;           // Number of constraints in one pub.
+extern int m;           // Number of constraints in one pub.
 extern const int attDis;       // The distribution of attributes in subs and pubs. 0:uniform distribution | 1:Zipf distribution
 extern const int valDis;       // The distribution of values in subs and pubs. 0:uniform
 extern const int valDom; // Cardinality of values.
