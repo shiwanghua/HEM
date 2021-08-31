@@ -123,167 +123,167 @@ cmakeRB/fast:
 	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/build
 .PHONY : cmakeRB/fast
 
-ReinBits.o: ReinBits.cpp.o
+BIOP.o: BIOP.cpp.o
 
-.PHONY : ReinBits.o
-
-# target to build an object file
-ReinBits.cpp.o:
-	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/ReinBits.cpp.o
-.PHONY : ReinBits.cpp.o
-
-ReinBits.i: ReinBits.cpp.i
-
-.PHONY : ReinBits.i
-
-# target to preprocess a source file
-ReinBits.cpp.i:
-	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/ReinBits.cpp.i
-.PHONY : ReinBits.cpp.i
-
-ReinBits.s: ReinBits.cpp.s
-
-.PHONY : ReinBits.s
-
-# target to generate assembly for a file
-ReinBits.cpp.s:
-	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/ReinBits.cpp.s
-.PHONY : ReinBits.cpp.s
-
-ReinBits1.o: ReinBits1.cpp.o
-
-.PHONY : ReinBits1.o
+.PHONY : BIOP.o
 
 # target to build an object file
-ReinBits1.cpp.o:
-	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/ReinBits1.cpp.o
-.PHONY : ReinBits1.cpp.o
+BIOP.cpp.o:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOP.cpp.o
+.PHONY : BIOP.cpp.o
 
-ReinBits1.i: ReinBits1.cpp.i
+BIOP.i: BIOP.cpp.i
 
-.PHONY : ReinBits1.i
+.PHONY : BIOP.i
 
 # target to preprocess a source file
-ReinBits1.cpp.i:
-	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/ReinBits1.cpp.i
-.PHONY : ReinBits1.cpp.i
+BIOP.cpp.i:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOP.cpp.i
+.PHONY : BIOP.cpp.i
 
-ReinBits1.s: ReinBits1.cpp.s
+BIOP.s: BIOP.cpp.s
 
-.PHONY : ReinBits1.s
+.PHONY : BIOP.s
 
 # target to generate assembly for a file
-ReinBits1.cpp.s:
-	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/ReinBits1.cpp.s
-.PHONY : ReinBits1.cpp.s
+BIOP.cpp.s:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOP.cpp.s
+.PHONY : BIOP.cpp.s
 
-ReinBits2.o: ReinBits2.cpp.o
+BIOP1.o: BIOP1.cpp.o
 
-.PHONY : ReinBits2.o
+.PHONY : BIOP1.o
 
 # target to build an object file
-ReinBits2.cpp.o:
-	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/ReinBits2.cpp.o
-.PHONY : ReinBits2.cpp.o
+BIOP1.cpp.o:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOP1.cpp.o
+.PHONY : BIOP1.cpp.o
 
-ReinBits2.i: ReinBits2.cpp.i
+BIOP1.i: BIOP1.cpp.i
 
-.PHONY : ReinBits2.i
+.PHONY : BIOP1.i
 
 # target to preprocess a source file
-ReinBits2.cpp.i:
-	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/ReinBits2.cpp.i
-.PHONY : ReinBits2.cpp.i
+BIOP1.cpp.i:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOP1.cpp.i
+.PHONY : BIOP1.cpp.i
 
-ReinBits2.s: ReinBits2.cpp.s
+BIOP1.s: BIOP1.cpp.s
 
-.PHONY : ReinBits2.s
+.PHONY : BIOP1.s
 
 # target to generate assembly for a file
-ReinBits2.cpp.s:
-	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/ReinBits2.cpp.s
-.PHONY : ReinBits2.cpp.s
+BIOP1.cpp.s:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOP1.cpp.s
+.PHONY : BIOP1.cpp.s
 
-ReinBits3.o: ReinBits3.cpp.o
+BIOP2.o: BIOP2.cpp.o
 
-.PHONY : ReinBits3.o
+.PHONY : BIOP2.o
 
 # target to build an object file
-ReinBits3.cpp.o:
-	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/ReinBits3.cpp.o
-.PHONY : ReinBits3.cpp.o
+BIOP2.cpp.o:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOP2.cpp.o
+.PHONY : BIOP2.cpp.o
 
-ReinBits3.i: ReinBits3.cpp.i
+BIOP2.i: BIOP2.cpp.i
 
-.PHONY : ReinBits3.i
+.PHONY : BIOP2.i
 
 # target to preprocess a source file
-ReinBits3.cpp.i:
-	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/ReinBits3.cpp.i
-.PHONY : ReinBits3.cpp.i
+BIOP2.cpp.i:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOP2.cpp.i
+.PHONY : BIOP2.cpp.i
 
-ReinBits3.s: ReinBits3.cpp.s
+BIOP2.s: BIOP2.cpp.s
 
-.PHONY : ReinBits3.s
+.PHONY : BIOP2.s
 
 # target to generate assembly for a file
-ReinBits3.cpp.s:
-	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/ReinBits3.cpp.s
-.PHONY : ReinBits3.cpp.s
+BIOP2.cpp.s:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOP2.cpp.s
+.PHONY : BIOP2.cpp.s
 
-ReinBits4.o: ReinBits4.cpp.o
+BIOP3.o: BIOP3.cpp.o
 
-.PHONY : ReinBits4.o
+.PHONY : BIOP3.o
 
 # target to build an object file
-ReinBits4.cpp.o:
-	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/ReinBits4.cpp.o
-.PHONY : ReinBits4.cpp.o
+BIOP3.cpp.o:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOP3.cpp.o
+.PHONY : BIOP3.cpp.o
 
-ReinBits4.i: ReinBits4.cpp.i
+BIOP3.i: BIOP3.cpp.i
 
-.PHONY : ReinBits4.i
+.PHONY : BIOP3.i
 
 # target to preprocess a source file
-ReinBits4.cpp.i:
-	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/ReinBits4.cpp.i
-.PHONY : ReinBits4.cpp.i
+BIOP3.cpp.i:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOP3.cpp.i
+.PHONY : BIOP3.cpp.i
 
-ReinBits4.s: ReinBits4.cpp.s
+BIOP3.s: BIOP3.cpp.s
 
-.PHONY : ReinBits4.s
+.PHONY : BIOP3.s
 
 # target to generate assembly for a file
-ReinBits4.cpp.s:
-	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/ReinBits4.cpp.s
-.PHONY : ReinBits4.cpp.s
+BIOP3.cpp.s:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOP3.cpp.s
+.PHONY : BIOP3.cpp.s
 
-ReinBits5.o: ReinBits5.cpp.o
+BIOP4.o: BIOP4.cpp.o
 
-.PHONY : ReinBits5.o
+.PHONY : BIOP4.o
 
 # target to build an object file
-ReinBits5.cpp.o:
-	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/ReinBits5.cpp.o
-.PHONY : ReinBits5.cpp.o
+BIOP4.cpp.o:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOP4.cpp.o
+.PHONY : BIOP4.cpp.o
 
-ReinBits5.i: ReinBits5.cpp.i
+BIOP4.i: BIOP4.cpp.i
 
-.PHONY : ReinBits5.i
+.PHONY : BIOP4.i
 
 # target to preprocess a source file
-ReinBits5.cpp.i:
-	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/ReinBits5.cpp.i
-.PHONY : ReinBits5.cpp.i
+BIOP4.cpp.i:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOP4.cpp.i
+.PHONY : BIOP4.cpp.i
 
-ReinBits5.s: ReinBits5.cpp.s
+BIOP4.s: BIOP4.cpp.s
 
-.PHONY : ReinBits5.s
+.PHONY : BIOP4.s
 
 # target to generate assembly for a file
-ReinBits5.cpp.s:
-	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/ReinBits5.cpp.s
-.PHONY : ReinBits5.cpp.s
+BIOP4.cpp.s:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOP4.cpp.s
+.PHONY : BIOP4.cpp.s
+
+BIOP5.o: BIOP5.cpp.o
+
+.PHONY : BIOP5.o
+
+# target to build an object file
+BIOP5.cpp.o:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOP5.cpp.o
+.PHONY : BIOP5.cpp.o
+
+BIOP5.i: BIOP5.cpp.i
+
+.PHONY : BIOP5.i
+
+# target to preprocess a source file
+BIOP5.cpp.i:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOP5.cpp.i
+.PHONY : BIOP5.cpp.i
+
+BIOP5.s: BIOP5.cpp.s
+
+.PHONY : BIOP5.s
+
+# target to generate assembly for a file
+BIOP5.cpp.s:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOP5.cpp.s
+.PHONY : BIOP5.cpp.s
 
 constant.o: constant.cpp.o
 
@@ -510,24 +510,24 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... cmakeRB"
 	@echo "... edit_cache"
-	@echo "... ReinBits.o"
-	@echo "... ReinBits.i"
-	@echo "... ReinBits.s"
-	@echo "... ReinBits1.o"
-	@echo "... ReinBits1.i"
-	@echo "... ReinBits1.s"
-	@echo "... ReinBits2.o"
-	@echo "... ReinBits2.i"
-	@echo "... ReinBits2.s"
-	@echo "... ReinBits3.o"
-	@echo "... ReinBits3.i"
-	@echo "... ReinBits3.s"
-	@echo "... ReinBits4.o"
-	@echo "... ReinBits4.i"
-	@echo "... ReinBits4.s"
-	@echo "... ReinBits5.o"
-	@echo "... ReinBits5.i"
-	@echo "... ReinBits5.s"
+	@echo "... BIOP.o"
+	@echo "... BIOP.i"
+	@echo "... BIOP.s"
+	@echo "... BIOP1.o"
+	@echo "... BIOP1.i"
+	@echo "... BIOP1.s"
+	@echo "... BIOP2.o"
+	@echo "... BIOP2.i"
+	@echo "... BIOP2.s"
+	@echo "... BIOP3.o"
+	@echo "... BIOP3.i"
+	@echo "... BIOP3.s"
+	@echo "... BIOP4.o"
+	@echo "... BIOP4.i"
+	@echo "... BIOP4.s"
+	@echo "... BIOP5.o"
+	@echo "... BIOP5.i"
+	@echo "... BIOP5.s"
 	@echo "... constant.o"
 	@echo "... constant.i"
 	@echo "... constant.s"
