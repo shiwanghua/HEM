@@ -63,8 +63,8 @@ void run_rein(const intervalGenerator& gen) {
 	//Util::WriteData(outputFileName.c_str(), content);
 }
 
-void run_ReinBits(const intervalGenerator& gen) {
-	ReinBits rb;
+void run_BIOP(const intervalGenerator& gen) {
+	BIOP rb;
 
 	vector<double> insertTimeList;
 	vector<double> matchTimeList;
@@ -80,7 +80,7 @@ void run_ReinBits(const intervalGenerator& gen) {
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
 	}
-	cout << "ReinBits Insertion Finish.\n";
+	cout << "BIOP Insertion Finish.\n";
 
 	double initTime;
 	Timer initStart;
@@ -99,13 +99,13 @@ void run_ReinBits(const intervalGenerator& gen) {
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % 100 == 0)
-			cout << "ReinBits Event" << i << " is matched.\n";
+			cout << "BIOP Event" << i << " is matched.\n";
 	}
 
 	if (display)
 		rb.printRelation();
 	// output
-	string outputFileName = "ReinBits.txt";
+	string outputFileName = "BIOP.txt";
 	string content = expID
 		+ " bits= " + Util::Int2String(be)
 		+ " memory= " + Util::Int2String(rb.calMemory())
@@ -126,7 +126,7 @@ void run_ReinBits(const intervalGenerator& gen) {
 		+ " attTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
 
-	//outputFileName = "ReinBitsBucketSize.txt";
+	//outputFileName = "BIOPBucketSize.txt";
 	//rb.calBucketSize();
 	//content = expID + " numBucket= " + Util::Int2String(rb.numBucket)
 	//	//+ " sumBukSetSize= " + to_string(accumulate(rein.bucketSub.begin(), rein.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
@@ -138,8 +138,8 @@ void run_ReinBits(const intervalGenerator& gen) {
 }
 
 // 静静模式
-void run_ReinBits1(const intervalGenerator& gen) {
-	ReinBits1 rb1;
+void run_BIOP1(const intervalGenerator& gen) {
+	BIOP1 rb1;
 
 	vector<double> insertTimeList;
 	vector<double> matchTimeList;
@@ -155,7 +155,7 @@ void run_ReinBits1(const intervalGenerator& gen) {
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
 	}
-	cout << "ReinBits1 Insertion Finishes.\n";
+	cout << "BIOP1 Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
@@ -174,12 +174,12 @@ void run_ReinBits1(const intervalGenerator& gen) {
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % 100 == 0)
-			cout << "ReinBits1 Event" << i << " is matched.\n";
+			cout << "BIOP1 Event" << i << " is matched.\n";
 	}
 	if(display)
 		rb1.printRelation(0);
 	// output
-	string outputFileName = "ReinBits1.txt";
+	string outputFileName = "BIOP1.txt";
 	string content = expID
 		+ " bits= " + Util::Int2String(be)
 		+ " memory= " + Util::Int2String(rb1.calMemory())
@@ -200,7 +200,7 @@ void run_ReinBits1(const intervalGenerator& gen) {
 		+ " attTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
 
-	//outputFileName = "ReinBits1BucketSize.txt";
+	//outputFileName = "BIOP1BucketSize.txt";
 	//rb.calBucketSize();
 	//content = expID + " numBucket= " + Util::Int2String(rb.numBucket)
 	//	//+ " sumBukSetSize= " + to_string(accumulate(rein.bucketSub.begin(), rein.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
@@ -213,8 +213,8 @@ void run_ReinBits1(const intervalGenerator& gen) {
 
 
 // 静动模式
-void run_ReinBits2(const intervalGenerator& gen) {
-	ReinBits2 rb2;
+void run_BIOP2(const intervalGenerator& gen) {
+	BIOP2 rb2;
 
 	vector<double> insertTimeList;
 	vector<double> matchTimeList;
@@ -230,7 +230,7 @@ void run_ReinBits2(const intervalGenerator& gen) {
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
 	}
-	cout << "ReinBits2 Insertion Finish.\n";
+	cout << "BIOP2 Insertion Finish.\n";
 
 	double initTime;
 	Timer initStart;
@@ -249,13 +249,13 @@ void run_ReinBits2(const intervalGenerator& gen) {
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % 100 == 0)
-			cout << "ReinBits2 Event" << i << " is matched.\n";
+			cout << "BIOP2 Event" << i << " is matched.\n";
 	}
 
 	if (display)
 	    rb2.printRelation(0);
 	// output
-	string outputFileName = "ReinBits2.txt";
+	string outputFileName = "BIOP2.txt";
 	string content = expID
 		+ " bits= " + Util::Int2String(be)
 		+ " memory= " + Util::Int2String(rb2.calMemory())
@@ -276,7 +276,7 @@ void run_ReinBits2(const intervalGenerator& gen) {
 		+ " attTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
 
-	//outputFileName = "ReinBits2BucketSize.txt";
+	//outputFileName = "BIOP2BucketSize.txt";
 	//rb.calBucketSize();
 	//content = expID + " numBucket= " + Util::Int2String(rb.numBucket)
 	//	//+ " sumBukSetSize= " + to_string(accumulate(rein.bucketSub.begin(), rein.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
@@ -287,14 +287,14 @@ void run_ReinBits2(const intervalGenerator& gen) {
 	//Util::WriteData(outputFileName.c_str(), content);
 }
 
-void run_ReinBits3(const intervalGenerator& gen) {
+void run_BIOP3(const intervalGenerator& gen) {
 
 }
 
-void run_ReinBits4(const intervalGenerator& gen) {
+void run_BIOP4(const intervalGenerator& gen) {
 
 }
 
-void run_ReinBits5(const intervalGenerator& gen) {
+void run_BIOP5(const intervalGenerator& gen) {
 
 }

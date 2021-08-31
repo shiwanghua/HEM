@@ -1,11 +1,11 @@
-#include "ReinBits1.h"
+#include "BIOP1.h"
 
-ReinBits1::ReinBits1(){
+BIOP1::BIOP1(){
 	numSub = subs;
 	numDimension = atts;
 	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
-    cout <<"ExpID = "<<expID<< ". ReinBits1: bit exponent = "<< be<<", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
+    cout <<"ExpID = "<<expID<< ". BIOP1: bit exponent = "<< be<<", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
 	// 如果桶数会变化，以下代码也要放入init函数里
 	//bucketSub.resize(numBucket);
 	data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
@@ -33,11 +33,11 @@ ReinBits1::ReinBits1(){
 	//fix[1].resize(numDimension, vector<int>(numBucket + 1, 0));
 }
 
-ReinBits1::~ReinBits1() {
+BIOP1::~BIOP1() {
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1], doubleReverse[0], doubleReverse[1];
 }
 
-void ReinBits1::insert(IntervalSub sub)
+void BIOP1::insert(IntervalSub sub)
 {
 	for (int i = 0; i < sub.size; i++)
 	{
@@ -53,7 +53,7 @@ void ReinBits1::insert(IntervalSub sub)
 }
 
 // fullBits单独存储的版本
-void ReinBits1::initBits() {
+void BIOP1::initBits() {
 
 	// 如果有多次初始化
 	delete[] doubleReverse[0], doubleReverse[1], endBucket[0], endBucket[1], bitsID[0], bitsID[1];
@@ -196,7 +196,7 @@ void ReinBits1::initBits() {
 	cout << "Stop.\n";
 }
 
-void ReinBits1::match(const Pub& pub, int& matchSubs)
+void BIOP1::match(const Pub& pub, int& matchSubs)
 {
 	bitset<subs> b, bLocal;
 	vector<bool> attExist(numDimension, false);
@@ -280,12 +280,12 @@ void ReinBits1::match(const Pub& pub, int& matchSubs)
 		if (!b[i])
 		{
 			++matchSubs;
-			//cout << "reinbits2 matches sub: " << i << endl;
+			//cout << "BIOP2 matches sub: " << i << endl;
 		}
 	bitTime += (double)bitStart.elapsed_nano();
 }
 
-//void ReinBits1::calBucketSize() {
+//void BIOP1::calBucketSize() {
 //	bucketSub.clear();
 //	bucketSub.resize(numBucket);
 //	_for(i, 0, numDimension)
@@ -298,7 +298,7 @@ void ReinBits1::match(const Pub& pub, int& matchSubs)
 //		}
 //}
 
-int ReinBits1::calMemory() {
+int BIOP1::calMemory() {
 	long long size = 0; // Byte
 	_for(i, 0, numDimension) {
 		// 若每个维度上bits数组个数一样就是 2*sizeof(bitset<subs>)*numDimension*numBits
@@ -318,13 +318,13 @@ int ReinBits1::calMemory() {
 	return (int)size;
 }
 
-void ReinBits1::printRelation(int dimension_i) {
-	cout << "\n\nReinBits1Map    LowBucket   ----------------\n";
+void BIOP1::printRelation(int dimension_i) {
+	cout << "\n\nBIOP1Map    LowBucket   ----------------\n";
 	_for(i, 0, numBucket) {
 		cout << "LBkt" << i << ": bID=" << bitsID[0][i] << ", eBkt=" << endBucket[0][i] << ", dRvs=" << doubleReverse[0][i] << "; ";
 		if (i % 5 == 0 && i > 0)cout << "\n";
 	}
-	cout << "\n\nReinBits1Map    HighBucket   ----------------\n";
+	cout << "\n\nBIOP1Map    HighBucket   ----------------\n";
 	_for(i, 0, numBucket) {
 		cout << "HBkt" << i << ": bID=" << bitsID[1][i] << ", eBkt=" << endBucket[1][i] << ", dRvs=" << doubleReverse[1][i] << "; ";
 		if (i % 5 == 0 && i > 0)cout << "\n";

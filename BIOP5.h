@@ -1,5 +1,5 @@
 #pragma once
-class ReinBits4
+class BIOP5
 {
 };
 

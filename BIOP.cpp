@@ -1,11 +1,11 @@
-#include "ReinBits.h"
+#include "BIOP.h"
 
-ReinBits::ReinBits(){
+BIOP::BIOP(){
 	numSub = subs;
 	numDimension = atts;
 	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
-	cout <<"ExpID = "<<expID<< ". ReinBits: bit exponent = "<< be<<", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
+	cout <<"ExpID = "<<expID<< ". BIOP: bit exponent = "<< be<<", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
 	
 	//bucketSub.resize(numBucket);
 	data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
@@ -31,12 +31,12 @@ ReinBits::ReinBits(){
 	//fix[1].resize(numDimension, vector<int>(numBucket));
 }
 
-ReinBits::~ReinBits() {
+BIOP::~BIOP() {
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1];
 	//delete[] endBucket, bitsID; // 不是new出来的
 }
 
-void ReinBits::insert(IntervalSub sub)
+void BIOP::insert(IntervalSub sub)
 {
 	for (int i = 0; i < sub.size; i++)
 	{
@@ -52,7 +52,7 @@ void ReinBits::insert(IntervalSub sub)
 }
 
 // fullBits单独存储的版本
-void ReinBits::initBits() {
+void BIOP::initBits() {
 
 	// 如果有多次初始化
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1];
@@ -141,7 +141,7 @@ void ReinBits::initBits() {
 }
 
 // old initBits(fullBits在0号数组中存了两次的版本）
-//void ReinBits::initBits() {
+//void BIOP::initBits() {
 //
 //	// 如果有多次初始化
 //	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1];
@@ -258,7 +258,7 @@ void ReinBits::initBits() {
 //
 //}
 
-void ReinBits::match(const Pub& pub, int& matchSubs)
+void BIOP::match(const Pub& pub, int& matchSubs)
 {
 	bitset<subs> b;
 	vector<bool> attExist(numDimension, false);
@@ -304,12 +304,12 @@ void ReinBits::match(const Pub& pub, int& matchSubs)
 		if (!b[i])
 		{
 			++matchSubs;
-			//cout << "reinbits matches sub: : " << i << endl;
+			//cout << "BIOP matches sub: : " << i << endl;
 		}
 	bitTime += (double)bitStart.elapsed_nano();
 }
 
-//void ReinBits::calBucketSize() {
+//void BIOP::calBucketSize() {
 //	bucketSub.clear();
 //	bucketSub.resize(numBucket);
 //	_for(i, 0, numDimension)
@@ -322,7 +322,7 @@ void ReinBits::match(const Pub& pub, int& matchSubs)
 //		}
 //}
 
-int ReinBits::calMemory() {
+int BIOP::calMemory() {
 	long long size = 0; // Byte
 	_for(i, 0, numDimension) {
 		// 若每个维度上bits数组个数一样就是 2*numDimension*numBits*sizeof(bitset<subs>)
@@ -340,13 +340,13 @@ int ReinBits::calMemory() {
 	return (int)size; 
 }
 
-void ReinBits::printRelation() {
-	cout << "\n\nReinBitsMap LowBucket\n";
+void BIOP::printRelation() {
+	cout << "\n\nBIOPMap LowBucket\n";
 	_for(i, 0, numBucket) {
 		cout << "LBkt" << i << ": bID=" << bitsID[0][i] << ", eBkt=" << endBucket[0][i]<<"; ";
 		if (i % 5 == 0 && i > 0)cout << "\n";
 	}
-	cout << "\n\nReinBitsMap HighBucket\n";
+	cout << "\n\nBIOPMap HighBucket\n";
 	_for(i, 0, numBucket) {
 		cout << "HBkt" << i << ": bID=" << bitsID[1][i] << ", eBkt=" << endBucket[1][i] << "; ";
 		if (i % 5 == 0 && i > 0)cout << "\n";

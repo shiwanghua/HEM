@@ -1,5 +1,5 @@
 #include "rein.h"
-#include "ReinBits.h"
+#include "BIOP.h"
 
 int masin(int argc, char** argv)
 {
