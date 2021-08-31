@@ -1,11 +1,11 @@
 #include "constant.h"
-string expID = "168";       // 记录实验id
+string expID = "178";       // 记录实验id
 bool display = false;       // 是否打印映射关系
 //const int subs = 1000000;   // Number of subscriptions.
 const int pubs = 1000;       // Number of publications.
-int atts = 1000;        // Total number of attributes, i.e. dimensions.
+int atts = 50;        // Total number of attributes, i.e. dimensions.
 const int cons = 5;        // Number of constraints(predicates) in one sub.
-int m = 1000;           // Number of constraints in one pub.
+int m = 50;           // Number of constraints in one pub.
 const int attDis = 0;       // The distribution of attributes in subs and pubs. 0:uniform distribution | 1:Zipf distribution
 const int valDis = 0;       // The distribution of values in subs and pubs. 0:uniform
 const int valDom = 1000000; // Cardinality of values.

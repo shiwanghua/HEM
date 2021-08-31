@@ -11,7 +11,7 @@ int main(int argc, char** argv)
 		cout << "argc=" << argc << endl;
 		cout << argv[0] << "  " << argv[1] << "  " << argv[2] << endl;
 		expID=to_string(atoi(argv[1]));
-		atts = m = atoi(argv[2]);
+		atts = atoi(argv[2]);
 		//be = atoi(argv[2]);  // 输入一个bits指数
 	}
 	intervalGenerator gen(subs, pubs, atts, cons, m, attDis, valDis, valDom, alpha, width);
