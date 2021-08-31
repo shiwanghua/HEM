@@ -1,11 +1,11 @@
 #include "BIOP2.h"
 
 BIOP2::BIOP2(){
-	numSub = subs;
+	numSub = 0;
 	numDimension = atts;
 	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
-	cout << "ExpID = " << expID << ". BIOP2: bit exponent = " << be << ", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
+	cout << "ExpID = " << expID << ". BIOP2SD: bit exponent = " << be << ", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
 
 	// 如果桶数会变化，以下代码也要放入init函数里
 	//bucketSub.resize(numBucket);
@@ -61,6 +61,7 @@ void BIOP2::insert(IntervalSub sub)
 		c.val = cnt.highValue;
 		data[1][cnt.att][cnt.highValue / buckStep].push_back(c);
 	}
+	numSub++;
 }
 
 // fullBits单独存储的版本
@@ -150,7 +151,7 @@ void BIOP2::initBits() {
 				bits[1][i][0][data[1][i][j][k].subID] = 1;  // Bug: high不是low, i维, 0号bits, subID
 			_for(j, numBucket >> 1, numBucket)    // 每个右半部分的桶
 				_for(k, 0, data[0][i][j].size())  // 桶里每个订阅
-				bits[0][i][0][data[0][i][j][k].subID] = 1;  // high, i维, 0号bits, subID
+				bits[0][i][0][data[0][i][j][k].subID] = 1;  // low, i维, 0号bits, subID
 		}
 		//cout << "Stop.\n";
 		return;
@@ -332,7 +333,7 @@ void BIOP2::initBits() {
 //	orTime += (double)orStart.elapsed_nano();
 //
 //	Timer bitStart;
-//	_for(i, 0, numSub)
+//	_for(i, 0, subs)
 //		if (!b[i])
 //		{
 //			++matchSubs;
@@ -421,7 +422,7 @@ void BIOP2::match(const Pub& pub, int& matchSubs)
 	orTime += (double)orStart.elapsed_nano();
 
 	Timer bitStart;
-	_for(i, 0, numSub)
+	_for(i, 0, subs)
 		if (!b[i])
 		{
 			++matchSubs;
@@ -453,7 +454,8 @@ int BIOP2::calMemory() {
 	}
 
 	// fullBits
-	size += sizeof(bitset<subs>) * fullBits.size();
+	if (numBits > 1)
+		size += sizeof(bitset<subs>) * fullBits.size(); // fullBits.size()即numDimension
 
 	// 两个fix
 	size += sizeof(int) * numDimension * (numBucket + 1);
@@ -467,19 +469,26 @@ void BIOP2::printRelation(int dimension_i) {
 	cout << "\n\nBIOP2Map\n";
 	if (dimension_i == -1)
 		_for(i, 0, numDimension) {
-		cout << "\nDimension " << i << "   ----------------\n";
-		_for(j, 0, numBucket)
-			cout << "Low Bucket" << j << ": bitsID=" << bitsID[0][i][j] << ", endBucket=" << endBucket[0][i][j] << ", doubleReverse=" << doubleReverse[0][i][j] << endl;
+		cout << "\nDimension " << i << "    LowBucket Predicates: " << fix[0][dimension_i][numBucket] << "   ----------------\n";
+		_for(j, 0, numBucket) {
+			cout << "lBkt" << j << ": bID=" << bitsID[0][i][j] << ", eBkt=" << endBucket[0][i][j] << ", dRvs=" << doubleReverse[0][i][j] <<"; ";
+			if (j % 5 == 0 && j > 0)cout << "\n";
+		}
+		cout << "\n\nDimension " << i << "    HighBucket Predicates: " << fix[1][dimension_i][numBucket] << "   ----------------\n";
+		_for(j, 0, numBucket) {
+			cout << "hBkt" << j << ": bID=" << bitsID[1][i][j] << ", eBkt=" << endBucket[1][i][j] << ", dRvs=" << doubleReverse[1][i][j]<<"; ";
+			if (j % 5 == 0 && j > 0)cout << "\n";
+		}
 	}
 	else {
 		cout << "\nDimension: " << dimension_i << "    LowBucket Predicates: " << fix[0][dimension_i][numBucket] << "   ----------------\n";
 		_for(i, 0, numBucket) {
-			cout << "LBkt" << i << ": bID=" << bitsID[0][dimension_i][i] << ", eBkt=" << endBucket[0][dimension_i][i] << ", dRvs=" << doubleReverse[0][dimension_i][i]<<"; ";
+			cout << "lBkt" << i << ": bID=" << bitsID[0][dimension_i][i] << ", eBkt=" << endBucket[0][dimension_i][i] << ", dRvs=" << doubleReverse[0][dimension_i][i]<<"; ";
 			if (i % 5 == 0 && i > 0)cout << "\n";
 		}
 		cout << "\n\nDimension: " << dimension_i << "    HighBucket Predicates: " << fix[1][dimension_i][numBucket] << "   ----------------\n";
 		_for(i, 0, numBucket) {
-			cout << "HBkt" << i << ": bID=" << bitsID[1][dimension_i][i] << ", eBkt=" << endBucket[1][dimension_i][i] << ", dRvs=" << doubleReverse[1][dimension_i][i] << "; ";
+			cout << "hBkt" << i << ": bID=" << bitsID[1][dimension_i][i] << ", eBkt=" << endBucket[1][dimension_i][i] << ", dRvs=" << doubleReverse[1][dimension_i][i] << "; ";
 			if (i % 5 == 0 && i > 0)cout << "\n";
 		}
 	}

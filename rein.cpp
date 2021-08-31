@@ -1,4 +1,13 @@
-#include "rein.h"
+#include "Rein.h"
+
+Rein::Rein() :numSub(0), numDimension(atts) {
+	buckStep = (valDom - 1) / buks + 1;
+	numBucket = (valDom - 1) / buckStep + 1;
+	cout << "ExpID = " << expID << ". Rein: bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
+	bucketSub.resize(numBucket);
+	data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
+	data[1].resize(numDimension, vector<vector<Combo>>(numBucket));
+}
 
 //void Rein::insert(Sub sub)
 //{
@@ -33,6 +42,7 @@ void Rein::insert(IntervalSub sub)
 		c.val = cnt.highValue;
 		data[1][cnt.att][cnt.highValue / buckStep].push_back(c);
 	}
+	numSub++;
 }
 //void Rein::insert(IntervalSub sub)
 //{
@@ -112,7 +122,7 @@ void Rein::match(const Pub& pub, int& matchSubs)
 	markTime += (double)markStart.elapsed_nano();
 
 	Timer bitStart;
-	for (int i = 0; i < numSub; i++)
+	for (int i = 0; i < subs; i++)
 		if (!bits[i])
 		{
 			++matchSubs;
@@ -167,9 +177,10 @@ void Rein::calBucketSize() {
 }
 
 int Rein::calMemory() {
-	int size = 0; // Byte
+	long long  size = 0; // Byte
 	_for(i, 0, numDimension)
 		_for(j, 0, numBucket)
 		size += sizeof(Combo) * (data[0][i][j].size() + data[1][i][j].size());
-	return size / 1024 / 1024; // MB
+	size = size / 1024 / 1024; // MB
+	return (int)size;
 }

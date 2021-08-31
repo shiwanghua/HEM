@@ -3,7 +3,7 @@
 #define _RUN_MODELS_H
 
 #include "constant.h"
-#include "rein.h"
+#include "Rein.h"
 #include "BIOP.h"
 #include "BIOP1.h"
 #include "BIOP2.h"
@@ -12,6 +12,8 @@
 #include "BIOP5.h"
 #include <numeric> 
 #include<algorithm>
+
+const int interval = 1000; // 每匹配这么多个事件输出一条日志信息
 
 void run_rein(const intervalGenerator& gen);
 void run_BIOP(const intervalGenerator& gen);

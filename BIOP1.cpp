@@ -1,11 +1,11 @@
 #include "BIOP1.h"
 
 BIOP1::BIOP1(){
-	numSub = subs;
+	numSub = 0;
 	numDimension = atts;
 	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
-    cout <<"ExpID = "<<expID<< ". BIOP1: bit exponent = "<< be<<", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
+    cout <<"ExpID = "<<expID<< ". BIOP1SS: bit exponent = "<< be<<", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
 	// 如果桶数会变化，以下代码也要放入init函数里
 	//bucketSub.resize(numBucket);
 	data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
@@ -50,6 +50,7 @@ void BIOP1::insert(IntervalSub sub)
 		c.val = cnt.highValue;
 		data[1][cnt.att][cnt.highValue / buckStep].push_back(c);
 	}
+	numSub++;
 }
 
 // fullBits单独存储的版本
@@ -276,7 +277,7 @@ void BIOP1::match(const Pub& pub, int& matchSubs)
 	orTime += (double)orStart.elapsed_nano();
 
 	Timer bitStart;
-	_for(i, 0, numSub)
+	_for(i, 0, subs)
 		if (!b[i])
 		{
 			++matchSubs;
@@ -308,7 +309,8 @@ int BIOP1::calMemory() {
 	}
 
 	// fullBits
-	size += sizeof(bitset<subs>) * fullBits.size();
+	if (numBits > 1)
+		size += sizeof(bitset<subs>) * fullBits.size(); // fullBits.size()即numDimension
 
 	// 两个fix
 	//size += sizeof(int) * numDimension * (numBucket + 1);
@@ -318,15 +320,15 @@ int BIOP1::calMemory() {
 	return (int)size;
 }
 
-void BIOP1::printRelation(int dimension_i) {
+void BIOP1::printRelation() {
 	cout << "\n\nBIOP1Map    LowBucket   ----------------\n";
 	_for(i, 0, numBucket) {
-		cout << "LBkt" << i << ": bID=" << bitsID[0][i] << ", eBkt=" << endBucket[0][i] << ", dRvs=" << doubleReverse[0][i] << "; ";
+		cout << "lBkt" << i << ": bID=" << bitsID[0][i] << ", eBkt=" << endBucket[0][i] << ", dRvs=" << doubleReverse[0][i] << "; ";
 		if (i % 5 == 0 && i > 0)cout << "\n";
 	}
 	cout << "\n\nBIOP1Map    HighBucket   ----------------\n";
 	_for(i, 0, numBucket) {
-		cout << "HBkt" << i << ": bID=" << bitsID[1][i] << ", eBkt=" << endBucket[1][i] << ", dRvs=" << doubleReverse[1][i] << "; ";
+		cout << "hBkt" << i << ": bID=" << bitsID[1][i] << ", eBkt=" << endBucket[1][i] << ", dRvs=" << doubleReverse[1][i] << "; ";
 		if (i % 5 == 0 && i > 0)cout << "\n";
 	}
 	

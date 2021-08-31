@@ -44,7 +44,7 @@ public:
 	void initBits();      // 插入完后初始化bits数组
 	//void calBucketSize(); // 计算bucketSize
 	int calMemory();      // 计算占用内存大小
-	void printRelation(int); // 打印映射关系
+	void printRelation(); // 打印映射关系
 };
 
 #endif

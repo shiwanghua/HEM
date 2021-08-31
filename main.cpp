@@ -18,10 +18,10 @@ int main(int argc, char** argv)
 	gen.GenSubList();
 	gen.GenPubList();
 
-	run_rein(gen);
+	/*run_rein(gen);
 	run_BIOP(gen);
 	run_BIOP1(gen);
-	run_BIOP2(gen);
+	run_BIOP2(gen);*/
 	//run_BIOP3(gen);
 	//run_BIOP4(gen);
 	//run_BIOP5(gen);

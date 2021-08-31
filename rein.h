@@ -27,14 +27,7 @@ public:
 	double bitTime = 0.0;     // 遍历bits数组得到结果所需的时间
 	vector<unordered_set<int>> bucketSub;   // id相同的桶存储的不同订阅个数的和
 
-	Rein(int valDom, int numSubscription, int numDim, int numBuck) :numSub(numSubscription), numDimension(numDim) {
-		buckStep = (valDom - 1) / numBuck + 1;
-		numBucket = (valDom - 1) / buckStep + 1;
-		cout << "ExpID = " << expID << ". Rein: bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
-		bucketSub.resize(numBucket);
-		data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
-		data[1].resize(numDimension, vector<vector<Combo>>(numBucket));
-	}
+	Rein();
 	//void insert(Sub sub);
 	void insert(IntervalSub sub);
 	//void match(const Pub& pub, int& matchSubs, const vector<Sub>& subList);

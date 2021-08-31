@@ -1,11 +1,11 @@
 #include "BIOP.h"
 
 BIOP::BIOP(){
-	numSub = subs;
+	numSub = 0;
 	numDimension = atts;
 	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
-	cout <<"ExpID = "<<expID<< ". BIOP: bit exponent = "<< be<<", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
+	cout <<"ExpID = "<<expID<< ". BIOPPS: bit exponent = "<< be<<", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
 	
 	//bucketSub.resize(numBucket);
 	data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
@@ -49,6 +49,7 @@ void BIOP::insert(IntervalSub sub)
 		c.val = cnt.highValue;
 		data[1][cnt.att][cnt.highValue / buckStep].push_back(c);
 	}
+	numSub++;
 }
 
 // fullBits单独存储的版本
@@ -300,7 +301,7 @@ void BIOP::match(const Pub& pub, int& matchSubs)
 	orTime += (double)orStart.elapsed_nano();
 
 	Timer bitStart;
-	_for(i, 0, numSub)
+	_for(i, 0, subs)
 		if (!b[i])
 		{
 			++matchSubs;
@@ -332,7 +333,8 @@ int BIOP::calMemory() {
 	}
 
 	// fullBits
-	size += sizeof(bitset<subs>) * fullBits.size();
+	if (numBits > 1)
+		size += sizeof(bitset<subs>) * fullBits.size(); // fullBits.size()即numDimension
 
 	// 两个endBucket和两个bitsID
 	size += 4 * numBucket * sizeof(int);

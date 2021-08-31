@@ -1,7 +1,7 @@
-#include "rein.h"
+#include "Rein.h"
 #include "BIOP.h"
 
-int masin(int argc, char** argv)
+int maint(int argc, char** argv)
 {
 	/*Timer s;
 	bool bits[100000000] = { 0 };
@@ -26,8 +26,10 @@ int masin(int argc, char** argv)
 	int bits3[1000000];
 	cout << s3.elapsed_nano()<<endl;*/
 
-	bool* q;
-	delete q;
+	long long size;
+	size = 3929399552;
+	size = size / 1024 / 1024; // MB
+	cout<< (int)size;
 
 	system("pause");
 	return 0;
