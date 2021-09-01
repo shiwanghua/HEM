@@ -2,7 +2,7 @@
 string expID = "178";       // 记录实验id
 bool display = false;       // 是否打印映射关系
 //const int subs = 1000000;   // Number of subscriptions.
-const int pubs = 1000;       // Number of publications.
+const int pubs = 5000;       // Number of publications.
 int atts = 50;        // Total number of attributes, i.e. dimensions.
 const int cons = 5;        // Number of constraints(predicates) in one sub.
 int m = 50;           // Number of constraints in one pub.

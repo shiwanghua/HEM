@@ -285,6 +285,33 @@ BIOP5.cpp.s:
 	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOP5.cpp.s
 .PHONY : BIOP5.cpp.s
 
+Rein.o: Rein.cpp.o
+
+.PHONY : Rein.o
+
+# target to build an object file
+Rein.cpp.o:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/Rein.cpp.o
+.PHONY : Rein.cpp.o
+
+Rein.i: Rein.cpp.i
+
+.PHONY : Rein.i
+
+# target to preprocess a source file
+Rein.cpp.i:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/Rein.cpp.i
+.PHONY : Rein.cpp.i
+
+Rein.s: Rein.cpp.s
+
+.PHONY : Rein.s
+
+# target to generate assembly for a file
+Rein.cpp.s:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/Rein.cpp.s
+.PHONY : Rein.cpp.s
+
 constant.o: constant.cpp.o
 
 .PHONY : constant.o
@@ -392,33 +419,6 @@ printer.s: printer.cpp.s
 printer.cpp.s:
 	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/printer.cpp.s
 .PHONY : printer.cpp.s
-
-rein.o: rein.cpp.o
-
-.PHONY : rein.o
-
-# target to build an object file
-rein.cpp.o:
-	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/rein.cpp.o
-.PHONY : rein.cpp.o
-
-rein.i: rein.cpp.i
-
-.PHONY : rein.i
-
-# target to preprocess a source file
-rein.cpp.i:
-	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/rein.cpp.i
-.PHONY : rein.cpp.i
-
-rein.s: rein.cpp.s
-
-.PHONY : rein.s
-
-# target to generate assembly for a file
-rein.cpp.s:
-	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/rein.cpp.s
-.PHONY : rein.cpp.s
 
 run_models.o: run_models.cpp.o
 
@@ -528,6 +528,9 @@ help:
 	@echo "... BIOP5.o"
 	@echo "... BIOP5.i"
 	@echo "... BIOP5.s"
+	@echo "... Rein.o"
+	@echo "... Rein.i"
+	@echo "... Rein.s"
 	@echo "... constant.o"
 	@echo "... constant.i"
 	@echo "... constant.s"
@@ -540,9 +543,6 @@ help:
 	@echo "... printer.o"
 	@echo "... printer.i"
 	@echo "... printer.s"
-	@echo "... rein.o"
-	@echo "... rein.i"
-	@echo "... rein.s"
 	@echo "... run_models.o"
 	@echo "... run_models.i"
 	@echo "... run_models.s"
