@@ -89,15 +89,27 @@ void BIOP2::initBits() {
 	bits[0].resize(numDimension, vector<bitset<subs>>(numBits > 1 ? numBits - 1 : 1));
 	bits[1].resize(numDimension, vector<bitset<subs>>(max(numBits - 1, 1)));
 
-	// 前缀和、后缀和数组, 不包括本身
+	//// 前缀和、后缀和数组, 不包括本身
+	//_for(i, 0, numDimension) {
+	//	_for(j, 1, numBucket) {
+	//		fix[0][i][numBucket - 1 - j] = fix[0][i][numBucket - j] + data[0][i][numBucket - j].size();
+	//		fix[1][i][j] = fix[1][i][j - 1] + data[1][i][j - 1].size();
+	//	}
+	//	// 整个数组的和存在最后一个元素上
+	//	fix[0][i][numBucket] = fix[0][i][0] + data[0][i][0].size();
+	//	fix[1][i][numBucket] = fix[1][i][numBucket-1] + data[1][i][numBucket - 1].size();  // Bug: 少了-1!!!
+	//}
+
+	// 前缀和数组(包括本身)、后缀和数组(包括本身)
 	_for(i, 0, numDimension) {
+		fix[0][i][numBucket - 1] = data[0][i][numBucket - 1].size();
 		_for(j, 1, numBucket) {
-			fix[0][i][numBucket - 1 - j] = fix[0][i][numBucket - j] + data[0][i][numBucket - j].size();
+			fix[0][i][numBucket - 1 - j] = fix[0][i][numBucket - j] + data[0][i][numBucket - j - 1].size();
 			fix[1][i][j] = fix[1][i][j - 1] + data[1][i][j - 1].size();
 		}
 		// 整个数组的和存在最后一个元素上
-		fix[0][i][numBucket] = fix[0][i][0] + data[0][i][0].size();
-		fix[1][i][numBucket] = fix[1][i][numBucket] + data[1][i][numBucket - 1].size();
+		fix[0][i][numBucket] = fix[0][i][0];
+		fix[1][i][numBucket] = fix[1][i][numBucket - 1] + data[1][i][numBucket - 1].size(); // Bug: 少了-1!!!
 	}
 
 	if (numBits == 1) {                           // 只有一个bits时特判，不用fullBits
@@ -198,7 +210,7 @@ void BIOP2::initBits() {
 	_for(i, 0, numDimension) {          // 每个维度
 		_for(j, 0, numBucket) {         // 每个桶
 			if (doubleReverse[0][i][j])
-				b = bitsID[0][i][j];       // 除了0号外最小的需要插入的bits数组的ID
+				b = bitsID[0][i][j];       // 最小的需要插入的bits数组的ID
 			else b = bitsID[0][i][j] + 1;
 			_for(k, 0, data[0][i][j].size()) {
 				subID = data[0][i][j][k].subID;
@@ -209,7 +221,7 @@ void BIOP2::initBits() {
 
 			if (doubleReverse[1][i][j])
 				b = bitsID[1][i][j];
-			else b = bitsID[1][i][j] + 1;  // 除了0号外最小的需要插入的bits数组的ID
+			else b = bitsID[1][i][j] + 1;  // 最小的需要插入的bits数组的ID
 			_for(k, 0, data[1][i][j].size()) {     // 桶里每个订阅
 				subID = data[1][i][j][k].subID;
 				_for(q, b, numBits - 1)
@@ -466,7 +478,7 @@ int BIOP2::calMemory() {
 }
 
 void BIOP2::printRelation(int dimension_i) {
-	cout << "\n\nBIOP2Map\n";
+	cout << "\n\nBIOP2SDMap\n";
 	if (dimension_i == -1)
 		_for(i, 0, numDimension) {
 		cout << "\nDimension " << i << "    LowBucket Predicates: " << fix[0][dimension_i][numBucket] << "   ----------------\n";

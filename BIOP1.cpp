@@ -87,7 +87,7 @@ void BIOP1::initBits() {
 			endBucket[0][j] = numBucket >> 1;     // 标记时遍历到小于这个值
 			doubleReverse[0][j] = false;          // Bug：这个也要赋值（没初始化），找了一个多小时
 			int bid1 = -1, bid2 = 0;
-			int bktid1 = 0, bktid2 = bitStep;
+			int bktid1 = 0, bktid2 = numBucket >> 1; // Bug: bitStep是0不是500! 折磨多天的毒瘤!
 			int midid = (bktid1 + bktid2) / 2;
 
 			if (j <= midid) {
@@ -104,24 +104,23 @@ void BIOP1::initBits() {
 		_for(j, numBucket >> 1, numBucket) {
 			// 此时high这一端一定用到也只能用到0号bits数组
 			bitsID[1][j] = 0;
-			endBucket[1][j] = bitStep;            // 标记时遍历到等于这个值
+			endBucket[1][j] = numBucket >> 1;            // 标记时遍历到等于这个值 Bug: bitStep是0不是500! 
 			doubleReverse[1][j] = false;
 
 			int bid1 = -1, bid2 = 0;
-			int bktid1 = numBucket, bktid2 = numBucket - bitStep;// 1000-500
+			int bktid1 = numBucket, bktid2 = numBucket - (numBucket >> 1);// 1000-500
 			int midid = (bktid1 + bktid2) / 2;
 			if (j <= midid) {
-				bitsID[0][j] = bid1;              // 为-1时表示确实用不到bits数组
-				endBucket[0][j] = bktid1;         // 往右标记1时从 j+1 遍历到 bktid1-1 号桶
-				doubleReverse[0][j] = false;
-			}
-			else {
-				bitsID[0][j] = bid2;
-				endBucket[0][j] = bktid2;         // 二重反向标记0时从 bktid2 遍历到 j 号桶
+				bitsID[0][j] = bid2;              // 为-1时表示确实用不到bits数组
+				endBucket[0][j] = bktid2;         // 往右标记1时从 j+1 遍历到 bktid1-1 号桶
 				doubleReverse[0][j] = true;
 			}
+			else {
+				bitsID[0][j] = bid1;
+				endBucket[0][j] = bktid1;         // 二重反向标记0时从 bktid2 遍历到 j 号桶
+				doubleReverse[0][j] = false;
+			}
 		}
-
 
 		// 这段标记与上面的映射分离出来了，可不分先后执行
 		_for(i, 0, numDimension) {                // 每个维度
@@ -281,7 +280,7 @@ void BIOP1::match(const Pub& pub, int& matchSubs)
 		if (!b[i])
 		{
 			++matchSubs;
-			//cout << "BIOP2 matches sub: " << i << endl;
+			//cout << "BIOP1 matches sub: " << i << endl;
 		}
 	bitTime += (double)bitStart.elapsed_nano();
 }
@@ -321,12 +320,12 @@ int BIOP1::calMemory() {
 }
 
 void BIOP1::printRelation() {
-	cout << "\n\nBIOP1Map    LowBucket   ----------------\n";
+	cout << "\n\nBIOP1SSMap    LowBucket   ----------------\n";
 	_for(i, 0, numBucket) {
 		cout << "lBkt" << i << ": bID=" << bitsID[0][i] << ", eBkt=" << endBucket[0][i] << ", dRvs=" << doubleReverse[0][i] << "; ";
 		if (i % 5 == 0 && i > 0)cout << "\n";
 	}
-	cout << "\n\nBIOP1Map    HighBucket   ----------------\n";
+	cout << "\n\nBIOP1SSMap    HighBucket   ----------------\n";
 	_for(i, 0, numBucket) {
 		cout << "hBkt" << i << ": bID=" << bitsID[1][i] << ", eBkt=" << endBucket[1][i] << ", dRvs=" << doubleReverse[1][i] << "; ";
 		if (i % 5 == 0 && i > 0)cout << "\n";

@@ -4,8 +4,13 @@ os.system('ulimit -s unlimited;sudo chmod 777 cmakeRB')
 os.system('sudo chmod 777 *.txt')
 expID=int(sys.argv[1])
 
-for m in range(10000,0,-1000):
-    os.system('./cmakeRB '+str(expID)+' '+str(m))
-    print('Experiment',str(expID),' ','atts=m= ',str(m),'done.')
+#for m in range(10000,0,-1000):
+#    os.system('./cmakeRB '+str(expID)+' '+str(m))
+#    print('Experiment',str(expID),' ','atts=m= ',str(m),'done.')
+#    expID+=1
+
+for be in range(0,10):
+    os.system('./cmakeRB '+str(expID)+' '+str(be))
+    print('Experiment',str(expID),' ','be= ',str(be),'done.')
     expID+=1
 

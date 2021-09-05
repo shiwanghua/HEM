@@ -129,8 +129,8 @@ void BIOP::initBits() {
 					bits[0][i][q][subID] = 1;
 			}
 
-			b = bitsID[1][j] + 1;   // 除了0号外最小的需要插入的bits数组的ID
-			_for(k, 0, data[1][i][j].size()) {   // 桶里每个订阅
+			b = bitsID[1][j] + 1; // 除了0号外最小的需要插入的bits数组的ID
+			_for(k, 0, data[1][i][j].size()) {     // 桶里每个订阅
 				subID = data[1][i][j][k].subID;
 				//bits[1][i][0][subID] = 1;        // 0号bits每次必须标记
 				_for(q, b, numBits-1)
@@ -288,7 +288,7 @@ void BIOP::match(const Pub& pub, int& matchSubs)
 
 		Timer orStart;
 		if (bitsID[0][buck] != -1)
-			b = b | bits[0][att][bitsID[0][buck]]; // 此时如果bitsID[0][buck]为0，不是表示覆盖所有桶的bits数组，而是表示只有1个bits数组(覆盖一半桶)的情况
+			b = b | bits[0][att][bitsID[0][buck]]; 
 		if (bitsID[1][buck] != -1)
 			b = b | bits[1][att][bitsID[1][buck]]; // Bug: 是att不是i
 		orTime += (double)orStart.elapsed_nano();
@@ -343,12 +343,12 @@ int BIOP::calMemory() {
 }
 
 void BIOP::printRelation() {
-	cout << "\n\nBIOPMap LowBucket\n";
+	cout << "\n\nBIOPPSMap LowBucket\n";
 	_for(i, 0, numBucket) {
 		cout << "LBkt" << i << ": bID=" << bitsID[0][i] << ", eBkt=" << endBucket[0][i]<<"; ";
 		if (i % 5 == 0 && i > 0)cout << "\n";
 	}
-	cout << "\n\nBIOPMap HighBucket\n";
+	cout << "\n\nBIOPPSMap HighBucket\n";
 	_for(i, 0, numBucket) {
 		cout << "HBkt" << i << ": bID=" << bitsID[1][i] << ", eBkt=" << endBucket[1][i] << "; ";
 		if (i % 5 == 0 && i > 0)cout << "\n";

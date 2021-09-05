@@ -15,11 +15,9 @@ BIOP3::BIOP3() {
 		numBits = numBucket;
 	else
 		numBits = pow(2, be);  // 每个维度上lowValue对应的bits数组个数
-	if (numBits > 1) {
+	if (numBits > 1)
 		fullBits.resize(numDimension);  // 维度总数永远不变，所以只需要resize一次
-		//bitStep = (numBucket + numBits - 1) / numBits;  // 每过这么远新设一个bits
-		// 等价写法：bitStep = numBucket % numBits == 0 ? numBucket / numBits : numBucket / numBits + 1;
-	}
+
 	//else bitStep = numBucket >> 1;
 
 	endBucket[0] = new int* [numDimension];
@@ -33,8 +31,8 @@ BIOP3::BIOP3() {
 		bitsID[1][i] = new int[numBucket];
 	}
 
-	fix[0].resize(numDimension, vector<int>(numBucket+1));
-	fix[1].resize(numDimension, vector<int>(numBucket+1));
+	fix[0].resize(numDimension, vector<int>(numBucket + 1));
+	fix[1].resize(numDimension, vector<int>(numBucket + 1));
 }
 
 BIOP3::~BIOP3() {
@@ -80,47 +78,49 @@ void BIOP3::initBits() {
 	bits[0].resize(numDimension, vector<bitset<subs>>(numBits > 1 ? numBits - 1 : 1));
 	bits[1].resize(numDimension, vector<bitset<subs>>(max(numBits - 1, 1)));
 
-	// 前缀和、后缀和数组, 不包括本身
+	// 前缀和数组(包括本身)、后缀和数组(包括本身)
 	_for(i, 0, numDimension) {
+		fix[0][i][numBucket - 1] = data[0][i][numBucket - 1].size();
 		_for(j, 1, numBucket) {
-			fix[0][i][numBucket - 1 - j] = fix[0][i][numBucket - j] + data[0][i][numBucket - j].size();
+			fix[0][i][numBucket - 1 - j] = fix[0][i][numBucket - j] + data[0][i][numBucket - j - 1].size();
 			fix[1][i][j] = fix[1][i][j - 1] + data[1][i][j - 1].size();
 		}
 		// 整个数组的和存在最后一个元素上
-		fix[0][i][numBucket] = fix[0][i][0] + data[0][i][0].size();
-		fix[1][i][numBucket] = fix[1][i][numBucket] + data[1][i][numBucket - 1].size();
+		fix[0][i][numBucket] = fix[0][i][0];
+		fix[1][i][numBucket] = fix[1][i][numBucket-1] + data[1][i][numBucket - 1].size(); // Bug: 少了-1!!!
 	}
 
 	if (numBits == 1) { // 只有一个bits时特判，不用fullBits
-		int halfWorkLoad = numSub >> 1;
 		_for(i, 0, numDimension) {
-			int lowCriticalPoint = -1, highCriticalPoint = -1; // 第一个后/前缀和包含一半订阅的桶ID，bit数组最远正好覆盖到这个桶
+			int halfWorkLoad = fix[0][i][numBucket] >> 1; // subWordLoadStep  fix[1][i][numBucket]
+			// 第一个后/前缀和包含一半订阅的桶ID，bit数组最远正好覆盖到lowCriticalPoint和highCriticalPoint-1
+			int lowCriticalPoint = -1, highCriticalPoint = -1;
 			_for(j, 0, numBucket) {
-				if (fix[0][i][numBucket-1-j]>=halfWorkLoad&& lowCriticalPoint==-1) 
-					lowCriticalPoint = j;
+				if (fix[0][i][numBucket - 1 - j] >= halfWorkLoad && lowCriticalPoint == -1)
+					lowCriticalPoint = numBucket - 1 - j;
 				if (fix[1][i][j] >= halfWorkLoad && highCriticalPoint == -1)
 					highCriticalPoint = j;
 			}
 			_for(j, 0, numBucket) {
-				if (j < lowCriticalPoint) { // 可以用bit
+				if (j < lowCriticalPoint) {                 // 可以用上bitset
 					bitsID[0][i][j] = 0;
-					endBucket[0][i][j] = lowCriticalPoint;
+					endBucket[0][i][j] = lowCriticalPoint;  // 遍历到小于 lowCriticalPoint
 				}
 				else {
 					bitsID[0][i][j] = -1;
 					endBucket[0][i][j] = numBucket;
-					_for(k, 0, data[0][i][j].size())  // 桶里每个订阅
-						bits[0][i][0][data[0][i][j][k].subID] = 1;  
+					_for(k, 0, data[0][i][j].size())        // 桶里每个订阅
+						bits[0][i][0][data[0][i][j][k].subID] = 1;
 				}
-				if (j <= highCriticalPoint) { // 不可以用bit
+				if (j < highCriticalPoint) {                // 不可以用bitset
 					bitsID[1][i][j] = -1;
 					endBucket[1][i][j] = 0;
-					_for(k, 0, data[1][i][j].size())  // 桶里每个订阅
+					_for(k, 0, data[1][i][j].size())        // 桶里每个订阅
 						bits[1][i][0][data[1][i][j][k].subID] = 1;
 				}
 				else {
 					bitsID[1][i][j] = 0;
-					endBucket[1][i][j] = highCriticalPoint;
+					endBucket[1][i][j] = highCriticalPoint; // 遍历到大于等于 highCriticalPoint, 和以前保持一致
 				}
 			}
 		}
@@ -128,38 +128,67 @@ void BIOP3::initBits() {
 		return;
 	}
 
-	//_for(i, 0, numBucket) {
-	//	//bitsID[0][i] = (numBucket - i - 1) / bitStep - 1; // (1000-499-1)/500=1, (1000-749-1)/250=1, (1000-936-1)/63=1, (1000-873-1)/63=2, (1000-54-1)/63=15 // 这个映射关系可以兼容numBits为1的情况，numBits为1时bitStep为500
-	//	bitsID[1][i] = i / bitStep - 1; // 750/250=3, 63/63=1
-	//	bitsID[0][i] = numBits - 3 - bitsID[1][i]; // 保证共用同一套cell
+	// 当前应该映射到的bitId, 桶id, 下一个临界负载点
+	int lowBid, highBid, lowBktId, highBktId, lowSubWorkLoad, highSubWorkLoad;
+	int subWorkLoadStep; // 每个维度上的subWordLoadStep都不同, 但同一个维度上的low/high subWordLoadStep是一样的
+	_for(i, 0, numDimension) {
 
-	//	//endBucket[0][i] = numBucket - (bitsID[0][i] + 1) * bitStep; // 1000-1*63=937, 1000-2*63=874, 1000-15*63=55
-	//	endBucket[1][i] = (bitsID[1][i] + 1) * bitStep;
-	//	endBucket[0][i] = min(numBucket, endBucket[1][i] + bitStep);
-	//}
+		subWorkLoadStep = (fix[0][i][numBucket] + numBits - 1) / numBits; // fix[1][i][numBucket]
 
-	//int subID, b;   // 起始标记数组的下标
-	//_for(i, 0, numDimension) {      // 每个维度
-	//	_for(j, 0, numBucket) {     // 每个桶
-	//		b = bitsID[0][j] + 1;
-	//		_for(k, 0, data[0][i][j].size()) {
-	//			subID = data[0][i][j][k].subID;
-	//			fullBits[i][subID] = 1;            // 0号bits每次必须标记
-	//			//bits[0][i][0][subID] = 1;        
-	//			_for(q, b, numBits - 1)              // Bug: bits都是是从高位(覆盖广)往低位遍历！
-	//				bits[0][i][q][subID] = 1;
-	//		}
+		// 由于是low/high都是动态的, 基本不可能共用同一套partition/cell,
+		// 但这里low还是从左边开始数一个subWordLoadStep的量, 保持一致      
+		// 或者从右边数 剩余负载量 开始累加subWordLoadStep, 否则不清楚endBucket!
+		// 0号low桶一定可以用到以 (numBits - 2) 为下标的bitset
+		// 最后一个桶一定用不到bitset
+		lowBid = -1;
+		lowBktId = numBucket;
+		// 举例: numBits=15, fix[0][i][numBucket]=1000000, subWorkLoadStep=66667 (low上的后14个多1, high上的前14个多1)
+		// fix[0][i][numBucket] / subWordLoadStep=14, lowSubWorkLoad=66662
+		lowSubWorkLoad = fix[0][i][numBucket] - (fix[0][i][numBucket]-1) / subWorkLoadStep * subWorkLoadStep;
+		highBid = -1;
+		highBktId = 0;
+		highSubWorkLoad = subWorkLoadStep;
 
-	//		b = bitsID[1][j] + 1;   // 除了0号外最小的需要插入的bits数组的ID
-	//		_for(k, 0, data[1][i][j].size()) {   // 桶里每个订阅
-	//			subID = data[1][i][j][k].subID;
-	//			//bits[1][i][0][subID] = 1;        // 0号bits每次必须标记
-	//			_for(q, b, numBits - 1)
-	//				bits[1][i][q][subID] = 1;
-	//		}
-	//	}
-	//}
-	//cout << "Stop.\n";
+		_for(j, 0, numBucket) {
+
+			if (fix[1][i][j] >= highSubWorkLoad) { // 第一个大于等于临界点的桶(j-1号, 前缀和不包含本身)作为bitset覆盖的终点桶
+				highSubWorkLoad += subWorkLoadStep;
+				highBid++;
+				highBktId = j;
+			}
+			bitsID[1][i][j] = highBid;
+			endBucket[1][i][j] = highBktId;        // 遍历到大于等于endBucket[1][i][j]
+
+			bitsID[0][i][numBucket - j - 1] = lowBid;
+			endBucket[0][i][numBucket - j - 1] = lowBktId;
+			if (fix[0][i][numBucket - j - 1] >= lowSubWorkLoad) {
+				lowSubWorkLoad += subWorkLoadStep;
+				lowBid++;
+				lowBktId = numBucket - j - 1;
+			}
+		}
+	}
+
+	int subID, b;   // 起始标记数组的下标
+	_for(i, 0, numDimension) {          // 每个维度
+		_for(j, 0, numBucket) {         // 每个桶
+			b = bitsID[0][i][j] + 1;
+			_for(k, 0, data[0][i][j].size()) {
+				subID = data[0][i][j][k].subID;
+				fullBits[i][subID] = 1; // 0号bits每次必须标记   
+				_for(q, b, numBits - 1) // Bug: bits都是是从高位(覆盖广)往低位遍历！
+					bits[0][i][q][subID] = 1;
+			}
+
+			b = bitsID[1][i][j] + 1;  // 最小的需要插入的bits数组的ID
+			_for(k, 0, data[1][i][j].size()) {     // 桶里每个订阅
+				subID = data[1][i][j][k].subID;
+				_for(q, b, numBits - 1)
+					bits[1][i][q][subID] = 1;
+			}
+		}
+	}
+	cout << "Stop.\n";
 }
 
 void BIOP3::match(const Pub& pub, int& matchSubs)
@@ -180,21 +209,21 @@ void BIOP3::match(const Pub& pub, int& matchSubs)
 				b[data[1][att][buck][k].subID] = 1;
 		compareTime += (double)compareStart.elapsed_nano();
 
-		//Timer markStart;
-		//_for(j, buck + 1, endBucket[0][buck])
-		//	_for(k, 0, data[0][att][j].size())
-		//	b[data[0][att][j][k].subID] = 1;
-		//mmfor(j, buck - 1, endBucket[1][buck])
-		//	_for(k, 0, data[1][att][j].size())
-		//	b[data[1][att][j][k].subID] = 1;
-		//markTime += (double)markStart.elapsed_nano();
+		Timer markStart;
+		_for(j, buck + 1, endBucket[0][att][buck])
+			_for(k, 0, data[0][att][j].size())
+			b[data[0][att][j][k].subID] = 1;
+		_for(j, endBucket[1][att][buck], buck)
+			_for(k, 0, data[1][att][j].size())
+			b[data[1][att][j][k].subID] = 1;
+		markTime += (double)markStart.elapsed_nano();
 
-		//Timer orStart;
-		//if (bitsID[0][buck] != -1)
-		//	b = b | bits[0][att][bitsID[0][buck]]; // 此时如果bitsID[0][buck]为0，不是表示覆盖所有桶的bits数组，而是表示只有1个bits数组(覆盖一半桶)的情况
-		//if (bitsID[1][buck] != -1)
-		//	b = b | bits[1][att][bitsID[1][buck]]; // Bug: 是att不是i
-		//orTime += (double)orStart.elapsed_nano();
+		Timer orStart;
+		if (bitsID[0][att][buck] != -1)
+			b = b | bits[0][att][bitsID[0][att][buck]];
+		if (bitsID[1][att][buck] != -1)
+			b = b | bits[1][att][bitsID[1][att][buck]];
+		orTime += (double)orStart.elapsed_nano();
 	}
 
 	Timer orStart;
@@ -248,7 +277,7 @@ int BIOP3::calMemory() {
 }
 
 void BIOP3::printRelation(int dimension_i) {
-	cout << "\n\nBIOP3Map\n";
+	cout << "\n\nBIOP3PDMap\n";
 	if (dimension_i == -1)
 		_for(i, 0, numDimension) {
 		cout << "\nDimension " << i << "    LowBucket Predicates: " << fix[0][dimension_i][numBucket] << "   ----------------\n";
@@ -258,7 +287,7 @@ void BIOP3::printRelation(int dimension_i) {
 		}
 		cout << "\n\nDimension " << i << "    HighBucket Predicates: " << fix[1][dimension_i][numBucket] << "   ----------------\n";
 		_for(j, 0, numBucket) {
-			cout << "hBkt" << j << ": bID=" << bitsID[1][i][j] << ", eBkt=" << endBucket[1][i][j]  << "; ";
+			cout << "hBkt" << j << ": bID=" << bitsID[1][i][j] << ", eBkt=" << endBucket[1][i][j] << "; ";
 			if (j % 5 == 0 && j > 0)cout << "\n";
 		}
 	}
