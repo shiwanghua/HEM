@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/swh/codes/ReinBits
+CMAKE_SOURCE_DIR = /home/swh/codes/BIOP
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/swh/codes/ReinBits
+CMAKE_BINARY_DIR = /home/swh/codes/BIOP
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/swh/codes/ReinBits/CMakeFiles /home/swh/codes/ReinBits/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/swh/codes/BIOP/CMakeFiles /home/swh/codes/BIOP/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/swh/codes/ReinBits/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/swh/codes/BIOP/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
