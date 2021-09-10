@@ -9,7 +9,7 @@ int main(int argc, char** argv)
 	
 	if (argc == 4) { 
 		cout << "argc=" << argc << endl;
-		cout << argv[0] << "  " << argv[1] << "  " << argv[2] <<"  "<< argv[3] << endl;
+		cout << argv[0] << "  " << argv[1] << "  " << argv[2] <<"  "<< argv[3] <<"  n="<<subs<< endl;
 		expID=to_string(atoi(argv[1]));
 		atts = m = atoi(argv[2]);
 		be = atoi(argv[3]);  // 输入一个bits指数

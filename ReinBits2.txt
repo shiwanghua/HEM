@@ -1,0 +1,1 @@
+135	bits= 4	memory= 226 MB	AvgMatchNum= 6.020000	AvgInsertTime= 0.000470 ms	InitTime= 221.519591 ms	NewAvgInsertTime= 0.000692 ms	AvgMatchTime= 2.303669 ms	AvgCmpTime= 0.071568 ms	AvgMarkTime= 0.794986 ms	OrTime= 0.473163 ms	AvgBitTime= 0.949655 ms	numBuk= 1000	numSub= 1000000	subSize= 10	numPub= 500	pubSize= 20	attTypes= 20
