@@ -20,8 +20,9 @@ extern const double width;   // Width of a predicate.
 // Rein
 extern const int buks;      // Number of buckets.
 
-// BIOP：Rein2
+// BIOP
 extern int be;         // 每个维度上 2 * 2^bits个bits数组, -1表示用桶数做为bits数组组数
+extern const int lvls;
 
 // Tama
 extern const int level;
