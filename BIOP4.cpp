@@ -97,7 +97,7 @@ void BIOP4::initBits() {
 	//	fix[1][i][numBucket] = fix[1][i][numBucket - 1] + data[1][i][numBucket - 1].size(); // Bug: 少了-1!!!
 	//}
 
-	// 前缀和数组(包括本身)、后缀和数组(包括本身)
+	// 前缀和数组(不包括本身)、后缀和数组(包括本身)
 	_for(i, 0, numDimension) {
 		fix[0][i][numBucket - 1] = data[0][i][numBucket - 1].size();
 		_for(j, 1, numBucket) {
@@ -403,12 +403,12 @@ void BIOP4::printRelation(int dimension_i) {
 	cout << "\n\nBIOP4DSMap\n";
 	if (dimension_i == -1)
 		_for(i, 0, numDimension) {
-		cout << "\nDimension " << i << "    LowBucket Predicates: " << fix[0][dimension_i][numBucket] << "   ----------------\n";
+		cout << "\nDimension " << i << "    LowBucket Predicates: " << fix[0][i][numBucket] << "   ----------------\n";
 		_for(j, 0, numBucket) {
 			cout << "lBkt" << j << ": bID=" << bitsID[0][i][j] << ", eBkt=" << endBucket[0][i][j] << ", dRvs=" << doubleReverse[0][i][j] << "; ";
 			if (j % 5 == 0 && j > 0)cout << "\n";
 		}
-		cout << "\n\nDimension " << i << "    HighBucket Predicates: " << fix[1][dimension_i][numBucket] << "   ----------------\n";
+		cout << "\n\nDimension " << i << "    HighBucket Predicates: " << fix[1][i][numBucket] << "   ----------------\n";
 		_for(j, 0, numBucket) {
 			cout << "hBkt" << j << ": bID=" << bitsID[1][i][j] << ", eBkt=" << endBucket[1][i][j] << ", dRvs=" << doubleReverse[1][i][j] << "; ";
 			if (j % 5 == 0 && j > 0)cout << "\n";

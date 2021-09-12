@@ -89,28 +89,28 @@ void BIOP2::initBits() {
 	bits[0].resize(numDimension, vector<bitset<subs>>(numBits > 1 ? numBits - 1 : 1));
 	bits[1].resize(numDimension, vector<bitset<subs>>(max(numBits - 1, 1)));
 
-	//// 前缀和、后缀和数组, 不包括本身
-	//_for(i, 0, numDimension) {
-	//	_for(j, 1, numBucket) {
-	//		fix[0][i][numBucket - 1 - j] = fix[0][i][numBucket - j] + data[0][i][numBucket - j].size();
-	//		fix[1][i][j] = fix[1][i][j - 1] + data[1][i][j - 1].size();
-	//	}
-	//	// 整个数组的和存在最后一个元素上
-	//	fix[0][i][numBucket] = fix[0][i][0] + data[0][i][0].size();
-	//	fix[1][i][numBucket] = fix[1][i][numBucket-1] + data[1][i][numBucket - 1].size();  // Bug: 少了-1!!!
-	//}
-
-	// 前缀和数组(包括本身)、后缀和数组(包括本身)
+	// 前缀和、后缀和数组, 不包括本身
 	_for(i, 0, numDimension) {
-		fix[0][i][numBucket - 1] = data[0][i][numBucket - 1].size();
 		_for(j, 1, numBucket) {
-			fix[0][i][numBucket - 1 - j] = fix[0][i][numBucket - j] + data[0][i][numBucket - j - 1].size();
+			fix[0][i][numBucket - 1 - j] = fix[0][i][numBucket - j] + data[0][i][numBucket - j].size();
 			fix[1][i][j] = fix[1][i][j - 1] + data[1][i][j - 1].size();
 		}
 		// 整个数组的和存在最后一个元素上
-		fix[0][i][numBucket] = fix[0][i][0];
-		fix[1][i][numBucket] = fix[1][i][numBucket - 1] + data[1][i][numBucket - 1].size(); // Bug: 少了-1!!!
+		fix[0][i][numBucket] = fix[0][i][0] + data[0][i][0].size();
+		fix[1][i][numBucket] = fix[1][i][numBucket-1] + data[1][i][numBucket - 1].size();  // Bug: 少了-1!!!
 	}
+
+	//// 前缀和数组(不包括本身)、后缀和数组(包括本身)
+	//_for(i, 0, numDimension) {
+	//	fix[0][i][numBucket - 1] = data[0][i][numBucket - 1].size();
+	//	_for(j, 1, numBucket) {
+	//		fix[0][i][numBucket - 1 - j] = fix[0][i][numBucket - j] + data[0][i][numBucket - j - 1].size();
+	//		fix[1][i][j] = fix[1][i][j - 1] + data[1][i][j - 1].size();
+	//	}
+	//	// 整个数组的和存在最后一个元素上
+	//	fix[0][i][numBucket] = fix[0][i][0];
+	//	fix[1][i][numBucket] = fix[1][i][numBucket - 1] + data[1][i][numBucket - 1].size(); // Bug: 少了-1!!!
+	//}
 
 	if (numBits == 1) {                           // 只有一个bits时特判，不用fullBits
 
@@ -481,12 +481,12 @@ void BIOP2::printRelation(int dimension_i) {
 	cout << "\n\nBIOP2SDMap\n";
 	if (dimension_i == -1)
 		_for(i, 0, numDimension) {
-		cout << "\nDimension " << i << "    LowBucket Predicates: " << fix[0][dimension_i][numBucket] << "   ----------------\n";
+		cout << "\nDimension " << i << "    LowBucket Predicates: " << fix[0][i][numBucket] << "   ----------------\n";
 		_for(j, 0, numBucket) {
 			cout << "lBkt" << j << ": bID=" << bitsID[0][i][j] << ", eBkt=" << endBucket[0][i][j] << ", dRvs=" << doubleReverse[0][i][j] <<"; ";
 			if (j % 5 == 0 && j > 0)cout << "\n";
 		}
-		cout << "\n\nDimension " << i << "    HighBucket Predicates: " << fix[1][dimension_i][numBucket] << "   ----------------\n";
+		cout << "\n\nDimension " << i << "    HighBucket Predicates: " << fix[1][i][numBucket] << "   ----------------\n";
 		_for(j, 0, numBucket) {
 			cout << "hBkt" << j << ": bID=" << bitsID[1][i][j] << ", eBkt=" << endBucket[1][i][j] << ", dRvs=" << doubleReverse[1][i][j]<<"; ";
 			if (j % 5 == 0 && j > 0)cout << "\n";

@@ -1,0 +1,82 @@
+Date : 2021-09-05 19:38:42
+Directory : d:\codes\c++\Rein-Bits\BIOP
+Total : 45 files,  6458 codes, 1046 comments, 833 blanks, all 8337 lines
+
+Languages
++--------------+------------+------------+------------+------------+------------+
+| language     | files      | code       | comment    | blank      | total      |
++--------------+------------+------------+------------+------------+------------+
+| C++          |         30 |      3,846 |        942 |        627 |      5,415 |
+| JSON         |          8 |      1,633 |          0 |          6 |      1,639 |
+| HTML         |          1 |        471 |          0 |          2 |        473 |
+| Makefile     |          1 |        316 |         82 |        171 |        569 |
+| Python       |          2 |        151 |         19 |         16 |        186 |
+| Shell Script |          2 |         31 |          3 |          7 |         41 |
+| Markdown     |          1 |         10 |          0 |          4 |         14 |
++--------------+------------+------------+------------+------------+------------+
+
+Directories
++------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                 | files      | code       | comment    | blank      | total      |
++------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                    |         45 |      6,458 |      1,046 |        833 |      8,337 |
+| build                                                                                                |          8 |      1,633 |          0 |          6 |      1,639 |
+| build\.cmake                                                                                         |          7 |      1,561 |          0 |          6 |      1,567 |
+| build\.cmake\api                                                                                     |          7 |      1,561 |          0 |          6 |      1,567 |
+| build\.cmake\api\v1                                                                                  |          7 |      1,561 |          0 |          6 |      1,567 |
+| build\.cmake\api\v1\query                                                                            |          1 |          1 |          0 |          0 |          1 |
+| build\.cmake\api\v1\query\client-vscode                                                              |          1 |          1 |          0 |          0 |          1 |
+| build\.cmake\api\v1\reply                                                                            |          6 |      1,560 |          0 |          6 |      1,566 |
++------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++------------------------------------------------------------------------------------------------------+--------------+------------+------------+------------+------------+
+| filename                                                                                             | language     | code       | comment    | blank      | total      |
++------------------------------------------------------------------------------------------------------+--------------+------------+------------+------------+------------+
+| d:\codes\c++\Rein-Bits\BIOP\BIOP.cpp                                                                 | C++          |        168 |        160 |         30 |        358 |
+| d:\codes\c++\Rein-Bits\BIOP\BIOP.h                                                                   | C++          |         35 |          7 |          7 |         49 |
+| d:\codes\c++\Rein-Bits\BIOP\BIOP1.cpp                                                                | C++          |        261 |         43 |         32 |        336 |
+| d:\codes\c++\Rein-Bits\BIOP\BIOP1.h                                                                  | C++          |         36 |          7 |          7 |         50 |
+| d:\codes\c++\Rein-Bits\BIOP\BIOP2.cpp                                                                | C++          |        312 |        164 |         33 |        509 |
+| d:\codes\c++\Rein-Bits\BIOP\BIOP2.h                                                                  | C++          |         37 |          6 |          7 |         50 |
+| d:\codes\c++\Rein-Bits\BIOP\BIOP3.cpp                                                                | C++          |        243 |         34 |         31 |        308 |
+| d:\codes\c++\Rein-Bits\BIOP\BIOP3.h                                                                  | C++          |         36 |          6 |          7 |         49 |
+| d:\codes\c++\Rein-Bits\BIOP\BIOP4.cpp                                                                | C++          |        345 |         49 |         37 |        431 |
+| d:\codes\c++\Rein-Bits\BIOP\BIOP4.h                                                                  | C++          |         37 |          6 |          8 |         51 |
+| d:\codes\c++\Rein-Bits\BIOP\BIOP5.cpp                                                                | C++          |        349 |         50 |         38 |        437 |
+| d:\codes\c++\Rein-Bits\BIOP\BIOP5.h                                                                  | C++          |         37 |          6 |          8 |         51 |
+| d:\codes\c++\Rein-Bits\BIOP\BIOPSC.cpp                                                               | C++          |        351 |         50 |         38 |        439 |
+| d:\codes\c++\Rein-Bits\BIOP\BIOPSC.h                                                                 | C++          |         36 |          8 |          8 |         52 |
+| d:\codes\c++\Rein-Bits\BIOP\Makefile                                                                 | Makefile     |        316 |         82 |        171 |        569 |
+| d:\codes\c++\Rein-Bits\BIOP\README.md                                                                | Markdown     |         10 |          0 |          4 |         14 |
+| d:\codes\c++\Rein-Bits\BIOP\Rein.cpp                                                                 | C++          |         83 |         92 |         11 |        186 |
+| d:\codes\c++\Rein-Bits\BIOP\Rein.h                                                                   | C++          |         30 |         37 |          9 |         76 |
+| d:\codes\c++\Rein-Bits\BIOP\build\.cmake\api\v1\query\client-vscode\query.json                       | JSON         |          1 |          0 |          0 |          1 |
+| d:\codes\c++\Rein-Bits\BIOP\build\.cmake\api\v1\reply\cache-v2-39d0d0c88fb01e10c680.json             | JSON         |      1,099 |          0 |          1 |      1,100 |
+| d:\codes\c++\Rein-Bits\BIOP\build\.cmake\api\v1\reply\codemodel-v2-86f80c09d350414e5507.json         | JSON         |         60 |          0 |          1 |         61 |
+| d:\codes\c++\Rein-Bits\BIOP\build\.cmake\api\v1\reply\directory-.-Debug-d0094a50bb2071803777.json    | JSON         |         14 |          0 |          1 |         15 |
+| d:\codes\c++\Rein-Bits\BIOP\build\.cmake\api\v1\reply\index-2021-08-28T17-26-37-0908.json            | JSON         |        110 |          0 |          1 |        111 |
+| d:\codes\c++\Rein-Bits\BIOP\build\.cmake\api\v1\reply\target-cmakeRB-Debug-e05224cbb4627421eb14.json | JSON         |        202 |          0 |          1 |        203 |
+| d:\codes\c++\Rein-Bits\BIOP\build\.cmake\api\v1\reply\toolchains-v1-fed8ceede3e4bf5b0a0a.json        | JSON         |         75 |          0 |          1 |         76 |
+| d:\codes\c++\Rein-Bits\BIOP\build\compile_commands.json                                              | JSON         |         72 |          0 |          0 |         72 |
+| d:\codes\c++\Rein-Bits\BIOP\chrono_time.h                                                            | C++          |         39 |          0 |         10 |         49 |
+| d:\codes\c++\Rein-Bits\BIOP\compile.sh                                                               | Shell Script |         12 |          0 |          4 |         16 |
+| d:\codes\c++\Rein-Bits\BIOP\constant.cpp                                                             | C++          |         16 |          4 |          4 |         24 |
+| d:\codes\c++\Rein-Bits\BIOP\constant.h                                                               | C++          |         21 |          4 |          5 |         30 |
+| d:\codes\c++\Rein-Bits\BIOP\data_structure.h                                                         | C++          |         46 |          0 |         12 |         58 |
+| d:\codes\c++\Rein-Bits\BIOP\draw.py                                                                  | Python       |        138 |         15 |         12 |        165 |
+| d:\codes\c++\Rein-Bits\BIOP\generator.cpp                                                            | C++          |        325 |          6 |         37 |        368 |
+| d:\codes\c++\Rein-Bits\BIOP\generator.h                                                              | C++          |         54 |          2 |         30 |         86 |
+| d:\codes\c++\Rein-Bits\BIOP\main.cpp                                                                 | C++          |         24 |          5 |          8 |         37 |
+| d:\codes\c++\Rein-Bits\BIOP\match_time.html                                                          | HTML         |        471 |          0 |          2 |        473 |
+| d:\codes\c++\Rein-Bits\BIOP\printer.cpp                                                              | C++          |         74 |         49 |         23 |        146 |
+| d:\codes\c++\Rein-Bits\BIOP\printer.h                                                                | C++          |         21 |          3 |         14 |         38 |
+| d:\codes\c++\Rein-Bits\BIOP\python_run.py                                                            | Python       |         13 |          4 |          4 |         21 |
+| d:\codes\c++\Rein-Bits\BIOP\run.sh                                                                   | Shell Script |         19 |          3 |          3 |         25 |
+| d:\codes\c++\Rein-Bits\BIOP\run_models.cpp                                                           | C++          |        348 |         86 |         77 |        511 |
+| d:\codes\c++\Rein-Bits\BIOP\run_models.h                                                             | C++          |         21 |          1 |          5 |         27 |
+| d:\codes\c++\Rein-Bits\BIOP\test.cpp                                                                 | C++          |         11 |         21 |          4 |         36 |
+| d:\codes\c++\Rein-Bits\BIOP\util.cpp                                                                 | C++          |        406 |         36 |         64 |        506 |
+| d:\codes\c++\Rein-Bits\BIOP\util.h                                                                   | C++          |         44 |          0 |         23 |         67 |
+| Total                                                                                                |              |      6,458 |      1,046 |        833 |      8,337 |
++------------------------------------------------------------------------------------------------------+--------------+------------+------------+------------+------------+
