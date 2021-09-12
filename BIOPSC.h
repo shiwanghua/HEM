@@ -22,7 +22,7 @@ private:
 	vector<vector<vector<vector<Combo>>>> data[2];  // low/high, 维度, 宽度, 桶号, 桶内偏移量
 	vector<vector<vector<bitset<subs>>>> bits[2];   // low/high, 维度, 宽度, bitset号, 订阅id
 	vector<vector<vector<int>>> fix[2];             // low/high, 维度, 宽度, 桶号
-	vector<vector<bitset<subs>>> fullBits;          // 维度, 宽度, 订阅id
+	vector<bitset<subs>> fullBits;                  // 不需要区分宽度!
 	int*** endBucket[2], *** bitsID[2];             // low/high, 维度, 宽度, 桶号
 	bool*** doubleReverse[2];                       // low/high, 维度, 宽度, 桶号
 
@@ -46,7 +46,7 @@ public:
 	void initBits();      // 插入完后初始化bits数组
 	//void calBucketSize(); // 计算bucketSize
 	int calMemory();      // 计算占用内存大小
-	void printRelation(int dimension_i); // 打印映射关系
+	void printRelation(int dimension_i, int li); // 打印映射关系
 };
 
 //#endif

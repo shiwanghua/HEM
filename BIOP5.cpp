@@ -97,7 +97,7 @@ void BIOP5::initBits() {
 	//	fix[1][i][numBucket] = fix[1][i][numBucket - 1] + data[1][i][numBucket - 1].size(); // Bug: 少了-1!!!
 	//}
 
-	// 前缀和数组(包括本身)、后缀和数组(包括本身)
+	// 前缀和数组(不包括本身)、后缀和数组(包括本身)
 	_for(i, 0, numDimension) {
 		fix[0][i][numBucket - 1] = data[0][i][numBucket - 1].size();
 		_for(j, 1, numBucket) {
@@ -105,13 +105,13 @@ void BIOP5::initBits() {
 			fix[1][i][j] = fix[1][i][j - 1] + data[1][i][j - 1].size();
 		}
 		// 整个数组的和存在最后一个元素上
-		fix[0][i][numBucket] = fix[0][i][0];
+		//fix[0][i][numBucket] = fix[0][i][0];  // Bug: 导致后面刚开始算映射关系时fix[0][i][lowBktId]不合理
 		fix[1][i][numBucket] = fix[1][i][numBucket - 1] + data[1][i][numBucket - 1].size(); // Bug: 少了-1!!!
 	}
 
 	if (numBits == 1) { // 只有一个bits时特判，不用fullBits
 		_for(i, 0, numDimension) {
-			int halfWorkLoad = fix[0][i][numBucket] >> 1; // subWorkLoadStep  fix[1][i][numBucket]
+			int halfWorkLoad = fix[0][i][0] >> 1; // subWorkLoadStep  fix[1][i][numBucket]
 			int quarterWorkLoad = halfWorkLoad >> 1;
 			// 第一个后/前缀和包含一半订阅的桶ID，bit数组最远正好覆盖到lowHalfPoint和highHalfPoint-1
 			int lowHalfPoint = -1, lowQuarterPoint = -1, highHalfPoint = -1, highQuarterPoint = -1;
@@ -177,7 +177,7 @@ void BIOP5::initBits() {
 	int subWorkLoadStep; // 每个维度上的subWorkLoadStep都不同, 但同一个维度上的low/high subWorkLoadStep是一样的
 	_for(i, 0, numDimension) {
 
-		subWorkLoadStep = (fix[0][i][numBucket] + numBits - 1) / numBits; // fix[1][i][numBucket]
+		subWorkLoadStep = (fix[0][i][0] + numBits - 1) / numBits; // fix[1][i][numBucket]
 
 		// 由于是low/high都是动态的, 基本不可能共用同一套partition/cell,
 		// 但这里low还是从左边开始数一个subWorkLoadStep的量, 保持一致      
@@ -188,14 +188,14 @@ void BIOP5::initBits() {
 		// fix[0][i][numBucket] / subWorkLoadStep=14, lowSubWorkLoad=66662
 		lowBid = -1;
 		lowBktId = numBucket;
-		lowSubWorkLoad = fix[0][i][numBucket] - (fix[0][i][numBucket] - 1) / subWorkLoadStep * subWorkLoadStep;
+		lowSubWorkLoad = fix[0][i][0] - (fix[0][i][0] - 1) / subWorkLoadStep * subWorkLoadStep;
 		highBid = -1;
 		highBktId = 0;
 		highSubWorkLoad = subWorkLoadStep;
 
 		// lowContain[i]=右数(第一个覆盖)lowSubWorkLoad+(i-1)*subWorkLoadStep个订阅所到的桶号(i>0时)
 		vector<int> lowContain(numBits + 1, numBucket);
-		// highContain[i]=左数i*subWorkLoadStep个订阅所到的桶号
+		// highContain[i]=左数 i*subWorkLoadStep 个订阅所到的桶号
 		vector<int> highContain(numBits + 1, 0);
 		int li = 1, hi = 1; // lowContain和highContain的下标
 		_for(j, 0, numBucket) {
@@ -203,16 +203,18 @@ void BIOP5::initBits() {
 				highContain[hi++] = j;
 				highSubWorkLoad += subWorkLoadStep;
 			}
+			// 举例: fix[0][i][0]=1M, subWorkLoadStep=100000, numBits=10
+			// li,lowSubWorkLoad = 1,100000; 2,200000; ... ; 9,900000; 10,1000000; 11,1100000
 			if (fix[0][i][numBucket - j - 1] >= lowSubWorkLoad) {
 				lowContain[li++] = numBucket - j - 1;
 				lowSubWorkLoad += subWorkLoadStep;
 			}
 		}
-		lowContain[li] = 0;
+		lowContain[li] = 0; // 为啥不会越界?
 		highContain[hi] = numBucket;
 
 		li = hi = 1; // 双重反向遍历时所对应的另一端的桶号在contain数组中的下标, 其实 li=lowBid+2, hi=highBid+2
-		lowSubWorkLoad = fix[0][i][numBucket] - (fix[0][i][numBucket] - 1) / subWorkLoadStep * subWorkLoadStep;
+		lowSubWorkLoad = fix[0][i][0] - (fix[0][i][0] - 1) / subWorkLoadStep * subWorkLoadStep;
 		highSubWorkLoad = subWorkLoadStep;
 		_for(j, 0, numBucket) {
 			// 此时大于等于highSubWorkLoad了, 可以用bits, 因为bits覆盖到j-1桶
@@ -234,7 +236,8 @@ void BIOP5::initBits() {
 				doubleReverse[1][i][j] = true;
 			}
 
-			// 前缀数组求和时包括本身(如果不包括本身, 则在两个j后再减一)
+			// 后缀数组求和时包括本身(如果不包括本身, 则在两个j、lowBktId和lowContain[li]后再减一，而lowContain[li]有可能为0); -1+1省去了
+			// fix[0][i][j][numBucket]需要是0, 使fix[0][i][j][lowBktId]刚开始为0
 			if (fix[0][i][numBucket - j] - fix[0][i][lowBktId] <= fix[0][i][lowContain[li]] - fix[0][i][numBucket - j]) {
 				bitsID[0][i][numBucket - j - 1] = lowBid;
 				endBucket[0][i][numBucket - j - 1] = lowBktId;
@@ -409,19 +412,19 @@ void BIOP5::printRelation(int dimension_i) {
 	cout << "\n\nBIOP5DDMap\n";
 	if (dimension_i == -1)
 		_for(i, 0, numDimension) {
-		cout << "\nDimension " << i << "    LowBucket Predicates: " << fix[0][dimension_i][numBucket] << "   ----------------\n";
+		cout << "\nDimension " << i << "    LowBucket Predicates: " << fix[0][i][0] << "   ----------------\n";
 		_for(j, 0, numBucket) {
 			cout << "lBkt" << j << ": bID=" << bitsID[0][i][j] << ", eBkt=" << endBucket[0][i][j] << ", dRvs=" << doubleReverse[0][i][j] << "; ";
 			if (j % 5 == 0 && j > 0)cout << "\n";
 		}
-		cout << "\n\nDimension " << i << "    HighBucket Predicates: " << fix[1][dimension_i][numBucket] << "   ----------------\n";
+		cout << "\n\nDimension " << i << "    HighBucket Predicates: " << fix[1][i][numBucket] << "   ----------------\n";
 		_for(j, 0, numBucket) {
 			cout << "hBkt" << j << ": bID=" << bitsID[1][i][j] << ", eBkt=" << endBucket[1][i][j] << ", dRvs=" << doubleReverse[1][i][j] << "; ";
 			if (j % 5 == 0 && j > 0)cout << "\n";
 		}
 	}
 	else {
-		cout << "\nDimension: " << dimension_i << "    LowBucket Predicates: " << fix[0][dimension_i][numBucket] << "   ----------------\n";
+		cout << "\nDimension: " << dimension_i << "    LowBucket Predicates: " << fix[0][dimension_i][0] << "   ----------------\n";
 		_for(i, 0, numBucket) {
 			cout << "lBkt" << i << ": bID=" << bitsID[0][dimension_i][i] << ", eBkt=" << endBucket[0][dimension_i][i] << ", dRvs=" << doubleReverse[0][dimension_i][i] << "; ";
 			if (i % 5 == 0 && i > 0)cout << "\n";

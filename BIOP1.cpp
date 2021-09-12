@@ -87,7 +87,7 @@ void BIOP1::initBits() {
 			endBucket[0][j] = numBucket >> 1;     // 标记时遍历到小于这个值
 			doubleReverse[0][j] = false;          // Bug：这个也要赋值（没初始化），找了一个多小时
 			int bid1 = -1, bid2 = 0;
-			int bktid1 = 0, bktid2 = numBucket >> 1; // Bug: bitStep是0不是500! 折磨多天的毒瘤!
+			int bktid1 = 0, bktid2 = bitStep;     // Bug: bitStep是0不是500! 折磨多天的毒瘤!???没错吧
 			int midid = (bktid1 + bktid2) / 2;
 
 			if (j <= midid) {
@@ -104,13 +104,13 @@ void BIOP1::initBits() {
 		_for(j, numBucket >> 1, numBucket) {
 			// 此时high这一端一定用到也只能用到0号bits数组
 			bitsID[1][j] = 0;
-			endBucket[1][j] = numBucket >> 1;            // 标记时遍历到等于这个值 Bug: bitStep是0不是500! 
+			endBucket[1][j] = numBucket >> 1;     // 标记时遍历到等于这个值 Bug: bitStep是0不是500! ??? 是500吧
 			doubleReverse[1][j] = false;
 
 			int bid1 = -1, bid2 = 0;
 			int bktid1 = numBucket, bktid2 = numBucket - (numBucket >> 1);// 1000-500
 			int midid = (bktid1 + bktid2) / 2;
-			if (j <= midid) {
+			if (j < midid) {
 				bitsID[0][j] = bid2;              // 为-1时表示确实用不到bits数组
 				endBucket[0][j] = bktid2;         // 往右标记1时从 j+1 遍历到 bktid1-1 号桶
 				doubleReverse[0][j] = true;
