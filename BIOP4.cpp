@@ -202,9 +202,15 @@ void BIOP4::initBits() {
 				lowSubWorkLoad += subWorkLoadStep;
 			}
 		}
-		lowContain[li] = 0;
-		highContain[hi] = numBucket;
-
+		if (li == numBits) {
+			lowContain[li] = 0;
+			cout << "BIOP4 li=" << li << endl;
+		}
+		if (hi == numBits) {
+			highContain[hi] = numBucket;
+			//cout << "BIOP4 hi=" << hi << endl;
+		}
+		
 		li = hi = 1; // 双重反向遍历时所对应的另一端的桶号在contain数组中的下标, 其实 li=lowBid+2, hi=highBid+2
 		lowSubWorkLoad = fix[0][i][numBucket] - (fix[0][i][numBucket] - 1) / subWorkLoadStep * subWorkLoadStep;
 		highSubWorkLoad = subWorkLoadStep;
@@ -215,9 +221,15 @@ void BIOP4::initBits() {
 				hi++;								      
 				highBid++;							      
 				highBktId = j;						      
-			}										      
-													      
-			if (j- highBktId <= highContain[hi] - j) {     // Bug: 没有减highBktId
+			}					
+
+			// Bug: 提前满了, 最后几个桶为空, 此时highBid=numBits-1, 越界了, 直接用fullBL
+			if (fix[1][i][j] == fix[1][i][numBucket]) {
+				bitsID[1][i][j] = numBits - 1;
+				endBucket[1][i][j] = j + 1; // 如果是第一次进来, j号桶非空, 需要二重反向标记, 否则是空桶, 可以兼容这种情况
+				doubleReverse[1][i][j] = true;
+			}
+			else if (j- highBktId <= highContain[hi] - j) {     // Bug: 没有减highBktId
 				bitsID[1][i][j] = highBid;			      
 				endBucket[1][i][j] = highBktId;            // 遍历到大于等于endBucket[1][i][j]
 				doubleReverse[1][i][j] = false;		      
@@ -228,8 +240,13 @@ void BIOP4::initBits() {
 				doubleReverse[1][i][j] = true;		      
 			}
 
-
-			if (lowBktId - (numBucket - j - 1) - 1 <= numBucket - j - 1 - lowContain[li]+1) {
+			// Bug: 提前满了, 序号小的几个桶为空, 单独考虑, 直接用二重反向
+			if (fix[0][i][numBucket - j - 1] == fix[0][i][0]) {
+				bitsID[0][i][numBucket - j - 1] = numBits - 1;
+				endBucket[0][i][numBucket - j - 1] = numBucket - j - 1;
+				doubleReverse[0][i][numBucket - j - 1] = true;
+			}
+			else if (lowBktId - (numBucket - j - 1) - 1 <= numBucket - j - 1 - lowContain[li]+1) {
 				bitsID[0][i][numBucket - j - 1] = lowBid;
 				endBucket[0][i][numBucket - j - 1] = lowBktId;
 				doubleReverse[0][i][numBucket - j - 1] = false;

@@ -20,6 +20,48 @@ void intervalGenerator::GenSubList()
     }
 }
 
+void intervalGenerator::GenSubList2()
+{
+    int i = 0;
+    double UniformProportion = 0.01;
+    for (i = 0; i < UniformProportion*subs; i++)
+    {
+        IntervalSub sub = GenOneSub(i, cons, atts, attDis, valDis, valDom, alpha, width);
+        subList.push_back(sub);
+    }
+
+    double most = UniformProportion + (1 - UniformProportion) * 0.8;
+    while(i< most*subs)
+    {
+        IntervalSub sub;
+        sub.id = i;
+        sub.size = cons;
+
+        if (attDis == 0)
+            GenUniformAtts(sub, atts);
+        else if (attDis == 1)
+            GenZipfAtts(sub, atts, alpha);
+
+        Gen28SubsPredicate(sub, 0.0, 0.2);
+        subList.push_back(sub);
+        i++;
+    }
+    while (i < subs) {
+        IntervalSub sub;
+        sub.id = i;
+        sub.size = cons;
+
+        if (attDis == 0)
+            GenUniformAtts(sub, atts);
+        else if (attDis == 1)
+            GenZipfAtts(sub, atts, alpha);
+        
+        Gen28SubsPredicate(sub, 0.8, 1.0);
+        subList.push_back(sub);
+        i++;
+    }
+}
+
 void generator::GenPubList()
 {
     for (int i = 0; i < pubs; i++)
@@ -65,6 +107,8 @@ IntervalSub intervalGenerator::GenOneSub(int id, int size, int atts, int attDis,
         
     if (valDis == 0)
         GenUniformValues(sub, valDom);
+    else if(valDis==1)
+        GenUniformSubs(sub);
     return sub;
 }
 
@@ -89,8 +133,8 @@ Pub intervalGenerator::GenOnePub(int m, int atts, int attDis, int valDis, int va
         GenUniformAtts(pub,atts);
     else if (attDis == 1)
         GenZipfAtts(pub,atts,alpha);
-    if (valDis == 0)
-        GenUniformValues(pub,valDom);
+    //if (valDis == 0)
+    GenUniformValues(pub,valDom);
     return pub;
 }
 
@@ -227,10 +271,44 @@ void generator::GenUniformValues(Sub &sub, int valDom)
 
 void intervalGenerator::GenUniformValues(IntervalSub &sub, int valDom)
 {
+    int fixedWidth = valDom * width;
     for (int i = 0; i < sub.size; i++)
     {
         int x = random( int(valDom * (1.0 - width)) );
-        int y = x + int(valDom * width);
+        int y = x + fixedWidth;
+        sub.constraints[i].lowValue = x;
+        sub.constraints[i].highValue = y;
+    }
+}
+
+// 产生随机宽度的谓词构成的订阅
+void intervalGenerator::GenUniformSubs(IntervalSub& sub)
+{
+    int w;
+    int minWidth = valDom * width;
+    int maxVal = valDom - minWidth;
+    for (int i = 0; i < sub.size; i++)
+    {
+        w = random(maxVal)+minWidth;
+        int x = random(valDom - w);
+        int y = x + w;
+        sub.constraints[i].lowValue = x;
+        sub.constraints[i].highValue = y;
+    }
+}
+
+// 根据28原则生成订阅
+void intervalGenerator::Gen28SubsPredicate(IntervalSub& sub, double l, double h)
+{
+    int minV = valDom * l;
+    int maxV = valDom * h;
+    int range = maxV - minV;
+    int w, x, y;
+    for (int i = 0; i < sub.size; i++)
+    {
+        w = random(range);
+        x = random(range - w) + minV;
+        y = x + w;
         sub.constraints[i].lowValue = x;
         sub.constraints[i].highValue = y;
     }

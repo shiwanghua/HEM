@@ -50,6 +50,8 @@ class intervalGenerator {
     void GenZipfAtts(Pub &pub, int atts, double alpha);
 
     void GenUniformValues(IntervalSub &sub, int valDom);
+    void GenUniformSubs(IntervalSub& sub);
+    void Gen28SubsPredicate(IntervalSub& sub, double l,double h);
     void GenUniformValues(Pub &pub, int valDom);
 
     bool CheckExist(vector<int> a, int x);
@@ -78,6 +80,7 @@ public:
     {}
 
     void GenSubList();
+    void GenSubList2(); // 产生取值不均匀的订阅
 
     void GenPubList();
 };

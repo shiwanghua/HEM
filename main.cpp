@@ -7,25 +7,26 @@ int main(int argc, char** argv)
 	//cin >> alpha >> width;
 	//m = atts; // Note that Rein requires m == atts.
 	
-	if (argc == 4) { 
-		cout << "argc=" << argc << endl;
-		cout << argv[0] << "  " << argv[1] << "  " << argv[2] <<"  "<< argv[3] <<"  n="<<subs<< endl;
+	if (argc == 5) { 
 		expID=to_string(atoi(argv[1]));
 		atts = m = atoi(argv[2]);
 		be = atoi(argv[3]);  // 输入一个bits指数
-		
+		width = atof(argv[4]);
+		cout << "argc=" << argc << endl;
+		cout << argv[0] << "  " << argv[1] << "  " << argv[2] << "  " << argv[3] << "  " << argv[4] << "  n=" << subs << endl;
 	}
 	intervalGenerator gen(subs, pubs, atts, cons, m, attDis, valDis, valDom, alpha, width);
 	gen.GenSubList();
 	gen.GenPubList();
 
-	run_rein(gen);
+	/*run_rein(gen);
 	run_BIOP(gen);
 	run_BIOP1(gen);
 	run_BIOP2(gen);
 	run_BIOP3(gen);
-	run_BIOP4(gen);
+	run_BIOP4(gen);*/
 	run_BIOP5(gen);
+	run_BIOPSC(gen);
 
 	cout << "Done.\n";
 	system("pause");

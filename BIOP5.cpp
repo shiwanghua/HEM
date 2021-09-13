@@ -177,6 +177,19 @@ void BIOP5::initBits() {
 	int subWorkLoadStep; // 每个维度上的subWorkLoadStep都不同, 但同一个维度上的low/high subWorkLoadStep是一样的
 	_for(i, 0, numDimension) {
 
+		// 基本不会出现
+		if (fix[0][i][0] == 0) {
+			_for(j, 0, numBucket) {
+				bitsID[0][i][j] = -1;
+				endBucket[0][i][j] = j;       // 遍历到大于等于endBucket[1][i][j]
+				doubleReverse[0][i][j] = false;
+				bitsID[1][i][j] = -1;
+				endBucket[1][i][j] = j;       // 遍历到大于等于endBucket[1][i][j]
+				doubleReverse[1][i][j] = false;
+			}
+			continue;
+		}
+
 		subWorkLoadStep = (fix[0][i][0] + numBits - 1) / numBits; // fix[1][i][numBucket]
 
 		// 由于是low/high都是动态的, 基本不可能共用同一套partition/cell,
@@ -210,8 +223,9 @@ void BIOP5::initBits() {
 				lowSubWorkLoad += subWorkLoadStep;
 			}
 		}
-		lowContain[li] = 0; // 为啥不会越界?
-		highContain[hi] = numBucket;
+		//lowContain[li] = 0; // 为啥不会越界??? li==numBits+1了
+		if (hi == numBits)  // Bug: 最后几个桶为空时hi会在for循环里增加到numBits+1
+			highContain[hi] = numBucket;
 
 		li = hi = 1; // 双重反向遍历时所对应的另一端的桶号在contain数组中的下标, 其实 li=lowBid+2, hi=highBid+2
 		lowSubWorkLoad = fix[0][i][0] - (fix[0][i][0] - 1) / subWorkLoadStep * subWorkLoadStep;
@@ -225,7 +239,13 @@ void BIOP5::initBits() {
 				highBktId = j;
 			}
 
-			if (fix[1][i][j] - fix[1][i][highBktId] <= fix[1][i][highContain[hi]] - fix[1][i][j]) {     // Bug: 没有减highBktId
+			// Bug: 提前满了, 最后几个桶为空, 此时highBid=numBits-1, 越界了, 直接用fullBL
+			if (fix[1][i][j] == fix[1][i][numBucket]) {
+				bitsID[1][i][j] = numBits - 1;
+				endBucket[1][i][j] = j + 1; // 如果是第一次进来, j号桶非空, 需要二重反向标记, 否则是空桶, 可以兼容这种情况
+				doubleReverse[1][i][j] = true;
+			}
+			else if (fix[1][i][j] - fix[1][i][highBktId] <= fix[1][i][highContain[hi]] - fix[1][i][j]) {     // Bug: 没有减highBktId
 				bitsID[1][i][j] = highBid;
 				endBucket[1][i][j] = highBktId;       // 遍历到大于等于endBucket[1][i][j]
 				doubleReverse[1][i][j] = false;
@@ -238,7 +258,13 @@ void BIOP5::initBits() {
 
 			// 后缀数组求和时包括本身(如果不包括本身, 则在两个j、lowBktId和lowContain[li]后再减一，而lowContain[li]有可能为0); -1+1省去了
 			// fix[0][i][j][numBucket]需要是0, 使fix[0][i][j][lowBktId]刚开始为0
-			if (fix[0][i][numBucket - j] - fix[0][i][lowBktId] <= fix[0][i][lowContain[li]] - fix[0][i][numBucket - j]) {
+			// Bug: 提前满了, 序号小的几个桶为空, 单独考虑, 直接用二重反向
+			if (fix[0][i][numBucket - j - 1] == fix[0][i][0]) {
+				bitsID[0][i][numBucket - j - 1] = numBits - 1;
+				endBucket[0][i][numBucket - j - 1] = numBucket - j - 1;
+				doubleReverse[0][i][numBucket - j - 1] = true;
+			}
+			else if (fix[0][i][numBucket - j] - fix[0][i][lowBktId] <= fix[0][i][lowContain[li]] - fix[0][i][numBucket - j]) {
 				bitsID[0][i][numBucket - j - 1] = lowBid;
 				endBucket[0][i][numBucket - j - 1] = lowBktId;
 				doubleReverse[0][i][numBucket - j - 1] = false;

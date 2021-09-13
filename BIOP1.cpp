@@ -193,7 +193,7 @@ void BIOP1::initBits() {
 			}
 		}
 	}
-	cout << "Stop.\n";
+	//cout << "Stop.\n";
 }
 
 void BIOP1::match(const Pub& pub, int& matchSubs)

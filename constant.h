@@ -6,7 +6,7 @@ using namespace std;
 
 extern string expID;       // 记录实验id
 extern bool display;       // 是否打印映射关系
-const int subs = 10000000;   // Number of subscriptions.
+const int subs = 1000000;   // Number of subscriptions.
 extern const int pubs;       // Number of publications.
 extern int atts;        // Total number of attributes, i.e. dimensions.
 extern const int cons;        // Number of constraints(predicates) in one sub.
@@ -15,7 +15,7 @@ extern const int attDis;       // The distribution of attributes in subs and pub
 extern const int valDis;       // The distribution of values in subs and pubs. 0:uniform
 extern const int valDom; // Cardinality of values.
 extern const double alpha;     // Parameter for Zipf distribution.
-extern const double width;   // Width of a predicate.
+extern double width;   // Width of a predicate.
 
 // Rein
 extern const int buks;      // Number of buckets.

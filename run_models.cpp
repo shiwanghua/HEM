@@ -49,7 +49,11 @@ void run_rein(const intervalGenerator& gen) {
 		+ " subSize= " + Util::Int2String(cons)
 		+ " numPub= " + Util::Int2String(pubs)
 		+ " pubSize= " + Util::Int2String(m)
-		+ " attTypes= " + Util::Int2String(atts);
+		+ " attTypes= " + Util::Int2String(atts)
+		+ " attDis= " + Util::Int2String(attDis)
+		+ " valDis= " + Util::Int2String(valDis)
+		+ " width= " + Util::Double2String(width)
+		+ " alpha= " + Util::Double2String(alpha);
 	Util::WriteData(outputFileName.c_str(), content);
 
 	//outputFileName = "ReinBucketSize.txt";
@@ -425,7 +429,7 @@ void run_BIOP4(const intervalGenerator& gen) {
 	Util::WriteData(outputFileName.c_str(), content);
 
 	//outputFileName = "BIOP4BucketSize.txt";
-	//rb.calBucketSize();
+	//rb4.calBucketSize();
 	//content = expID + " numBucket= " + Util::Int2String(rb4.numBucket)
 	//	//+ " sumBukSetSize= " + to_string(accumulate(rb4.bucketSub.begin(), rb4.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
 	//	+ " maxBukSetSize= " + to_string((*max_element(rb4.bucketSub.begin(), rb4.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
@@ -499,12 +503,88 @@ void run_BIOP5(const intervalGenerator& gen) {
 	Util::WriteData(outputFileName.c_str(), content);
 
 	//outputFileName = "BIOP5BucketSize.txt";
-	//rb.calBucketSize();
+	//rb5.calBucketSize();
 	//content = expID + " numBucket= " + Util::Int2String(rb5.numBucket)
 	//	//+ " sumBukSetSize= " + to_string(accumulate(rb5.bucketSub.begin(), rb5.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
 	//	+ " maxBukSetSize= " + to_string((*max_element(rb5.bucketSub.begin(), rb5.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
 	//	+ " minBukSetSize= " + to_string(min_element(rb5.bucketSub.begin(), rb5.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
-	//_for(i, 0, rb3.numBucket)
+	//_for(i, 0, rb5.numBucket)
 	//	content += " " + to_string(rb5.bucketSub[i].size());
+	//Util::WriteData(outputFileName.c_str(), content);
+}
+
+void run_BIOPSC(const intervalGenerator& gen) {
+	BIOPSC biopsc;
+
+	vector<double> insertTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchSubList;
+
+	// insert
+	for (int i = 0; i < subs; i++)
+	{
+		Timer subStart;
+
+		biopsc.insert(gen.subList[i]); // Insert sub[i] into data structure.
+
+		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double)insertTime / 1000000);
+	}
+	cout << "BIOPSCDD Insertion Finish.\n";
+
+	double initTime;
+	Timer initStart;
+	biopsc.initBits();
+	initTime = (double)initStart.elapsed_nano() / 1000000.0;
+
+	// match
+	for (int i = 0; i < pubs; i++)
+	{
+		int matchSubs = 0; // Record the number of matched subscriptions.
+		Timer matchStart;
+		//cout << "Begin to match event" << i << endl;
+		biopsc.match(gen.pubList[i], matchSubs);
+
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double)eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "BIOPSCDD Event" << i << " is matched.\n";
+	}
+
+	if (display)
+		biopsc.printRelation(1,2);
+
+	// output
+	string outputFileName = "BIOPSC.txt";
+	string content = expID
+		+ " bits= " + Util::Int2String(be)
+		+ " memory= " + Util::Int2String(biopsc.calMemory())
+		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+		+ " ms InitTime= " + Util::Double2String(initTime)
+		+ " ms NewAvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+		+ " ms AvgCmpTime= " + to_string(biopsc.compareTime / pubs / 1000000)
+		+ " ms AvgMarkTime= " + to_string(biopsc.markTime / pubs / 1000000)
+		+ " ms OrTime= " + to_string(biopsc.orTime / pubs / 1000000)
+		+ " ms AvgBitTime= " + to_string(biopsc.bitTime / pubs / 1000000)
+		+ " ms numBuk= " + Util::Int2String(biopsc.numBucket)
+		+ " numSub= " + Util::Int2String(subs)
+		+ " subSize= " + Util::Int2String(cons)
+		+ " numPub= " + Util::Int2String(pubs)
+		+ " pubSize= " + Util::Int2String(m)
+		+ " attTypes= " + Util::Int2String(atts)
+		+ " lvls=" + Util::Int2String(lvls);
+	Util::WriteData(outputFileName.c_str(), content);
+
+	//outputFileName = "BIOPSCBucketSize.txt";
+	//biopsc.calBucketSize();
+	//content = expID + " numBucket= " + Util::Int2String(biopsc.numBucket)
+	//	//+ " sumBukSetSize= " + to_string(accumulate(biopsc.bucketSub.begin(), biopsc.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
+	//	+ " maxBukSetSize= " + to_string((*max_element(biopsc.bucketSub.begin(), biopsc.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
+	//	+ " minBukSetSize= " + to_string(min_element(biopsc.bucketSub.begin(), biopsc.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
+	//_for(i, 0, biopsc.numBucket)
+	//	content += " " + to_string(biopsc.bucketSub[i].size());
 	//Util::WriteData(outputFileName.c_str(), content);
 }

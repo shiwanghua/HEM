@@ -22,7 +22,8 @@ private:
 	vector<vector<vector<vector<Combo>>>> data[2];  // low/high, 维度, 宽度, 桶号, 桶内偏移量
 	vector<vector<vector<bitset<subs>>>> bits[2];   // low/high, 维度, 宽度, bitset号, 订阅id
 	vector<vector<vector<int>>> fix[2];             // low/high, 维度, 宽度, 桶号
-	vector<bitset<subs>> fullBits;                  // 不需要区分宽度!
+	vector<bitset<subs>> fullBits;					// 只能用于空事件维度上
+	vector<vector<bitset<subs>>> fullBL;			// Bug: 只能用于每一层的双重反向匹配!存储每一层的所有订阅
 	int*** endBucket[2], *** bitsID[2];             // low/high, 维度, 宽度, 桶号
 	bool*** doubleReverse[2];                       // low/high, 维度, 宽度, 桶号
 

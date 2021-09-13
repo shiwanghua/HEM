@@ -3,10 +3,12 @@
 BIOPSC::BIOPSC() {
 	numSub = 0;
 	numDimension = atts;
-	buckStep = (valDom - 1) / buks + 1;
-	numBucket = (valDom - 1) / buckStep + 1;
 	levelStep = (valDom - 1) / lvls + 1;
 	numLevel = (valDom - 1) / levelStep + 1;
+	buckStep = (valDom - 1) / buks + 1;   
+	//buckStep = buckStep * numLevel; // 没用
+	numBucket = (valDom - 1) / buckStep + 1;
+
 	cout << "ExpID = " << expID << ". BIOPSC: numLevel = " << numLevel << ", levelStep = " << levelStep << ", numBucket = " << numBucket << ", bucketStep = " << buckStep << ", bit exponent = " << be << endl;
 
 	//bucketSub.resize(numBucket);
@@ -17,8 +19,11 @@ BIOPSC::BIOPSC() {
 		numBits = numBucket;
 	else
 		numBits = pow(2, be);  // 每个维度上lowValue对应的bits数组个数
-	if (numBits > 1)
+	if (numBits > 1) {
 		fullBits.resize(numDimension);  // 维度总数永远不变，所以只需要resize一次
+		fullBL.resize(numDimension, vector<bitset<subs>>(numLevel));
+	}
+		
 
 	doubleReverse[0] = new bool** [numDimension];
 	doubleReverse[1] = new bool** [numDimension];
@@ -59,12 +64,21 @@ void BIOPSC::insert(IntervalSub sub)
 	{
 		IntervalCnt cnt = sub.constraints[i];
 		Combo c;
-		int li = (cnt.highValue - cnt.lowValue) / levelStep;
+		//int li = (cnt.highValue - cnt.lowValue) / levelStep;
+		int li = cnt.highValue / levelStep;
+		//int li = cnt.lowValue / levelStep;
+
+		/*int li;
+		if (cnt.highValue <= valDom / 2)
+			li = 0;
+		else if (cnt.lowValue >= valDom / 2)
+			li = 2;
+		else li = 1;*/
 		c.val = cnt.lowValue;
 		c.subID = sub.id;
-		data[0][li][cnt.att][cnt.lowValue / buckStep].push_back(c);
+		data[0][cnt.att][li][cnt.lowValue / buckStep].push_back(c);
 		c.val = cnt.highValue;
-		data[1][li][cnt.att][cnt.highValue / buckStep].push_back(c);
+		data[1][cnt.att][li][cnt.highValue / buckStep].push_back(c);
 	}
 	numSub++;
 }
@@ -159,28 +173,28 @@ void BIOPSC::initBits() {
 						endBucket[0][i][j][k] = lowHalfPoint;  // 从 k 二重反向遍历到等于 lowCriticalPoint(都包含)
 						doubleReverse[0][i][j][k] = true;
 						_for(q, 0, data[0][i][j][k].size())    // 桶里每个订阅
-							bits[0][i][0][data[0][i][j][k][q].subID] = 1;
+							bits[0][i][j][0][data[0][i][j][k][q].subID] = 1;
 					}
 					else {
 						bitsID[0][i][j][k] = -1;
 						endBucket[0][i][j][k] = numBucket;
 						doubleReverse[0][i][j][k] = false;
 						_for(q, 0, data[0][i][j][k].size())    // 桶里每个订阅
-							bits[0][i][0][data[0][i][j][k][q].subID] = 1;
+							bits[0][i][j][0][data[0][i][j][k][q].subID] = 1;
 					}
-					if (j < highQuarterPoint) {                // 不可以用bitset
+					if (k < highQuarterPoint) {                // 不可以用bitset
 						bitsID[1][i][j][k] = -1;
 						endBucket[1][i][j][k] = 0;             // 遍历到等于0
 						doubleReverse[1][i][j][k] = false;
 						_for(q, 0, data[1][i][j][k].size())    // 桶里每个订阅
-							bits[1][i][0][data[1][i][j][k][q].subID] = 1;
+							bits[1][i][j][0][data[1][i][j][k][q].subID] = 1;
 					}
-					else if (j < highHalfPoint) {
+					else if (k < highHalfPoint) {
 						bitsID[1][i][j][k] = 0;
 						endBucket[1][i][j][k] = highHalfPoint;  // 从 j 二重反向遍历到大于等于 highCriticalPoint
 						doubleReverse[1][i][j][k] = true;
 						_for(q, 0, data[1][i][j][k].size())     // 桶里每个订阅
-							bits[1][i][0][data[1][i][j][k][q].subID] = 1;
+							bits[1][i][j][0][data[1][i][j][k][q].subID] = 1;
 					}
 					else {
 						bitsID[1][i][j][k] = 0;
@@ -199,6 +213,17 @@ void BIOPSC::initBits() {
 	int subWorkLoadStep; // 每个维度上的subWorkLoadStep都不同, 但同一个维度上的low/high subWorkLoadStep是一样的
 	_for(i, 0, numDimension) {
 		_for(j, 0, numLevel) {
+			if (fix[1][i][j][numBucket]==0) { 
+				_for(k, 0, numBucket) {
+					bitsID[0][i][j][k] = -1;
+					endBucket[0][i][j][k] = k;       // 遍历到大于等于endBucket[1][i][j]
+					doubleReverse[0][i][j][k] = false;
+					bitsID[1][i][j][k] = -1;
+					endBucket[1][i][j][k] = k;       // 遍历到大于等于endBucket[1][i][j]
+					doubleReverse[1][i][j][k] = false;
+				}
+				continue;
+			}
 			subWorkLoadStep = (fix[1][i][j][numBucket] + numBits - 1) / numBits; // fix[0][i][j][0]
 
 		// 由于是low/high都是动态的, 基本不可能共用同一套partition/cell,
@@ -230,8 +255,9 @@ void BIOPSC::initBits() {
 					lowSubWorkLoad += subWorkLoadStep;
 				}
 			}
-			lowContain[li] = 0;
-			highContain[hi] = numBucket;
+			//lowContain[li] = 0;
+			if(hi==numBits)  // Bug: 最后几个桶为空时hi会在for循环里增加到numBits+1
+				highContain[hi] = numBucket;
 
 			li = hi = 1; // 双重反向遍历时所对应的另一端的桶号在contain数组中的下标, 其实 li=lowBid+2, hi=highBid+2
 			lowSubWorkLoad = fix[0][i][j][0] - (fix[0][i][j][0] - 1) / subWorkLoadStep * subWorkLoadStep;
@@ -244,8 +270,16 @@ void BIOPSC::initBits() {
 					highBid++;
 					highBktId = k;
 				}
-
-				if (fix[1][i][j][k] - fix[1][i][j][highBktId] <= fix[1][i][j][highContain[hi]] - fix[1][i][j][k]) {     // Bug: 没有减highBktId
+				//if (i == 5 && j == 0 && k == 827) {
+				//	cout << "error\n";
+				//}
+				// Bug: 提前满了, 最后几个桶为空, 此时highBid=numBits-1, 越界了, 直接用fullBL
+				if (fix[1][i][j][k] == fix[1][i][j][numBucket]) {
+					bitsID[1][i][j][k] = numBits - 1;
+					endBucket[1][i][j][k] = j + 1; // 如果是第一次进来, j号桶非空, 需要二重反向标记, 否则是空桶, 可以兼容这种情况
+					doubleReverse[1][i][j][k] = true;
+				}
+				else if (fix[1][i][j][k] - fix[1][i][j][highBktId] <= fix[1][i][j][highContain[hi]] - fix[1][i][j][k]) {     // Bug: 没有减highBktId
 					bitsID[1][i][j][k] = highBid;
 					endBucket[1][i][j][k] = highBktId;       // 遍历到大于等于endBucket[1][i][j]
 					doubleReverse[1][i][j][k] = false;
@@ -258,7 +292,13 @@ void BIOPSC::initBits() {
 
 				// 后缀数组求和时包括本身(如果不包括本身, 则在两个k、lowBktId和lowContain[li]后再减一，而lowContain[li]有可能为0)
 				// fix[0][i][j][numBucket]需要是0, 使fix[0][i][j][lowBktId]刚开始为0
-				if (fix[0][i][j][numBucket - k] - fix[0][i][j][lowBktId] <= fix[0][i][j][lowContain[li]] - fix[0][i][j][numBucket - k]) {
+				// Bug: 提前满了, 序号小的几个桶为空, 单独考虑, 直接用二重反向
+				if (fix[0][i][j][numBucket - k - 1] == fix[0][i][j][0]) {
+					bitsID[0][i][j][numBucket - k - 1] = numBits - 1;
+					endBucket[0][i][j][numBucket - k - 1] = numBucket - k - 1;
+					doubleReverse[0][i][j][numBucket - k - 1] = true;
+				}
+				else if (fix[0][i][j][numBucket - k] - fix[0][i][j][lowBktId] <= fix[0][i][j][lowContain[li]] - fix[0][i][j][numBucket - k]) {
 					bitsID[0][i][j][numBucket - k - 1] = lowBid;
 					endBucket[0][i][j][numBucket - k - 1] = lowBktId;
 					doubleReverse[0][i][j][numBucket - k - 1] = false;
@@ -290,6 +330,7 @@ void BIOPSC::initBits() {
 				_for(q, 0, data[0][i][j][k].size()) {
 					subID = data[0][i][j][k][q].subID;
 					fullBits[i][subID] = 1;    // 0号bits每次必须标记  
+					fullBL[i][j][subID] = 1;
 					_for(p, b, numBits - 1) // Bug: bits都是是从高位(覆盖广)往低位遍历！
 						bits[0][i][j][p][subID] = 1;
 				}
@@ -332,7 +373,7 @@ void BIOPSC::match(const Pub& pub, int& matchSubs)
 			if (doubleReverse[0][att][j][buck]) {
 				Timer markStart;
 				if (bitsID[0][att][j][buck] == numBits - 1 && numBits > 1)
-					bLocal = fullBits[att];
+					bLocal = fullBL[att][j];
 				else
 					bLocal = bits[0][att][j][bitsID[0][att][j][buck]];
 				_for(k, endBucket[0][att][j][buck], buck + 1)
@@ -360,7 +401,7 @@ void BIOPSC::match(const Pub& pub, int& matchSubs)
 			if (doubleReverse[1][att][j][buck]) {
 				Timer markStart;
 				if (bitsID[1][att][j][buck] == numBits - 1 && numBits > 1)
-					bLocal = fullBits[att];
+					bLocal = fullBL[att][j];
 				else
 					bLocal = bits[1][att][j][bitsID[1][att][j][buck]];
 				_for(k, buck, endBucket[1][att][j][buck])
@@ -426,8 +467,11 @@ int BIOPSC::calMemory() {
 	}
 
 	// fullBits
-	if (numBits > 1)
+	if (numBits > 1) {
 		size += sizeof(bitset<subs>) * fullBits.size(); // fullBits.size()即numDimension
+		size += sizeof(bitset<subs>) * numDimension * numLevel; // fullBL
+	}
+		
 
 	// 两个fix
 	size += sizeof(int) * numDimension * numLevel * (numBucket + 1);

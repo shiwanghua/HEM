@@ -188,7 +188,7 @@ void BIOP3::initBits() {
 			}
 		}
 	}
-	cout << "Stop.\n";
+	//cout << "Stop.\n";
 }
 
 void BIOP3::match(const Pub& pub, int& matchSubs)
