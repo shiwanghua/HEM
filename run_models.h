@@ -14,7 +14,7 @@
 #include <numeric> 
 #include<algorithm>
 
-const int interval = 100; // 每匹配这么多个事件输出一条日志信息
+const int interval = 1000; // 每匹配这么多个事件输出一条日志信息
 
 void run_rein(const intervalGenerator& gen);
 void run_BIOP(const intervalGenerator& gen);

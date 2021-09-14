@@ -285,6 +285,33 @@ BIOP5.cpp.s:
 	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOP5.cpp.s
 .PHONY : BIOP5.cpp.s
 
+BIOPSC.o: BIOPSC.cpp.o
+
+.PHONY : BIOPSC.o
+
+# target to build an object file
+BIOPSC.cpp.o:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOPSC.cpp.o
+.PHONY : BIOPSC.cpp.o
+
+BIOPSC.i: BIOPSC.cpp.i
+
+.PHONY : BIOPSC.i
+
+# target to preprocess a source file
+BIOPSC.cpp.i:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOPSC.cpp.i
+.PHONY : BIOPSC.cpp.i
+
+BIOPSC.s: BIOPSC.cpp.s
+
+.PHONY : BIOPSC.s
+
+# target to generate assembly for a file
+BIOPSC.cpp.s:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOPSC.cpp.s
+.PHONY : BIOPSC.cpp.s
+
 Rein.o: Rein.cpp.o
 
 .PHONY : Rein.o
@@ -528,6 +555,9 @@ help:
 	@echo "... BIOP5.o"
 	@echo "... BIOP5.i"
 	@echo "... BIOP5.s"
+	@echo "... BIOPSC.o"
+	@echo "... BIOPSC.i"
+	@echo "... BIOPSC.s"
 	@echo "... Rein.o"
 	@echo "... Rein.i"
 	@echo "... Rein.s"
