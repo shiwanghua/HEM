@@ -8,6 +8,6 @@
 | 2    | 8/18 - 8/24 | 提出 6 种模式，实现BIOPPS、BIOP2SD，实现 Rein 和 BIOP 的空属性匹配功能 |
 | 3    | 8/25 - 8/31 | 实现 BIOP1SS，修改 BIOPPS、BIOP2SD，low、high 两端统一用同一套覆盖分区，做实验，数据处理 |
 | 4    | 9/1 - 9/7   | 实现 BIOP3PS、BIOP4DS、BIOP5DD                               |
-| 5    | 9/8 - 9/14  |                                                              |
+| 5    | 9/8 - 9/14  | 实现BIOPSCDD，修复空桶带来的bug                              |
 | 6    |             |                                                              |
 
