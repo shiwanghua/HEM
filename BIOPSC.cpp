@@ -5,7 +5,7 @@ BIOPSC::BIOPSC() {
 	numDimension = atts;
 	levelStep = (valDom - 1) / lvls + 1;
 	numLevel = (valDom - 1) / levelStep + 1;
-	buckStep = (valDom - 1) / buks + 1;   
+	buckStep = (valDom - 1) / buks + 1;
 	//buckStep = buckStep * numLevel; // 没用
 	numBucket = (valDom - 1) / buckStep + 1;
 
@@ -23,7 +23,7 @@ BIOPSC::BIOPSC() {
 		fullBits.resize(numDimension);  // 维度总数永远不变，所以只需要resize一次
 		fullBL.resize(numDimension, vector<bitset<subs>>(numLevel));
 	}
-		
+
 
 	doubleReverse[0] = new bool** [numDimension];
 	doubleReverse[1] = new bool** [numDimension];
@@ -213,10 +213,11 @@ void BIOPSC::initBits() {
 	int subWorkLoadStep; // 每个维度上的subWorkLoadStep都不同, 但同一个维度上的low/high subWorkLoadStep是一样的
 	_for(i, 0, numDimension) {
 		_for(j, 0, numLevel) {
-			if (fix[1][i][j][numBucket]==0) { 
+
+			if (fix[1][i][j][numBucket] == 0) {
 				_for(k, 0, numBucket) {
 					bitsID[0][i][j][k] = -1;
-					endBucket[0][i][j][k] = k;       // 遍历到大于等于endBucket[1][i][j]
+					endBucket[0][i][j][k] = k;   
 					doubleReverse[0][i][j][k] = false;
 					bitsID[1][i][j][k] = -1;
 					endBucket[1][i][j][k] = k;       // 遍历到大于等于endBucket[1][i][j]
@@ -224,6 +225,7 @@ void BIOPSC::initBits() {
 				}
 				continue;
 			}
+
 			subWorkLoadStep = (fix[1][i][j][numBucket] + numBits - 1) / numBits; // fix[0][i][j][0]
 
 		// 由于是low/high都是动态的, 基本不可能共用同一套partition/cell,
@@ -256,7 +258,7 @@ void BIOPSC::initBits() {
 				}
 			}
 			//lowContain[li] = 0;
-			if(hi==numBits)  // Bug: 最后几个桶为空时hi会在for循环里增加到numBits+1
+			if (hi == numBits)  // Bug: 最后几个桶为空时hi会在for循环里增加到numBits+1
 				highContain[hi] = numBucket;
 
 			li = hi = 1; // 双重反向遍历时所对应的另一端的桶号在contain数组中的下标, 其实 li=lowBid+2, hi=highBid+2
@@ -426,11 +428,30 @@ void BIOPSC::match(const Pub& pub, int& matchSubs)
 		}
 	}
 
-	Timer orStart;
-	_for(i, 0, numDimension)
-		if (!attExist[i])
-			b = b | fullBits[i];
-	orTime += (double)orStart.elapsed_nano();
+	if (numBits > 1) {
+		Timer orStart;
+		_for(i, 0, numDimension)
+			if (!attExist[i])
+				b = b | fullBits[i];
+		orTime += (double)orStart.elapsed_nano();
+	}
+	else {
+		Timer markStart;
+		_for(i, 0, numDimension)
+			if (!attExist[i])
+				_for(j, 0, numLevel)
+				_for(k, 0, endBucket[0][i][j][0])
+				_for(q, 0, data[0][i][j].size())
+				b[data[0][i][j][k][q].subID] = 1;
+		markTime += (double)markStart.elapsed_nano();
+
+		Timer orStart;
+		_for(i, 0, numDimension)
+			if (!attExist[i])
+				_for(j, 0, numLevel)
+					b = b | bits[0][i][j][0];
+		orTime += (double)orStart.elapsed_nano();
+	}
 
 	Timer bitStart;
 	_for(i, 0, subs)
@@ -471,7 +492,7 @@ int BIOPSC::calMemory() {
 		size += sizeof(bitset<subs>) * fullBits.size(); // fullBits.size()即numDimension
 		size += sizeof(bitset<subs>) * numDimension * numLevel; // fullBL
 	}
-		
+
 
 	// 两个fix
 	size += sizeof(int) * numDimension * numLevel * (numBucket + 1);

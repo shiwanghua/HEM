@@ -61,6 +61,23 @@ void BIOP5::insert(IntervalSub sub)
 	numSub++;
 }
 
+void BIOP5::insert_online(IntervalSub sub)
+{
+	for (int i = 0; i < sub.size; i++)
+	{
+		IntervalCnt cnt = sub.constraints[i];
+		Combo c;
+		// int bucketID = cnt.lowValue / buckStep; // Bug: 这里被坑了
+		c.val = cnt.lowValue;
+		c.subID = sub.id;
+		data[0][cnt.att][cnt.lowValue / buckStep].push_back(c);
+		c.val = cnt.highValue;
+		data[1][cnt.att][cnt.highValue / buckStep].push_back(c);
+	}
+	numSub++;
+}
+
+
 // fullBits单独存储的版本
 void BIOP5::initBits() {
 
@@ -181,7 +198,7 @@ void BIOP5::initBits() {
 		if (fix[0][i][0] == 0) {
 			_for(j, 0, numBucket) {
 				bitsID[0][i][j] = -1;
-				endBucket[0][i][j] = j;       // 遍历到大于等于endBucket[1][i][j]
+				endBucket[0][i][j] = j;      
 				doubleReverse[0][i][j] = false;
 				bitsID[1][i][j] = -1;
 				endBucket[1][i][j] = j;       // 遍历到大于等于endBucket[1][i][j]
@@ -384,11 +401,28 @@ void BIOP5::match(const Pub& pub, int& matchSubs)
 		}
 	}
 
-	Timer orStart;
-	_for(i, 0, numDimension)
-		if (!attExist[i])
-			b = b | fullBits[i];
-	orTime += (double)orStart.elapsed_nano();
+	if (numBits > 1) {
+		Timer orStart;
+		_for(i, 0, numDimension)
+			if (!attExist[i])
+				b = b | fullBits[i];
+		orTime += (double)orStart.elapsed_nano();
+	}
+	else {
+		Timer markStart;
+		_for(i, 0, numDimension)
+			if (!attExist[i])
+				_for(j, 0, endBucket[0][i][0])
+				_for(k, 0, data[0][i][j].size())
+				b[data[0][i][j][k].subID] = 1;
+		markTime += (double)markStart.elapsed_nano();
+
+		Timer orStart;
+		_for(i, 0, numDimension)
+			if (!attExist[i])
+				b = b | bits[0][i][0];
+		orTime += (double)orStart.elapsed_nano();
+	}
 
 	Timer bitStart;
 	_for(i, 0, subs)

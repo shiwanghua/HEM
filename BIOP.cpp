@@ -80,7 +80,6 @@ void BIOP::initBits() {
 
 	if (numBits == 1) {                           // 只有一个bits时特判，不用fullBits
 
-		// 以下代码已被上面的for循环兼容
 		_for(i, 0, numBucket >> 1) {
 			bitsID[0][i] = 0;                     // 此时的0号代表0.5~1, 不是0~1
 			bitsID[1][i] = -1;                    // 此时用不到bits数组, -1表示非法
@@ -294,11 +293,28 @@ void BIOP::match(const Pub& pub, int& matchSubs)
 		orTime += (double)orStart.elapsed_nano();
 	}
 	
-	Timer orStart;
-	_for(i, 0, numDimension)
-		if (!attExist[i])
-			b = b | fullBits[i];
-	orTime += (double)orStart.elapsed_nano();
+	if (numBits > 1) {
+		Timer orStart;
+		_for(i, 0, numDimension)
+			if (!attExist[i])
+				b = b | fullBits[i];
+		orTime += (double)orStart.elapsed_nano();
+	}
+	else {
+		Timer markStart;
+		_for(i, 0, numDimension) 
+			if (!attExist[i])
+				_for(j, 0, bitStep)
+				_for(k, 0, data[0][i][j].size())
+				b[data[0][i][j][k].subID] = 1;
+		markTime += (double)markStart.elapsed_nano();
+
+		Timer orStart;
+		_for(i, 0, numDimension)
+			if (!attExist[i])
+				b = b | bits[0][i][0];
+		orTime += (double)orStart.elapsed_nano();
+	}
 
 	Timer bitStart;
 	_for(i, 0, subs)

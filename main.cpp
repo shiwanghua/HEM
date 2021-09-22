@@ -26,7 +26,8 @@ int main(int argc, char** argv)
 	run_BIOP3(gen);
 	run_BIOP4(gen);
 	run_BIOP5(gen);
-	run_BIOPSC(gen);
+	//run_BIOPSC(gen);
+	run_BIOPSR(gen);
 
 	cout << "Done.\n";
 	system("pause");

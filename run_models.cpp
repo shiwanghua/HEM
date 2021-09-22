@@ -530,7 +530,7 @@ void run_BIOPSC(const intervalGenerator& gen) {
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
 	}
-	cout << "BIOPSCDD Insertion Finish.\n";
+	cout << "BIOP-SC-DD Insertion Finish.\n";
 
 	double initTime;
 	Timer initStart;
@@ -549,7 +549,7 @@ void run_BIOPSC(const intervalGenerator& gen) {
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "BIOPSCDD Event" << i << " is matched.\n";
+			cout << "BIOP-SC-DD Event" << i << " is matched.\n";
 	}
 
 	if (display)
@@ -587,4 +587,71 @@ void run_BIOPSC(const intervalGenerator& gen) {
 	//_for(i, 0, biopsc.numBucket)
 	//	content += " " + to_string(biopsc.bucketSub[i].size());
 	//Util::WriteData(outputFileName.c_str(), content);
+}
+
+void run_BIOPSR(const intervalGenerator& gen) {
+	BIOPSR biopsr;
+
+	vector<double> insertTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchSubList;
+
+	// insert
+	for (int i = 0; i < subs; i++)
+	{
+		Timer subStart;
+
+		biopsr.insert(gen.subList[i]); // Insert sub[i] into data structure.
+
+		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double)insertTime / 1000000);
+	}
+	cout << "BIOP-SR-PS Insertion Finish.\n";
+
+	double initTime;
+	Timer initStart;
+	biopsr.initBits();
+	initTime = (double)initStart.elapsed_nano() / 1000000.0;
+
+	// match
+	for (int i = 0; i < pubs; i++)
+	{
+		int matchSubs = 0; // Record the number of matched subscriptions.
+		Timer matchStart;
+		//cout << "Begin to match event" << i << endl;
+		biopsr.match(gen.pubList[i], matchSubs);
+
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double)eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "BIOP-SR-PS Event" << i << " is matched.\n";
+	}
+
+	if (display)
+		biopsr.printRelation();
+
+	// output
+	string outputFileName = "BIOPSR.txt";
+	string content = expID
+		+ " bits= " + Util::Int2String(be)
+		+ " memory= " + Util::Int2String(biopsr.calMemory())
+		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+		+ " ms InitTime= " + Util::Double2String(initTime)
+		+ " ms NewAvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+		+ " ms AvgCmpTime= " + to_string(biopsr.compareTime / pubs / 1000000)
+		+ " ms AvgMarkTime= " + to_string(biopsr.markTime / pubs / 1000000)
+		+ " ms OrTime= " + to_string(biopsr.orTime / pubs / 1000000)
+		+ " ms AvgBitTime= " + to_string(biopsr.bitTime / pubs / 1000000)
+		+ " ms numBuk= " + Util::Int2String(biopsr.numBucket)
+		+ " numSub= " + Util::Int2String(subs)
+		+ " subSize= " + Util::Int2String(cons)
+		+ " numPub= " + Util::Int2String(pubs)
+		+ " pubSize= " + Util::Int2String(m)
+		+ " attTypes= " + Util::Int2String(atts)
+		+ " lvls=" + Util::Int2String(lvls);
+	Util::WriteData(outputFileName.c_str(), content);
+
 }

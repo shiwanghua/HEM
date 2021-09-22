@@ -14,7 +14,7 @@
 #define mfor(i,a,b) for(int i=(a);i>(b);--i)
 #define mmfor(i,a,b) for(int i=(a);i>=(b);--i)
 
-// 订阅分类+动动模式
+// 订阅分类+动动模式 Subscriptions Classification
 class BIOPSC
 {
 private:

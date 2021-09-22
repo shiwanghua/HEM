@@ -133,6 +133,17 @@ void BIOP3::initBits() {
 	int subWorkLoadStep; // 每个维度上的subWordLoadStep都不同, 但同一个维度上的low/high subWordLoadStep是一样的
 	_for(i, 0, numDimension) {
 
+		// 基本不会出现
+		if (fix[0][i][0] == 0) {
+			_for(j, 0, numBucket) {
+				bitsID[0][i][j] = -1;
+				endBucket[0][i][j] = j;
+				bitsID[1][i][j] = -1;
+				endBucket[1][i][j] = j; 
+			}
+			continue;
+		}
+
 		subWorkLoadStep = (fix[0][i][numBucket] + numBits - 1) / numBits; // fix[1][i][numBucket]
 
 		// 由于是low/high都是动态的, 基本不可能共用同一套partition/cell,
@@ -226,11 +237,28 @@ void BIOP3::match(const Pub& pub, int& matchSubs)
 		orTime += (double)orStart.elapsed_nano();
 	}
 
-	Timer orStart;
-	_for(i, 0, numDimension)
-		if (!attExist[i])
-			b = b | fullBits[i];
-	orTime += (double)orStart.elapsed_nano();
+	if (numBits > 1) {
+		Timer orStart;
+		_for(i, 0, numDimension)
+			if (!attExist[i])
+				b = b | fullBits[i];
+		orTime += (double)orStart.elapsed_nano();
+	}
+	else {
+		Timer markStart;
+		_for(i, 0, numDimension)
+			if (!attExist[i])
+				_for(j, 0, endBucket[0][i][0])  // 到临界点为止
+				_for(k, 0, data[0][i][j].size())
+				b[data[0][i][j][k].subID] = 1;
+		markTime += (double)markStart.elapsed_nano();
+
+		Timer orStart;
+		_for(i, 0, numDimension)
+			if (!attExist[i])
+				b = b | bits[0][i][0];
+		orTime += (double)orStart.elapsed_nano();
+	}
 
 	Timer bitStart;
 	_for(i, 0, subs)

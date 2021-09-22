@@ -427,11 +427,28 @@ void BIOP2::match(const Pub& pub, int& matchSubs)
 		}
 	}
 
-	Timer orStart;
-	_for(i, 0, numDimension)
-		if (!attExist[i])
-			b = b | fullBits[i];
-	orTime += (double)orStart.elapsed_nano();
+	if (numBits > 1) {
+		Timer orStart;
+		_for(i, 0, numDimension)
+			if (!attExist[i])
+				b = b | fullBits[i];
+		orTime += (double)orStart.elapsed_nano();
+	}
+	else {
+		Timer markStart;
+		_for(i, 0, numDimension)
+			if (!attExist[i])
+				_for(j, 0, bitStep)
+				_for(k, 0, data[0][i][j].size())
+				b[data[0][i][j][k].subID] = 1;
+		markTime += (double)markStart.elapsed_nano();
+
+		Timer orStart;
+		_for(i, 0, numDimension)
+			if (!attExist[i])
+				b = b | bits[0][i][0];
+		orTime += (double)orStart.elapsed_nano();
+	}
 
 	Timer bitStart;
 	_for(i, 0, subs)
