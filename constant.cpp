@@ -1,12 +1,12 @@
 #include "constant.h"
-string expID = "300";       // 记录实验id
+string expID = "303";       // 记录实验id
 bool display = 0;           // 是否打印映射关系
-const int interval = 100;   // 每匹配这么多个事件输出一条日志信息
+const int interval = 1000;   // 每匹配这么多个事件输出一条日志信息
 //const int subs = 1000000; // Number of subscriptions.
-const int pubs = 500;       // Number of publications.
-int atts = 1000;            // Total number of attributes, i.e. dimensions.
+const int pubs = 5000;       // Number of publications.
+int atts = 5000;            // Total number of attributes, i.e. dimensions.
 const int cons = 10;        // Number of constraints(predicates) in one sub.
-int m = 1000;                 // Number of constraints in one pub.
+int m = 5000;                 // Number of constraints in one pub.
 const int attDis = 0;       // The distribution of attributes in subs and pubs. 0:uniform distribution | 1:Zipf distribution
 const int valDis = 0;       // The distribution of values in subs and pubs. 0:uniform 固定宽度; 1: 随机宽度谓词(以width为最小宽度)
 const int valDom = 1000000; // Cardinality of values.
@@ -17,7 +17,7 @@ double width = 0.3;         // Width of a predicate.
 const int buks = 1000;      // Number of buckets.
 
 // BIOP：Rein2
-int be = 5;                 // 每个维度0上 2 * 2^bits个bits数组, -1表示用桶数做为bits数组组数 bitExponent
+int be = 4;                 // 每个维度0上 2 * 2^bits个bits数组, -1表示用桶数做为bits数组组数 bitExponent
 const int lvls = 2;         // 层数
 const int gs = 5;           // 组的大小     
 

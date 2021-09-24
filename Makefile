@@ -312,6 +312,33 @@ BIOPSC.cpp.s:
 	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOPSC.cpp.s
 .PHONY : BIOPSC.cpp.s
 
+BIOPSR.o: BIOPSR.cpp.o
+
+.PHONY : BIOPSR.o
+
+# target to build an object file
+BIOPSR.cpp.o:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOPSR.cpp.o
+.PHONY : BIOPSR.cpp.o
+
+BIOPSR.i: BIOPSR.cpp.i
+
+.PHONY : BIOPSR.i
+
+# target to preprocess a source file
+BIOPSR.cpp.i:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOPSR.cpp.i
+.PHONY : BIOPSR.cpp.i
+
+BIOPSR.s: BIOPSR.cpp.s
+
+.PHONY : BIOPSR.s
+
+# target to generate assembly for a file
+BIOPSR.cpp.s:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOPSR.cpp.s
+.PHONY : BIOPSR.cpp.s
+
 Rein.o: Rein.cpp.o
 
 .PHONY : Rein.o
@@ -558,6 +585,9 @@ help:
 	@echo "... BIOPSC.o"
 	@echo "... BIOPSC.i"
 	@echo "... BIOPSC.s"
+	@echo "... BIOPSR.o"
+	@echo "... BIOPSR.i"
+	@echo "... BIOPSR.s"
 	@echo "... Rein.o"
 	@echo "... Rein.i"
 	@echo "... Rein.s"
