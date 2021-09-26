@@ -15,7 +15,7 @@ expID=int(sys.argv[1])
 #    expID+=1
 
 for m in range(10000,0,-1000):
-    os.system('./cmakeRB '+str(expID)+' '+ str(m)+ ' 5 0.3')
+    os.system('./cmakeRB '+str(expID)+' '+ str(m)+ ' 0 0.3')
     print('Experiment',str(expID),' atts=m=',str(m),' be=',str(5),'done.')
     expID+=1
 
