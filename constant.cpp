@@ -1,5 +1,5 @@
 #include "constant.h"
-string expID = "335";       // 记录实验id
+string expID = "337";       // 记录实验id
 bool display = 0;           // 是否打印映射关系
 const int interval = 100;   // 每匹配这么多个事件输出一条日志信息
 const double subp = 0;    // 有subp比例的订阅的所有谓词都在[0,cons-1]维度上, 即前cons维度, 从而加大匹配个数
@@ -15,7 +15,7 @@ const double alpha = 0;     // Parameter for Zipf distribution.
 double width = 0.3;         // Width of a predicate.
 
 // Rein
-const int buks = 1000;       // Number of buckets.
+const int buks = 600;       // Number of buckets.
 
 // BIOP：Rein2
 int be = 4;                 // 每个维度0上 2 * 2^bits个bits数组, -1表示用桶数做为bits数组组数 bitExponent

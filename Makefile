@@ -366,6 +366,87 @@ Rein.cpp.s:
 	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/Rein.cpp.s
 .PHONY : Rein.cpp.s
 
+Simple.o: Simple.cpp.o
+
+.PHONY : Simple.o
+
+# target to build an object file
+Simple.cpp.o:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/Simple.cpp.o
+.PHONY : Simple.cpp.o
+
+Simple.i: Simple.cpp.i
+
+.PHONY : Simple.i
+
+# target to preprocess a source file
+Simple.cpp.i:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/Simple.cpp.i
+.PHONY : Simple.cpp.i
+
+Simple.s: Simple.cpp.s
+
+.PHONY : Simple.s
+
+# target to generate assembly for a file
+Simple.cpp.s:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/Simple.cpp.s
+.PHONY : Simple.cpp.s
+
+Simple2.o: Simple2.cpp.o
+
+.PHONY : Simple2.o
+
+# target to build an object file
+Simple2.cpp.o:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/Simple2.cpp.o
+.PHONY : Simple2.cpp.o
+
+Simple2.i: Simple2.cpp.i
+
+.PHONY : Simple2.i
+
+# target to preprocess a source file
+Simple2.cpp.i:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/Simple2.cpp.i
+.PHONY : Simple2.cpp.i
+
+Simple2.s: Simple2.cpp.s
+
+.PHONY : Simple2.s
+
+# target to generate assembly for a file
+Simple2.cpp.s:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/Simple2.cpp.s
+.PHONY : Simple2.cpp.s
+
+Tama.o: Tama.cpp.o
+
+.PHONY : Tama.o
+
+# target to build an object file
+Tama.cpp.o:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/Tama.cpp.o
+.PHONY : Tama.cpp.o
+
+Tama.i: Tama.cpp.i
+
+.PHONY : Tama.i
+
+# target to preprocess a source file
+Tama.cpp.i:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/Tama.cpp.i
+.PHONY : Tama.cpp.i
+
+Tama.s: Tama.cpp.s
+
+.PHONY : Tama.s
+
+# target to generate assembly for a file
+Tama.cpp.s:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/Tama.cpp.s
+.PHONY : Tama.cpp.s
+
 constant.o: constant.cpp.o
 
 .PHONY : constant.o
@@ -591,6 +672,15 @@ help:
 	@echo "... Rein.o"
 	@echo "... Rein.i"
 	@echo "... Rein.s"
+	@echo "... Simple.o"
+	@echo "... Simple.i"
+	@echo "... Simple.s"
+	@echo "... Simple2.o"
+	@echo "... Simple2.i"
+	@echo "... Simple2.s"
+	@echo "... Tama.o"
+	@echo "... Tama.i"
+	@echo "... Tama.s"
 	@echo "... constant.o"
 	@echo "... constant.i"
 	@echo "... constant.s"
