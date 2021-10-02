@@ -12,6 +12,8 @@
 #include "BIOP5.h"
 #include "BIOPSC.h"
 #include "BIOPSR.h"
+#include "Simple.h"
+#include "Simple2.h"
 #include <numeric> 
 #include<algorithm>
 
@@ -24,5 +26,7 @@ void run_BIOP4(const intervalGenerator& gen);
 void run_BIOP5(const intervalGenerator& gen);
 void run_BIOPSC(const intervalGenerator& gen);
 void run_BIOPSR(const intervalGenerator& gen);
+void run_Simple(const intervalGenerator& gen);
+void run_Simple2(const intervalGenerator& gen);
 
 #endif

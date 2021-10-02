@@ -61,6 +61,7 @@ public:
 
 	static vector<double> ComputeIntStatistics(vector<int> data);
 
+	static void Pub2dPub(Pub pub, dPub& dpub);
 };
 
 #endif

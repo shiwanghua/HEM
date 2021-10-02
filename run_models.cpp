@@ -655,3 +655,113 @@ void run_BIOPSR(const intervalGenerator& gen) {
 	Util::WriteData(outputFileName.c_str(), content);
 
 }
+
+void run_Simple(const intervalGenerator& gen) {
+	Simple simple;
+
+	vector<double> insertTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchSubList;
+
+	// insert
+	for (int i = 0; i < subs; i++)
+	{
+		Timer subStart;
+
+		simple.insert(gen.subList[i]); // Insert sub[i] into data structure.
+
+		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double)insertTime / 1000000);
+	}
+	cout << "Simple Insertion Finish.\n";
+
+
+	// match
+	for (int i = 0; i < pubs; i++)
+	{
+		dPub dpub;
+		dpub.pubId = i;
+		Util::Pub2dPub(gen.pubList[i], dpub);
+
+		int matchSubs = 0; // Record the number of matched subscriptions.
+		Timer matchStart;
+		
+		simple.match(dpub, matchSubs);
+
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double)eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "Simple Event" << i << " is matched.\n";
+	}
+
+	// output
+	string outputFileName = "Simple.txt";
+	string content = expID
+		+ " memory= " + Util::Int2String(simple.calMemory())
+		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+		+ " numSub= " + Util::Int2String(subs)
+		+ " subSize= " + Util::Int2String(cons)
+		+ " numPub= " + Util::Int2String(pubs)
+		+ " pubSize= " + Util::Int2String(m)
+		+ " attTypes= " + Util::Int2String(atts);
+	Util::WriteData(outputFileName.c_str(), content);
+
+}
+
+void run_Simple2(const intervalGenerator& gen) {
+	Simple2 simple2;
+
+	vector<double> insertTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchSubList;
+
+	// insert
+	for (int i = 0; i < subs; i++)
+	{
+		Timer subStart;
+
+		simple2.insert(gen.subList[i]); // Insert sub[i] into data structure.
+
+		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double)insertTime / 1000000);
+	}
+	cout << "Simple2 Insertion Finish.\n";
+
+
+	// match
+	for (int i = 0; i < pubs; i++)
+	{
+		dPub dpub;
+		dpub.pubId = i;
+		Util::Pub2dPub(gen.pubList[i], dpub);
+
+		int matchSubs = 0; // Record the number of matched subscriptions.
+		Timer matchStart;
+
+		simple2.match(dpub, matchSubs);
+
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double)eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "Simple2 Event" << i << " is matched.\n";
+	}
+
+	// output
+	string outputFileName = "Simple2.txt";
+	string content = expID
+		+ " memory= " + Util::Int2String(simple2.calMemory())
+		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+		+ " numSub= " + Util::Int2String(subs)
+		+ " subSize= " + Util::Int2String(cons)
+		+ " numPub= " + Util::Int2String(pubs)
+		+ " pubSize= " + Util::Int2String(m)
+		+ " attTypes= " + Util::Int2String(atts);
+	Util::WriteData(outputFileName.c_str(), content);
+
+}

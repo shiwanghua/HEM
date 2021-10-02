@@ -15,7 +15,7 @@ int main(int argc, char** argv)
 		cout << "argc=" << argc << endl;
 		cout << argv[0] << "  " << argv[1] << "  " << argv[2] << "  " << argv[3] << "  " << argv[4] << "  n=" << subs << endl;
 	}
-	intervalGenerator gen(subs, pubs, atts, cons, m, attDis, valDis, valDom, alpha, width);
+	intervalGenerator gen(subs, pubs, atts, cons, m, attDis, valDis, valDom, alpha, subp, width);
 	gen.GenSubList();
 	gen.GenPubList();
 
@@ -28,6 +28,8 @@ int main(int argc, char** argv)
 	run_BIOP5(gen);
 	//run_BIOPSC(gen);
 	run_BIOPSR(gen);
+	run_Simple(gen);
+	run_Simple2(gen);
 
 	cout << "Done.\n";
 	system("pause");

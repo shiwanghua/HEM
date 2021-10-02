@@ -501,5 +501,11 @@ vector<double> Util::ComputeIntStatistics(vector<int> data)
 	return result;
 }
 
+void Util::Pub2dPub(Pub pub, dPub& dpub) {
+	for (int i = 0; i < pub.size; i++) {
+		dpub.AVmap[pub.pairs[i].att] = pub.pairs[i].value;
+	}
+}
+
 
 

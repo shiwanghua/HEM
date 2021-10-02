@@ -20,6 +20,7 @@ void intervalGenerator::GenSubList()
     }
 }
 
+// 谓词值非均匀分布
 void intervalGenerator::GenSubList2()
 {
     int i = 0;
@@ -155,16 +156,26 @@ void generator::GenUniformAtts(Sub &sub, int atts)
 
 void intervalGenerator::GenUniformAtts(IntervalSub &sub, int atts)
 {
-    vector<int> a;
-    for (int i = 0; i < sub.size; i++)
-    {
-        int x = random(atts);
-        while (CheckExist(a,x))
-            x = random(atts);
-        a.push_back(x);
-        IntervalCnt tmp;
-        tmp.att = x;
-        sub.constraints.push_back(tmp);
+    if (sub.id < subp * subs) {
+        for (int i = 0; i < sub.size; i++)
+        {
+            IntervalCnt tmp;
+            tmp.att = i;
+            sub.constraints.push_back(tmp);
+        }
+    }
+    else {
+        vector<int> a;
+        for (int i = 0; i < sub.size; i++)
+        {
+            int x = random(atts);
+            while (CheckExist(a, x))
+                x = random(atts);
+            a.push_back(x);
+            IntervalCnt tmp;
+            tmp.att = x;
+            sub.constraints.push_back(tmp);
+        }
     }
 }
 
@@ -186,11 +197,19 @@ void generator::GenUniformAtts(Pub &pub, int atts)
 void intervalGenerator::GenUniformAtts(Pub &pub, int atts)
 {
     vector<int> a;
-    for (int i = 0; i < pub.size; i++)
+    int i = 0;
+    // 让事件在前cons个维度上都有值, 维度较高时, 不至于没有订阅匹配
+    while (i < cons) {
+        Pair tmp;
+        tmp.att = i;
+        pub.pairs.push_back(tmp);
+        i++;
+    }
+    for (; i < pub.size; i++)
     {
-        int x = random(atts);
+        int x = random(atts-cons)+cons;
         while (CheckExist(a,x))
-            x = random(atts);
+            x = random(atts - cons) + cons;
         a.push_back(x);
         Pair tmp;
         tmp.att = x;

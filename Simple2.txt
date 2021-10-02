@@ -1,0 +1,13 @@
+334 memory= 57 MB AvgMatchNum= 2416.372000 AvgInsertTime= 0.000572 ms AvgMatchTime= 60.689633 numSub= 1000000 subSize= 5 numPub= 500 pubSize= 30 attTypes= 30
+334 memory= 114 MB AvgMatchNum= 6.104000 AvgInsertTime= 0.000693 ms AvgMatchTime= 65.180620 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 30 attTypes= 30
+334 memory= 114 MB AvgMatchNum= 1.432000 AvgInsertTime= 0.000581 ms AvgMatchTime= 50.392629 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 40 attTypes= 100
+334 memory= 114 MB AvgMatchNum= 1.372000 AvgInsertTime= 0.000654 ms AvgMatchTime= 48.516393 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 40 attTypes= 100
+332 memory= 114 MB AvgMatchNum= 6.042000 AvgInsertTime= 0.000310 ms AvgMatchTime= 36.060034 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 40 attTypes= 40
+331 memory= 114 MB AvgMatchNum= 5.970000 AvgInsertTime= 0.000334 ms AvgMatchTime= 39.051194 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 30 attTypes= 30
+330 memory= 114 MB AvgMatchNum= 5.970000 AvgInsertTime= 0.000300 ms AvgMatchTime= 37.594688 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 30 attTypes= 30
+329 memory= 114 MB AvgMatchNum= 932.064000 AvgInsertTime= 0.000481 ms AvgMatchTime= 31.768321 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 30 attTypes= 30
+328 memory= 114 MB AvgMatchNum= 103.478000 AvgInsertTime= 0.000344 ms AvgMatchTime= 40.160729 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 30 attTypes= 30
+328 memory= 114 MB AvgMatchNum= 103.478000 AvgInsertTime= 0.000342 ms AvgMatchTime= 47.290751 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 30 attTypes= 30
+328 memory= 114 MB AvgMatchNum= 0.000000 AvgInsertTime= 0.000309 ms AvgMatchTime= 21.904239 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 30 attTypes= 30
+328 memory= 114 MB AvgMatchNum= 0.000000 AvgInsertTime= 0.000306 ms AvgMatchTime= 28.116811 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 30 attTypes= 30
+328 memory= 114 MB AvgMatchNum= 0.000000 AvgInsertTime= 0.000286 ms AvgMatchTime= 27.720200 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 30 attTypes= 30

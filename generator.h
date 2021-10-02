@@ -68,15 +68,15 @@ public:
     vector<IntervalSub> subList;
     vector<Pub> pubList;
     int subs, pubs, atts, cons, m, attDis, valDis, valDom;
-    double alpha, width;
+    double alpha, width,subp;
     // 0 -- fixed width, 1 -- maxWidth, -1 -- minWidth
     // 0 ~ [width,width], 1 ~ [0,width], -1 ~ [width,1]
     int widthType; 
 
     intervalGenerator(int subs, int pubs, int atts, int cons, int m, int attDis, int valDis, int valDom, double alpha,
-                      double width = 0.5) :
+         double p, double width = 0.5) :
             subs(subs), pubs(pubs), atts(atts), cons(cons), m(m), attDis(attDis), valDis(valDis), valDom(valDom),
-            alpha(alpha), width(width)
+            alpha(alpha), subp(p), width(width)
     {}
 
     void GenSubList();

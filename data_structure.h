@@ -1,7 +1,8 @@
 #ifndef _DATA_STRUCTURE_H
 #define _DATA_STRUCTURE_H
-#include<string>
+//#include<string>
 #include<vector>
+#include<unordered_map>
 using namespace std;
 
 struct Cnt{
@@ -24,7 +25,7 @@ struct Sub {
 struct IntervalSub{
     int id;
     int size;
-    vector<IntervalCnt> constraints;
+    vector<IntervalCnt> constraints; // constraints的size不就是上面的size吗
 };
 
 struct ConElement {
@@ -50,7 +51,12 @@ struct Pair{
 
 struct Pub{
     int size;
-    vector<Pair> pairs;
+    vector<Pair> pairs;// pairs的size不就是上面的size吗
+};
+
+struct dPub { // dimensional publish
+    int pubId;
+    unordered_map<int,int> AVmap;
 };
 
 
