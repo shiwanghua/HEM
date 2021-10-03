@@ -10,7 +10,7 @@ expID=int(sys.argv[1])
 #    expID+=1
 
 for be in range(9,-1,-1):
-    os.system('./cmakeRB '+str(expID)+' 30 '+str(be)+'0.3')
+    os.system('taskset -c 0 ./cmakeRB '+str(expID)+' 30 '+str(be)+' 0.3')
     print('Experiment',str(expID),' atts=m=',str(30),' be= ',str(be),' w=0.3 done.')
     expID+=1
 
