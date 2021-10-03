@@ -9,15 +9,15 @@ expID=int(sys.argv[1])
 #    print('Experiment',str(expID),' ','atts=m= ',str(m),'done.')
 #    expID+=1
 
-#for be in range(9,-1,-1):
-#    os.system('./cmakeRB '+str(expID)+' 20 '+str(be))
-#    print('Experiment',str(expID),' atts=m=',str(20),' be= ',str(be),'done.')
-#    expID+=1
-
-for m in range(10000,0,-1000):
-    os.system('./cmakeRB '+str(expID)+' '+ str(m)+ ' 0 0.3')
-    print('Experiment',str(expID),' atts=m=',str(m),' be=',str(5),'done.')
+for be in range(9,-1,-1):
+    os.system('./cmakeRB '+str(expID)+' 30 '+str(be)+'0.3')
+    print('Experiment',str(expID),' atts=m=',str(30),' be= ',str(be),' w=0.3 done.')
     expID+=1
+
+#for m in range(10000,0,-1000):
+#    os.system('./cmakeRB '+str(expID)+' '+ str(m)+ ' 0 0.3')
+#    print('Experiment',str(expID),' atts=m=',str(m),' be=',str(5),'done.')
+#    expID+=1
 
 '''
 width=0.9
