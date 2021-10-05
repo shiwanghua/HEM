@@ -141,7 +141,9 @@ void BIOPSR::match(const Pub& pub, int& matchSubs)
 			_for(j, 0, bitStep) // 令空维度的状态为0, 即使用low上的bitset
 				_for(k, 0, data[0][i][j].size())
 				globalBitset[data[0][i][j][k].subID] = 1;
-		}	
+		}else{
+			
+		}
 	markTime += (double)markStart2.elapsed_nano();
 
 	Timer orStart;
