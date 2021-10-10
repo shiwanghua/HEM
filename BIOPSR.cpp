@@ -55,8 +55,12 @@ void BIOPSR::initBits() {
 	bits[0].clear(), bits[1].clear();
 	bits[0].resize(numDimension);
 	bits[1].resize(numDimension);
+	fix[0].clear(), fix[1].clear();
+	fix[0].resize(numDimension);
+	fix[1].resize(numDimension);
 	bitsSR.clear();
 	bitsSR.resize(numGroup, vector<bitset<subs>>(numState)); // 最后一组可能没这么多状态
+	
 
 	_for(i, 0, numBucket >> 1) {
 		bitsID[0][i] = 0;                     // 此时的0号代表0.5~1, 不是0~1
@@ -72,12 +76,16 @@ void BIOPSR::initBits() {
 	}
 
 	_for(i, 0, numDimension) {                // 每个维度
-		_for(j, 0, bitStep)                   // 每个左半部分的桶
+		_for(j, 0, bitStep) {                   // 每个左半部分的桶
 			_for(k, 0, data[1][i][j].size())  // 桶里每个订阅
-			bits[1][i][data[1][i][j][k].subID] = 1;  // high, i维, subID
-		_for(j, bitStep, numBucket)           // 每个右半部分的桶
+				bits[1][i][data[1][i][j][k].subID] = 1;  // high, i维, subID
+			fix[1][i] = fix[1][i] + data[1][i][j].size();
+		}
+		_for(j, bitStep, numBucket) {           // 每个右半部分的桶
 			_for(k, 0, data[0][i][j].size())  // 桶里每个订阅
-			bits[0][i][data[0][i][j][k].subID] = 1;  // high, i维, subID
+				bits[0][i][data[0][i][j][k].subID] = 1;  // high, i维, subID
+			fix[0][i] = fix[0][i] + data[0][i][j].size();
+		}
 	}
 
 	_for(g, 0, numGroup) {
@@ -136,13 +144,19 @@ void BIOPSR::match(const Pub& pub, int& matchSubs)
 
 	Timer markStart2;
 	_for(i, 0, numDimension)
-		if (attExist[i] == -1) {
-			attExist[i] = 0;
-			_for(j, 0, bitStep) // 令空维度的状态为0, 即使用low上的bitset
-				_for(k, 0, data[0][i][j].size())
-				globalBitset[data[0][i][j][k].subID] = 1;
-		}else{
-			
+		if (attExist[i] == -1) {           // 空维度
+			if (fix[0][i] >= fix[1][i]) {  // low右边的谓词多, 用0号bitset
+				attExist[i] = 0;          
+				_for(j, 0, bitStep) 
+					_for(k, 0, data[0][i][j].size())
+					globalBitset[data[0][i][j][k].subID] = 1;
+			}
+			else {
+				attExist[i] = 1;
+				_for(j, bitStep, numBucket)
+					_for(k, 0, data[0][i][j].size())
+					globalBitset[data[0][i][j][k].subID] = 1;
+			}
 		}
 	markTime += (double)markStart2.elapsed_nano();
 
@@ -194,8 +208,8 @@ int BIOPSR::calMemory() {
 			size += sizeof(Combo) * (data[0][i][j].size() + data[1][i][j].size());
 	}
 
-	// 两个endBucket和两个bitsID
-	size += 4 * numBucket * sizeof(int);
+	// 两个endBucket和两个bitsID和两个fix
+	size += (4 * numBucket + 2 * numDimension) * sizeof(int);
 	size = size / 1024 / 1024; // MB
 	return (int)size;
 }

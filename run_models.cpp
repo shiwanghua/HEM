@@ -463,6 +463,14 @@ void run_BIOP5(const intervalGenerator& gen) {
 	rb5.initBits();
 	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 
+	_for(i, 0, 5000) {
+		if (!rb5.deleteSubscription(gen.subList[i]))
+			cout << "Sub" << gen.subList[i].id << "is failled to be deleted.\n";
+	}
+	_for(i, 0, 5000) {
+		rb5.insert_online(gen.subList[i]);
+	}
+
 	// match
 	for (int i = 0; i < pubs; i++)
 	{

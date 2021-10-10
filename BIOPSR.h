@@ -28,7 +28,7 @@ private:
 	vector<vector<bitset<subs>>> bitsSR;    // 第几组属性上的第几个状态
 	//vector<bitset<subs>> fullBits;        // 全覆盖的bits单独存，因为只要存一次
 	int* endBucket[2], * bitsID[2];         // 落入这个bucket的事件在标记时终止于哪一个bucket、用到的bits数组的下标
-	//vector<vector<int>> fix[2];           // 0是low上的后缀和，1是high上的前缀和，可以用于计算任务量
+	vector<int> fix[2];                     // 0是low上的后半部分的和，1是high上的前半部分和，可以用于计算任务量
 public:
 	int numBucket;
 	double compareTime = 0.0;               // 所有维度上事件值落入的那个cell里逐个精确比较的时间

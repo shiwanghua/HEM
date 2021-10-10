@@ -67,14 +67,11 @@ void BIOP5::insert_online(IntervalSub sub)
 	Combo c;
 	int b, bucketID;
 	c.subID = sub.id;
-	if (numBits > 1) { // 懒得在下面for循环里每次都判断一次
-		_for(i, 0, sub.size) {
-			fullBits[sub.constraints[i].att][sub.id] = 1;
-		}
-	}
 	for (int i = 0; i < sub.size; i++)
 	{
 		cnt = sub.constraints[i];
+		fullBits[cnt.att][sub.id] = 1;
+
 		bucketID = cnt.lowValue / buckStep; 
 		c.val = cnt.lowValue;
 		data[0][cnt.att][bucketID].push_back(c);
@@ -102,13 +99,6 @@ bool BIOP5::deleteSubscription(IntervalSub sub) {
 	Combo c;
 	int b, bucketID;
 	c.subID = sub.id;
-
-	if (numBits > 1) { // 懒得在下面for循环里每次都判断一次
-		_for(i, 0, sub.size) {
-			fullBits[sub.constraints[i].att][sub.id] = 0;
-		}
-	}
-
 	_for(i, 0, sub.size) {
 		cnt = sub.constraints[i];
 		fullBits[cnt.att][sub.id] = 0;

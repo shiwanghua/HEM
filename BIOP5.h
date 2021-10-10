@@ -40,6 +40,7 @@ public:
 	//void insert(Sub sub);
 	void insert(IntervalSub sub);
 	void insert_online(IntervalSub sub);
+	bool deleteSubscription(IntervalSub sub);
 	//void match(const Pub& pub, int& matchSubs, const vector<Sub>& subList);
 	void match(const Pub& pub, int& matchSubs);
 

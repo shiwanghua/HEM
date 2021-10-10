@@ -8,7 +8,7 @@ extern string expID;       // 记录实验id
 extern bool display;       // 是否打印映射关系
 extern const int interval; // 每匹配这么多个事件输出一条日志信息
 extern const double subp;  // subp比例的订阅的谓词定义在前cons个维度上
-const int subs = 1000000;  // Number of subscriptions.
+const int subs = 10000;  // Number of subscriptions.
 extern const int pubs;     // Number of publications.
 extern int atts;           // Total number of attributes, i.e. dimensions.
 extern const int cons;     // Number of constraints(predicates) in one sub.
@@ -23,7 +23,8 @@ extern double width;       // Width of a predicate.
 extern const int buks;     // Number of buckets.
 
 // BIOP
-extern int be;             // 每个维度上 2 * 2^bits个bits数组, -1表示用桶数做为bits数组组数
+extern int be;             // 每个维度上 2 * 2^bits个bits数组
+extern int be2;            // be=-1时每个维度上be2个bits数组
 extern const int lvls;     // 层数
 extern const int gs;       // 一组有多少个维度
 

@@ -12,7 +12,7 @@ BIOP3::BIOP3() {
 	data[1].resize(numDimension, vector<vector<Combo>>(numBucket));
 
 	if (be == -1)
-		numBits = numBucket;
+		numBits = be2;
 	else
 		numBits = pow(2, be);  // 每个维度上lowValue对应的bits数组个数
 	if (numBits > 1)
