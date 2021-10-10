@@ -1,15 +1,15 @@
 #include "constant.h"
-string expID = "403";       // ¼ÇÂ¼ÊµÑéid
-bool display = 0;           // ÊÇ·ñ´òÓ¡Ó³Éä¹ØÏµ
-const int interval = 100;   // Ã¿Æ¥ÅäÕâÃ´¶à¸öÊÂ¼şÊä³öÒ»ÌõÈÕÖ¾ĞÅÏ¢
-const double subp = 0;    // ÓĞsubp±ÈÀıµÄ¶©ÔÄµÄËùÓĞÎ½´Ê¶¼ÔÚ[0,cons-1]Î¬¶ÈÉÏ, ¼´Ç°consÎ¬¶È, ´Ó¶ø¼Ó´óÆ¥Åä¸öÊı
+string expID = "403";       // è®°å½•å®éªŒid
+bool display = 0;           // æ˜¯å¦æ‰“å°æ˜ å°„å…³ç³»
+const int interval = 100;   // æ¯åŒ¹é…è¿™ä¹ˆå¤šä¸ªäº‹ä»¶è¾“å‡ºä¸€æ¡æ—¥å¿—ä¿¡æ¯
+const double subp = 0;    // æœ‰subpæ¯”ä¾‹çš„è®¢é˜…çš„æ‰€æœ‰è°“è¯éƒ½åœ¨[0,cons-1]ç»´åº¦ä¸Š, å³å‰consç»´åº¦, ä»è€ŒåŠ å¤§åŒ¹é…ä¸ªæ•°
 //const int subs = 1000000; // Number of subscriptions.
 const int pubs = 500;       // Number of publications.
 int atts = 20;             // Total number of attributes, i.e. dimensions.
 const int cons = 10;        // Number of constraints(predicates) in one sub.
-int m = 20;                 // Number of constraints in one pub. ËùÓĞÊÂ¼şµÄÇ°consÎ¬¶¼ÓĞ¶¨Òå
+int m = 20;                 // Number of constraints in one pub. æ‰€æœ‰äº‹ä»¶çš„å‰consç»´éƒ½æœ‰å®šä¹‰
 const int attDis = 0;       // The distribution of attributes in subs and pubs. 0:uniform distribution | 1:Zipf distribution
-const int valDis = 0;       // The distribution of values in subs and pubs. 0:uniform ¹Ì¶¨¿í¶È; 1: Ëæ»ú¿í¶ÈÎ½´Ê(ÒÔwidthÎª×îĞ¡¿í¶È)
+const int valDis = 0;       // The distribution of values in subs and pubs. 0:uniform å›ºå®šå®½åº¦; 1: éšæœºå®½åº¦è°“è¯(ä»¥widthä¸ºæœ€å°å®½åº¦)
 const int valDom = 1000000; // Cardinality of values.
 const double alpha = 0;     // Parameter for Zipf distribution.
 double width = 0.3;         // Width of a predicate.
@@ -17,10 +17,11 @@ double width = 0.3;         // Width of a predicate.
 // Rein
 const int buks = 1000;       // Number of buckets.
 
-// BIOP£ºRein2
-int be = 4;                 // Ã¿¸öÎ¬¶È0ÉÏ 2 * 2^bits¸öbitsÊı×é, -1±íÊ¾ÓÃÍ°Êı×öÎªbitsÊı×é×éÊı bitExponent
-const int lvls = 2;         // ²ãÊı
-const int gs = 4;           // ×éµÄ´óĞ¡     
+// BIOPï¼šRein2
+int be = 4;                 // æ¯ä¸ªç»´åº¦0ä¸Š 2 * 2^bitsä¸ªbitsæ•°ç»„, -1è¡¨ç¤ºç”¨æ¡¶æ•°åšä¸ºbitsæ•°ç»„ç»„æ•° bitExponent
+int be2 = 10;               // beç­‰äº-1å°±ç”¨be2ä¸ªbitset
+const int lvls = 2;         // å±‚æ•°
+const int gs = 4;           // ç»„çš„å¤§å°     
 
 // Tama
 const int level = 11;
