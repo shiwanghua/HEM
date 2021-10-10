@@ -1,3 +1,16 @@
+412 memory= 114 MB AvgMatchNum= 6.558000 AvgInsertTime= 0.000071 ms AvgMatchTime= 13.352336 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20
+411 memory= 114 MB AvgMatchNum= 6.558000 AvgInsertTime= 0.000070 ms AvgMatchTime= 13.270126 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20
+410 memory= 114 MB AvgMatchNum= 6.558000 AvgInsertTime= 0.000070 ms AvgMatchTime= 13.311838 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20
+409 memory= 114 MB AvgMatchNum= 6.558000 AvgInsertTime= 0.000072 ms AvgMatchTime= 13.275023 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20
+408 memory= 114 MB AvgMatchNum= 6.558000 AvgInsertTime= 0.000070 ms AvgMatchTime= 13.319665 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20
+407 memory= 114 MB AvgMatchNum= 6.558000 AvgInsertTime= 0.000070 ms AvgMatchTime= 13.289775 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20
+406 memory= 114 MB AvgMatchNum= 6.558000 AvgInsertTime= 0.000070 ms AvgMatchTime= 13.389271 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20
+405 memory= 114 MB AvgMatchNum= 6.558000 AvgInsertTime= 0.000070 ms AvgMatchTime= 13.340902 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20
+404 memory= 114 MB AvgMatchNum= 6.558000 AvgInsertTime= 0.000071 ms AvgMatchTime= 13.281849 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20
+403 memory= 114 MB AvgMatchNum= 6.558000 AvgInsertTime= 0.000070 ms AvgMatchTime= 13.288273 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20
+402 memory= 114 MB AvgMatchNum= 6.558000 AvgInsertTime= 0.000071 ms AvgMatchTime= 13.813144 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20
+402 memory= 114 MB AvgMatchNum= 6.558000 AvgInsertTime= 0.000070 ms AvgMatchTime= 13.432613 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20
+392 memory= 114 MB AvgMatchNum= 6.558000 AvgInsertTime= 0.000069 ms AvgMatchTime= 13.423193 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20
 401 memory= 114 MB AvgMatchNum= 6.558000 AvgInsertTime= 0.000105 ms AvgMatchTime= 29.889514 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20
 400 memory= 114 MB AvgMatchNum= 6.558000 AvgInsertTime= 0.000105 ms AvgMatchTime= 29.984356 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20
 399 memory= 114 MB AvgMatchNum= 6.558000 AvgInsertTime= 0.000104 ms AvgMatchTime= 30.024624 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20

@@ -57,3 +57,6 @@ CMakeFiles
 # BIOP.txt
 # ReinBucketSize.txt
 # BIOPBucketSize.txt
+/Testing/
+/cmake-build-debug/
+/build/

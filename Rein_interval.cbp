@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="Rein_interval"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/swh/桌面/BIOP"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/swh/桌面/BIOP/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/swh/桌面/BIOP/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/swh/桌面/BIOP/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/swh/桌面/BIOP/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/swh/桌面/BIOP"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/swh/桌面/BIOP/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/swh/桌面/BIOP/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/swh/桌面/BIOP/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/swh/桌面/BIOP/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/swh/桌面/BIOP"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/swh/桌面/BIOP/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/swh/桌面/BIOP/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/swh/桌面/BIOP/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/swh/桌面/BIOP/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="cmakeRB">
+				<Option output="/home/swh/桌面/BIOP/cmakeRB" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/swh/桌面/BIOP"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/swh/桌面/BIOP/Makefile&quot;  VERBOSE=1 cmakeRB"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/swh/桌面/BIOP/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/swh/桌面/BIOP/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/swh/桌面/BIOP/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="cmakeRB/fast">
+				<Option output="/home/swh/桌面/BIOP/cmakeRB" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/swh/桌面/BIOP"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/swh/桌面/BIOP/Makefile&quot;  VERBOSE=1 cmakeRB/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/swh/桌面/BIOP/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/swh/桌面/BIOP/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/swh/桌面/BIOP/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/swh/桌面/BIOP/BIOP.cpp">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/BIOP.h">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/BIOP1.cpp">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/BIOP1.h">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/BIOP2.cpp">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/BIOP2.h">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/BIOP3.cpp">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/BIOP3.h">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/BIOP4.cpp">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/BIOP4.h">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/BIOP5.cpp">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/BIOP5.h">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/BIOPSC.cpp">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/BIOPSC.h">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/BIOPSR.cpp">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/BIOPSR.h">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/Rein.cpp">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/Rein.h">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/Simple.cpp">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/Simple.h">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/Simple2.cpp">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/Simple2.h">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/Tama.cpp">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/Tama.h">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/constant.cpp">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/constant.h">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/generator.cpp">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/generator.h">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/main.cpp">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/printer.cpp">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/printer.h">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/run_models.cpp">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/run_models.h">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/test.cpp">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/util.cpp">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/util.h">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
