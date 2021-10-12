@@ -27,13 +27,13 @@ Name = ["Rein", "BIOP0PS", "BIOP1SS", "BIOP2SD", "BIOP3PD", "BIOP4DS", "BIOP5DD"
 plt.figure(figsize=(16, 9))
 # plt.subplot()
 x = np.arange(10)  # x轴刻度标签位置
-width = 0.15  # 柱子的宽度
+width = 0.14  # 柱子的宽度
 # 计算每个柱子在x轴上的位置，保证x轴刻度标签居中
 plt.bar(x - 2.5*width, BIOP0PS, width, color='DODGERBLUE', label=Name[1])
 plt.bar(x - 1.5*width, BIOP1SS, width, color='purple', label=Name[2])
 plt.bar(x - 0.5*width, BIOP2SD, width, color='darkorange', label=Name[3])
 plt.bar(x + 0.5*width, BIOP3PD, width, color='limegreen', label=Name[4])
-plt.bar(x + 1.5*width, BIOP4DS, width, color='GOLD', label=Name[5])
+plt.bar(x + 1.5*width, BIOP4DS, width, color='brown', label=Name[5])
 plt.bar(x + 2.5*width, BIOP5DD, width, color='DEEPPINK', label=Name[6])
 plt.tick_params(direction='out',labelsize=15,length=5.5,width=1)
 plt.xlabel('Number of Bit Exponent',fontsize=20)
@@ -41,7 +41,7 @@ plt.ylabel('Marking Time (ms)',fontsize=20)
 # plt.title('4 datasets')
 # x轴刻度标签位置不进行计算
 plt.xticks(x, labels=be)
-plt.legend(fontsize=20)
+plt.legend(fontsize=20,ncol=2)
 plt.grid()
 fig = plt.gcf()
 plt.show()

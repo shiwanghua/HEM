@@ -1,16 +1,17 @@
 #include "run_models.h"
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
 	//freopen("paras.txt", "r", stdin);
 	//cin >> subs >> pubs >> atts >> cons>> buks >> m >> attDis >> valDis >> valDom;
 	//cin >> alpha >> width;
 	//m = atts; // Note that Rein requires m == atts.
-	
-	if (argc == 5) { 
-		expID=to_string(atoi(argv[1]));
-		atts=m = atoi(argv[2]);
-		be = atoi(argv[3]);  // 输入一个bits指数
+
+	if (argc == 5)
+	{
+		expID = to_string(atoi(argv[1]));
+		atts = m = atoi(argv[2]);
+		be = atoi(argv[3]); // 输入一个bits指数
 		width = atof(argv[4]);
 		cout << "argc=" << argc << endl;
 		cout << argv[0] << "  " << argv[1] << "  " << argv[2] << "  " << argv[3] << "  " << argv[4] << "  n=" << subs << endl;

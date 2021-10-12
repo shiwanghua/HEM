@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib import rc
 from matplotlib.pyplot import MultipleLocator
 rc('mathtext', default='regular')
-# 解决坐标轴负号问题
+# 解决坐标轴负号?
 plt.rcParams['axes.unicode_minus'] = False
 
 be = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -66,15 +66,20 @@ x_major_locator=MultipleLocator(1)
 ax.xaxis.set_major_locator(x_major_locator)
 
 ax2 = ax.twinx()
-ax2.bar(be, Memory, color='Gray', alpha=0.7, label = 'Memory (MB)')
+ax2.bar(be, Memory, color='lightsteelblue',  label = 'Memory (MB)') # alpha=0.7,
 ax2.set_ylabel(r"Memory Size (MB)")
 ax2.set_ylim(0, 2700)
 ax2.legend(loc=(5.1/10,3.95/5))
 ax2.set_zorder(0)
 
+for a,b in zip(be,Memory):
+    c=b-160
+    if a<5 :
+        c+=20    
+    plt.text(a, c, '%.0f' % b, ha='center', va= 'bottom') #,fontsize=7
 
 gcf = plt.gcf()
 plt.show()
-gcf.savefig('../matchingTime.eps',format='eps',bbox_inches='tight')
+gcf.savefig('matchingTime.eps',format='eps',bbox_inches='tight')
 
 
