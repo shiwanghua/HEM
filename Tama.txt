@@ -1,0 +1,4 @@
+415 memory= 0 MB AvgMatchNum= 26.000000 AvgInsertTime= 0.000302 ms AvgMatchTime= 6.163900 ms level= 5 numSub= 10000 subSize= 3 numPub= 1 pubSize= 5 attTypes= 5 attDis= 0 valDis= 0 width= 0.100000 alpha= 0.000000
+415 memory= 1 MB AvgMatchNum= 3.000000 AvgInsertTime= 0.001819 ms AvgMatchTime= 1.419500 ms level= 11 numSub= 10000 subSize= 3 numPub= 1 pubSize= 5 attTypes= 5 attDis= 0 valDis= 0 width= 0.100000 alpha= 0.000000
+415 memory= 0 MB AvgMatchNum= 601.000000 AvgInsertTime= 0.001445 ms AvgMatchTime= 0.060400 ms level= 11 numSub= 10000 subSize= 2 numPub= 1 pubSize= 5 attTypes= 5 attDis= 0 valDis= 0 width= 0.300000 alpha= 0.000000
+414 memory= 394 MB AvgMatchNum= 5.980000 AvgInsertTime= 0.003598 ms AvgMatchTime= 11.252342 ms level= 11 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20 attDis= 0 valDis= 0 width= 0.300000 alpha= 0.000000

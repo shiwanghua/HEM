@@ -30,3 +30,7 @@
 
 ##### ubuntu 20 环境
 
+
+##### 注意事项
+1. "Tama.h" 里 MAX_ATTS 必须大于等于 "constant.h" 里的atts
+

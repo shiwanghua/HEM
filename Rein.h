@@ -12,7 +12,7 @@
 #define mmfor(i,a,b) for(int i=(a);i>=(b);--i)
 
 const int MAX_SUBS = 2000001;
-const int MAX_ATTS = 101;
+//const int MAX_ATTS = 101;
 const int MAX_BUCKS = 500;
 
 // 01在第一维
@@ -32,8 +32,9 @@ public:
 	void insert(IntervalSub sub);
 	//void match(const Pub& pub, int& matchSubs, const vector<Sub>& subList);
 	void match(const Pub& pub, int& matchSubs);
+	bool deleteSubscription(IntervalSub sub);
 	void calBucketSize(); // 计算bucketSize
-	int calMemory();     // 计算占用内存大小
+	int calMemory();     // 计算占用内存大小, 返回MB
 };
 
 // 01在第二维，全动态

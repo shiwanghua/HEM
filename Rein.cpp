@@ -44,19 +44,37 @@ void Rein::insert(IntervalSub sub)
 	}
 	numSub++;
 }
-//void Rein::insert(IntervalSub sub)
-//{
-//	for (int i = 0; i < sub.size; i++)
-//	{
-//		IntervalCnt cnt = sub.constraints[i];
-//		Combo c;
-//		c.val = cnt.lowValue;
-//		c.subID = sub.id;
-//		data[cnt.att][0][cnt.lowValue / buckStep].push_back(c);
-//		c.val = cnt.highValue;
-//		data[cnt.att][1][cnt.highValue / buckStep].push_back(c);
-//	}
-//}
+
+bool Rein::deleteSubscription(IntervalSub sub)
+{
+	bool find = false;
+	IntervalCnt cnt;
+	int bucketID, id = sub.id;
+
+	_for(i, 0, sub.size)
+	{
+		cnt = sub.constraints[i];
+
+		bucketID = cnt.lowValue / buckStep;
+		vector<Combo>::iterator it;
+		for (it = data[0][cnt.att][bucketID].begin(); it != data[0][cnt.att][bucketID].end(); it++)
+			if (it->subID == id) {
+				data[0][cnt.att][bucketID].erase(it); // it = 
+				find = true;
+				break;
+			}
+
+		bucketID = cnt.highValue / buckStep;
+		for (it = data[1][cnt.att][bucketID].begin(); it != data[1][cnt.att][bucketID].end(); it++)
+			if (it->subID == id) {
+				data[1][cnt.att][bucketID].erase(it); // it = 
+				break;
+			}
+	}
+	if (find)
+		numSub--;
+	return find;
+}
 
 //void Rein::match(const Pub &pub, int &matchSubs, const vector<Sub> &subList)
 //{
@@ -126,7 +144,7 @@ void Rein::match(const Pub& pub, int& matchSubs)
 		if (!bits[i])
 		{
 			++matchSubs;
-			//cout << "rein matches sub: " << i << endl;
+			cout << "rein matches sub: " << i << endl;
 		}
 	bitTime += (double)bitStart.elapsed_nano();
 }
