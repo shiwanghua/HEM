@@ -46,7 +46,7 @@ void Tama::insert(int p, int att, int subID, int l, int r, int low, int high, in
 bool Tama::deleteSubscription(IntervalSub sub) {
 	bool find = 1;
 	for (int i = 0; i < sub.size; i++)
-		if (deleteSubscription(0, sub.constraints[i].att, sub.id, 0, valDom - 1, sub.constraints[i].lowValue, sub.constraints[i].highValue, 1))
+		if (!deleteSubscription(0, sub.constraints[i].att, sub.id, 0, valDom - 1, sub.constraints[i].lowValue, sub.constraints[i].highValue, 1))
 			find = 0;
 	return find;
 }
@@ -74,29 +74,67 @@ bool Tama::deleteSubscription(int p, int att, int subID, int l, int r, int low, 
 		return find;
 	}
 }
-void Tama::match(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
+void Tama::match_accurate(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
 {
 	for (int i = 0; i < subList.size(); i++)
 		counter[i] = subList[i].size;
 	for (int i = 0; i < pub.size; i++)
-		match(0, pub.pairs[i].att, 0, valDom - 1, pub.pairs[i].value, 1);
+		match_accurate(0, pub.pairs[i].att, 0, valDom - 1, pub.pairs[i].value, 1, subList);
 	for (int i = 0; i < subList.size(); i++)
 		if (counter[i] == 0) {
 			++matchSubs;
-			cout << "tama matches sub: " << i << endl;
+			//cout << "tama matches sub: " << i << endl;
 		}
 }
 
-void Tama::match(int p, int att, int l, int r, int value, int lvl)
+void Tama::match_accurate(int p, int att, int l, int r, const int value, int lvl, const vector<IntervalSub>& subList)
+{
+	if (level == lvl) {
+		int id;
+		for (auto& id:data[att][p])
+		{
+			for(auto& predicate:subList[id].constraints)
+				if (att == predicate.att) {
+					if(predicate.lowValue<=value&&value<=predicate.highValue)
+						--counter[id];
+					break;
+				}
+		}
+		return;
+	}
+	for (int i = 0; i < data[att][p].size(); i++)
+		--counter[data[att][p][i]];
+	if (l == r) // 这里l有可能等于r吗？当取值范围比较小, 层数很高时会等于; 当事件值刚好等于边界时也会等于!
+		return;
+	else if (value <= mid[p])
+		match_accurate(lchild[p], att, l, mid[p], value, lvl + 1, subList);
+	else
+		match_accurate(rchild[p], att, mid[p] + 1, r, value, lvl + 1, subList);
+}
+
+void Tama::match_vague(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
+{
+	for (int i = 0; i < subList.size(); i++)
+		counter[i] = subList[i].size;
+	for (int i = 0; i < pub.size; i++)
+		match_vague(0, pub.pairs[i].att, 0, valDom - 1, pub.pairs[i].value, 1);
+	for (int i = 0; i < subList.size(); i++)
+		if (counter[i] == 0) {
+			++matchSubs;
+			//cout << "tama matches sub: " << i << endl;
+		}
+}
+
+void Tama::match_vague(int p, int att, int l, int r, const int value, int lvl)
 {
 	for (int i = 0; i < data[att][p].size(); i++)
 		--counter[data[att][p][i]];
-	if (level == lvl || l == r) // 这里l有可能等于r吗？
+	if (level == lvl||l == r) // 这里l有可能等于r吗？当取值范围比较小, 层数很高时会等于; 当事件值刚好等于边界时也会等于!
 		return;
 	else if (value <= mid[p])
-		match(lchild[p], att, l, mid[p], value, lvl + 1);
+		match_vague(lchild[p], att, l, mid[p], value, lvl + 1);
 	else
-		match(rchild[p], att, mid[p] + 1, r, value, lvl + 1);
+		match_vague(rchild[p], att, mid[p] + 1, r, value, lvl + 1);
 }
 
 int Tama::calMemory() {

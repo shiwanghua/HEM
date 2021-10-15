@@ -38,8 +38,8 @@ public:
 	~BIOP5();
 
 	//void insert(Sub sub);
-	void insert(IntervalSub sub);
-	void insert_online(IntervalSub sub);
+	void insert(IntervalSub sub); // 没有bitset时的插入算法
+	void insert_online(IntervalSub sub); // 构建好订阅集后的在线插入订阅算法
 	bool deleteSubscription(IntervalSub sub);
 	//void match(const Pub& pub, int& matchSubs, const vector<Sub>& subList);
 	void match(const Pub& pub, int& matchSubs);

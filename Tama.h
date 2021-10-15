@@ -19,23 +19,26 @@ class Tama {
 
     void insert(int p, int att, int subID, int l, int r, int low, int high, int lvl);
     bool deleteSubscription(int p, int att, int subID, int l, int r, int low, int high, int lvl);
-    void match(int p, int att, int l, int r, int value, int lvl);
+    void match_accurate(int p, int att, int l, int r, const int value, int lvl, const vector<IntervalSub>& subList);
+    void match_vague(int p, int att, int l, int r, const int value, int lvl);
 
 public:
     Tama()
     {
+        int nodeNumber = 1 << level;
         for (int i = 0; i < atts; i++)
-            data[i] = new vector<int>[1 << level];
-        lchild = new int[1 << level];
-        rchild = new int[1 << level];
-        mid = new int[1 << level];
+            data[i] = new vector<int>[nodeNumber];
+        lchild = new int[nodeNumber];
+        rchild = new int[nodeNumber];
+        mid = new int[nodeNumber];
         nodeCounter = 0;
         initiate(0, 0, valDom - 1, 1);
     }
 
     void insert(IntervalSub sub);
     bool deleteSubscription(IntervalSub sub);
-    void match(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
+    void match_accurate(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
+    void match_vague(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
     int calMemory();
 };
 

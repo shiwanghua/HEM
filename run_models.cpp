@@ -30,7 +30,7 @@ void run_rein(const intervalGenerator& gen) {
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
-		if (i % interval ==0)
+		if (i % interval == 0)
 			cout << "Rein Event" << i << " is matched.\n";
 	}
 
@@ -180,7 +180,7 @@ void run_BIOP1(const intervalGenerator& gen) {
 		if (i % interval == 0)
 			cout << "BIOP1 Event" << i << " is matched.\n";
 	}
-	if(display)
+	if (display)
 		rb1.printRelation();
 	// output
 	string outputFileName = "BIOP1.txt";
@@ -257,7 +257,7 @@ void run_BIOP2(const intervalGenerator& gen) {
 	}
 
 	if (display)
-	    rb2.printRelation(0);
+		rb2.printRelation(0);
 	// output
 	string outputFileName = "BIOP2.txt";
 	string content = expID
@@ -562,7 +562,7 @@ void run_BIOPSC(const intervalGenerator& gen) {
 	}
 
 	if (display)
-		biopsc.printRelation(1,2);
+		biopsc.printRelation(1, 2);
 
 	// output
 	string outputFileName = "BIOPSC.txt";
@@ -694,7 +694,7 @@ void run_Simple(const intervalGenerator& gen) {
 
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
-		
+
 		simple.match(dpub, matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
@@ -794,6 +794,14 @@ void run_tama(const intervalGenerator& gen) {
 	}
 	cout << "Tama Insertion Finish.\n";
 
+	// 验证插入删除正确性
+	_for(i, 0, 5000) {
+		if (!tama.deleteSubscription(gen.subList[i]))
+			cout << "Tama: Sub" << gen.subList[i].id << "is failled to be deleted.\n";
+	}
+	_for(i, 0, 5000) {
+		tama.insert(gen.subList[i]);
+	}
 
 	// match
 	for (int i = 0; i < pubs; i++)
@@ -801,7 +809,8 @@ void run_tama(const intervalGenerator& gen) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
-		tama.match(gen.pubList[i], matchSubs, gen.subList);
+		tama.match_accurate(gen.pubList[i], matchSubs, gen.subList);
+		//tama.match_vague(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);

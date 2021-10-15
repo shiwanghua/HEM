@@ -351,6 +351,120 @@ void BIOPSC::initBits() {
 	//cout << "BIOPSCDD Stop.\n";
 }
 
+//// 计算时间组成
+//void BIOPSC::match(const Pub& pub, int& matchSubs)
+//{
+//	bitset<subs> b, bLocal;
+//	vector<bool> attExist(numDimension, false);
+//	int value, att, buck;
+//
+//	_for(i, 0, pub.size)
+//	{
+//		// 落入每层的桶号一样...
+//		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
+//		attExist[att] = true;
+//		_for(j, 0, numLevel) {
+//			Timer compareStart;
+//			_for(q, 0, data[0][att][j][buck].size())
+//				if (data[0][att][j][buck][q].val > value)
+//					b[data[0][att][j][buck][q].subID] = 1;
+//			_for(q, 0, data[1][att][j][buck].size())
+//				if (data[1][att][j][buck][q].val < value)
+//					b[data[1][att][j][buck][q].subID] = 1;
+//			compareTime += (double)compareStart.elapsed_nano();
+//
+//			if (doubleReverse[0][att][j][buck]) {
+//				Timer markStart;
+//				if (bitsID[0][att][j][buck] == numBits - 1 && numBits > 1)
+//					bLocal = fullBL[att][j];
+//				else
+//					bLocal = bits[0][att][j][bitsID[0][att][j][buck]];
+//				_for(k, endBucket[0][att][j][buck], buck + 1)
+//					_for(q, 0, data[0][att][j][k].size())
+//					bLocal[data[0][att][j][k][q].subID] = 0;
+//				markTime += (double)markStart.elapsed_nano();
+//
+//				Timer orStart;
+//				b = b | bLocal;
+//				orTime += (double)orStart.elapsed_nano();
+//			}
+//			else {
+//				Timer markStart;
+//				_for(k, buck + 1, endBucket[0][att][j][buck])
+//					_for(q, 0, data[0][att][j][k].size())
+//					b[data[0][att][j][k][q].subID] = 1;
+//				markTime += (double)markStart.elapsed_nano();
+//
+//				Timer orStart;
+//				if (bitsID[0][att][j][buck] != -1)
+//					b = b | bits[0][att][j][bitsID[0][att][j][buck]];
+//				orTime += (double)orStart.elapsed_nano();
+//			}
+//
+//			if (doubleReverse[1][att][j][buck]) {
+//				Timer markStart;
+//				if (bitsID[1][att][j][buck] == numBits - 1 && numBits > 1)
+//					bLocal = fullBL[att][j];
+//				else
+//					bLocal = bits[1][att][j][bitsID[1][att][j][buck]];
+//				_for(k, buck, endBucket[1][att][j][buck])
+//					_for(q, 0, data[1][att][j][k].size())
+//					bLocal[data[1][att][j][k][q].subID] = 0;
+//				markTime += (double)markStart.elapsed_nano();
+//				Timer orStart;
+//				b = b | bLocal;
+//				orTime += (double)orStart.elapsed_nano();
+//			}
+//			else {
+//				Timer markStart;
+//				_for(k, endBucket[1][att][j][buck], buck)
+//					_for(q, 0, data[1][att][j][k].size())
+//					b[data[1][att][j][k][q].subID] = 1;
+//				markTime += (double)markStart.elapsed_nano();
+//				Timer orStart;
+//				if (bitsID[1][att][j][buck] != -1)
+//					b = b | bits[1][att][j][bitsID[1][att][j][buck]]; // Bug: 是att不是i
+//				orTime += (double)orStart.elapsed_nano();
+//			}
+//		}
+//	}
+//
+//	if (numBits > 1) {
+//		Timer orStart;
+//		_for(i, 0, numDimension)
+//			if (!attExist[i])
+//				b = b | fullBits[i];
+//		orTime += (double)orStart.elapsed_nano();
+//	}
+//	else {
+//		Timer markStart;
+//		_for(i, 0, numDimension)
+//			if (!attExist[i])
+//				_for(j, 0, numLevel)
+//				_for(k, 0, endBucket[0][i][j][0])
+//				_for(q, 0, data[0][i][j].size())
+//				b[data[0][i][j][k][q].subID] = 1;
+//		markTime += (double)markStart.elapsed_nano();
+//
+//		Timer orStart;
+//		_for(i, 0, numDimension)
+//			if (!attExist[i])
+//				_for(j, 0, numLevel)
+//					b = b | bits[0][i][j][0];
+//		orTime += (double)orStart.elapsed_nano();
+//	}
+//
+//	Timer bitStart;
+//	_for(i, 0, subs)
+//		if (!b[i])
+//		{
+//			++matchSubs;
+//			//cout << "BIOPSC matches sub: " << i << endl;
+//		}
+//	bitTime += (double)bitStart.elapsed_nano();
+//}
+
+// 不计算时间组成
 void BIOPSC::match(const Pub& pub, int& matchSubs)
 {
 	bitset<subs> b, bLocal;
@@ -363,17 +477,14 @@ void BIOPSC::match(const Pub& pub, int& matchSubs)
 		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 		attExist[att] = true;
 		_for(j, 0, numLevel) {
-			Timer compareStart;
 			_for(q, 0, data[0][att][j][buck].size())
 				if (data[0][att][j][buck][q].val > value)
 					b[data[0][att][j][buck][q].subID] = 1;
 			_for(q, 0, data[1][att][j][buck].size())
 				if (data[1][att][j][buck][q].val < value)
 					b[data[1][att][j][buck][q].subID] = 1;
-			compareTime += (double)compareStart.elapsed_nano();
 
 			if (doubleReverse[0][att][j][buck]) {
-				Timer markStart;
 				if (bitsID[0][att][j][buck] == numBits - 1 && numBits > 1)
 					bLocal = fullBL[att][j];
 				else
@@ -381,27 +492,19 @@ void BIOPSC::match(const Pub& pub, int& matchSubs)
 				_for(k, endBucket[0][att][j][buck], buck + 1)
 					_for(q, 0, data[0][att][j][k].size())
 					bLocal[data[0][att][j][k][q].subID] = 0;
-				markTime += (double)markStart.elapsed_nano();
 
-				Timer orStart;
 				b = b | bLocal;
-				orTime += (double)orStart.elapsed_nano();
 			}
 			else {
-				Timer markStart;
 				_for(k, buck + 1, endBucket[0][att][j][buck])
 					_for(q, 0, data[0][att][j][k].size())
 					b[data[0][att][j][k][q].subID] = 1;
-				markTime += (double)markStart.elapsed_nano();
 
-				Timer orStart;
 				if (bitsID[0][att][j][buck] != -1)
 					b = b | bits[0][att][j][bitsID[0][att][j][buck]];
-				orTime += (double)orStart.elapsed_nano();
 			}
 
 			if (doubleReverse[1][att][j][buck]) {
-				Timer markStart;
 				if (bitsID[1][att][j][buck] == numBits - 1 && numBits > 1)
 					bLocal = fullBL[att][j];
 				else
@@ -409,58 +512,43 @@ void BIOPSC::match(const Pub& pub, int& matchSubs)
 				_for(k, buck, endBucket[1][att][j][buck])
 					_for(q, 0, data[1][att][j][k].size())
 					bLocal[data[1][att][j][k][q].subID] = 0;
-				markTime += (double)markStart.elapsed_nano();
-				Timer orStart;
 				b = b | bLocal;
-				orTime += (double)orStart.elapsed_nano();
 			}
 			else {
-				Timer markStart;
 				_for(k, endBucket[1][att][j][buck], buck)
 					_for(q, 0, data[1][att][j][k].size())
 					b[data[1][att][j][k][q].subID] = 1;
-				markTime += (double)markStart.elapsed_nano();
-				Timer orStart;
 				if (bitsID[1][att][j][buck] != -1)
 					b = b | bits[1][att][j][bitsID[1][att][j][buck]]; // Bug: 是att不是i
-				orTime += (double)orStart.elapsed_nano();
 			}
 		}
 	}
 
 	if (numBits > 1) {
-		Timer orStart;
 		_for(i, 0, numDimension)
 			if (!attExist[i])
 				b = b | fullBits[i];
-		orTime += (double)orStart.elapsed_nano();
 	}
 	else {
-		Timer markStart;
 		_for(i, 0, numDimension)
 			if (!attExist[i])
 				_for(j, 0, numLevel)
 				_for(k, 0, endBucket[0][i][j][0])
 				_for(q, 0, data[0][i][j].size())
 				b[data[0][i][j][k][q].subID] = 1;
-		markTime += (double)markStart.elapsed_nano();
 
-		Timer orStart;
 		_for(i, 0, numDimension)
 			if (!attExist[i])
 				_for(j, 0, numLevel)
-					b = b | bits[0][i][j][0];
-		orTime += (double)orStart.elapsed_nano();
+				b = b | bits[0][i][j][0];
 	}
 
-	Timer bitStart;
 	_for(i, 0, subs)
 		if (!b[i])
 		{
 			++matchSubs;
 			//cout << "BIOPSC matches sub: " << i << endl;
 		}
-	bitTime += (double)bitStart.elapsed_nano();
 }
 
 //void BIOPSC::calBucketSize() {
