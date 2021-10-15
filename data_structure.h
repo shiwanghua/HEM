@@ -50,7 +50,7 @@ struct Pair{
 };
 
 struct Pub{
-    int size;
+    int size,id;
     vector<Pair> pairs;// pairs的size不就是上面的size吗
 };
 

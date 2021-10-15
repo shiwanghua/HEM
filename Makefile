@@ -123,6 +123,33 @@ cmakeRB/fast:
 	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/build
 .PHONY : cmakeRB/fast
 
+AdaRein.o: AdaRein.cpp.o
+
+.PHONY : AdaRein.o
+
+# target to build an object file
+AdaRein.cpp.o:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/AdaRein.cpp.o
+.PHONY : AdaRein.cpp.o
+
+AdaRein.i: AdaRein.cpp.i
+
+.PHONY : AdaRein.i
+
+# target to preprocess a source file
+AdaRein.cpp.i:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/AdaRein.cpp.i
+.PHONY : AdaRein.cpp.i
+
+AdaRein.s: AdaRein.cpp.s
+
+.PHONY : AdaRein.s
+
+# target to generate assembly for a file
+AdaRein.cpp.s:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/AdaRein.cpp.s
+.PHONY : AdaRein.cpp.s
+
 BIOP.o: BIOP.cpp.o
 
 .PHONY : BIOP.o
@@ -338,6 +365,33 @@ BIOPSR.s: BIOPSR.cpp.s
 BIOPSR.cpp.s:
 	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BIOPSR.cpp.s
 .PHONY : BIOPSR.cpp.s
+
+OpIndex.o: OpIndex.cpp.o
+
+.PHONY : OpIndex.o
+
+# target to build an object file
+OpIndex.cpp.o:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/OpIndex.cpp.o
+.PHONY : OpIndex.cpp.o
+
+OpIndex.i: OpIndex.cpp.i
+
+.PHONY : OpIndex.i
+
+# target to preprocess a source file
+OpIndex.cpp.i:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/OpIndex.cpp.i
+.PHONY : OpIndex.cpp.i
+
+OpIndex.s: OpIndex.cpp.s
+
+.PHONY : OpIndex.s
+
+# target to generate assembly for a file
+OpIndex.cpp.s:
+	$(MAKE) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/OpIndex.cpp.s
+.PHONY : OpIndex.cpp.s
 
 Rein.o: Rein.cpp.o
 
@@ -645,6 +699,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... cmakeRB"
+	@echo "... AdaRein.o"
+	@echo "... AdaRein.i"
+	@echo "... AdaRein.s"
 	@echo "... BIOP.o"
 	@echo "... BIOP.i"
 	@echo "... BIOP.s"
@@ -669,6 +726,9 @@ help:
 	@echo "... BIOPSR.o"
 	@echo "... BIOPSR.i"
 	@echo "... BIOPSR.s"
+	@echo "... OpIndex.o"
+	@echo "... OpIndex.i"
+	@echo "... OpIndex.s"
 	@echo "... Rein.o"
 	@echo "... Rein.i"
 	@echo "... Rein.s"

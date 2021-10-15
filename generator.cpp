@@ -76,7 +76,7 @@ void intervalGenerator::GenPubList()
 {
     for (int i = 0; i < pubs; i++)
     {
-        Pub pub = GenOnePub(m, atts, attDis, valDis, valDom, alpha);
+        Pub pub = GenOnePub(i,m, atts, attDis, valDis, valDom, alpha);
         pubList.push_back(pub);
     }
 }
@@ -126,10 +126,11 @@ Pub generator::GenOnePub(int m, int atts, int attDis, int valDis, int valDom, do
     return pub;
 }
 
-Pub intervalGenerator::GenOnePub(int m, int atts, int attDis, int valDis, int valDom, double alpha)
+Pub intervalGenerator::GenOnePub(int id, int m, int atts, int attDis, int valDis, int valDom, double alpha)
 {
     Pub pub;
     pub.size = m;
+    pub.id=id;
     if (attDis == 0)
         GenUniformAtts(pub,atts);
     else if (attDis == 1)
@@ -196,24 +197,39 @@ void generator::GenUniformAtts(Pub &pub, int atts)
 
 void intervalGenerator::GenUniformAtts(Pub &pub, int atts)
 {
-    vector<int> a;
-    int i = 0;
-    // 让事件在前cons个维度上都有值, 维度较高时, 不至于没有订阅匹配
-    while (i < cons) {
-        Pair tmp;
-        tmp.att = i;
-        pub.pairs.push_back(tmp);
-        i++;
+    if (pub.id < subp * pubs) {
+        vector<int> a;
+        int i = 0;
+        // 让事件在前cons个维度上都有值, 维度较高时, 不至于没有订阅匹配
+        while (i < cons) {
+            Pair tmp;
+            tmp.att = i;
+            pub.pairs.push_back(tmp);
+            i++;
+        }
+        for (; i < pub.size; i++)
+        {
+            int x = random(atts-cons)+cons;
+            while (CheckExist(a,x))
+                x = random(atts - cons) + cons;
+            a.push_back(x);
+            Pair tmp;
+            tmp.att = x;
+            pub.pairs.push_back(tmp);
+        }
     }
-    for (; i < pub.size; i++)
-    {
-        int x = random(atts-cons)+cons;
-        while (CheckExist(a,x))
-            x = random(atts - cons) + cons;
-        a.push_back(x);
-        Pair tmp;
-        tmp.att = x;
-        pub.pairs.push_back(tmp);
+    else {
+        vector<int> a;
+        for (int i = 0; i < pub.size; i++)
+        {
+            int x = random(atts);
+            while (CheckExist(a,x))
+                x = random(atts - cons) + cons;
+            a.push_back(x);
+            Pair tmp;
+            tmp.att = x;
+            pub.pairs.push_back(tmp);
+        }
     }
 }
 

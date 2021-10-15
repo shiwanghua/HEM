@@ -203,75 +203,6 @@ void BIOP3::initBits() {
 }
 
 //// 计算时间组成
-//void BIOP3::match(const Pub& pub, int& matchSubs)
-//{
-//	bitset<subs> b;
-//	vector<bool> attExist(numDimension, false);
-//	int value, att, buck;
-//	_for(i, 0, pub.size)
-//	{
-//		Timer compareStart;
-//		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
-//		attExist[att] = true;
-//		_for(k, 0, data[0][att][buck].size())
-//			if (data[0][att][buck][k].val > value)
-//				b[data[0][att][buck][k].subID] = 1;
-//		_for(k, 0, data[1][att][buck].size())
-//			if (data[1][att][buck][k].val < value)
-//				b[data[1][att][buck][k].subID] = 1;
-//		compareTime += (double)compareStart.elapsed_nano();
-//
-//		Timer markStart;
-//		_for(j, buck + 1, endBucket[0][att][buck])
-//			_for(k, 0, data[0][att][j].size())
-//			b[data[0][att][j][k].subID] = 1;
-//		_for(j, endBucket[1][att][buck], buck)
-//			_for(k, 0, data[1][att][j].size())
-//			b[data[1][att][j][k].subID] = 1;
-//		markTime += (double)markStart.elapsed_nano();
-//
-//		Timer orStart;
-//		if (bitsID[0][att][buck] != -1)
-//			b = b | bits[0][att][bitsID[0][att][buck]];
-//		if (bitsID[1][att][buck] != -1)
-//			b = b | bits[1][att][bitsID[1][att][buck]];
-//		orTime += (double)orStart.elapsed_nano();
-//	}
-//
-//	if (numBits > 1) {
-//		Timer orStart;
-//		_for(i, 0, numDimension)
-//			if (!attExist[i])
-//				b = b | fullBits[i];
-//		orTime += (double)orStart.elapsed_nano();
-//	}
-//	else {
-//		Timer markStart;
-//		_for(i, 0, numDimension)
-//			if (!attExist[i])
-//				_for(j, 0, endBucket[0][i][0])  // 到临界点为止
-//				_for(k, 0, data[0][i][j].size())
-//				b[data[0][i][j][k].subID] = 1;
-//		markTime += (double)markStart.elapsed_nano();
-//
-//		Timer orStart;
-//		_for(i, 0, numDimension)
-//			if (!attExist[i])
-//				b = b | bits[0][i][0];
-//		orTime += (double)orStart.elapsed_nano();
-//	}
-//
-//	Timer bitStart;
-//	_for(i, 0, subs)
-//		if (!b[i])
-//		{
-//			++matchSubs;
-//			//cout << "BIOP3 matches sub: : " << i << endl;
-//		}
-//	bitTime += (double)bitStart.elapsed_nano();
-//}
-
-// 不计算时间组成
 void BIOP3::match(const Pub& pub, int& matchSubs)
 {
 	bitset<subs> b;
@@ -279,6 +210,7 @@ void BIOP3::match(const Pub& pub, int& matchSubs)
 	int value, att, buck;
 	_for(i, 0, pub.size)
 	{
+		Timer compareStart;
 		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 		attExist[att] = true;
 		_for(k, 0, data[0][att][buck].size())
@@ -287,44 +219,112 @@ void BIOP3::match(const Pub& pub, int& matchSubs)
 		_for(k, 0, data[1][att][buck].size())
 			if (data[1][att][buck][k].val < value)
 				b[data[1][att][buck][k].subID] = 1;
-		
+		compareTime += (double)compareStart.elapsed_nano();
+
+		Timer markStart;
 		_for(j, buck + 1, endBucket[0][att][buck])
 			_for(k, 0, data[0][att][j].size())
 			b[data[0][att][j][k].subID] = 1;
 		_for(j, endBucket[1][att][buck], buck)
 			_for(k, 0, data[1][att][j].size())
 			b[data[1][att][j][k].subID] = 1;
-		
+		markTime += (double)markStart.elapsed_nano();
+
+		Timer orStart;
 		if (bitsID[0][att][buck] != -1)
 			b = b | bits[0][att][bitsID[0][att][buck]];
 		if (bitsID[1][att][buck] != -1)
 			b = b | bits[1][att][bitsID[1][att][buck]];
+		orTime += (double)orStart.elapsed_nano();
 	}
 
 	if (numBits > 1) {
+		Timer orStart;
 		_for(i, 0, numDimension)
 			if (!attExist[i])
 				b = b | fullBits[i];
+		orTime += (double)orStart.elapsed_nano();
 	}
 	else {
+		Timer markStart;
 		_for(i, 0, numDimension)
 			if (!attExist[i])
 				_for(j, 0, endBucket[0][i][0])  // 到临界点为止
 				_for(k, 0, data[0][i][j].size())
 				b[data[0][i][j][k].subID] = 1;
+		markTime += (double)markStart.elapsed_nano();
 
+		Timer orStart;
 		_for(i, 0, numDimension)
 			if (!attExist[i])
 				b = b | bits[0][i][0];
+		orTime += (double)orStart.elapsed_nano();
 	}
 
+	Timer bitStart;
 	_for(i, 0, subs)
 		if (!b[i])
 		{
 			++matchSubs;
 			//cout << "BIOP3 matches sub: : " << i << endl;
 		}
+	bitTime += (double)bitStart.elapsed_nano();
 }
+
+// 不计算时间组成
+// void BIOP3::match(const Pub& pub, int& matchSubs)
+// {
+// 	bitset<subs> b;
+// 	vector<bool> attExist(numDimension, false);
+// 	int value, att, buck;
+// 	_for(i, 0, pub.size)
+// 	{
+// 		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
+// 		attExist[att] = true;
+// 		_for(k, 0, data[0][att][buck].size())
+// 			if (data[0][att][buck][k].val > value)
+// 				b[data[0][att][buck][k].subID] = 1;
+// 		_for(k, 0, data[1][att][buck].size())
+// 			if (data[1][att][buck][k].val < value)
+// 				b[data[1][att][buck][k].subID] = 1;
+		
+// 		_for(j, buck + 1, endBucket[0][att][buck])
+// 			_for(k, 0, data[0][att][j].size())
+// 			b[data[0][att][j][k].subID] = 1;
+// 		_for(j, endBucket[1][att][buck], buck)
+// 			_for(k, 0, data[1][att][j].size())
+// 			b[data[1][att][j][k].subID] = 1;
+		
+// 		if (bitsID[0][att][buck] != -1)
+// 			b = b | bits[0][att][bitsID[0][att][buck]];
+// 		if (bitsID[1][att][buck] != -1)
+// 			b = b | bits[1][att][bitsID[1][att][buck]];
+// 	}
+
+// 	if (numBits > 1) {
+// 		_for(i, 0, numDimension)
+// 			if (!attExist[i])
+// 				b = b | fullBits[i];
+// 	}
+// 	else {
+// 		_for(i, 0, numDimension)
+// 			if (!attExist[i])
+// 				_for(j, 0, endBucket[0][i][0])  // 到临界点为止
+// 				_for(k, 0, data[0][i][j].size())
+// 				b[data[0][i][j][k].subID] = 1;
+
+// 		_for(i, 0, numDimension)
+// 			if (!attExist[i])
+// 				b = b | bits[0][i][0];
+// 	}
+
+// 	_for(i, 0, subs)
+// 		if (!b[i])
+// 		{
+// 			++matchSubs;
+// 			//cout << "BIOP3 matches sub: : " << i << endl;
+// 		}
+// }
 
 //void BIOP3::calBucketSize() {
 //	bucketSub.clear();

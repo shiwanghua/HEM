@@ -62,7 +62,7 @@ class intervalGenerator {
 
     IntervalSub GenOneSub(int id, int size, int atts, int attDis, int valDis, int valDom, double alpha, double width);
 
-    Pub GenOnePub(int m, int atts, int attDis, int valDis, int valDom, double alpha);
+    Pub GenOnePub(int id, int m, int atts, int attDis, int valDis, int valDom, double alpha);
 
 public:
     vector<IntervalSub> subList;

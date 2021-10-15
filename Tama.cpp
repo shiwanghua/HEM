@@ -1,4 +1,4 @@
-#include "tama.h"
+#include "Tama.h"
 
 void Tama::initiate(int p, int l, int r, int lvl)
 {
