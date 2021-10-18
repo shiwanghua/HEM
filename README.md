@@ -32,5 +32,5 @@
 
 
 ##### 注意事项
-1. "Tama.h" 里 MAX_ATTS 必须大于等于 "constant.h" 里的atts
+1. "constant.h" 里 MAX_SUBS、MAX_ATTS、MAX_BUCKS 必须大于等于 subs、atts、buks
 

@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib import rc
 from matplotlib.pyplot import MultipleLocator
 rc('mathtext', default='regular')
-# 解决坐标轴负号?
+
 plt.rcParams['axes.unicode_minus'] = False
 
 be = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -60,9 +60,9 @@ ax.plot(be, BIOP0PS, marker='x', color='DODGERBLUE', label=Name[1])
 ax.plot(be, BIOP5DD, marker='.', color='DEEPPINK', label=Name[6])
 # ax.plot(be, Simple, marker='D',  color='lightseagreen', label=Name[7])
 
-ax.legend(loc=(2/10,3.95/5))
+ax.legend(loc=(2.5/10,3.99/5))
 ax.grid()
-ax.set_xlabel('Bit Exponent')
+ax.set_xlabel('Number of Bit Exponent')
 ax.set_ylabel('Matching Time (ms)')
 # plt.xticks(range(0,10))
 ax.set_xlim(-0.5,9.5)
@@ -74,8 +74,8 @@ ax2 = ax.twinx()
 ax2.bar(be, Memory, color='lightsteelblue',  label = 'Memory (MB)') # alpha=0.7,
 ax2.set_ylabel(r"Memory Size (MB)")
 ax2.set_ylim(0, 2700)
-ax2.legend(loc=(5.1/10,3.95/5))
-ax2.set_zorder(0)
+ax2.legend(loc=(5.5/10,3.99/5))
+ax2.set_zorder(1)
 
 for a,b in zip(be,Memory):
     c=b-160

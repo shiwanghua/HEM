@@ -30,4 +30,11 @@ extern const int gs;       // 一组有多少个维度
 
 // Tama
 extern const int level;
+
+// AdaRein
+const int MAX_SUBS = 2000001;
+const int MAX_ATTS = 1000;
+const int MAX_BUCKS = 2000;
+extern const double falsePositiveRate;
 #endif
+

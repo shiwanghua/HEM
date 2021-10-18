@@ -1,3 +1,4 @@
+454 memory= 470 MB AvgMatchNum= 5.630000 AvgInsertTime= 0.017459 ms AvgMatchTime= 27.061216 ms level= 13 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20 attDis= 0 valDis= 0 width= 0.300000 alpha= 0.000000
 452 memory= 470 MB AvgMatchNum= 0.000000 AvgInsertTime= 0.003529 ms AvgMatchTime= 2.823266 ms level= 13 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 10 attTypes= 20 attDis= 0 valDis= 0 width= 0.300000 alpha= 0.000000
 451 memory= 470 MB AvgMatchNum= 0.000000 AvgInsertTime= 0.003495 ms AvgMatchTime= 2.817556 ms level= 13 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 10 attTypes= 20 attDis= 0 valDis= 0 width= 0.300000 alpha= 0.000000
 450 memory= 470 MB AvgMatchNum= 0.000000 AvgInsertTime= 0.003477 ms AvgMatchTime= 2.821302 ms level= 13 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 10 attTypes= 20 attDis= 0 valDis= 0 width= 0.300000 alpha= 0.000000

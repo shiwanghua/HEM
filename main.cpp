@@ -32,6 +32,8 @@ int main(int argc, char **argv)
 	run_Simple(gen);
 	//run_Simple2(gen);
 	run_tama(gen);
+	run_adarein(gen);
+	//run_opindex(gen);
 	
 
 	cout << "Done.\n";

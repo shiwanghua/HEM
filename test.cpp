@@ -1,7 +1,7 @@
 #include "Rein.h"
 #include "BIOP.h"
 
-int maint(int argc, char** argv)
+int mainha(int argc, char** argv)
 {
 	/*Timer s;
 	bool bits[100000000] = { 0 };
@@ -26,10 +26,20 @@ int maint(int argc, char** argv)
 	int bits3[1000000];
 	cout << s3.elapsed_nano()<<endl;*/
 
-	long long size;
-	size = 3929399552;
-	size = size / 1024 / 1024; // MB
-	cout<< (int)size;
+	//long long size;
+	//size = 3929399552;
+	//size = size / 1024 / 1024; // MB
+	//cout<< (int)size;
+
+	// if (   (double)(countSum - currentSum) / (double)subList.size() > subList[0].constraints.size() + 
+	
+	//        log(falsePositive + 1) / log((subList[0].constraints[0].highValue - subList[0].constraints[0].lowValue) / (double)1000000))
+
+	if (9.0 > 10 + log(1.0 + 1) / log(0.8))
+		cout << "skip it";
+
+	if (-3.10628)
+		cout << "skip it2";
 
 	system("pause");
 	return 0;

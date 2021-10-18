@@ -59,5 +59,12 @@ struct dPub { // dimensional publish
     unordered_map<int,int> AVmap;
 };
 
+struct attAndCount { // AdaRein
+    int att, count;
+    bool operator < (const attAndCount& b) const {
+        return  count < b.count;
+    }
+};
+
 
 #endif //_DATA_STRUCTURE_H

@@ -1,11 +1,11 @@
-#ifndef _TAMA_H
-#define _TAMA_H
+#ifndef TAMA_H
+#define TAMA_H
 #include "util.h"
 #include "constant.h"
 
 using namespace std;
 
-const int MAX_ATTS = 101;
+//const int MAX_ATTS = 101;
 
 class Tama {
     int nodeCounter;
@@ -42,4 +42,4 @@ public:
     int calMemory();
 };
 
-#endif //_TAMA_H
+#endif //TAMA_H

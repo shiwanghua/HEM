@@ -116,7 +116,7 @@ void run_BIOP(const intervalGenerator& gen) {
 		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 		+ " ms InitTime= " + Util::Double2String(initTime)
-		+ " ms NewAvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+		+ " ms AvgConstructionTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
 		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
 		+ " ms AvgCmpTime= " + to_string(rb.compareTime / pubs / 1000000)
 		+ " ms AvgMarkTime= " + to_string(rb.markTime / pubs / 1000000)
@@ -190,7 +190,7 @@ void run_BIOP1(const intervalGenerator& gen) {
 		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 		+ " ms InitTime= " + Util::Double2String(initTime)
-		+ " ms NewAvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+		+ " ms AvgConstructionTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
 		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
 		+ " ms AvgCmpTime= " + to_string(rb1.compareTime / pubs / 1000000)
 		+ " ms AvgMarkTime= " + to_string(rb1.markTime / pubs / 1000000)
@@ -266,7 +266,7 @@ void run_BIOP2(const intervalGenerator& gen) {
 		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 		+ " ms InitTime= " + Util::Double2String(initTime)
-		+ " ms NewAvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+		+ " ms AvgConstructionTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
 		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
 		+ " ms AvgCmpTime= " + to_string(rb2.compareTime / pubs / 1000000)
 		+ " ms AvgMarkTime= " + to_string(rb2.markTime / pubs / 1000000)
@@ -340,7 +340,7 @@ void run_BIOP3(const intervalGenerator& gen) {
 		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 		+ " ms InitTime= " + Util::Double2String(initTime)
-		+ " ms NewAvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+		+ " ms AvgConstructionTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
 		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
 		+ " ms AvgCmpTime= " + to_string(rb3.compareTime / pubs / 1000000)
 		+ " ms AvgMarkTime= " + to_string(rb3.markTime / pubs / 1000000)
@@ -414,7 +414,7 @@ void run_BIOP4(const intervalGenerator& gen) {
 		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 		+ " ms InitTime= " + Util::Double2String(initTime)
-		+ " ms NewAvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+		+ " ms AvgConstructionTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
 		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
 		+ " ms AvgCmpTime= " + to_string(rb4.compareTime / pubs / 1000000)
 		+ " ms AvgMarkTime= " + to_string(rb4.markTime / pubs / 1000000)
@@ -497,7 +497,7 @@ void run_BIOP5(const intervalGenerator& gen) {
 		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 		+ " ms InitTime= " + Util::Double2String(initTime)
-		+ " ms NewAvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+		+ " ms AvgConstructionTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
 		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
 		+ " ms AvgCmpTime= " + to_string(rb5.compareTime / pubs / 1000000)
 		+ " ms AvgMarkTime= " + to_string(rb5.markTime / pubs / 1000000)
@@ -572,7 +572,7 @@ void run_BIOPSC(const intervalGenerator& gen) {
 		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 		+ " ms InitTime= " + Util::Double2String(initTime)
-		+ " ms NewAvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+		+ " ms AvgConstructionTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
 		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
 		+ " ms AvgCmpTime= " + to_string(biopsc.compareTime / pubs / 1000000)
 		+ " ms AvgMarkTime= " + to_string(biopsc.markTime / pubs / 1000000)
@@ -648,7 +648,7 @@ void run_BIOPSR(const intervalGenerator& gen) {
 		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 		+ " ms InitTime= " + Util::Double2String(initTime)
-		+ " ms NewAvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+		+ " ms AvgConstructionTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
 		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
 		+ " ms AvgCmpTime= " + to_string(biopsr.compareTime / pubs / 1000000)
 		+ " ms AvgMarkTime= " + to_string(biopsr.markTime / pubs / 1000000)
@@ -839,7 +839,7 @@ void run_tama(const intervalGenerator& gen) {
 	Util::WriteData(outputFileName.c_str(), content);
 }
 void run_adarein(const intervalGenerator& gen) {
-	Simple2 adarein;
+	AdaRein adarein;
 
 	vector<double> insertTimeList;
 	vector<double> matchTimeList;
@@ -855,34 +855,36 @@ void run_adarein(const intervalGenerator& gen) {
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
 	}
-	cout << "Simple2 Insertion Finish.\n";
+	cout << "AdaRein Insertion Finishes.\n";
 
+	double initTime;
+	Timer initStart;
+	adarein.select_skipped_atts(gen.subList,falsePositiveRate);
+	initTime = (double)initStart.elapsed_nano() / 1000000.0;
+	
 
 	// match
 	for (int i = 0; i < pubs; i++)
 	{
-		dPub dpub;
-		dpub.pubId = i;
-		Util::Pub2dPub(gen.pubList[i], dpub);
-
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
-		adarein.match(dpub, matchSubs);
+		adarein.accurate_match(gen.pubList[i], matchSubs,gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "Simple2 Event" << i << " is matched.\n";
+			cout << "AdaRein Event" << i << " is matched.\n";
 	}
 
 	// output
-	string outputFileName = "Simple2.txt";
+	string outputFileName = "AdaRein.txt";
 	string content = expID
 		+ " memory= " + Util::Int2String(adarein.calMemory())
 		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+		+ " ms AvgConstructionTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
 		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
 		+ " numSub= " + Util::Int2String(subs)
 		+ " subSize= " + Util::Int2String(cons)

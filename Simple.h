@@ -1,6 +1,6 @@
 //#pragma once
-#ifndef _SIMPLE_H
-#define _SIMPLE_H
+#ifndef SIMPLE_H
+#define SIMPLE_H
 
 //#include <cstring>
 #include "util.h"

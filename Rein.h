@@ -11,9 +11,9 @@
 #define mfor(i,a,b) for(int i=(a);i>(b);--i)
 #define mmfor(i,a,b) for(int i=(a);i>=(b);--i)
 
-const int MAX_SUBS = 2000001;
+//const int MAX_SUBS = 2000001;
 //const int MAX_ATTS = 101;
-const int MAX_BUCKS = 500;
+//const int MAX_BUCKS = 500;
 
 // 01ÔÚµÚÒ»Î¬
 class Rein {

@@ -224,7 +224,7 @@ void intervalGenerator::GenUniformAtts(Pub &pub, int atts)
         {
             int x = random(atts);
             while (CheckExist(a,x))
-                x = random(atts - cons) + cons;
+                x = random(atts);
             a.push_back(x);
             Pair tmp;
             tmp.att = x;

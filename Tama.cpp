@@ -90,7 +90,7 @@ void Tama::match_accurate(const Pub& pub, int& matchSubs, const vector<IntervalS
 void Tama::match_accurate(int p, int att, int l, int r, const int value, int lvl, const vector<IntervalSub>& subList)
 {
 	if (level == lvl) {
-		int id;
+		int id=-1;
 		for (auto& id:data[att][p])
 		{
 			for(auto& predicate:subList[id].constraints)

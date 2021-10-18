@@ -1,0 +1,1 @@
+454 memory= 0 MB AvgMatchNum= 0.000000 AvgInsertTime= 0.008692 ms AvgConstructionTime= 0.008827 ms AvgMatchTime= 1832.328357 numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20
