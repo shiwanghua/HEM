@@ -20,11 +20,13 @@ class Simple
 private:
 	vector<IntervalSub> data;
 public:
+	int numSub;
 	Simple();
 	~Simple();
 
 	//void insert(Sub sub);
 	void insert(IntervalSub sub);
+	bool deleteSubscription(IntervalSub sub);
 	//void match(const Pub& pub, int& matchSubs, const vector<Sub>& subList);
 	void match(dPub& pub, int& matchSubs);
 	int calMemory();      // 计算占用内存大小

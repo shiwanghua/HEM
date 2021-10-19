@@ -31,7 +31,7 @@ public:
     bool deleteSubscription(IntervalSub sub);
 
     void accurate_match(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
-    void select_skipped_atts(const vector<IntervalSub>& subList, double falsePositive);
+    void select_skipped_atts(double falsePositive, const vector<IntervalSub>& subList);
     void approx_match(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
 
     int calMemory();      // 计算占用内存大小, 返回MB

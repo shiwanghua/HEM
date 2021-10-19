@@ -12,6 +12,21 @@ void Simple2::insert(IntervalSub sub)
 {
 	sort(sub.constraints.begin(), sub.constraints.end(), [](IntervalCnt& a, IntervalCnt& b) {return a.highValue - a.lowValue < b.highValue - b.lowValue; });
 	data.push_back(sub);
+	numSub++;
+}
+
+bool Simple2::deleteSubscription(IntervalSub sub)
+{
+	bool find = false;
+	for (vector<IntervalSub>::iterator it = data.begin(); it != data.end(); it++) {
+		if (it->id == sub.id) {
+			data.erase(it);
+			numSub--;
+			find = true;
+			break;
+		}
+	}
+	return find;
 }
 
 void Simple2::match(dPub& dpub, int& matchSubs)
@@ -38,7 +53,7 @@ void Simple2::match(dPub& dpub, int& matchSubs)
 int Simple2::calMemory() {
 	long long size = 0; // Byte
 	_for(i, 0, data.size()) {
-		size += sizeof(int) * 3 * data[i].constraints.size();
+		size += sizeof(int) * (2 + 3 * data[i].constraints.size());
 	}
 	size = size / 1024 / 1024; // MB
 	return (int)size;

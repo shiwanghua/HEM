@@ -1,6 +1,6 @@
-#include "opIndex.h"
+#include "OpIndex.h"
 
-void opIndex::insert(Sub x)
+void OpIndex::insert(Sub x)
 {
     int att = getMinFre(x);
     isPivot[att] = true;
@@ -22,9 +22,10 @@ void opIndex::insert(Sub x)
             sig[att][x.constraints[i].op][e.att % SEGMENTS][signatureHash2(e.att)] = true;
         }
     }
+    numSub++;
 }
 
-void opIndex::insert(IntervalSub x)
+void OpIndex::insert(IntervalSub x)
 {
     int att = getMinFre(x);
     isPivot[att] = true;
@@ -40,9 +41,44 @@ void opIndex::insert(IntervalSub x)
         data[att][2][e.att % SEGMENTS][signatureHash2(e.att)].push_back(e);
         sig[att][2][e.att % SEGMENTS][signatureHash2(e.att)] = true;
     }
+    numSub++;
 }
 
-void opIndex::match(Pub pub, int& matchSubs, vector<Sub>& subList)
+bool OpIndex::deleteSubscription(IntervalSub sub)
+{
+    int find = 0;
+    int id = sub.id;
+    int pivotAtt = getMinFre(sub);
+    //isPivot[pivotAtt] = false; // 未实现
+
+    for (int i = 0; i < sub.size; i++)
+    {
+        int att = sub.constraints[i].att;
+        int seg = att % SEGMENTS;
+        int hash = signatureHash2(att);
+        vector<ConElement>::iterator it;
+        for (it = data[pivotAtt][1][seg][hash].begin(); it != data[pivotAtt][1][seg][hash].end(); it++)
+            if (it->subID == id) {
+                data[pivotAtt][1][seg][hash].erase(it); 
+                find++;
+                break;
+            }
+        for (it = data[pivotAtt][2][seg][hash].begin(); it != data[pivotAtt][2][seg][hash].end(); it++)
+            if (it->subID == id) {
+                data[pivotAtt][2][seg][hash].erase(it);
+                find++;
+                break;
+            }
+        //sig[pivotAtt][1][seg][hash] = false; // 未实现
+        //sig[pivotAtt][2][seg][hash] = false; // 未实现
+    }
+
+    if (find == 2 * sub.size)
+        numSub--;
+    return find == 2 * sub.size;
+}
+
+void OpIndex::match(Pub pub, int& matchSubs, const vector<Sub>& subList)
 {
     initCounter(subList);
     for (int i = 0; i < pub.size; i++)
@@ -95,7 +131,7 @@ void opIndex::match(Pub pub, int& matchSubs, vector<Sub>& subList)
     }
 }
 
-void opIndex::match(Pub pub, int& matchSubs, vector<IntervalSub>& subList)
+void OpIndex::match(Pub pub, int& matchSubs, const vector<IntervalSub>& subList)
 {
     initCounter(subList);
     for (int i = 0; i < pub.size; i++)
@@ -135,19 +171,19 @@ void opIndex::match(Pub pub, int& matchSubs, vector<IntervalSub>& subList)
     }
 }
 
-void opIndex::initCounter(vector<Sub>& subList)
+void OpIndex::initCounter(const vector<Sub>& subList)
 {
     for (int i = 0; i < subList.size(); i++)
         counter[i] = subList[i].size;
 }
 
-void opIndex::initCounter(vector<IntervalSub>& subList)
+void OpIndex::initCounter(const vector<IntervalSub>& subList)
 {
     for (int i = 0; i < subList.size(); i++)
         counter[i] = subList[i].size << 1;
 }
 
-int opIndex::getMinFre(Sub x)
+int OpIndex::getMinFre(Sub x)
 {
     int tmp = x.constraints.at(0).att;
     for (int i = 1; i < x.size; i++)
@@ -156,7 +192,7 @@ int opIndex::getMinFre(Sub x)
     return tmp;
 }
 
-int opIndex::getMinFre(IntervalSub x)
+int OpIndex::getMinFre(IntervalSub x)
 {
     int tmp = x.constraints.at(0).att;
     for (int i = 1; i < x.size; i++)
@@ -165,7 +201,7 @@ int opIndex::getMinFre(IntervalSub x)
     return tmp;
 }
 
-void opIndex::calcFrequency(vector<Sub>& subList)
+void OpIndex::calcFrequency(const vector<Sub>& subList)
 {
     memset(fre, 0, sizeof(fre));
     for (int i = 0; i < subList.size(); i++)
@@ -173,7 +209,7 @@ void opIndex::calcFrequency(vector<Sub>& subList)
             ++fre[subList[i].constraints[j].att];
 }
 
-void opIndex::calcFrequency(vector<IntervalSub>& subList)
+void OpIndex::calcFrequency(const vector<IntervalSub>& subList)
 {
     memset(fre, 0, sizeof(fre));
     for (int i = 0; i < subList.size(); i++)
@@ -181,12 +217,29 @@ void opIndex::calcFrequency(vector<IntervalSub>& subList)
             ++fre[subList[i].constraints[j].att];
 }
 
-int opIndex::signatureHash1(int att, int val)
+int OpIndex::signatureHash1(int att, int val)
 {
     return att * val % MAX_SIGNATURE;
 }
 
-int opIndex::signatureHash2(int att)
+int OpIndex::signatureHash2(int att)
 {
     return att * att % MAX_SIGNATURE;
+}
+
+int OpIndex::calMemory()
+{
+    long long size = 0; // Byte
+    _for(i, 0, atts) {
+        _for(j, 0, 3) {
+            _for(k, 0, SEGMENTS) {
+                _for(q, 0, MAX_SIGNATURE) {
+                    size += data[i][j][k][q].size() * sizeof(ConElement) + sizeof(bool); // sig 数组
+                }
+            }
+        }
+    }
+    size += MAX_SUBS * sizeof(int) + MAX_ATTS * sizeof(bool) + MAX_ATTS * sizeof(int); // counter, isPivot, fre
+    size = size / 1024 / 1024; // MB
+    return (int)size;
 }

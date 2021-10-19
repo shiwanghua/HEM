@@ -47,7 +47,7 @@ void Rein::insert(IntervalSub sub)
 
 bool Rein::deleteSubscription(IntervalSub sub)
 {
-	bool find = false;
+	int find = 0;
 	IntervalCnt cnt;
 	int bucketID, id = sub.id;
 
@@ -60,7 +60,7 @@ bool Rein::deleteSubscription(IntervalSub sub)
 		for (it = data[0][cnt.att][bucketID].begin(); it != data[0][cnt.att][bucketID].end(); it++)
 			if (it->subID == id) {
 				data[0][cnt.att][bucketID].erase(it); // it = 
-				find = true;
+				find++;
 				break;
 			}
 
@@ -68,12 +68,13 @@ bool Rein::deleteSubscription(IntervalSub sub)
 		for (it = data[1][cnt.att][bucketID].begin(); it != data[1][cnt.att][bucketID].end(); it++)
 			if (it->subID == id) {
 				data[1][cnt.att][bucketID].erase(it); // it = 
+				find++;
 				break;
 			}
 	}
-	if (find)
+	if (find == 2 * sub.size)
 		numSub--;
-	return find;
+	return find == 2 * sub.size;
 }
 
 // 01在第二维，比较-标记-比较-标记
@@ -170,7 +171,7 @@ void Rein::match(const Pub& pub, int& matchSubs)
 // 		for (int k = 0; k < data[1][att][buck].size(); k++)
 // 			if (data[1][att][buck][k].val < value)
 // 				bits[data[1][att][buck][k].subID] = true;
-		
+
 // 		for (int j = buck + 1; j < numBucket; j++)
 // 			for (int k = 0; k < data[0][att][j].size(); k++)
 // 				bits[data[0][att][j][k].subID] = true;
@@ -197,14 +198,14 @@ void Rein::match(const Pub& pub, int& matchSubs)
 void Rein::calBucketSize() {
 	bucketSub.clear();
 	bucketSub.resize(numBucket);
-	_for(i,0,numDimension)
+	_for(i, 0, numDimension)
 		_for(j, 0, numBucket)
-		{
+	{
 		_for(k, 0, data[0][i][j].size())
 			bucketSub[j].insert(data[0][i][j][k].subID);
 		_for(k, 0, data[1][i][j].size())
 			bucketSub[j].insert(data[1][i][j][k].subID);
-		}
+	}
 }
 
 int Rein::calMemory() {

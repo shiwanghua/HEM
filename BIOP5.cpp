@@ -21,12 +21,12 @@ BIOP5::BIOP5()
 
 	//else bitStep = numBucket >> 1;
 
-	doubleReverse[0] = new bool *[numDimension];
-	doubleReverse[1] = new bool *[numDimension];
-	endBucket[0] = new int *[numDimension];
-	endBucket[1] = new int *[numDimension];
-	bitsID[0] = new int *[numDimension];
-	bitsID[1] = new int *[numDimension];
+	doubleReverse[0] = new bool* [numDimension];
+	doubleReverse[1] = new bool* [numDimension];
+	endBucket[0] = new int* [numDimension];
+	endBucket[1] = new int* [numDimension];
+	bitsID[0] = new int* [numDimension];
+	bitsID[1] = new int* [numDimension];
 	_for(i, 0, numDimension)
 	{
 		doubleReverse[0][i] = new bool[numBucket];
@@ -104,9 +104,9 @@ void BIOP5::insert_online(IntervalSub sub)
 
 bool BIOP5::deleteSubscription(IntervalSub sub)
 {
-	bool find = false;
+	int find = 0;
 	IntervalCnt cnt;
-	int b, bucketID,id=sub.id;
+	int b, bucketID, id = sub.id;
 
 	if (numBits > 1)
 	{ // 懒得在下面for循环里每次都判断一次
@@ -122,11 +122,11 @@ bool BIOP5::deleteSubscription(IntervalSub sub)
 
 		bucketID = cnt.lowValue / buckStep;
 		vector<Combo>::iterator it;
-		for(it=data[0][cnt.att][bucketID].begin();it!=data[0][cnt.att][bucketID].end();it++)
-			if(it->subID==id){
+		for (it = data[0][cnt.att][bucketID].begin(); it != data[0][cnt.att][bucketID].end(); it++)
+			if (it->subID == id) {
 				data[0][cnt.att][bucketID].erase(it); // it = 
-				find=true;
-				break; 
+				find++;
+				break;
 			}
 
 		if (doubleReverse[0][cnt.att][bucketID])
@@ -137,10 +137,11 @@ bool BIOP5::deleteSubscription(IntervalSub sub)
 			bits[0][cnt.att][q][sub.id] = 0;
 
 		bucketID = cnt.highValue / buckStep;
-		for(it=data[1][cnt.att][bucketID].begin();it!=data[1][cnt.att][bucketID].end();it++)
-			if(it->subID==id){
+		for (it = data[1][cnt.att][bucketID].begin(); it != data[1][cnt.att][bucketID].end(); it++)
+			if (it->subID == id) {
 				data[1][cnt.att][bucketID].erase(it); // it = 
-				break; 
+				find++;
+				break;
 			}
 
 		if (doubleReverse[1][cnt.att][bucketID])
@@ -150,9 +151,9 @@ bool BIOP5::deleteSubscription(IntervalSub sub)
 		_for(q, b, numBits - 1)
 			bits[1][cnt.att][q][sub.id] = 0;
 	}
-	if (find)
+	if (find == 2 * sub.size)
 		numSub--;
-	return find;
+	return find == 2 * sub.size;
 }
 
 // fullBits单独存储的版本
@@ -162,12 +163,12 @@ void BIOP5::initBits()
 	// 如果有多次初始化
 	_for(i, 0, numDimension) delete[] doubleReverse[0][i], doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1], doubleReverse[0], doubleReverse[1];
-	doubleReverse[0] = new bool *[numDimension];
-	doubleReverse[1] = new bool *[numDimension];
-	endBucket[0] = new int *[numDimension];
-	endBucket[1] = new int *[numDimension];
-	bitsID[0] = new int *[numDimension];
-	bitsID[1] = new int *[numDimension];
+	doubleReverse[0] = new bool* [numDimension];
+	doubleReverse[1] = new bool* [numDimension];
+	endBucket[0] = new int* [numDimension];
+	endBucket[1] = new int* [numDimension];
+	bitsID[0] = new int* [numDimension];
+	bitsID[1] = new int* [numDimension];
 	_for(i, 0, numDimension)
 	{
 		doubleReverse[0][i] = new bool[numBucket];
@@ -440,7 +441,7 @@ void BIOP5::initBits()
 }
 
 // 计算时间组成
-void BIOP5::match(const Pub &pub, int &matchSubs)
+void BIOP5::match(const Pub& pub, int& matchSubs)
 {
 	bitset<subs> b, bLocal;
 	vector<bool> attExist(numDimension, false);
@@ -466,7 +467,7 @@ void BIOP5::match(const Pub &pub, int &matchSubs)
 				bLocal = bits[0][att][bitsID[0][att][buck]];
 			_for(j, endBucket[0][att][buck], buck + 1)
 				_for(k, 0, data[0][att][j].size())
-					bLocal[data[0][att][j][k].subID] = 0;
+				bLocal[data[0][att][j][k].subID] = 0;
 			markTime += (double)markStart.elapsed_nano();
 
 			Timer orStart;
@@ -478,7 +479,7 @@ void BIOP5::match(const Pub &pub, int &matchSubs)
 			Timer markStart;
 			_for(j, buck + 1, endBucket[0][att][buck])
 				_for(k, 0, data[0][att][j].size())
-					b[data[0][att][j][k].subID] = 1;
+				b[data[0][att][j][k].subID] = 1;
 			markTime += (double)markStart.elapsed_nano();
 			Timer orStart;
 			if (bitsID[0][att][buck] != -1)
@@ -495,7 +496,7 @@ void BIOP5::match(const Pub &pub, int &matchSubs)
 				bLocal = bits[1][att][bitsID[1][att][buck]];
 			_for(j, buck, endBucket[1][att][buck])
 				_for(k, 0, data[1][att][j].size())
-					bLocal[data[1][att][j][k].subID] = 0;
+				bLocal[data[1][att][j][k].subID] = 0;
 			markTime += (double)markStart.elapsed_nano();
 			Timer orStart;
 			b = b | bLocal;
@@ -506,7 +507,7 @@ void BIOP5::match(const Pub &pub, int &matchSubs)
 			Timer markStart;
 			_for(j, endBucket[1][att][buck], buck)
 				_for(k, 0, data[1][att][j].size())
-					b[data[1][att][j][k].subID] = 1;
+				b[data[1][att][j][k].subID] = 1;
 			markTime += (double)markStart.elapsed_nano();
 			Timer orStart;
 			if (bitsID[1][att][buck] != -1)
@@ -527,8 +528,8 @@ void BIOP5::match(const Pub &pub, int &matchSubs)
 		Timer markStart;
 		_for(i, 0, numDimension) if (!attExist[i])
 			_for(j, 0, endBucket[0][i][0])
-				_for(k, 0, data[0][i][j].size())
-					b[data[0][i][j][k].subID] = 1;
+			_for(k, 0, data[0][i][j].size())
+			b[data[0][i][j][k].subID] = 1;
 		markTime += (double)markStart.elapsed_nano();
 
 		Timer orStart;
@@ -561,7 +562,7 @@ void BIOP5::match(const Pub &pub, int &matchSubs)
 // 			b[data[0][att][buck][k].subID] = 1;
 // 		_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
 // 			b[data[1][att][buck][k].subID] = 1;
-		
+
 // 		if (doubleReverse[0][att][buck])
 // 		{
 // 			if (bitsID[0][att][buck] == numBits - 1 && numBits > 1)
@@ -571,7 +572,7 @@ void BIOP5::match(const Pub &pub, int &matchSubs)
 // 			_for(j, endBucket[0][att][buck], buck + 1)
 // 				_for(k, 0, data[0][att][j].size())
 // 				bLocal[data[0][att][j][k].subID] = 0;
-			
+
 // 			b = b | bLocal;
 // 		}
 // 		else
@@ -579,7 +580,7 @@ void BIOP5::match(const Pub &pub, int &matchSubs)
 // 			_for(j, buck + 1, endBucket[0][att][buck])
 // 				_for(k, 0, data[0][att][j].size())
 // 				b[data[0][att][j][k].subID] = 1;
-			
+
 // 			if (bitsID[0][att][buck] != -1)
 // 				b = b | bits[0][att][bitsID[0][att][buck]];
 // 		}
@@ -594,7 +595,7 @@ void BIOP5::match(const Pub &pub, int &matchSubs)
 // 			_for(j, buck, endBucket[1][att][buck])
 // 				_for(k, 0, data[1][att][j].size())
 // 				bLocal[data[1][att][j][k].subID] = 0;
-	
+
 // 			b = b | bLocal;
 // 		}
 // 		else
@@ -672,22 +673,22 @@ void BIOP5::printRelation(int dimension_i)
 	cout << "\n\nBIOP5DDMap\n";
 	if (dimension_i == -1)
 		_for(i, 0, numDimension)
+	{
+		cout << "\nDimension " << i << "    LowBucket Predicates: " << fix[0][i][0] << "   ----------------\n";
+		_for(j, 0, numBucket)
 		{
-			cout << "\nDimension " << i << "    LowBucket Predicates: " << fix[0][i][0] << "   ----------------\n";
-			_for(j, 0, numBucket)
-			{
-				cout << "lBkt" << j << ": bID=" << bitsID[0][i][j] << ", eBkt=" << endBucket[0][i][j] << ", dRvs=" << doubleReverse[0][i][j] << "; ";
-				if (j % 5 == 0 && j > 0)
-					cout << "\n";
-			}
-			cout << "\n\nDimension " << i << "    HighBucket Predicates: " << fix[1][i][numBucket] << "   ----------------\n";
-			_for(j, 0, numBucket)
-			{
-				cout << "hBkt" << j << ": bID=" << bitsID[1][i][j] << ", eBkt=" << endBucket[1][i][j] << ", dRvs=" << doubleReverse[1][i][j] << "; ";
-				if (j % 5 == 0 && j > 0)
-					cout << "\n";
-			}
+			cout << "lBkt" << j << ": bID=" << bitsID[0][i][j] << ", eBkt=" << endBucket[0][i][j] << ", dRvs=" << doubleReverse[0][i][j] << "; ";
+			if (j % 5 == 0 && j > 0)
+				cout << "\n";
 		}
+		cout << "\n\nDimension " << i << "    HighBucket Predicates: " << fix[1][i][numBucket] << "   ----------------\n";
+		_for(j, 0, numBucket)
+		{
+			cout << "hBkt" << j << ": bID=" << bitsID[1][i][j] << ", eBkt=" << endBucket[1][i][j] << ", dRvs=" << doubleReverse[1][i][j] << "; ";
+			if (j % 5 == 0 && j > 0)
+				cout << "\n";
+		}
+	}
 	else
 	{
 		cout << "\nDimension: " << dimension_i << "    LowBucket Predicates: " << fix[0][dimension_i][0] << "   ----------------\n";

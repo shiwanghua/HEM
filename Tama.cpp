@@ -44,10 +44,10 @@ void Tama::insert(int p, int att, int subID, int l, int r, int low, int high, in
 }
 
 bool Tama::deleteSubscription(IntervalSub sub) {
-	bool find = 1;
+	bool find = true;
 	for (int i = 0; i < sub.size; i++)
 		if (!deleteSubscription(0, sub.constraints[i].att, sub.id, 0, valDom - 1, sub.constraints[i].lowValue, sub.constraints[i].highValue, 1))
-			find = 0;
+			find = false;
 	return find;
 }
 
@@ -60,7 +60,7 @@ bool Tama::deleteSubscription(int p, int att, int subID, int l, int r, int low, 
 				data[att][p].erase(it); // it = 
 				return 1;
 			}
-		return 0;
+		return false;
 	}
 	if (high <= mid[p])
 		return deleteSubscription(lchild[p], att, subID, l, mid[p], low, high, lvl + 1);
@@ -70,7 +70,7 @@ bool Tama::deleteSubscription(int p, int att, int subID, int l, int r, int low, 
 	{
 		bool find = deleteSubscription(lchild[p], att, subID, l, mid[p], low, high, lvl + 1);
 		if (!deleteSubscription(rchild[p], att, subID, mid[p] + 1, r, low, high, lvl + 1))
-			find = 0;  // 左右都必须找到
+			find = false;  // 左右都必须找到
 		return find;
 	}
 }

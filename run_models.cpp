@@ -17,7 +17,18 @@ void run_rein(const intervalGenerator& gen) {
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
 	}
-	cout << "Rein Insertion Finish.\n";
+	cout << "Rein Insertion Finishes.\n";
+
+	// 验证插入删除正确性
+	if (verifyID) {
+		_for(i, 0, 5000) {
+			if (!rein.deleteSubscription(gen.subList[i]))
+				cout << "Rein: sub" << gen.subList[i].id << " is failled to be deleted.\n";
+		}
+		_for(i, 0, 5000) {
+			rein.insert(gen.subList[i]);
+		}
+	}
 
 	// match
 	for (int i = 0; i < pubs; i++)
@@ -31,8 +42,9 @@ void run_rein(const intervalGenerator& gen) {
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "Rein Event" << i << " is matched.\n";
+			cout << "Rein Event " << i << " is matched.\n";
 	}
+	cout << endl;
 
 	// output
 	string outputFileName = "Rein.txt";
@@ -84,7 +96,7 @@ void run_BIOP(const intervalGenerator& gen) {
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
 	}
-	cout << "BIOP Insertion Finish.\n";
+	cout << "BIOP Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
@@ -103,8 +115,9 @@ void run_BIOP(const intervalGenerator& gen) {
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "BIOP Event" << i << " is matched.\n";
+			cout << "BIOP Event " << i << " is matched.\n";
 	}
+	cout << endl;
 
 	if (display)
 		rb.printRelation();
@@ -178,10 +191,13 @@ void run_BIOP1(const intervalGenerator& gen) {
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "BIOP1 Event" << i << " is matched.\n";
+			cout << "BIOP1 Event " << i << " is matched.\n";
 	}
+
 	if (display)
 		rb1.printRelation();
+	cout << endl;
+
 	// output
 	string outputFileName = "BIOP1.txt";
 	string content = expID
@@ -234,7 +250,7 @@ void run_BIOP2(const intervalGenerator& gen) {
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
 	}
-	cout << "BIOP2 Insertion Finish.\n";
+	cout << "BIOP2 Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
@@ -253,11 +269,13 @@ void run_BIOP2(const intervalGenerator& gen) {
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "BIOP2 Event" << i << " is matched.\n";
+			cout << "BIOP2 Event " << i << " is matched.\n";
 	}
 
 	if (display)
 		rb2.printRelation(0);
+	cout << endl;
+
 	// output
 	string outputFileName = "BIOP2.txt";
 	string content = expID
@@ -308,7 +326,7 @@ void run_BIOP3(const intervalGenerator& gen) {
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
 	}
-	cout << "BIOP3 Insertion Finish.\n";
+	cout << "BIOP3 Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
@@ -327,11 +345,13 @@ void run_BIOP3(const intervalGenerator& gen) {
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "BIOP3 Event" << i << " is matched.\n";
+			cout << "BIOP3 Event " << i << " is matched.\n";
 	}
 
 	if (display)
 		rb3.printRelation(1);
+	cout << endl;
+
 	// output
 	string outputFileName = "BIOP3.txt";
 	string content = expID
@@ -382,7 +402,7 @@ void run_BIOP4(const intervalGenerator& gen) {
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
 	}
-	cout << "BIOP4DS Insertion Finish.\n";
+	cout << "BIOP4DS Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
@@ -401,11 +421,13 @@ void run_BIOP4(const intervalGenerator& gen) {
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "BIOP4DS Event" << i << " is matched.\n";
+			cout << "BIOP4DS Event " << i << " is matched.\n";
 	}
 
 	if (display)
 		rb4.printRelation(1);
+	cout << endl;
+
 	// output
 	string outputFileName = "BIOP4.txt";
 	string content = expID
@@ -456,7 +478,7 @@ void run_BIOP5(const intervalGenerator& gen) {
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
 	}
-	cout << "BIOP5DD Insertion Finish.\n";
+	cout << "BIOP5DD Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
@@ -464,13 +486,15 @@ void run_BIOP5(const intervalGenerator& gen) {
 	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 
 	// 验证插入删除正确性
-	//_for(i, 0, 5000) {
-	//	if (!rb5.deleteSubscription(gen.subList[i]))
-	//		cout << "Sub" << gen.subList[i].id << "is failled to be deleted.\n";
-	//}
-	//_for(i, 0, 5000) {
-	//	rb5.insert_online(gen.subList[i]);
-	//}
+	if (verifyID) {
+		_for(i, 0, 5000) {
+			if (!rb5.deleteSubscription(gen.subList[i]))
+				cout << "BIOP5DD: sub" << gen.subList[i].id << " is failled to be deleted.\n";
+		}
+		_for(i, 0, 5000) {
+			rb5.insert_online(gen.subList[i]);
+		}
+	}
 
 	// match
 	for (int i = 0; i < pubs; i++)
@@ -484,11 +508,13 @@ void run_BIOP5(const intervalGenerator& gen) {
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "BIOP5DD Event" << i << " is matched.\n";
+			cout << "BIOP5DD Event " << i << " is matched.\n";
 	}
 
 	if (display)
 		rb5.printRelation(1);
+	cout << endl;
+
 	// output
 	string outputFileName = "BIOP5.txt";
 	string content = expID
@@ -539,7 +565,7 @@ void run_BIOPSC(const intervalGenerator& gen) {
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
 	}
-	cout << "BIOP-SC-DD Insertion Finish.\n";
+	cout << "BIOP-SC-DD Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
@@ -551,18 +577,19 @@ void run_BIOPSC(const intervalGenerator& gen) {
 	{
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
-		//cout << "Begin to match event" << i << endl;
+		//cout << "Begin to match event " << i << endl;
 		biopsc.match(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "BIOP-SC-DD Event" << i << " is matched.\n";
+			cout << "BIOP-SC-DD Event " << i << " is matched.\n";
 	}
 
 	if (display)
 		biopsc.printRelation(1, 2);
+	cout << endl;
 
 	// output
 	string outputFileName = "BIOPSC.txt";
@@ -615,7 +642,7 @@ void run_BIOPSR(const intervalGenerator& gen) {
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
 	}
-	cout << "BIOP-SR-PS Insertion Finish.\n";
+	cout << "BIOP-SR-PS Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
@@ -627,18 +654,19 @@ void run_BIOPSR(const intervalGenerator& gen) {
 	{
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
-		//cout << "Begin to match event" << i << endl;
+		//cout << "Begin to match event " << i << endl;
 		biopsr.match(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "BIOP-SR-PS Event" << i << " is matched.\n";
+			cout << "BIOP-SR-PS Event " << i << " is matched.\n";
 	}
 
 	if (display)
 		biopsr.printRelation();
+	cout << endl;
 
 	// output
 	string outputFileName = "BIOPSR.txt";
@@ -682,8 +710,18 @@ void run_Simple(const intervalGenerator& gen) {
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
 	}
-	cout << "Simple Insertion Finish.\n";
+	cout << "Simple Insertion Finishes.\n";
 
+	// 验证插入删除正确性
+	if (verifyID) {
+		_for(i, 0, 5000) {
+			if (!simple.deleteSubscription(gen.subList[i]))
+				cout << "Simple: sub" << gen.subList[i].id << " is failled to be deleted.\n";
+		}
+		_for(i, 0, 5000) {
+			simple.insert(gen.subList[i]);
+		}
+	}
 
 	// match
 	for (int i = 0; i < pubs; i++)
@@ -701,8 +739,9 @@ void run_Simple(const intervalGenerator& gen) {
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "Simple Event" << i << " is matched.\n";
+			cout << "Simple Event " << i << " is matched.\n";
 	}
+	cout << endl;
 
 	// output
 	string outputFileName = "Simple.txt";
@@ -739,6 +778,16 @@ void run_Simple2(const intervalGenerator& gen) {
 	}
 	cout << "Simple2 Insertion Finish.\n";
 
+	// 验证插入删除正确性
+	if (verifyID) {
+		_for(i, 0, 5000) {
+			if (!simple2.deleteSubscription(gen.subList[i]))
+				cout << "Simple2: sub" << gen.subList[i].id << " is failled to be deleted.\n";
+		}
+		_for(i, 0, 5000) {
+			simple2.insert(gen.subList[i]);
+		}
+	}
 
 	// match
 	for (int i = 0; i < pubs; i++)
@@ -756,8 +805,9 @@ void run_Simple2(const intervalGenerator& gen) {
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "Simple2 Event" << i << " is matched.\n";
+			cout << "Simple2 Event " << i << " is matched.\n";
 	}
+	cout << endl;
 
 	// output
 	string outputFileName = "Simple2.txt";
@@ -794,14 +844,16 @@ void run_tama(const intervalGenerator& gen) {
 	}
 	cout << "Tama Insertion Finish.\n";
 
-	//// 验证插入删除正确性
-	//_for(i, 0, 5000) {
-	//	if (!tama.deleteSubscription(gen.subList[i]))
-	//		cout << "Tama: Sub" << gen.subList[i].id << "is failled to be deleted.\n";
-	//}
-	//_for(i, 0, 5000) {
-	//	tama.insert(gen.subList[i]);
-	//}
+	// 验证插入删除正确性
+	if (verifyID) {
+		_for(i, 0, 5000) {
+			if (!tama.deleteSubscription(gen.subList[i]))
+				cout << "Tama: sub " << gen.subList[i].id << " is failled to be deleted.\n";
+		}
+		_for(i, 0, 5000) {
+			tama.insert(gen.subList[i]);
+		}
+	}
 
 	// match
 	for (int i = 0; i < pubs; i++)
@@ -816,8 +868,9 @@ void run_tama(const intervalGenerator& gen) {
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "Tama Event" << i << " is matched.\n";
+			cout << "Tama Event " << i << " is matched.\n";
 	}
+	cout << endl;
 
 	// output
 	string outputFileName = "Tama.txt";
@@ -859,9 +912,20 @@ void run_adarein(const intervalGenerator& gen) {
 
 	double initTime;
 	Timer initStart;
-	adarein.select_skipped_atts(gen.subList,falsePositiveRate);
+	adarein.select_skipped_atts(falsePositiveRate, gen.subList);
 	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 	cout << "AdaRein Skipping Task Finishes.\n";
+
+	// 验证插入删除正确性
+	if (verifyID) {
+		_for(i, 0, 5000) {
+			if (!adarein.deleteSubscription(gen.subList[i]))
+				cout << "AdaRein: sub " << gen.subList[i].id << " is failled to be deleted.\n";
+		}
+		_for(i, 0, 5000) {
+			adarein.insert(gen.subList[i]);
+		}
+	}
 
 	// match
 	for (int i = 0; i < pubs; i++)
@@ -869,15 +933,16 @@ void run_adarein(const intervalGenerator& gen) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
-		//adarein.accurate_match(gen.pubList[i], matchSubs,gen.subList);
-		adarein.approx_match(gen.pubList[i], matchSubs,gen.subList);
+		adarein.accurate_match(gen.pubList[i], matchSubs,gen.subList);
+		//adarein.approx_match(gen.pubList[i], matchSubs,gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "AdaRein Event" << i << " is matched.\n";
+			cout << "AdaRein Event " << i << " is matched.\n";
 	}
+	cout << endl;
 
 	// output
 	string outputFileName = "AdaRein.txt";
@@ -885,6 +950,7 @@ void run_adarein(const intervalGenerator& gen) {
 		+ " memory= " + Util::Int2String(adarein.calMemory())
 		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+		+ " ms InitTime= " + Util::Double2String(initTime)
 		+ " ms AvgConstructionTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
 		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
 		+ " ms fPR= "+Util::Double2String(falsePositiveRate)
@@ -897,11 +963,18 @@ void run_adarein(const intervalGenerator& gen) {
 }
 
 void run_opindex(const intervalGenerator& gen) {
-	Simple2 opindex;
+	OpIndex opindex;
 
 	vector<double> insertTimeList;
 	vector<double> matchTimeList;
 	vector<double> matchSubList;
+
+	// Note: for OpIndex, it needs to calculate frequency first!
+	double initTime;
+	Timer initStart;
+	opindex.calcFrequency(gen.subList);
+	initTime = (double)initStart.elapsed_nano() / 1000000.0;
+	cout << "OpIndex CalcFrequency Task Finishes.\n";
 
 	// insert
 	for (int i = 0; i < subs; i++)
@@ -913,36 +986,45 @@ void run_opindex(const intervalGenerator& gen) {
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
 	}
-	cout << "Simple2 Insertion Finish.\n";
+	cout << "OpIndex Insertion Finish.\n";
 
+	// 验证插入删除正确性
+	if (verifyID) {
+		_for(i, 0, 5000) {
+			if (!opindex.deleteSubscription(gen.subList[i]))
+				cout << "OpIndex: sub " << gen.subList[i].id << " is failled to be deleted.\n";
+		}
+		_for(i, 0, 5000) {
+			opindex.insert(gen.subList[i]);
+		}
+	}
 
 	// match
 	for (int i = 0; i < pubs; i++)
 	{
-		dPub dpub;
-		dpub.pubId = i;
-		Util::Pub2dPub(gen.pubList[i], dpub);
-
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
-		opindex.match(dpub, matchSubs);
+		opindex.match(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "Simple2 Event" << i << " is matched.\n";
+			cout << "OpIndex Event " << i << " is matched.\n";
 	}
+	cout << endl;
 
 	// output
-	string outputFileName = "Simple2.txt";
+	string outputFileName = "OpIndex.txt";
 	string content = expID
 		+ " memory= " + Util::Int2String(opindex.calMemory())
 		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+		+ " ms InitTime= " + Util::Double2String(initTime)
+		+ " ms AvgConstructionTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
 		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-		+ " numSub= " + Util::Int2String(subs)
+		+ " ms numSub= " + Util::Int2String(subs)
 		+ " subSize= " + Util::Int2String(cons)
 		+ " numPub= " + Util::Int2String(pubs)
 		+ " pubSize= " + Util::Int2String(m)
