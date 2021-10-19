@@ -13,7 +13,7 @@
 | 7    | 9/22 - 9/28   | 实现 BIOPSRPS，写论文 Introduction、State Reduction Optimization、Theoretical Analysis、Achievement |
 | 8    | 9/29 - 10/05  | 写论文、Setup部分(找baseline参数未果)，实现BIOP5DD插入算法、两个暴力匹配Simple和Simple2算法，优化BIOPSRPS选择bitset策略 |
 | 9    | 10/06 - 10/12 | 写论文Verification Experiment部分，跑实验，画图              |
-| 10   | 10/13 - 10/19 | 实现Rein和BIOP5DD删除算法写论文Verification Experiment部分，跑实验，画图              |
+| 10   | 10/13 - 10/19 | 实现Rein和BIOP5DD删除算法写论文Verification Experiment、Related Work部分，跑实验，画图，将Tama、AdaRein整合进项目，修改论文某些部分 |
 | 11   | 10/20 - 10/26 |                                                              |
 
 ### Note
