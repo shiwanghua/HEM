@@ -32,9 +32,13 @@ extern const int gs;       // 一组有多少个维度
 extern const int level;
 
 // AdaRein
-const int MAX_SUBS = 2000001;
-const int MAX_ATTS = 1000;
-const int MAX_BUCKS = 2000;
+const int MAX_SUBS = 1000000;
+const int MAX_ATTS = 20;
+const int MAX_BUCKS = 1000;
 extern const double falsePositiveRate;
+
+// OpIndex
+const int SEGMENTS = 32;
+const int MAX_SIGNATURE = 61;
 #endif
 

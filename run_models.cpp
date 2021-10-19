@@ -711,7 +711,7 @@ void run_Simple(const intervalGenerator& gen) {
 		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-		+ " numSub= " + Util::Int2String(subs)
+		+ " ms numSub= " + Util::Int2String(subs)
 		+ " subSize= " + Util::Int2String(cons)
 		+ " numPub= " + Util::Int2String(pubs)
 		+ " pubSize= " + Util::Int2String(m)
@@ -766,7 +766,7 @@ void run_Simple2(const intervalGenerator& gen) {
 		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-		+ " numSub= " + Util::Int2String(subs)
+		+ " ms numSub= " + Util::Int2String(subs)
 		+ " subSize= " + Util::Int2String(cons)
 		+ " numPub= " + Util::Int2String(pubs)
 		+ " pubSize= " + Util::Int2String(m)
@@ -794,14 +794,14 @@ void run_tama(const intervalGenerator& gen) {
 	}
 	cout << "Tama Insertion Finish.\n";
 
-	// 验证插入删除正确性
-	_for(i, 0, 5000) {
-		if (!tama.deleteSubscription(gen.subList[i]))
-			cout << "Tama: Sub" << gen.subList[i].id << "is failled to be deleted.\n";
-	}
-	_for(i, 0, 5000) {
-		tama.insert(gen.subList[i]);
-	}
+	//// 验证插入删除正确性
+	//_for(i, 0, 5000) {
+	//	if (!tama.deleteSubscription(gen.subList[i]))
+	//		cout << "Tama: Sub" << gen.subList[i].id << "is failled to be deleted.\n";
+	//}
+	//_for(i, 0, 5000) {
+	//	tama.insert(gen.subList[i]);
+	//}
 
 	// match
 	for (int i = 0; i < pubs; i++)
@@ -861,7 +861,7 @@ void run_adarein(const intervalGenerator& gen) {
 	Timer initStart;
 	adarein.select_skipped_atts(gen.subList,falsePositiveRate);
 	initTime = (double)initStart.elapsed_nano() / 1000000.0;
-	
+	cout << "AdaRein Skipping Task Finishes.\n";
 
 	// match
 	for (int i = 0; i < pubs; i++)
@@ -869,7 +869,8 @@ void run_adarein(const intervalGenerator& gen) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
-		adarein.accurate_match(gen.pubList[i], matchSubs,gen.subList);
+		//adarein.accurate_match(gen.pubList[i], matchSubs,gen.subList);
+		adarein.approx_match(gen.pubList[i], matchSubs,gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
@@ -886,6 +887,7 @@ void run_adarein(const intervalGenerator& gen) {
 		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 		+ " ms AvgConstructionTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
 		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+		+ " ms fPR= "+Util::Double2String(falsePositiveRate)
 		+ " numSub= " + Util::Int2String(subs)
 		+ " subSize= " + Util::Int2String(cons)
 		+ " numPub= " + Util::Int2String(pubs)

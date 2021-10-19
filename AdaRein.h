@@ -14,15 +14,17 @@
 //const int MAX_BUCKS = 2000;
 
 class AdaRein {
-    int valDom, buckStep, bucks, numSub;
+    int buckStep, numSub;
     vector<Combo> data[MAX_ATTS][2][MAX_BUCKS];    // 0:left parenthesis, 1:right parenthesis
     bool bits[MAX_SUBS];
     bool skipped[MAX_ATTS];
     attAndCount attsCounts[MAX_ATTS];
 public:
+    int numBucket;
     AdaRein():numSub(0) {
-        buckStep = (valDom - 1) / MAX_BUCKS + 1; 
-        bucks = (valDom - 1) / buckStep + 1; 
+        buckStep = (valDom - 1) / buks + 1;
+        numBucket = (valDom - 1) / buckStep + 1;
+        cout << "ExpID = " << expID << ". AdaRein: falsePositiveRate = " << falsePositiveRate << ", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
     }
 
     void insert(IntervalSub sub);

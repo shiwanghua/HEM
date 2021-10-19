@@ -21,16 +21,16 @@ int main(int argc, char **argv)
 	gen.GenPubList();
 
 	run_rein(gen);
-	run_BIOP(gen);
-	run_BIOP1(gen);
-	run_BIOP2(gen);
-	run_BIOP3(gen);
-	run_BIOP4(gen);
+	//run_BIOP(gen);
+	//run_BIOP1(gen);
+	//run_BIOP2(gen);
+	//run_BIOP3(gen);
+	//run_BIOP4(gen);
 	run_BIOP5(gen);
-	run_BIOPSC(gen);
-	run_BIOPSR(gen);
-	run_Simple(gen);
-	//run_Simple2(gen);
+	//run_BIOPSC(gen);
+	//run_BIOPSR(gen);
+	//run_Simple(gen);
+	////run_Simple2(gen);
 	run_tama(gen);
 	run_adarein(gen);
 	//run_opindex(gen);
