@@ -1,5 +1,5 @@
 #include "constant.h"
-string expID = "464";       // Record the experiment ID number
+string expID = "465";       // Record the experiment ID number
 const bool display = false; // 是否打印映射关系
 const bool verifyID = false;// whether to verify Insertion and Deletion function
 const int interval = 100;   // 姣忓尮閰嶈繖涔堬拷?锟戒釜浜嬩欢杈撳嚭涓€鏉℃棩蹇椾俊锟??
@@ -9,10 +9,10 @@ const int pubs = 100;       // Number of publications.
 int atts = 20;              // Total number of attributes, i.e. dimensions.
 const int cons = 10;        // Number of constraints(predicates) in one sub.
 int m = 20;                 // Number of constraints in one pub. 鎵€鏈変簨浠剁殑鍓峜ons缁撮兘鏈夊畾锟??
-const int attDis = 0;       // The distribution of attributes in subs and pubs. 0:uniform distribution | 1:Zipf distribution
+const int attDis = 1;       // The distribution of attributes in subs and pubs. 0:uniform distribution | 1:Zipf distribution
 const int valDis = 0;       // The distribution of values in subs and pubs. 0:uniform 鍥哄畾瀹藉害; 1: 闅忔満瀹藉害璋撹瘝(锟??width涓烘渶灏忥拷?锟藉害)
 const int valDom = 1000000; // Cardinality of values.
-const double alpha = 0;     // Parameter for Zipf distribution.
+const double alpha = 3;     // Parameter for Zipf distribution.
 double width = 0.3;         // Width of a predicate.
 
 // Rein
