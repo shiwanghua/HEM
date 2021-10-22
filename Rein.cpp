@@ -19,13 +19,13 @@ Rein::Rein() :numSub(0), numDimension(atts) {
 //        c.subID = sub.id;
 //        if (cnt.op == 0)        // ==
 //        {
-//            data[cnt.att][0][c.val / buckStep].push_back(c);
-//            data[cnt.att][1][c.val / buckStep].push_back(c);
+//            data[0][cnt.att][c.val / buckStep].push_back(c);
+//            data[1][cnt.att][c.val / buckStep].push_back(c);
 //        }
 //        else if (cnt.op == 1)   // >=
-//            data[cnt.att][0][c.val / buckStep].push_back(c);
+//            data[0][cnt.att][c.val / buckStep].push_back(c);
 //        else                    // >=
-//            data[cnt.att][1][c.val / buckStep].push_back(c);
+//            data[1][cnt.att][c.val / buckStep].push_back(c);
 //    }
 //}
 
@@ -85,22 +85,22 @@ bool Rein::deleteSubscription(IntervalSub sub)
 //	for (int i = 0; i < pub.size; i++)
 //	{
 //		int value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
-//		for (int k = 0; k < data[att][0][buck].size(); k++)
-//			if (data[att][0][buck][k].val > value)
-//				bits[data[att][0][buck][k].subID] = true;
+//		for (int k = 0; k < data[0][att][buck].size(); k++)
+//			if (data[0][att][buck][k].val > value)
+//				bits[data[0][att][buck][k].subID] = true;
 //
 //		for (int j = buck + 1; j < numBucket; j++)
-//			for (int k = 0; k < data[att][0][j].size(); k++)
-//				bits[data[att][0][j][k].subID] = true;
+//			for (int k = 0; k < data[0][att][j].size(); k++)
+//				bits[data[0][att][j][k].subID] = true;
 //
 //
-//		for (int k = 0; k < data[att][1][buck].size(); k++)
-//			if (data[att][1][buck][k].val < value)
-//				bits[data[att][1][buck][k].subID] = true;
+//		for (int k = 0; k < data[1][att][buck].size(); k++)
+//			if (data[1][att][buck][k].val < value)
+//				bits[data[1][att][buck][k].subID] = true;
 //
 //		for (int j = buck - 1; j >= 0; j--)
-//			for (int k = 0; k < data[att][1][j].size(); k++)
-//				bits[data[att][1][j][k].subID] = true;
+//			for (int k = 0; k < data[1][att][j].size(); k++)
+//				bits[data[1][att][j][k].subID] = true;
 //	}
 //
 //	for (int i = 0; i < numSub; i++)
@@ -109,90 +109,90 @@ bool Rein::deleteSubscription(IntervalSub sub)
 //}
 
 // 01在第一维 计算时间组成
-void Rein::match(const Pub& pub, int& matchSubs)
-{
-	vector<bool> bits(numSub, false);
-	vector<bool> attExist(numDimension, false);
-	for (int i = 0; i < pub.size; i++)
-	{
-		Timer compareStart;
-		int value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
-		attExist[att] = true;
-		// 把下面两个for循环注释了就是模糊匹配, 类似Tama
-		for (int k = 0; k < data[0][att][buck].size(); k++)
-			if (data[0][att][buck][k].val > value)
-				bits[data[0][att][buck][k].subID] = true;
-		for (int k = 0; k < data[1][att][buck].size(); k++)
-			if (data[1][att][buck][k].val < value)
-				bits[data[1][att][buck][k].subID] = true;
-		compareTime += (double)compareStart.elapsed_nano();
-
-		Timer markStart;
-		for (int j = buck + 1; j < numBucket; j++)
-			for (int k = 0; k < data[0][att][j].size(); k++)
-				bits[data[0][att][j][k].subID] = true;
-		for (int j = buck - 1; j >= 0; j--)
-			for (int k = 0; k < data[1][att][j].size(); k++)
-				bits[data[1][att][j][k].subID] = true;
-		markTime += (double)markStart.elapsed_nano();
-	}
-
-	Timer markStart;
-	for (int i = 0; i < numDimension; i++)
-		if (!attExist[i])
-			for (int j = 0; j < numBucket; j++)
-				for (int k = 0; k < data[0][i][j].size(); k++)
-					bits[data[0][i][j][k].subID] = true;
-	markTime += (double)markStart.elapsed_nano();
-
-	Timer bitStart;
-	for (int i = 0; i < subs; i++)
-		if (!bits[i])
-		{
-			++matchSubs;
-			//cout << "rein matches sub: " << i << endl;
-		}
-	bitTime += (double)bitStart.elapsed_nano();
-}
+//void Rein::match(const Pub& pub, int& matchSubs)
+//{
+//	vector<bool> bits(numSub, false);
+//	vector<bool> attExist(numDimension, false);
+//	for (int i = 0; i < pub.size; i++)
+//	{
+//		Timer compareStart;
+//		int value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
+//		attExist[att] = true;
+//		// 把下面两个for循环注释了就是模糊匹配, 类似Tama
+//		for (int k = 0; k < data[0][att][buck].size(); k++)
+//			if (data[0][att][buck][k].val > value)
+//				bits[data[0][att][buck][k].subID] = true;
+//		for (int k = 0; k < data[1][att][buck].size(); k++)
+//			if (data[1][att][buck][k].val < value)
+//				bits[data[1][att][buck][k].subID] = true;
+//		compareTime += (double)compareStart.elapsed_nano();
+//
+//		Timer markStart;
+//		for (int j = buck + 1; j < numBucket; j++)
+//			for (int k = 0; k < data[0][att][j].size(); k++)
+//				bits[data[0][att][j][k].subID] = true;
+//		for (int j = buck - 1; j >= 0; j--)
+//			for (int k = 0; k < data[1][att][j].size(); k++)
+//				bits[data[1][att][j][k].subID] = true;
+//		markTime += (double)markStart.elapsed_nano();
+//	}
+//
+//	Timer markStart;
+//	for (int i = 0; i < numDimension; i++)
+//		if (!attExist[i])
+//			for (int j = 0; j < numBucket; j++)
+//				for (int k = 0; k < data[0][i][j].size(); k++)
+//					bits[data[0][i][j][k].subID] = true;
+//	markTime += (double)markStart.elapsed_nano();
+//
+//	Timer bitStart;
+//	for (int i = 0; i < subs; i++)
+//		if (!bits[i])
+//		{
+//			++matchSubs;
+//			//cout << "rein matches sub: " << i << endl;
+//		}
+//	bitTime += (double)bitStart.elapsed_nano();
+//}
 
 // 01在第一维 不计算时间组成
-// void Rein::match(const Pub& pub, int& matchSubs)
-// {
-// 	vector<bool> bits(numSub, false);
-// 	vector<bool> attExist(numDimension, false);
-// 	for (int i = 0; i < pub.size; i++)
-// 	{	
-// 		int value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
-// 		attExist[att] = true;
-// 		// 把下面两个for循环注释了就是模糊匹配, 类似Tama
-// 		for (int k = 0; k < data[0][att][buck].size(); k++)
-// 			if (data[0][att][buck][k].val > value)
-// 				bits[data[0][att][buck][k].subID] = true;
-// 		for (int k = 0; k < data[1][att][buck].size(); k++)
-// 			if (data[1][att][buck][k].val < value)
-// 				bits[data[1][att][buck][k].subID] = true;
+ void Rein::match(const Pub& pub, int& matchSubs)
+ {
+ 	vector<bool> bits(numSub, false);
+ 	vector<bool> attExist(numDimension, false);
+ 	for (int i = 0; i < pub.size; i++)
+ 	{
+ 		int value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
+ 		attExist[att] = true;
+ 		// 把下面两个for循环注释了就是模糊匹配, 类似Tama
+ 		for (int k = 0; k < data[0][att][buck].size(); k++)
+ 			if (data[0][att][buck][k].val > value)
+ 				bits[data[0][att][buck][k].subID] = true;
+ 		for (int k = 0; k < data[1][att][buck].size(); k++)
+ 			if (data[1][att][buck][k].val < value)
+ 				bits[data[1][att][buck][k].subID] = true;
 
-// 		for (int j = buck + 1; j < numBucket; j++)
-// 			for (int k = 0; k < data[0][att][j].size(); k++)
-// 				bits[data[0][att][j][k].subID] = true;
-// 		for (int j = buck - 1; j >= 0; j--)
-// 			for (int k = 0; k < data[1][att][j].size(); k++)
-// 				bits[data[1][att][j][k].subID] = true;
-// 	}
+ 		for (int j = buck + 1; j < numBucket; j++)
+ 			for (int k = 0; k < data[0][att][j].size(); k++)
+ 				bits[data[0][att][j][k].subID] = true;
+ 		for (int j = buck - 1; j >= 0; j--)
+ 			for (int k = 0; k < data[1][att][j].size(); k++)
+ 				bits[data[1][att][j][k].subID] = true;
+ 	}
 
-// 	for (int i = 0; i < numDimension; i++)
-// 		if (!attExist[i])
-// 			for (int j = 0; j < numBucket; j++)
-// 				for (int k = 0; k < data[0][i][j].size(); k++)
-// 					bits[data[0][i][j][k].subID] = true;
+ 	for (int i = 0; i < numDimension; i++)
+ 		if (!attExist[i])
+ 			for (int j = 0; j < numBucket; j++)
+ 				for (int k = 0; k < data[0][i][j].size(); k++)
+ 					bits[data[0][i][j][k].subID] = true;
 
-// 	for (int i = 0; i < subs; i++)
-// 		if (!bits[i])
-// 		{
-// 			++matchSubs;
-// 			//cout << "rein matches sub: " << i << endl;
-// 		}
-// }
+ 	for (int i = 0; i < subs; i++)
+ 		if (!bits[i])
+ 		{
+ 			++matchSubs;
+ 			//cout << "rein matches sub: " << i << endl;
+ 		}
+ }
 
 
 void Rein::calBucketSize() {

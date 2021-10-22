@@ -10,7 +10,9 @@ int main(int argc, char **argv)
 	if (argc == 5)
 	{
 		expID = to_string(atoi(argv[1]));
-		m = atoi(argv[2]);
+//		m = atoi(argv[2]);
+//		cons= atoi(argv[2]);
+		atts=atoi(argv[2]);
 		be = atoi(argv[3]); // 输入一个bits指数
 		width = atof(argv[4]);
 		cout << "argc=" << argc << endl;

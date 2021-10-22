@@ -66,6 +66,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/swh/桌面/BIOP/AdaRein.cpp">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/AdaRein.h">
+			<Option target="cmakeRB"/>
+		</Unit>
 		<Unit filename="/home/swh/桌面/BIOP/BIOP.cpp">
 			<Option target="cmakeRB"/>
 		</Unit>
@@ -112,6 +118,12 @@
 			<Option target="cmakeRB"/>
 		</Unit>
 		<Unit filename="/home/swh/桌面/BIOP/BIOPSR.h">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/OpIndex.cpp">
+			<Option target="cmakeRB"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/BIOP/OpIndex.h">
 			<Option target="cmakeRB"/>
 		</Unit>
 		<Unit filename="/home/swh/桌面/BIOP/Rein.cpp">

@@ -1,6 +1,6 @@
 #include "run_models.h"
 
-void run_rein(const intervalGenerator& gen) {
+void run_rein(const intervalGenerator &gen) {
 	Rein rein;
 
 	vector<double> insertTimeList;
@@ -8,14 +8,13 @@ void run_rein(const intervalGenerator& gen) {
 	vector<double> matchSubList;
 
 	// insert
-	for (int i = 0; i < subs; i++)
-	{
+	for (int i = 0; i < subs; i++) {
 		Timer subStart;
 
 		rein.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
-		insertTimeList.push_back((double)insertTime / 1000000);
+		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "Rein Insertion Finishes.\n";
 
@@ -31,15 +30,14 @@ void run_rein(const intervalGenerator& gen) {
 	}
 
 	// match
-	for (int i = 0; i < pubs; i++)
-	{
+	for (int i = 0; i < pubs; i++) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
 		rein.match(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-		matchTimeList.push_back((double)eventTime / 1000000);
+		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
 			cout << "Rein Event " << i << " is matched.\n";
@@ -49,23 +47,23 @@ void run_rein(const intervalGenerator& gen) {
 	// output
 	string outputFileName = "Rein.txt";
 	string content = expID
-		+ " memory= " + Util::Int2String(rein.calMemory())
-		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-		+ " ms AvgCmpTime= " + to_string(rein.compareTime / pubs / 1000000)
-		+ " ms AvgMarkTime= " + to_string(rein.markTime / pubs / 1000000)
-		+ " ms AvgBitTime= " + to_string(rein.bitTime / pubs / 1000000)
-		+ " ms numBuk= " + Util::Int2String(rein.numBucket)
-		+ " numSub= " + Util::Int2String(subs)
-		+ " subSize= " + Util::Int2String(cons)
-		+ " numPub= " + Util::Int2String(pubs)
-		+ " pubSize= " + Util::Int2String(m)
-		+ " attTypes= " + Util::Int2String(atts)
-		+ " attDis= " + Util::Int2String(attDis)
-		+ " valDis= " + Util::Int2String(valDis)
-		+ " width= " + Util::Double2String(width)
-		+ " alpha= " + Util::Double2String(alpha);
+					 + " memory= " + Util::Int2String(rein.calMemory())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms AvgCmpTime= " + to_string(rein.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(rein.markTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(rein.bitTime / pubs / 1000000)
+					 + " ms numBuk= " + Util::Int2String(rein.numBucket)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts)
+					 + " attDis= " + Util::Int2String(attDis)
+					 + " valDis= " + Util::Int2String(valDis)
+					 + " width= " + Util::Double2String(width)
+					 + " alpha= " + Util::Double2String(alpha);
 	Util::WriteData(outputFileName.c_str(), content);
 
 	//outputFileName = "ReinBucketSize.txt";
@@ -79,7 +77,7 @@ void run_rein(const intervalGenerator& gen) {
 	//Util::WriteData(outputFileName.c_str(), content);
 }
 
-void run_BIOP(const intervalGenerator& gen) {
+void run_BIOP(const intervalGenerator &gen) {
 	BIOP rb;
 
 	vector<double> insertTimeList;
@@ -87,32 +85,30 @@ void run_BIOP(const intervalGenerator& gen) {
 	vector<double> matchSubList;
 
 	// insert
-	for (int i = 0; i < subs; i++)
-	{
+	for (int i = 0; i < subs; i++) {
 		Timer subStart;
 
 		rb.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
-		insertTimeList.push_back((double)insertTime / 1000000);
+		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "BIOP Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
 	rb.initBits();
-	initTime = (double)initStart.elapsed_nano() / 1000000.0;
+	initTime = (double) initStart.elapsed_nano() / 1000000.0;
 
 	// match
-	for (int i = 0; i < pubs; i++)
-	{
+	for (int i = 0; i < pubs; i++) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
 		rb.match(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-		matchTimeList.push_back((double)eventTime / 1000000);
+		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
 			cout << "BIOP Event " << i << " is matched.\n";
@@ -124,23 +120,24 @@ void run_BIOP(const intervalGenerator& gen) {
 	// output
 	string outputFileName = "BIOP.txt";
 	string content = expID
-		+ " bits= " + Util::Int2String(be)
-		+ " memory= " + Util::Int2String(rb.calMemory())
-		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-		+ " ms InitTime= " + Util::Double2String(initTime)
-		+ " ms AvgConstructionTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-		+ " ms AvgCmpTime= " + to_string(rb.compareTime / pubs / 1000000)
-		+ " ms AvgMarkTime= " + to_string(rb.markTime / pubs / 1000000)
-		+ " ms OrTime= " + to_string(rb.orTime / pubs / 1000000)
-		+ " ms AvgBitTime= " + to_string(rb.bitTime / pubs / 1000000)
-		+ " ms numBuk= " + Util::Int2String(rb.numBucket)
-		+ " numSub= " + Util::Int2String(subs)
-		+ " subSize= " + Util::Int2String(cons)
-		+ " numPub= " + Util::Int2String(pubs)
-		+ " pubSize= " + Util::Int2String(m)
-		+ " attTypes= " + Util::Int2String(atts);
+					 + " bits= " + Util::Int2String(be)
+					 + " memory= " + Util::Int2String(rb.calMemory())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms InitTime= " + Util::Double2String(initTime)
+					 + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms AvgCmpTime= " + to_string(rb.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(rb.markTime / pubs / 1000000)
+					 + " ms OrTime= " + to_string(rb.orTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(rb.bitTime / pubs / 1000000)
+					 + " ms numBuk= " + Util::Int2String(rb.numBucket)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
 
 	//outputFileName = "BIOPBucketSize.txt";
@@ -155,7 +152,7 @@ void run_BIOP(const intervalGenerator& gen) {
 }
 
 // 静静模式
-void run_BIOP1(const intervalGenerator& gen) {
+void run_BIOP1(const intervalGenerator &gen) {
 	BIOP1 rb1;
 
 	vector<double> insertTimeList;
@@ -163,32 +160,30 @@ void run_BIOP1(const intervalGenerator& gen) {
 	vector<double> matchSubList;
 
 	// insert
-	for (int i = 0; i < subs; i++)
-	{
+	for (int i = 0; i < subs; i++) {
 		Timer subStart;
 
 		rb1.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
-		insertTimeList.push_back((double)insertTime / 1000000);
+		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "BIOP1 Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
 	rb1.initBits();
-	initTime = (double)initStart.elapsed_nano() / 1000000.0;
+	initTime = (double) initStart.elapsed_nano() / 1000000.0;
 
 	// match
-	for (int i = 0; i < pubs; i++)
-	{
+	for (int i = 0; i < pubs; i++) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
 		rb1.match(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-		matchTimeList.push_back((double)eventTime / 1000000);
+		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
 			cout << "BIOP1 Event " << i << " is matched.\n";
@@ -201,23 +196,24 @@ void run_BIOP1(const intervalGenerator& gen) {
 	// output
 	string outputFileName = "BIOP1.txt";
 	string content = expID
-		+ " bits= " + Util::Int2String(be)
-		+ " memory= " + Util::Int2String(rb1.calMemory())
-		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-		+ " ms InitTime= " + Util::Double2String(initTime)
-		+ " ms AvgConstructionTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-		+ " ms AvgCmpTime= " + to_string(rb1.compareTime / pubs / 1000000)
-		+ " ms AvgMarkTime= " + to_string(rb1.markTime / pubs / 1000000)
-		+ " ms OrTime= " + to_string(rb1.orTime / pubs / 1000000)
-		+ " ms AvgBitTime= " + to_string(rb1.bitTime / pubs / 1000000)
-		+ " ms numBuk= " + Util::Int2String(rb1.numBucket)
-		+ " numSub= " + Util::Int2String(subs)
-		+ " subSize= " + Util::Int2String(cons)
-		+ " numPub= " + Util::Int2String(pubs)
-		+ " pubSize= " + Util::Int2String(m)
-		+ " attTypes= " + Util::Int2String(atts);
+					 + " bits= " + Util::Int2String(be)
+					 + " memory= " + Util::Int2String(rb1.calMemory())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms InitTime= " + Util::Double2String(initTime)
+					 + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms AvgCmpTime= " + to_string(rb1.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(rb1.markTime / pubs / 1000000)
+					 + " ms OrTime= " + to_string(rb1.orTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(rb1.bitTime / pubs / 1000000)
+					 + " ms numBuk= " + Util::Int2String(rb1.numBucket)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
 
 	//outputFileName = "BIOP1BucketSize.txt";
@@ -233,7 +229,7 @@ void run_BIOP1(const intervalGenerator& gen) {
 
 
 // 静动模式
-void run_BIOP2(const intervalGenerator& gen) {
+void run_BIOP2(const intervalGenerator &gen) {
 	BIOP2 rb2;
 
 	vector<double> insertTimeList;
@@ -241,32 +237,30 @@ void run_BIOP2(const intervalGenerator& gen) {
 	vector<double> matchSubList;
 
 	// insert
-	for (int i = 0; i < subs; i++)
-	{
+	for (int i = 0; i < subs; i++) {
 		Timer subStart;
 
 		rb2.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
-		insertTimeList.push_back((double)insertTime / 1000000);
+		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "BIOP2 Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
 	rb2.initBits();
-	initTime = (double)initStart.elapsed_nano() / 1000000.0;
+	initTime = (double) initStart.elapsed_nano() / 1000000.0;
 
 	// match
-	for (int i = 0; i < pubs; i++)
-	{
+	for (int i = 0; i < pubs; i++) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
 		rb2.match(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-		matchTimeList.push_back((double)eventTime / 1000000);
+		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
 			cout << "BIOP2 Event " << i << " is matched.\n";
@@ -279,23 +273,24 @@ void run_BIOP2(const intervalGenerator& gen) {
 	// output
 	string outputFileName = "BIOP2.txt";
 	string content = expID
-		+ " bits= " + Util::Int2String(be)
-		+ " memory= " + Util::Int2String(rb2.calMemory())
-		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-		+ " ms InitTime= " + Util::Double2String(initTime)
-		+ " ms AvgConstructionTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-		+ " ms AvgCmpTime= " + to_string(rb2.compareTime / pubs / 1000000)
-		+ " ms AvgMarkTime= " + to_string(rb2.markTime / pubs / 1000000)
-		+ " ms OrTime= " + to_string(rb2.orTime / pubs / 1000000)
-		+ " ms AvgBitTime= " + to_string(rb2.bitTime / pubs / 1000000)
-		+ " ms numBuk= " + Util::Int2String(rb2.numBucket)
-		+ " numSub= " + Util::Int2String(subs)
-		+ " subSize= " + Util::Int2String(cons)
-		+ " numPub= " + Util::Int2String(pubs)
-		+ " pubSize= " + Util::Int2String(m)
-		+ " attTypes= " + Util::Int2String(atts);
+					 + " bits= " + Util::Int2String(be)
+					 + " memory= " + Util::Int2String(rb2.calMemory())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms InitTime= " + Util::Double2String(initTime)
+					 + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms AvgCmpTime= " + to_string(rb2.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(rb2.markTime / pubs / 1000000)
+					 + " ms OrTime= " + to_string(rb2.orTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(rb2.bitTime / pubs / 1000000)
+					 + " ms numBuk= " + Util::Int2String(rb2.numBucket)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
 
 	//outputFileName = "BIOP2BucketSize.txt";
@@ -309,7 +304,7 @@ void run_BIOP2(const intervalGenerator& gen) {
 	//Util::WriteData(outputFileName.c_str(), content);
 }
 
-void run_BIOP3(const intervalGenerator& gen) {
+void run_BIOP3(const intervalGenerator &gen) {
 	BIOP3 rb3;
 
 	vector<double> insertTimeList;
@@ -317,32 +312,30 @@ void run_BIOP3(const intervalGenerator& gen) {
 	vector<double> matchSubList;
 
 	// insert
-	for (int i = 0; i < subs; i++)
-	{
+	for (int i = 0; i < subs; i++) {
 		Timer subStart;
 
 		rb3.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
-		insertTimeList.push_back((double)insertTime / 1000000);
+		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "BIOP3 Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
 	rb3.initBits();
-	initTime = (double)initStart.elapsed_nano() / 1000000.0;
+	initTime = (double) initStart.elapsed_nano() / 1000000.0;
 
 	// match
-	for (int i = 0; i < pubs; i++)
-	{
+	for (int i = 0; i < pubs; i++) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
 		rb3.match(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-		matchTimeList.push_back((double)eventTime / 1000000);
+		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
 			cout << "BIOP3 Event " << i << " is matched.\n";
@@ -355,23 +348,24 @@ void run_BIOP3(const intervalGenerator& gen) {
 	// output
 	string outputFileName = "BIOP3.txt";
 	string content = expID
-		+ " bits= " + Util::Int2String(be)
-		+ " memory= " + Util::Int2String(rb3.calMemory())
-		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-		+ " ms InitTime= " + Util::Double2String(initTime)
-		+ " ms AvgConstructionTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-		+ " ms AvgCmpTime= " + to_string(rb3.compareTime / pubs / 1000000)
-		+ " ms AvgMarkTime= " + to_string(rb3.markTime / pubs / 1000000)
-		+ " ms OrTime= " + to_string(rb3.orTime / pubs / 1000000)
-		+ " ms AvgBitTime= " + to_string(rb3.bitTime / pubs / 1000000)
-		+ " ms numBuk= " + Util::Int2String(rb3.numBucket)
-		+ " numSub= " + Util::Int2String(subs)
-		+ " subSize= " + Util::Int2String(cons)
-		+ " numPub= " + Util::Int2String(pubs)
-		+ " pubSize= " + Util::Int2String(m)
-		+ " attTypes= " + Util::Int2String(atts);
+					 + " bits= " + Util::Int2String(be)
+					 + " memory= " + Util::Int2String(rb3.calMemory())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms InitTime= " + Util::Double2String(initTime)
+					 + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms AvgCmpTime= " + to_string(rb3.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(rb3.markTime / pubs / 1000000)
+					 + " ms OrTime= " + to_string(rb3.orTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(rb3.bitTime / pubs / 1000000)
+					 + " ms numBuk= " + Util::Int2String(rb3.numBucket)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
 
 	//outputFileName = "BIOP3BucketSize.txt";
@@ -385,7 +379,7 @@ void run_BIOP3(const intervalGenerator& gen) {
 	//Util::WriteData(outputFileName.c_str(), content);
 }
 
-void run_BIOP4(const intervalGenerator& gen) {
+void run_BIOP4(const intervalGenerator &gen) {
 	BIOP4 rb4;
 
 	vector<double> insertTimeList;
@@ -393,32 +387,30 @@ void run_BIOP4(const intervalGenerator& gen) {
 	vector<double> matchSubList;
 
 	// insert
-	for (int i = 0; i < subs; i++)
-	{
+	for (int i = 0; i < subs; i++) {
 		Timer subStart;
 
 		rb4.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
-		insertTimeList.push_back((double)insertTime / 1000000);
+		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "BIOP4DS Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
 	rb4.initBits();
-	initTime = (double)initStart.elapsed_nano() / 1000000.0;
+	initTime = (double) initStart.elapsed_nano() / 1000000.0;
 
 	// match
-	for (int i = 0; i < pubs; i++)
-	{
+	for (int i = 0; i < pubs; i++) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
 		rb4.match(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-		matchTimeList.push_back((double)eventTime / 1000000);
+		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
 			cout << "BIOP4DS Event " << i << " is matched.\n";
@@ -431,23 +423,24 @@ void run_BIOP4(const intervalGenerator& gen) {
 	// output
 	string outputFileName = "BIOP4.txt";
 	string content = expID
-		+ " bits= " + Util::Int2String(be)
-		+ " memory= " + Util::Int2String(rb4.calMemory())
-		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-		+ " ms InitTime= " + Util::Double2String(initTime)
-		+ " ms AvgConstructionTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-		+ " ms AvgCmpTime= " + to_string(rb4.compareTime / pubs / 1000000)
-		+ " ms AvgMarkTime= " + to_string(rb4.markTime / pubs / 1000000)
-		+ " ms OrTime= " + to_string(rb4.orTime / pubs / 1000000)
-		+ " ms AvgBitTime= " + to_string(rb4.bitTime / pubs / 1000000)
-		+ " ms numBuk= " + Util::Int2String(rb4.numBucket)
-		+ " numSub= " + Util::Int2String(subs)
-		+ " subSize= " + Util::Int2String(cons)
-		+ " numPub= " + Util::Int2String(pubs)
-		+ " pubSize= " + Util::Int2String(m)
-		+ " attTypes= " + Util::Int2String(atts);
+					 + " bits= " + Util::Int2String(be)
+					 + " memory= " + Util::Int2String(rb4.calMemory())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms InitTime= " + Util::Double2String(initTime)
+					 + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms AvgCmpTime= " + to_string(rb4.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(rb4.markTime / pubs / 1000000)
+					 + " ms OrTime= " + to_string(rb4.orTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(rb4.bitTime / pubs / 1000000)
+					 + " ms numBuk= " + Util::Int2String(rb4.numBucket)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
 
 	//outputFileName = "BIOP4BucketSize.txt";
@@ -461,7 +454,7 @@ void run_BIOP4(const intervalGenerator& gen) {
 	//Util::WriteData(outputFileName.c_str(), content);
 }
 
-void run_BIOP5(const intervalGenerator& gen) {
+void run_BIOP5(const intervalGenerator &gen) {
 	BIOP5 rb5;
 
 	vector<double> insertTimeList;
@@ -469,21 +462,20 @@ void run_BIOP5(const intervalGenerator& gen) {
 	vector<double> matchSubList;
 
 	// insert
-	for (int i = 0; i < subs; i++)
-	{
+	for (int i = 0; i < subs; i++) {
 		Timer subStart;
 
 		rb5.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
-		insertTimeList.push_back((double)insertTime / 1000000);
+		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "BIOP5DD Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
 	rb5.initBits();
-	initTime = (double)initStart.elapsed_nano() / 1000000.0;
+	initTime = (double) initStart.elapsed_nano() / 1000000.0;
 
 	// 验证插入删除正确性
 	if (verifyID) {
@@ -497,15 +489,14 @@ void run_BIOP5(const intervalGenerator& gen) {
 	}
 
 	// match
-	for (int i = 0; i < pubs; i++)
-	{
+	for (int i = 0; i < pubs; i++) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
 		rb5.match(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-		matchTimeList.push_back((double)eventTime / 1000000);
+		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
 			cout << "BIOP5DD Event " << i << " is matched.\n";
@@ -518,23 +509,24 @@ void run_BIOP5(const intervalGenerator& gen) {
 	// output
 	string outputFileName = "BIOP5.txt";
 	string content = expID
-		+ " bits= " + Util::Int2String(be)
-		+ " memory= " + Util::Int2String(rb5.calMemory())
-		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-		+ " ms InitTime= " + Util::Double2String(initTime)
-		+ " ms AvgConstructionTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-		+ " ms AvgCmpTime= " + to_string(rb5.compareTime / pubs / 1000000)
-		+ " ms AvgMarkTime= " + to_string(rb5.markTime / pubs / 1000000)
-		+ " ms OrTime= " + to_string(rb5.orTime / pubs / 1000000)
-		+ " ms AvgBitTime= " + to_string(rb5.bitTime / pubs / 1000000)
-		+ " ms numBuk= " + Util::Int2String(rb5.numBucket)
-		+ " numSub= " + Util::Int2String(subs)
-		+ " subSize= " + Util::Int2String(cons)
-		+ " numPub= " + Util::Int2String(pubs)
-		+ " pubSize= " + Util::Int2String(m)
-		+ " attTypes= " + Util::Int2String(atts);
+					 + " bits= " + Util::Int2String(be)
+					 + " memory= " + Util::Int2String(rb5.calMemory())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms InitTime= " + Util::Double2String(initTime)
+					 + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms AvgCmpTime= " + to_string(rb5.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(rb5.markTime / pubs / 1000000)
+					 + " ms OrTime= " + to_string(rb5.orTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(rb5.bitTime / pubs / 1000000)
+					 + " ms numBuk= " + Util::Int2String(rb5.numBucket)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
 
 	//outputFileName = "BIOP5BucketSize.txt";
@@ -548,7 +540,7 @@ void run_BIOP5(const intervalGenerator& gen) {
 	//Util::WriteData(outputFileName.c_str(), content);
 }
 
-void run_BIOPSC(const intervalGenerator& gen) {
+void run_BIOPSC(const intervalGenerator &gen) {
 	BIOPSC biopsc;
 
 	vector<double> insertTimeList;
@@ -556,32 +548,30 @@ void run_BIOPSC(const intervalGenerator& gen) {
 	vector<double> matchSubList;
 
 	// insert
-	for (int i = 0; i < subs; i++)
-	{
+	for (int i = 0; i < subs; i++) {
 		Timer subStart;
 
 		biopsc.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
-		insertTimeList.push_back((double)insertTime / 1000000);
+		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "BIOP-SC-DD Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
 	biopsc.initBits();
-	initTime = (double)initStart.elapsed_nano() / 1000000.0;
+	initTime = (double) initStart.elapsed_nano() / 1000000.0;
 
 	// match
-	for (int i = 0; i < pubs; i++)
-	{
+	for (int i = 0; i < pubs; i++) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 		//cout << "Begin to match event " << i << endl;
 		biopsc.match(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-		matchTimeList.push_back((double)eventTime / 1000000);
+		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
 			cout << "BIOP-SC-DD Event " << i << " is matched.\n";
@@ -594,24 +584,25 @@ void run_BIOPSC(const intervalGenerator& gen) {
 	// output
 	string outputFileName = "BIOPSC.txt";
 	string content = expID
-		+ " bits= " + Util::Int2String(be)
-		+ " memory= " + Util::Int2String(biopsc.calMemory())
-		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-		+ " ms InitTime= " + Util::Double2String(initTime)
-		+ " ms AvgConstructionTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-		+ " ms AvgCmpTime= " + to_string(biopsc.compareTime / pubs / 1000000)
-		+ " ms AvgMarkTime= " + to_string(biopsc.markTime / pubs / 1000000)
-		+ " ms OrTime= " + to_string(biopsc.orTime / pubs / 1000000)
-		+ " ms AvgBitTime= " + to_string(biopsc.bitTime / pubs / 1000000)
-		+ " ms numBuk= " + Util::Int2String(biopsc.numBucket)
-		+ " numSub= " + Util::Int2String(subs)
-		+ " subSize= " + Util::Int2String(cons)
-		+ " numPub= " + Util::Int2String(pubs)
-		+ " pubSize= " + Util::Int2String(m)
-		+ " attTypes= " + Util::Int2String(atts)
-		+ " lvls=" + Util::Int2String(lvls);
+					 + " bits= " + Util::Int2String(be)
+					 + " memory= " + Util::Int2String(biopsc.calMemory())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms InitTime= " + Util::Double2String(initTime)
+					 + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms AvgCmpTime= " + to_string(biopsc.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(biopsc.markTime / pubs / 1000000)
+					 + " ms OrTime= " + to_string(biopsc.orTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(biopsc.bitTime / pubs / 1000000)
+					 + " ms numBuk= " + Util::Int2String(biopsc.numBucket)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts)
+					 + " lvls=" + Util::Int2String(lvls);
 	Util::WriteData(outputFileName.c_str(), content);
 
 	//outputFileName = "BIOPSCBucketSize.txt";
@@ -625,7 +616,7 @@ void run_BIOPSC(const intervalGenerator& gen) {
 	//Util::WriteData(outputFileName.c_str(), content);
 }
 
-void run_BIOPSR(const intervalGenerator& gen) {
+void run_BIOPSR(const intervalGenerator &gen) {
 	BIOPSR biopsr;
 
 	vector<double> insertTimeList;
@@ -633,32 +624,30 @@ void run_BIOPSR(const intervalGenerator& gen) {
 	vector<double> matchSubList;
 
 	// insert
-	for (int i = 0; i < subs; i++)
-	{
+	for (int i = 0; i < subs; i++) {
 		Timer subStart;
 
 		biopsr.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
-		insertTimeList.push_back((double)insertTime / 1000000);
+		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "BIOP-SR-PS Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
 	biopsr.initBits();
-	initTime = (double)initStart.elapsed_nano() / 1000000.0;
+	initTime = (double) initStart.elapsed_nano() / 1000000.0;
 
 	// match
-	for (int i = 0; i < pubs; i++)
-	{
+	for (int i = 0; i < pubs; i++) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 		//cout << "Begin to match event " << i << endl;
 		biopsr.match(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-		matchTimeList.push_back((double)eventTime / 1000000);
+		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
 			cout << "BIOP-SR-PS Event " << i << " is matched.\n";
@@ -671,29 +660,30 @@ void run_BIOPSR(const intervalGenerator& gen) {
 	// output
 	string outputFileName = "BIOPSR.txt";
 	string content = expID
-		+ " bits= " + Util::Int2String(be)
-		+ " memory= " + Util::Int2String(biopsr.calMemory())
-		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-		+ " ms InitTime= " + Util::Double2String(initTime)
-		+ " ms AvgConstructionTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-		+ " ms AvgCmpTime= " + to_string(biopsr.compareTime / pubs / 1000000)
-		+ " ms AvgMarkTime= " + to_string(biopsr.markTime / pubs / 1000000)
-		+ " ms OrTime= " + to_string(biopsr.orTime / pubs / 1000000)
-		+ " ms AvgBitTime= " + to_string(biopsr.bitTime / pubs / 1000000)
-		+ " ms numBuk= " + Util::Int2String(biopsr.numBucket)
-		+ " numSub= " + Util::Int2String(subs)
-		+ " subSize= " + Util::Int2String(cons)
-		+ " numPub= " + Util::Int2String(pubs)
-		+ " pubSize= " + Util::Int2String(m)
-		+ " attTypes= " + Util::Int2String(atts)
-		+ " lvls=" + Util::Int2String(lvls);
+					 + " bits= " + Util::Int2String(be)
+					 + " memory= " + Util::Int2String(biopsr.calMemory())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms InitTime= " + Util::Double2String(initTime)
+					 + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms AvgCmpTime= " + to_string(biopsr.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(biopsr.markTime / pubs / 1000000)
+					 + " ms OrTime= " + to_string(biopsr.orTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(biopsr.bitTime / pubs / 1000000)
+					 + " ms GroupSize=" + Util::Int2String(gs)
+					 + " numBuk= " + Util::Int2String(biopsr.numBucket)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
 
 }
 
-void run_Simple(const intervalGenerator& gen) {
+void run_Simple(const intervalGenerator &gen) {
 	Simple simple;
 
 	vector<double> insertTimeList;
@@ -701,14 +691,13 @@ void run_Simple(const intervalGenerator& gen) {
 	vector<double> matchSubList;
 
 	// insert
-	for (int i = 0; i < subs; i++)
-	{
+	for (int i = 0; i < subs; i++) {
 		Timer subStart;
 
 		simple.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
-		insertTimeList.push_back((double)insertTime / 1000000);
+		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "Simple Insertion Finishes.\n";
 
@@ -724,8 +713,7 @@ void run_Simple(const intervalGenerator& gen) {
 	}
 
 	// match
-	for (int i = 0; i < pubs; i++)
-	{
+	for (int i = 0; i < pubs; i++) {
 		dPub dpub;
 		dpub.pubId = i;
 		Util::Pub2dPub(gen.pubList[i], dpub);
@@ -736,7 +724,7 @@ void run_Simple(const intervalGenerator& gen) {
 		simple.match(dpub, matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-		matchTimeList.push_back((double)eventTime / 1000000);
+		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
 			cout << "Simple Event " << i << " is matched.\n";
@@ -746,20 +734,20 @@ void run_Simple(const intervalGenerator& gen) {
 	// output
 	string outputFileName = "Simple.txt";
 	string content = expID
-		+ " memory= " + Util::Int2String(simple.calMemory())
-		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-		+ " ms numSub= " + Util::Int2String(subs)
-		+ " subSize= " + Util::Int2String(cons)
-		+ " numPub= " + Util::Int2String(pubs)
-		+ " pubSize= " + Util::Int2String(m)
-		+ " attTypes= " + Util::Int2String(atts);
+					 + " memory= " + Util::Int2String(simple.calMemory())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
 
 }
 
-void run_Simple2(const intervalGenerator& gen) {
+void run_Simple2(const intervalGenerator &gen) {
 	Simple2 simple2;
 
 	vector<double> insertTimeList;
@@ -767,14 +755,13 @@ void run_Simple2(const intervalGenerator& gen) {
 	vector<double> matchSubList;
 
 	// insert
-	for (int i = 0; i < subs; i++)
-	{
+	for (int i = 0; i < subs; i++) {
 		Timer subStart;
 
 		simple2.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
-		insertTimeList.push_back((double)insertTime / 1000000);
+		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "Simple2 Insertion Finish.\n";
 
@@ -790,8 +777,7 @@ void run_Simple2(const intervalGenerator& gen) {
 	}
 
 	// match
-	for (int i = 0; i < pubs; i++)
-	{
+	for (int i = 0; i < pubs; i++) {
 		dPub dpub;
 		dpub.pubId = i;
 		Util::Pub2dPub(gen.pubList[i], dpub);
@@ -802,7 +788,7 @@ void run_Simple2(const intervalGenerator& gen) {
 		simple2.match(dpub, matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-		matchTimeList.push_back((double)eventTime / 1000000);
+		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
 			cout << "Simple2 Event " << i << " is matched.\n";
@@ -812,20 +798,20 @@ void run_Simple2(const intervalGenerator& gen) {
 	// output
 	string outputFileName = "Simple2.txt";
 	string content = expID
-		+ " memory= " + Util::Int2String(simple2.calMemory())
-		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-		+ " ms numSub= " + Util::Int2String(subs)
-		+ " subSize= " + Util::Int2String(cons)
-		+ " numPub= " + Util::Int2String(pubs)
-		+ " pubSize= " + Util::Int2String(m)
-		+ " attTypes= " + Util::Int2String(atts);
+					 + " memory= " + Util::Int2String(simple2.calMemory())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
 
 }
 
-void run_tama(const intervalGenerator& gen) {
+void run_tama(const intervalGenerator &gen) {
 	Tama tama;
 
 	vector<double> insertTimeList;
@@ -833,14 +819,13 @@ void run_tama(const intervalGenerator& gen) {
 	vector<double> matchSubList;
 
 	// insert
-	for (int i = 0; i < subs; i++)
-	{
+	for (int i = 0; i < subs; i++) {
 		Timer subStart;
 
 		tama.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
-		insertTimeList.push_back((double)insertTime / 1000000);
+		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "Tama Insertion Finish.\n";
 
@@ -856,8 +841,7 @@ void run_tama(const intervalGenerator& gen) {
 	}
 
 	// match
-	for (int i = 0; i < pubs; i++)
-	{
+	for (int i = 0; i < pubs; i++) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
@@ -865,7 +849,7 @@ void run_tama(const intervalGenerator& gen) {
 		//tama.match_vague(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-		matchTimeList.push_back((double)eventTime / 1000000);
+		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
 			cout << "Tama Event " << i << " is matched.\n";
@@ -875,23 +859,24 @@ void run_tama(const intervalGenerator& gen) {
 	// output
 	string outputFileName = "Tama.txt";
 	string content = expID
-		+ " memory= " + Util::Int2String(tama.calMemory())
-		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-		+ " ms level= " + Util::Int2String(level)
-		+ " numSub= " + Util::Int2String(subs)
-		+ " subSize= " + Util::Int2String(cons)
-		+ " numPub= " + Util::Int2String(pubs)
-		+ " pubSize= " + Util::Int2String(m)
-		+ " attTypes= " + Util::Int2String(atts)
-		+ " attDis= " + Util::Int2String(attDis)
-		+ " valDis= " + Util::Int2String(valDis)
-		+ " width= " + Util::Double2String(width)
-		+ " alpha= " + Util::Double2String(alpha);
+					 + " memory= " + Util::Int2String(tama.calMemory())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms level= " + Util::Int2String(level)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts)
+					 + " attDis= " + Util::Int2String(attDis)
+					 + " valDis= " + Util::Int2String(valDis)
+					 + " width= " + Util::Double2String(width)
+					 + " alpha= " + Util::Double2String(alpha);
 	Util::WriteData(outputFileName.c_str(), content);
 }
-void run_adarein(const intervalGenerator& gen) {
+
+void run_adarein(const intervalGenerator &gen) {
 	AdaRein adarein;
 
 	vector<double> insertTimeList;
@@ -899,21 +884,20 @@ void run_adarein(const intervalGenerator& gen) {
 	vector<double> matchSubList;
 
 	// insert
-	for (int i = 0; i < subs; i++)
-	{
+	for (int i = 0; i < subs; i++) {
 		Timer subStart;
 
 		adarein.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
-		insertTimeList.push_back((double)insertTime / 1000000);
+		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "AdaRein Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
 	adarein.select_skipped_atts(falsePositiveRate, gen.subList);
-	initTime = (double)initStart.elapsed_nano() / 1000000.0;
+	initTime = (double) initStart.elapsed_nano() / 1000000.0;
 	cout << "AdaRein Skipping Task Finishes.\n";
 
 	// 验证插入删除正确性
@@ -928,16 +912,15 @@ void run_adarein(const intervalGenerator& gen) {
 	}
 
 	// match
-	for (int i = 0; i < pubs; i++)
-	{
+	for (int i = 0; i < pubs; i++) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
-		adarein.accurate_match(gen.pubList[i], matchSubs,gen.subList);
-		//adarein.approx_match(gen.pubList[i], matchSubs,gen.subList);
+		//adarein.exact_match(gen.pubList[i], matchSubs,gen.subList);
+		adarein.approx_match(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-		matchTimeList.push_back((double)eventTime / 1000000);
+		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
 			cout << "AdaRein Event " << i << " is matched.\n";
@@ -947,23 +930,24 @@ void run_adarein(const intervalGenerator& gen) {
 	// output
 	string outputFileName = "AdaRein.txt";
 	string content = expID
-		+ " memory= " + Util::Int2String(adarein.calMemory())
-		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-		+ " ms InitTime= " + Util::Double2String(initTime)
-		+ " ms AvgConstructionTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-		+ " ms fPR= "+Util::Double2String(falsePositiveRate)
-		+ " numSub= " + Util::Int2String(subs)
-		+ " subSize= " + Util::Int2String(cons)
-		+ " numPub= " + Util::Int2String(pubs)
-		+ " pubSize= " + Util::Int2String(m)
-		+ " attTypes= " + Util::Int2String(atts);
+					 + " memory= " + Util::Int2String(adarein.calMemory())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms InitTime= " + Util::Double2String(initTime)
+					 + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms fPR= " + Util::Double2String(falsePositiveRate)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
 }
 
-void run_opindex(const intervalGenerator& gen) {
-	OpIndex opindex;
+void run_opindex(const intervalGenerator &gen) {
+	OpIndex2 opindex;
 
 	vector<double> insertTimeList;
 	vector<double> matchTimeList;
@@ -973,20 +957,26 @@ void run_opindex(const intervalGenerator& gen) {
 	double initTime;
 	Timer initStart;
 	opindex.calcFrequency(gen.subList);
-	initTime = (double)initStart.elapsed_nano() / 1000000.0;
+	initTime = (double) initStart.elapsed_nano() / 1000000.0;
 	cout << "OpIndex CalcFrequency Task Finishes.\n";
 
 	// insert
-	for (int i = 0; i < subs; i++)
-	{
+	for (int i = 0; i < subs; i++) {
 		Timer subStart;
 
 		opindex.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
-		insertTimeList.push_back((double)insertTime / 1000000);
+		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "OpIndex Insertion Finish.\n";
+
+	if (display)
+		for (int i = 0; i < atts; i++) {
+			cout << "Att " << i << ": " << opindex.isPivot[i] << ", ";
+			if (i > 0 && i % 5 == 0) cout << endl;
+		}
+	cout << endl;
 
 	// 验证插入删除正确性
 	if (verifyID) {
@@ -1000,15 +990,14 @@ void run_opindex(const intervalGenerator& gen) {
 	}
 
 	// match
-	for (int i = 0; i < pubs; i++)
-	{
+	for (int i = 0; i < pubs; i++) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
 		opindex.match(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-		matchTimeList.push_back((double)eventTime / 1000000);
+		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
 			cout << "OpIndex Event " << i << " is matched.\n";
@@ -1018,16 +1007,17 @@ void run_opindex(const intervalGenerator& gen) {
 	// output
 	string outputFileName = "OpIndex.txt";
 	string content = expID
-		+ " memory= " + Util::Int2String(opindex.calMemory())
-		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-		+ " ms InitTime= " + Util::Double2String(initTime)
-		+ " ms AvgConstructionTime= " + Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-		+ " ms numSub= " + Util::Int2String(subs)
-		+ " subSize= " + Util::Int2String(cons)
-		+ " numPub= " + Util::Int2String(pubs)
-		+ " pubSize= " + Util::Int2String(m)
-		+ " attTypes= " + Util::Int2String(atts);
+					 + " memory= " + Util::Int2String(opindex.calMemory())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms InitTime= " + Util::Double2String(initTime)
+					 + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
 }

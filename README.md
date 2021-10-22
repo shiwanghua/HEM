@@ -1,6 +1,6 @@
 # BIOP
 
-### 2021 - 开发周志
+## 2021 - 开发周志
 
 | 周数 | 时间          | 进展情况                                                     |
 | ---- | :------------ | ------------------------------------------------------------ |
@@ -16,7 +16,7 @@
 | 10   | 10/13 - 10/19 | 实现Rein和BIOP5DD删除算法写论文Verification Experiment、Related Work部分，跑实验，画图，将Tama、AdaRein整合进项目，修改论文某些部分 |
 | 11   | 10/20 - 10/26 |                                                              |
 
-### Note
+## Note
 
 ##### Windows 10 环境：Visual Studio 2022
 
@@ -29,8 +29,29 @@
 7. 左上角的下拉框里进入配置管理器，活动解决方案配置为 "Debug"，下面的配置为 "Release"，勾选生成
 
 ##### ubuntu 20 环境
-
+1. Run command "sudo cmake ."
+2. Run command "sudo make"
+3. Run command "sudo ./cmakeRB"
 
 ##### 注意事项
-1. "constant.h" 里 MAX_SUBS、MAX_ATTS、MAX_BUCKS 必须大于等于 subs、atts、buks
+1. "constant.h" 里 MAX_SUBS、MAX_ATTS、MAX_BUCKS 必须大于等于 subs、atts、buks (Now it's obsoleted.)
+2. In "constant.h", the constant `subs` can't be adjusted by input, means you have to run relative experiments one by one.
+
+## 实验记录
+* Default Parameter: n = 1**m**, d = 20, Ss = 10, Se = 20, w = 0.3, subp = 0, uniform distribution.
+* Model Parameter: 
+  * Rein: b = 1000
+  * BIOP5DD: b = 1000, be = 4
+  * Tama: level = 13
+  * AdaRein: falsePositiveRate = 10
+
+[comment]: <> (OpIndex)
+  
+| No. | 实验名| 参数设置         | 在txt文件中的记录号（expID）                                                     |
+| ---- | :-------|----- | ---------------- |
+| 1| 订阅数实验  | n = 300**k** ~ 9**m** | 484 ~ 489|
+|2 |订阅大小实验 | Ss = 5 ~ 30, d = Se = 30, w = 0.7 |497 ~ 502|
+|3 |事件大小实验 |Se = 30 ~ 80, d = 80, subp = 0.5 | 503 ~ 508|
+|4 |订阅宽度实验 |w = 0.1 ~ 0.7, Ss = 5| 517 ~ 523|
+|5 |维度实验| d = |
 
