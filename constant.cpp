@@ -9,7 +9,6 @@ const int pubs = 500;       // Number of publications.
 int atts = 20;              // Total number of attributes, i.e. dimensions.
 int cons = 10;              // Number of constraints(predicates) in one sub.
 int m = 20;                 // Number of constraints in one pub.
-
 const int attDis = 0;       // The distribution of attributes in subs and pubs. 0:uniform distribution | 1:Zipf distribution
 const int valDis = 0;       // The distribution of values in subs and pubs. 0:uniform + fixed width | 1: random width >= $width + Uniform | 2: Zipf + fixed width | 3: Normal + fixed width | 4: Normal + two ends
 const int valDom = 1000000; // Cardinality of values.
