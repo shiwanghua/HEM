@@ -14,19 +14,6 @@ expID=int(sys.argv[1])
 #     print('Experiment',str(expID),' atts=m=',str(20),' be= ',str(be),' w=0.3 done.')
 #     expID+=1
 
-#for m in range(10000,0,-1000):
-#    os.system('./cmakeRB '+str(expID)+' '+ str(m)+ ' 0 0.3')
-#    print('Experiment',str(expID),' atts=m=',str(m),' be=',str(5),'done.')
-#    expID+=1
-
-# width 0.1-0.7
-width=0.7
-for i in range(7):
-    os.system('taskset -c 20 ./cmakeRB '+str(expID)+' 20 4 '+str(width))
-    print('Experiment',str(expID),' atts=m=',str(20),' be=',str(4),'width=',width,'done.')
-    expID+=1
-    width-=0.1
-
 
 # # Ss size of subscriptions 5-30
 # for Ss in range(30,0,-5):
@@ -39,3 +26,23 @@ for i in range(7):
 #     os.system('taskset -c 20 ./cmakeRB '+str(expID)+' '+str(Se)+' 4 0.3')
 #     print('Experiment ',str(expID),' Se=',str(30),' be= 4, w=0.3 done.')
 #     expID+=1
+
+# # width 0.1-0.7
+# width=0.7
+# for i in range(7):
+#     os.system('taskset -c 20 ./cmakeRB '+str(expID)+' 20 4 '+str(width))
+#     print('Experiment',str(expID),' atts=m=',str(20),' be=',str(4),'width=',width,'done.')
+#     expID+=1
+#     width-=0.1
+
+# # atts 30-900
+# for atts in [900,700,500,300,100,30]:
+#    os.system('taskset -c 20 ./cmakeRB '+str(expID)+' '+ str(atts)+ ' 4 0.5')
+#    print('Experiment',str(expID),': atts=',str(atts), ', m=20, be=4, w=0.5 done.')
+#    expID+=1
+
+# alpha 0-5 attribute distribution
+for alpha in range(5,-1,-1):
+   os.system('taskset -c 20 ./cmakeRB '+str(expID)+' '+ str(alpha)+ ' 4 0.5')
+   print('Experiment',str(expID),': alpha=',str(alpha), ', atts=40, m=20, cons=10, be=4, w=0.5 done.')
+   expID+=1

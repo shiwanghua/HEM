@@ -12,7 +12,8 @@ int main(int argc, char **argv)
 		expID = to_string(atoi(argv[1]));
 //		m = atoi(argv[2]);
 //		cons= atoi(argv[2]);
-		atts=atoi(argv[2]);
+//		atts=atoi(argv[2]);
+		alpha=atof(argv[2]);
 		be = atoi(argv[3]); // 输入一个bits指数
 		width = atof(argv[4]);
 		cout << "argc=" << argc << endl;
@@ -32,7 +33,7 @@ int main(int argc, char **argv)
 	run_BIOPSC(gen);
 	run_BIOPSR(gen);
 	run_Simple(gen);
-	//run_Simple2(gen);
+	run_Simple2(gen);
 	run_tama(gen);
 	run_adarein(gen);
 	run_opindex(gen);

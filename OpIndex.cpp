@@ -228,6 +228,10 @@ OpIndex2::~OpIndex2() {
 }
 
 void OpIndex2::insert(IntervalSub sub) {
+	if(sub.size==0){
+		numSub++;
+		return;
+	}
 	int pivotAtt = getMinFre(sub);
 	isPivot[pivotAtt] = true;
 	pivotCount[pivotAtt]++;
@@ -242,6 +246,10 @@ void OpIndex2::insert(IntervalSub sub) {
 }
 
 bool OpIndex2::deleteSubscription(IntervalSub sub) {
+	if(sub.size==0){
+		numSub--;
+		return true;
+	}
 	int find = 0;
 	int id = sub.id;
 	int pivotAtt = getMinFre(sub);
@@ -267,8 +275,11 @@ bool OpIndex2::deleteSubscription(IntervalSub sub) {
 
 void OpIndex2::match(Pub pub, int &matchSubs, const vector<IntervalSub> &subList) {
 	vector<int> counter(subs);
-	for (int i = 0; i < subList.size(); i++)
+	for (int i = 0; i < subList.size(); i++){
 		counter[i] = subList[i].size;
+		if(counter[i]==0)
+			++matchSubs;
+	}
 
 	for (int i = 0; i < pub.size; i++) {
 		int piv_att = pub.pairs[i].att;
@@ -318,13 +329,14 @@ void OpIndex2::calcFrequency(const vector<IntervalSub> &subList) {
 		for (int j = 0; j < subList[i].size; j++)
 			++fre[subList[i].constraints[j].att];
 
-	if (display)
+	if (!display){
 		for (int i = 0; i < atts; i++) {
 			cout << "Att " << i << ": " << fre[i] << "\t";
 			if (i > 0 && i % 5 == 0)
 				cout << endl;
 		}
-	cout << endl;
+		cout << endl;
+	}
 }
 
 int OpIndex2::calMemory() {

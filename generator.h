@@ -1,6 +1,14 @@
 #ifndef _GENERATOR_H
 #define _GENERATOR_H
 #include "data_structure.h"
+#include <chrono>
+#include <random>
+#include "constant.h"
+
+#define _for(i,a,b) for( int i=(a); i<(b); ++i)
+#define __for(i,a,b) for( int i=(a); i<=(b); ++i)
+#define mfor(i,a,b) for(int i=(a);i>(b);--i)
+#define mmfor(i,a,b) for(int i=(a);i>=(b);--i)
 
 class generator {
     void GenUniformAtts(Sub &sub, int atts);
@@ -49,10 +57,17 @@ class intervalGenerator {
     void GenZipfAtts(IntervalSub &sub, int atts, double alpha);
     void GenZipfAtts(Pub &pub, int atts, double alpha);
 
-    void GenUniformValues(IntervalSub &sub, int valDom);
-    void GenUniformSubs(IntervalSub& sub);
+    void GenUniformValues(IntervalSub &sub); // fixed width
+    void GenUniformValues_w(IntervalSub& sub);  // random width >=$width
     void Gen28SubsPredicate(IntervalSub& sub, double l,double h);
-    void GenUniformValues(Pub &pub, int valDom);
+    void GenUniformValues(Pub &pub);
+
+	void GenZipfValues(IntervalSub&sub); // random width
+	void GenZipfValues(Pub&pub);
+
+	void GenNormalValues(IntervalSub& sub); // fixed width
+	void GenNormalValues_t(IntervalSub& sub); // Normal + two ends
+	void GenNormalValues(Pub& pub);
 
     bool CheckExist(vector<int> a, int x);
 

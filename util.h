@@ -14,11 +14,6 @@
 #include <vector>
 using namespace std;
 
-#define _for(i,a,b) for( int i=(a); i<(b); ++i)
-#define __for(i,a,b) for( int i=(a); i<=(b); ++i)
-#define mfor(i,a,b) for(int i=(a);i>(b);--i)
-#define mmfor(i,a,b) for(int i=(a);i>=(b);--i)
-
 class Util {
 public:
 	static void Check(generator gen, string filename);

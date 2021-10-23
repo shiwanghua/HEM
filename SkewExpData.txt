@@ -1,0 +1,184 @@
+ExpID = 538. AdaRein: falsePositiveRate = 10, bucketStep = 1000, numBucket = 1000 alpha = 0
+avgSubSize= 10, avgWidth= 500000, countSum= 10000000, currentSum= 3392946.
+Skip attribute: 4 5 6 7 9 14 21 29 30 32 34 35 36 37 39 43 46
+Total: 17
+
+ExpID = 538. OpIndex2 begins.
+Predicate Number:
+Att 0: 200108	Att 1: 200025	Att 2: 200588	Att 3: 200271	Att 4: 199760	Att 5: 199635
+Att 6: 199561	Att 7: 199801	Att 8: 200470	Att 9: 199192	Att 10: 200631
+Att 11: 199931	Att 12: 200547	Att 13: 200248	Att 14: 199501	Att 15: 200240
+Att 16: 199991	Att 17: 199915	Att 18: 199932	Att 19: 200081	Att 20: 200223
+Att 21: 199847	Att 22: 200460	Att 23: 200140	Att 24: 200178	Att 25: 200053
+Att 26: 200096	Att 27: 200489	Att 28: 200132	Att 29: 199397	Att 30: 199651
+Att 31: 200315	Att 32: 199384	Att 33: 200076	Att 34: 199749	Att 35: 199830
+Att 36: 199605	Att 37: 199193	Att 38: 200550	Att 39: 199522	Att 40: 199945
+Att 41: 200292	Att 42: 200038	Att 43: 199752	Att 44: 200109	Att 45: 200214
+Att 46: 199566	Att 47: 200595	Att 48: 199971	Att 49: 200200
+Pivot Attribute:
+Att 0: 1, Att 1: 1, Att 2: 0, Att 3: 0, Att 4: 1, Att 5: 1,
+Att 6: 1, Att 7: 1, Att 8: 0, Att 9: 1, Att 10: 0,
+Att 11: 1, Att 12: 0, Att 13: 0, Att 14: 1, Att 15: 0,
+Att 16: 1, Att 17: 1, Att 18: 1, Att 19: 1, Att 20: 1,
+Att 21: 1, Att 22: 0, Att 23: 1, Att 24: 1, Att 25: 1,
+Att 26: 1, Att 27: 0, Att 28: 1, Att 29: 1, Att 30: 1,
+Att 31: 0, Att 32: 1, Att 33: 1, Att 34: 1, Att 35: 1,
+Att 36: 1, Att 37: 1, Att 38: 0, Att 39: 1, Att 40: 1,
+Att 41: 0, Att 42: 1, Att 43: 1, Att 44: 1, Att 45: 0,
+Att 46: 1, Att 47: 0, Att 48: 1, Att 49: 0
+
+
+ExpID = 539. AdaRein: falsePositiveRate = 10, bucketStep = 1000, numBucket = 1000 alpha = 1
+avgSubSize= 10, avgWidth= 500000, countSum= 10000000, currentSum= 3455180.
+Skip attribute: 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49
+Total: 34
+
+ExpID = 539. OpIndex2 begins.
+Predicate Number:
+Att 0: 955289	Att 1: 808348	Att 2: 672299	Att 3: 566773	Att 4: 488199	Att 5: 426737
+Att 6: 379112	Att 7: 339475	Att 8: 307962	Att 9: 282836	Att 10: 259711
+Att 11: 240661	Att 12: 224233	Att 13: 209831	Att 14: 197336	Att 15: 186018
+Att 16: 175173	Att 17: 167446	Att 18: 159500	Att 19: 150869	Att 20: 144425
+Att 21: 139222	Att 22: 133027	Att 23: 127677	Att 24: 122429	Att 25: 118829
+Att 26: 114239	Att 27: 110424	Att 28: 106936	Att 29: 103715	Att 30: 100215
+Att 31: 97433	Att 32: 94182	Att 33: 91527	Att 34: 89322	Att 35: 86870
+Att 36: 84522	Att 37: 82475	Att 38: 80565	Att 39: 78583	Att 40: 77005
+Att 41: 74827	Att 42: 73300	Att 43: 71645	Att 44: 69791	Att 45: 68560
+Att 46: 67111	Att 47: 65884	Att 48: 64357	Att 49: 63095
+Pivot Attribute:
+Att 0: 0, Att 1: 0, Att 2: 0, Att 3: 0, Att 4: 0, Att 5: 0,
+Att 6: 0, Att 7: 0, Att 8: 0, Att 9: 1, Att 10: 1,
+Att 11: 1, Att 12: 1, Att 13: 1, Att 14: 1, Att 15: 1,
+Att 16: 1, Att 17: 1, Att 18: 1, Att 19: 1, Att 20: 1,
+Att 21: 1, Att 22: 1, Att 23: 1, Att 24: 1, Att 25: 1,
+Att 26: 1, Att 27: 1, Att 28: 1, Att 29: 1, Att 30: 1,
+Att 31: 1, Att 32: 1, Att 33: 1, Att 34: 1, Att 35: 1,
+Att 36: 1, Att 37: 1, Att 38: 1, Att 39: 1, Att 40: 1,
+Att 41: 1, Att 42: 1, Att 43: 1, Att 44: 1, Att 45: 1,
+Att 46: 1, Att 47: 1, Att 48: 1, Att 49: 1
+
+
+ExpID = 540. AdaRein: falsePositiveRate = 10, bucketStep = 1000, numBucket = 1000 alpha = 2
+avgSubSize= 10, avgWidth= 500000, countSum= 10000000, currentSum= 3158865.
+Skip attribute: 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49
+Total: 41
+
+ExpID = 540. OpIndex2 begins.
+Predicate Number:
+Att 0: 1000000	Att 1: 999060	Att 2: 980565	Att 3: 914481	Att 4: 806959	Att 5: 686772
+Att 6: 574293	Att 7: 478568	Att 8: 400437	Att 9: 338231	Att 10: 287123
+Att 11: 246851	Att 12: 214162	Att 13: 187140	Att 14: 164397	Att 15: 145771
+Att 16: 130214	Att 17: 117061	Att 18: 105332	Att 19: 94824	Att 20: 86780
+Att 21: 79746	Att 22: 73335	Att 23: 66983	Att 24: 61633	Att 25: 57584
+Att 26: 53499	Att 27: 49547	Att 28: 46443	Att 29: 43400	Att 30: 40649
+Att 31: 38091	Att 32: 36034	Att 33: 33674	Att 34: 32086	Att 35: 30330
+Att 36: 28831	Att 37: 27362	Att 38: 25869	Att 39: 24392	Att 40: 23318
+Att 41: 22026	Att 42: 21147	Att 43: 20392	Att 44: 19234	Att 45: 18340
+Att 46: 17739	Att 47: 17159	Att 48: 16314	Att 49: 15822
+Pivot Attribute:
+Att 0: 0, Att 1: 0, Att 2: 0, Att 3: 0, Att 4: 0, Att 5: 0,
+Att 6: 0, Att 7: 0, Att 8: 0, Att 9: 1, Att 10: 1,
+Att 11: 1, Att 12: 1, Att 13: 1, Att 14: 1, Att 15: 1,
+Att 16: 1, Att 17: 1, Att 18: 1, Att 19: 1, Att 20: 1,
+Att 21: 1, Att 22: 1, Att 23: 1, Att 24: 1, Att 25: 1,
+Att 26: 1, Att 27: 1, Att 28: 1, Att 29: 1, Att 30: 1,
+Att 31: 1, Att 32: 1, Att 33: 1, Att 34: 1, Att 35: 1,
+Att 36: 1, Att 37: 1, Att 38: 1, Att 39: 1, Att 40: 1,
+Att 41: 1, Att 42: 1, Att 43: 1, Att 44: 1, Att 45: 1,
+Att 46: 1, Att 47: 1, Att 48: 1, Att 49: 1
+
+
+ExpID = 541. AdaRein: falsePositiveRate = 10, bucketStep = 1000, numBucket = 1000 alpha = 3
+avgSubSize= 10, avgWidth= 500000, countSum= 10000000, currentSum= 3386270.
+Skip attribute: 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49
+Total: 43
+
+ExpID = 541. OpIndex2 begins.
+Predicate Number:
+Att 0: 1000000	Att 1: 1000000	Att 2: 999886	Att 3: 995735	Att 4: 966968	Att 5: 888008
+Att 6: 763133	Att 7: 623422	Att 8: 492987	Att 9: 387188	Att 10: 305334
+Att 11: 242792	Att 12: 193867	Att 13: 158574	Att 14: 130458	Att 15: 108072
+Att 16: 90194	Att 17: 76839	Att 18: 65810	Att 19: 56806	Att 20: 49079
+Att 21: 42600	Att 22: 37187	Att 23: 33282	Att 24: 29209	Att 25: 26120
+Att 26: 23304	Att 27: 20762	Att 28: 18891	Att 29: 16836	Att 30: 15530
+Att 31: 13922	Att 32: 12837	Att 33: 11786	Att 34: 10657	Att 35: 9710
+Att 36: 8967	Att 37: 8343	Att 38: 7785	Att 39: 7104	Att 40: 6724
+Att 41: 6133	Att 42: 5922	Att 43: 5307	Att 44: 5064	Att 45: 4763
+Att 46: 4465	Att 47: 4094	Att 48: 3952	Att 49: 3592
+Pivot Attribute:
+Att 0: 0, Att 1: 0, Att 2: 0, Att 3: 0, Att 4: 0, Att 5: 0,
+Att 6: 0, Att 7: 0, Att 8: 0, Att 9: 1, Att 10: 1,
+Att 11: 1, Att 12: 1, Att 13: 1, Att 14: 1, Att 15: 1,
+Att 16: 1, Att 17: 1, Att 18: 1, Att 19: 1, Att 20: 1,
+Att 21: 1, Att 22: 1, Att 23: 1, Att 24: 1, Att 25: 1,
+Att 26: 1, Att 27: 1, Att 28: 1, Att 29: 1, Att 30: 1,
+Att 31: 1, Att 32: 1, Att 33: 1, Att 34: 1, Att 35: 1,
+Att 36: 1, Att 37: 1, Att 38: 1, Att 39: 1, Att 40: 1,
+Att 41: 1, Att 42: 1, Att 43: 1, Att 44: 1, Att 45: 1,
+Att 46: 1, Att 47: 1, Att 48: 1, Att 49: 1
+
+
+ExpID = 542. AdaRein: falsePositiveRate = 10, bucketStep = 1000, numBucket = 1000 alpha = 4
+avgSubSize= 10, avgWidth= 500000, countSum= 10000000, currentSum= 3138182.
+Skip attribute: 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49
+Total: 43
+
+ExpID = 542. OpIndex2 begins.
+Predicate Number:
+Att 0: 1000000	Att 1: 1000000	Att 2: 1000000	Att 3: 999930	Att 4: 997144	Att 5: 972773
+Att 6: 891971	Att 7: 750243	Att 8: 581732	Att 9: 429786	Att 10: 312867
+Att 11: 227899	Att 12: 169604	Att 13: 128231	Att 14: 98255	Att 15: 76319
+Att 16: 60164	Att 17: 48121	Att 18: 38537	Att 19: 31909	Att 20: 26242
+Att 21: 21767	Att 22: 18271	Att 23: 15229	Att 24: 13180	Att 25: 11002
+Att 26: 9784	Att 27: 8354	Att 28: 7146	Att 29: 6370	Att 30: 5622
+Att 31: 4960	Att 32: 4275	Att 33: 3797	Att 34: 3457	Att 35: 3061
+Att 36: 2801	Att 37: 2524	Att 38: 2289	Att 39: 1984	Att 40: 1847
+Att 41: 1685	Att 42: 1521	Att 43: 1362	Att 44: 1237	Att 45: 1179
+Att 46: 1010	Att 47: 972	Att 48: 847	Att 49: 740
+Pivot Attribute:
+Att 0: 0, Att 1: 0, Att 2: 0, Att 3: 0, Att 4: 0, Att 5: 0,
+Att 6: 0, Att 7: 0, Att 8: 0, Att 9: 1, Att 10: 1,
+Att 11: 1, Att 12: 1, Att 13: 1, Att 14: 1, Att 15: 1,
+Att 16: 1, Att 17: 1, Att 18: 1, Att 19: 1, Att 20: 1,
+Att 21: 1, Att 22: 1, Att 23: 1, Att 24: 1, Att 25: 1,
+Att 26: 1, Att 27: 1, Att 28: 1, Att 29: 1, Att 30: 1,
+Att 31: 1, Att 32: 1, Att 33: 1, Att 34: 1, Att 35: 1,
+Att 36: 1, Att 37: 1, Att 38: 1, Att 39: 1, Att 40: 1,
+Att 41: 1, Att 42: 1, Att 43: 1, Att 44: 1, Att 45: 1,
+Att 46: 1, Att 47: 1, Att 48: 1, Att 49: 1
+
+
+ExpID = 543. AdaRein: falsePositiveRate = 10, bucketStep = 1000, numBucket = 1000 alpha = 5
+avgSubSize= 10, avgWidth= 500000, countSum= 10000000, currentSum= 3047668.
+Skip attribute: 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49
+Total: 43
+AdaRein Skipping Task Finishes.
+AdaRein Event 0 is matched.
+AdaRein Event 100 is matched.
+AdaRein Event 200 is matched.
+AdaRein Event 300 is matched.
+AdaRein Event 400 is matched.
+
+ExpID = 543. OpIndex2 begins.
+Predicate Number:
+Att 0: 1000000	Att 1: 1000000	Att 2: 1000000	Att 3: 1000000	Att 4: 999836	Att 5: 994904
+Att 6: 957592	Att 7: 844726	Att 8: 662331	Att 9: 466521	Att 10: 312397
+Att 11: 210261	Att 12: 144044	Att 13: 99828	Att 14: 72002	Att 15: 52213
+Att 16: 38882	Att 17: 29027	Att 18: 22313	Att 19: 17313	Att 20: 13498
+Att 21: 10833	Att 22: 8620	Att 23: 6871	Att 24: 5725	Att 25: 4641
+Att 26: 3969	Att 27: 3183	Att 28: 2653	Att 29: 2268	Att 30: 1957
+Att 31: 1626	Att 32: 1365	Att 33: 1177	Att 34: 992	Att 35: 879
+Att 36: 771	Att 37: 721	Att 38: 613	Att 39: 476	Att 40: 500
+Att 41: 391	Att 42: 414	Att 43: 295	Att 44: 290	Att 45: 250
+Att 46: 254	Att 47: 252	Att 48: 175	Att 49: 151
+Pivot Attribute:
+Att 0: 0, Att 1: 0, Att 2: 0, Att 3: 0, Att 4: 0, Att 5: 0,
+Att 6: 0, Att 7: 0, Att 8: 0, Att 9: 1, Att 10: 1,
+Att 11: 1, Att 12: 1, Att 13: 1, Att 14: 1, Att 15: 1,
+Att 16: 1, Att 17: 1, Att 18: 1, Att 19: 1, Att 20: 1,
+Att 21: 1, Att 22: 1, Att 23: 1, Att 24: 1, Att 25: 1,
+Att 26: 1, Att 27: 1, Att 28: 1, Att 29: 1, Att 30: 1,
+Att 31: 1, Att 32: 1, Att 33: 1, Att 34: 1, Att 35: 1,
+Att 36: 1, Att 37: 1, Att 38: 1, Att 39: 1, Att 40: 1,
+Att 41: 1, Att 42: 1, Att 43: 1, Att 44: 1, Att 45: 1,
+Att 46: 1, Att 47: 1, Att 48: 1, Att 49: 1

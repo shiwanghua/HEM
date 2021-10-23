@@ -4,16 +4,17 @@ void run_rein(const intervalGenerator &gen) {
 	Rein rein;
 
 	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
 	vector<double> matchTimeList;
 	vector<double> matchSubList;
 
 	// insert
 	for (int i = 0; i < subs; i++) {
-		Timer subStart;
+		Timer insertStart;
 
 		rein.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
-		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "Rein Insertion Finishes.\n";
@@ -21,8 +22,10 @@ void run_rein(const intervalGenerator &gen) {
 	// 验证插入删除正确性
 	if (verifyID) {
 		_for(i, 0, 5000) {
+			Timer deleteStart;
 			if (!rein.deleteSubscription(gen.subList[i]))
 				cout << "Rein: sub" << gen.subList[i].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		_for(i, 0, 5000) {
 			rein.insert(gen.subList[i]);
@@ -50,6 +53,7 @@ void run_rein(const intervalGenerator &gen) {
 					 + " memory= " + Util::Int2String(rein.calMemory())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
 					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
 					 + " ms AvgCmpTime= " + to_string(rein.compareTime / pubs / 1000000)
 					 + " ms AvgMarkTime= " + to_string(rein.markTime / pubs / 1000000)
@@ -63,7 +67,16 @@ void run_rein(const intervalGenerator &gen) {
 					 + " attDis= " + Util::Int2String(attDis)
 					 + " valDis= " + Util::Int2String(valDis)
 					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha);
+					 + " alpha= " + Util::Double2String(alpha)
+					 + " subp= " + Util::Double2String(subp)
+					 + " mean= " + Util::Double2String(mean)
+					 + " stddev= " + Util::Double2String(stddev);
+	Util::WriteData(outputFileName.c_str(), content);
+
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "Rein= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
 	Util::WriteData(outputFileName.c_str(), content);
 
 	//outputFileName = "ReinBucketSize.txt";
@@ -81,16 +94,17 @@ void run_BIOP(const intervalGenerator &gen) {
 	BIOP rb;
 
 	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
 	vector<double> matchTimeList;
 	vector<double> matchSubList;
 
 	// insert
 	for (int i = 0; i < subs; i++) {
-		Timer subStart;
+		Timer insertStart;
 
 		rb.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
-		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "BIOP Insertion Finishes.\n";
@@ -140,6 +154,12 @@ void run_BIOP(const intervalGenerator &gen) {
 					 + " attTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
 
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "BIOP0PS= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData(outputFileName.c_str(), content);
+
 	//outputFileName = "BIOPBucketSize.txt";
 	//rb.calBucketSize();
 	//content = expID + " numBucket= " + Util::Int2String(rb.numBucket)
@@ -156,16 +176,17 @@ void run_BIOP1(const intervalGenerator &gen) {
 	BIOP1 rb1;
 
 	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
 	vector<double> matchTimeList;
 	vector<double> matchSubList;
 
 	// insert
 	for (int i = 0; i < subs; i++) {
-		Timer subStart;
+		Timer insertStart;
 
 		rb1.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
-		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "BIOP1 Insertion Finishes.\n";
@@ -216,6 +237,12 @@ void run_BIOP1(const intervalGenerator &gen) {
 					 + " attTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
 
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "BIOP1SS= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData(outputFileName.c_str(), content);
+
 	//outputFileName = "BIOP1BucketSize.txt";
 	//rb.calBucketSize();
 	//content = expID + " numBucket= " + Util::Int2String(rb.numBucket)
@@ -227,22 +254,22 @@ void run_BIOP1(const intervalGenerator &gen) {
 	//Util::WriteData(outputFileName.c_str(), content);
 }
 
-
 // 静动模式
 void run_BIOP2(const intervalGenerator &gen) {
 	BIOP2 rb2;
 
 	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
 	vector<double> matchTimeList;
 	vector<double> matchSubList;
 
 	// insert
 	for (int i = 0; i < subs; i++) {
-		Timer subStart;
+		Timer insertStart;
 
 		rb2.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
-		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "BIOP2 Insertion Finishes.\n";
@@ -293,6 +320,12 @@ void run_BIOP2(const intervalGenerator &gen) {
 					 + " attTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
 
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "BIOP2SD= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData(outputFileName.c_str(), content);
+
 	//outputFileName = "BIOP2BucketSize.txt";
 	//rb.calBucketSize();
 	//content = expID + " numBucket= " + Util::Int2String(rb.numBucket)
@@ -308,16 +341,17 @@ void run_BIOP3(const intervalGenerator &gen) {
 	BIOP3 rb3;
 
 	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
 	vector<double> matchTimeList;
 	vector<double> matchSubList;
 
 	// insert
 	for (int i = 0; i < subs; i++) {
-		Timer subStart;
+		Timer insertStart;
 
 		rb3.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
-		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "BIOP3 Insertion Finishes.\n";
@@ -368,6 +402,12 @@ void run_BIOP3(const intervalGenerator &gen) {
 					 + " attTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
 
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "BIOP3PD= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData(outputFileName.c_str(), content);
+
 	//outputFileName = "BIOP3BucketSize.txt";
 	//rb.calBucketSize();
 	//content = expID + " numBucket= " + Util::Int2String(rb3.numBucket)
@@ -383,16 +423,17 @@ void run_BIOP4(const intervalGenerator &gen) {
 	BIOP4 rb4;
 
 	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
 	vector<double> matchTimeList;
 	vector<double> matchSubList;
 
 	// insert
 	for (int i = 0; i < subs; i++) {
-		Timer subStart;
+		Timer insertStart;
 
 		rb4.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
-		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "BIOP4DS Insertion Finishes.\n";
@@ -443,6 +484,12 @@ void run_BIOP4(const intervalGenerator &gen) {
 					 + " attTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
 
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "BIOP4DS= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData(outputFileName.c_str(), content);
+
 	//outputFileName = "BIOP4BucketSize.txt";
 	//rb4.calBucketSize();
 	//content = expID + " numBucket= " + Util::Int2String(rb4.numBucket)
@@ -458,16 +505,17 @@ void run_BIOP5(const intervalGenerator &gen) {
 	BIOP5 rb5;
 
 	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
 	vector<double> matchTimeList;
 	vector<double> matchSubList;
 
 	// insert
 	for (int i = 0; i < subs; i++) {
-		Timer subStart;
+		Timer insertStart;
 
 		rb5.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
-		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "BIOP5DD Insertion Finishes.\n";
@@ -480,8 +528,10 @@ void run_BIOP5(const intervalGenerator &gen) {
 	// 验证插入删除正确性
 	if (verifyID) {
 		_for(i, 0, 5000) {
+			Timer deleteStart;
 			if (!rb5.deleteSubscription(gen.subList[i]))
 				cout << "BIOP5DD: sub" << gen.subList[i].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		_for(i, 0, 5000) {
 			rb5.insert_online(gen.subList[i]);
@@ -516,6 +566,7 @@ void run_BIOP5(const intervalGenerator &gen) {
 					 + " ms InitTime= " + Util::Double2String(initTime)
 					 + " ms AvgConstructionTime= " +
 					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
 					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
 					 + " ms AvgCmpTime= " + to_string(rb5.compareTime / pubs / 1000000)
 					 + " ms AvgMarkTime= " + to_string(rb5.markTime / pubs / 1000000)
@@ -527,6 +578,12 @@ void run_BIOP5(const intervalGenerator &gen) {
 					 + " numPub= " + Util::Int2String(pubs)
 					 + " pubSize= " + Util::Int2String(m)
 					 + " attTypes= " + Util::Int2String(atts);
+	Util::WriteData(outputFileName.c_str(), content);
+
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "BIOP5DD= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
 	Util::WriteData(outputFileName.c_str(), content);
 
 	//outputFileName = "BIOP5BucketSize.txt";
@@ -544,16 +601,17 @@ void run_BIOPSC(const intervalGenerator &gen) {
 	BIOPSC biopsc;
 
 	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
 	vector<double> matchTimeList;
 	vector<double> matchSubList;
 
 	// insert
 	for (int i = 0; i < subs; i++) {
-		Timer subStart;
+		Timer insertStart;
 
 		biopsc.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
-		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "BIOP-SC-DD Insertion Finishes.\n";
@@ -605,6 +663,12 @@ void run_BIOPSC(const intervalGenerator &gen) {
 					 + " lvls=" + Util::Int2String(lvls);
 	Util::WriteData(outputFileName.c_str(), content);
 
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "BIOP-SC-DD= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData(outputFileName.c_str(), content);
+
 	//outputFileName = "BIOPSCBucketSize.txt";
 	//biopsc.calBucketSize();
 	//content = expID + " numBucket= " + Util::Int2String(biopsc.numBucket)
@@ -620,16 +684,17 @@ void run_BIOPSR(const intervalGenerator &gen) {
 	BIOPSR biopsr;
 
 	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
 	vector<double> matchTimeList;
 	vector<double> matchSubList;
 
 	// insert
 	for (int i = 0; i < subs; i++) {
-		Timer subStart;
+		Timer insertStart;
 
 		biopsr.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
-		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "BIOP-SR-PS Insertion Finishes.\n";
@@ -681,22 +746,28 @@ void run_BIOPSR(const intervalGenerator &gen) {
 					 + " attTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
 
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "BIOP-SR-PS= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData(outputFileName.c_str(), content);
 }
 
 void run_Simple(const intervalGenerator &gen) {
 	Simple simple;
 
 	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
 	vector<double> matchTimeList;
 	vector<double> matchSubList;
 
 	// insert
 	for (int i = 0; i < subs; i++) {
-		Timer subStart;
+		Timer insertStart;
 
 		simple.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
-		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "Simple Insertion Finishes.\n";
@@ -704,8 +775,10 @@ void run_Simple(const intervalGenerator &gen) {
 	// 验证插入删除正确性
 	if (verifyID) {
 		_for(i, 0, 5000) {
+			Timer deleteStart;
 			if (!simple.deleteSubscription(gen.subList[i]))
 				cout << "Simple: sub" << gen.subList[i].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		_for(i, 0, 5000) {
 			simple.insert(gen.subList[i]);
@@ -737,6 +810,7 @@ void run_Simple(const intervalGenerator &gen) {
 					 + " memory= " + Util::Int2String(simple.calMemory())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
 					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
 					 + " ms numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
@@ -745,22 +819,28 @@ void run_Simple(const intervalGenerator &gen) {
 					 + " attTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
 
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "Simple= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData(outputFileName.c_str(), content);
 }
 
 void run_Simple2(const intervalGenerator &gen) {
 	Simple2 simple2;
 
 	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
 	vector<double> matchTimeList;
 	vector<double> matchSubList;
 
 	// insert
 	for (int i = 0; i < subs; i++) {
-		Timer subStart;
+		Timer insertStart;
 
 		simple2.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
-		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "Simple2 Insertion Finish.\n";
@@ -768,8 +848,10 @@ void run_Simple2(const intervalGenerator &gen) {
 	// 验证插入删除正确性
 	if (verifyID) {
 		_for(i, 0, 5000) {
+			Timer deleteStart;
 			if (!simple2.deleteSubscription(gen.subList[i]))
 				cout << "Simple2: sub" << gen.subList[i].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		_for(i, 0, 5000) {
 			simple2.insert(gen.subList[i]);
@@ -801,6 +883,7 @@ void run_Simple2(const intervalGenerator &gen) {
 					 + " memory= " + Util::Int2String(simple2.calMemory())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
 					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
 					 + " ms numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
@@ -809,22 +892,28 @@ void run_Simple2(const intervalGenerator &gen) {
 					 + " attTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
 
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "Simple2= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData(outputFileName.c_str(), content);
 }
 
 void run_tama(const intervalGenerator &gen) {
 	Tama tama;
 
 	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
 	vector<double> matchTimeList;
 	vector<double> matchSubList;
 
 	// insert
 	for (int i = 0; i < subs; i++) {
-		Timer subStart;
+		Timer insertStart;
 
 		tama.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
-		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "Tama Insertion Finish.\n";
@@ -832,8 +921,10 @@ void run_tama(const intervalGenerator &gen) {
 	// 验证插入删除正确性
 	if (verifyID) {
 		_for(i, 0, 5000) {
+			Timer deleteStart;
 			if (!tama.deleteSubscription(gen.subList[i]))
 				cout << "Tama: sub " << gen.subList[i].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		_for(i, 0, 5000) {
 			tama.insert(gen.subList[i]);
@@ -862,6 +953,7 @@ void run_tama(const intervalGenerator &gen) {
 					 + " memory= " + Util::Int2String(tama.calMemory())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
 					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
 					 + " ms level= " + Util::Int2String(level)
 					 + " numSub= " + Util::Int2String(subs)
@@ -874,22 +966,29 @@ void run_tama(const intervalGenerator &gen) {
 					 + " width= " + Util::Double2String(width)
 					 + " alpha= " + Util::Double2String(alpha);
 	Util::WriteData(outputFileName.c_str(), content);
+
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "Tama= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData(outputFileName.c_str(), content);
 }
 
 void run_adarein(const intervalGenerator &gen) {
 	AdaRein adarein;
 
 	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
 	vector<double> matchTimeList;
 	vector<double> matchSubList;
 
 	// insert
 	for (int i = 0; i < subs; i++) {
-		Timer subStart;
+		Timer insertStart;
 
 		adarein.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
-		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "AdaRein Insertion Finishes.\n";
@@ -903,8 +1002,10 @@ void run_adarein(const intervalGenerator &gen) {
 	// 验证插入删除正确性
 	if (verifyID) {
 		_for(i, 0, 5000) {
+			Timer deleteStart;
 			if (!adarein.deleteSubscription(gen.subList[i]))
 				cout << "AdaRein: sub " << gen.subList[i].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		_for(i, 0, 5000) {
 			adarein.insert(gen.subList[i]);
@@ -936,6 +1037,7 @@ void run_adarein(const intervalGenerator &gen) {
 					 + " ms InitTime= " + Util::Double2String(initTime)
 					 + " ms AvgConstructionTime= " +
 					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
 					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
 					 + " ms fPR= " + Util::Double2String(falsePositiveRate)
 					 + " numSub= " + Util::Int2String(subs)
@@ -944,12 +1046,19 @@ void run_adarein(const intervalGenerator &gen) {
 					 + " pubSize= " + Util::Int2String(m)
 					 + " attTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
+
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "AdaRein= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData(outputFileName.c_str(), content);
 }
 
 void run_opindex(const intervalGenerator &gen) {
 	OpIndex2 opindex;
 
 	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
 	vector<double> matchTimeList;
 	vector<double> matchSubList;
 
@@ -962,27 +1071,32 @@ void run_opindex(const intervalGenerator &gen) {
 
 	// insert
 	for (int i = 0; i < subs; i++) {
-		Timer subStart;
+		Timer insertStart;
 
 		opindex.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
-		int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "OpIndex Insertion Finish.\n";
 
-	if (display)
+	if (!display) {// show pivot attribute
+		int counter = 0;
 		for (int i = 0; i < atts; i++) {
 			cout << "Att " << i << ": " << opindex.isPivot[i] << ", ";
+			if (opindex.isPivot[i])counter++;
 			if (i > 0 && i % 5 == 0) cout << endl;
 		}
-	cout << endl;
+		cout << "\nTotal pivot attribute: " << counter << endl;
+	}
 
 	// 验证插入删除正确性
 	if (verifyID) {
 		_for(i, 0, 5000) {
+			Timer deleteStart;
 			if (!opindex.deleteSubscription(gen.subList[i]))
 				cout << "OpIndex: sub " << gen.subList[i].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		_for(i, 0, 5000) {
 			opindex.insert(gen.subList[i]);
@@ -1013,11 +1127,18 @@ void run_opindex(const intervalGenerator &gen) {
 					 + " ms InitTime= " + Util::Double2String(initTime)
 					 + " ms AvgConstructionTime= " +
 					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
 					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
 					 + " ms numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
 					 + " numPub= " + Util::Int2String(pubs)
 					 + " pubSize= " + Util::Int2String(m)
 					 + " attTypes= " + Util::Int2String(atts);
+	Util::WriteData(outputFileName.c_str(), content);
+
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "OpIndex= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
 	Util::WriteData(outputFileName.c_str(), content);
 }
