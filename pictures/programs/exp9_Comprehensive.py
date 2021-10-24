@@ -41,8 +41,8 @@ Rein = [19.693646, 18.602445, 18.207885, 18.010635, 17.077245, 16.447647, 19.049
 
 fig = plt.figure()
 ax = fig.add_subplot(111)
-ax.set_xlabel('Event ID')
-ax.set_ylabel('Matching Time (ms)')
+ax.set_xlabel('Event ID', fontsize=13)
+ax.set_ylabel('Matching Time (ms)', fontsize=13)
 # plt.xticks(range(0,10))
 # ax.plot(x, OpIndex, marker='h', color='DimGray', label=Name[5]) #   slategray
 # ax.plot(x, Rein, marker='v', color='r', label=Name[0 ])

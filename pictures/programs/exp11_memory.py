@@ -19,8 +19,8 @@ OpIndex = [34, 114, 343, 572, 801, 1029]
 
 fig=plt.figure()
 ax = fig.add_subplot(111)
-ax.set_xlabel('Number of Subscriptions')
-ax.set_ylabel('Memory Consumption (MB)')
+ax.set_xlabel('Number of Subscriptions', fontsize=13)
+ax.set_ylabel('Memory Consumption (MB)', fontsize=13)
 # plt.xticks(range(0,10))
 ax.plot(x, Rein, marker='v', color='r', label=Name[0])
 ax.plot(x, BIOP5DD, marker='.', color='DEEPPINK', label=Name[1])

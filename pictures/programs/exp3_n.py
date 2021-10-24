@@ -19,8 +19,8 @@ OpIndex = [6.805552, 23.133089, 68.743382, 117.347896, 173.80194, 243.786402]
 
 fig=plt.figure()
 ax = fig.add_subplot(111)
-ax.set_xlabel('Number of Subscriptions')
-ax.set_ylabel('Matching Time (ms)')
+ax.set_xlabel('Number of Subscriptions', fontsize=13)
+ax.set_ylabel('Matching Time (ms)', fontsize=13)
 # plt.xticks(range(0,10))
 ax.plot(x, Rein, marker='v', color='r', label=Name[0])
 ax.plot(x, BIOP5DD, marker='.', color='DEEPPINK', label=Name[1])

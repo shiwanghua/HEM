@@ -21,8 +21,8 @@ OpIndex = []
 
 fig=plt.figure()
 ax = fig.add_subplot(111)
-ax.set_xlabel('Size of Subscriptions')
-ax.set_ylabel('Deleting Time (ms)')
+ax.set_xlabel('Size of Subscriptions', fontsize=13)
+ax.set_ylabel('Deleting Time (ms)', fontsize=13)
 # plt.xticks(range(0,10))
 ax.plot(x, Rein, marker='v', color='r', label=Name[0])
 ax.plot(x, BIOP5DD, marker='.', color='DEEPPINK', label=Name[1])

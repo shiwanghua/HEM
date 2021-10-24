@@ -19,8 +19,8 @@ OpIndex = [11.821977, 6.743832, 5.930406, 5.65893, 5.748188, 5.659542]
 					
 fig=plt.figure()
 ax = fig.add_subplot(111)
-ax.set_xlabel('Number of Dimensions')
-ax.set_ylabel('Matching Time (ms)')
+ax.set_xlabel('Number of Dimensions', fontsize=13)
+ax.set_ylabel('Matching Time (ms)', fontsize=13)
 # plt.xticks(range(0,10))
 ax.plot(x, Rein, marker='v', color='r', label=Name[0])
 ax.plot(x, BIOP5DD, marker='.', color='DEEPPINK', label=Name[1])

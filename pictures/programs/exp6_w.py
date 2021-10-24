@@ -20,8 +20,8 @@ OpIndex = [12.971666, 13.176297, 12.826006, 12.108869, 11.550296, 11.162329, 11.
 
 fig=plt.figure()
 ax = fig.add_subplot(111)
-ax.set_xlabel('Number of Predicate Widths')
-ax.set_ylabel('Matching Time (ms)')
+ax.set_xlabel('Number of Predicate Widths', fontsize=13)
+ax.set_ylabel('Matching Time (ms)', fontsize=13)
 # plt.xticks(range(0,10))
 ax.plot(x, Rein, marker='v', color='r', label=Name[0])
 ax.plot(x, BIOP5DD, marker='.', color='DEEPPINK', label=Name[1])

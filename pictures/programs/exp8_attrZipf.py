@@ -19,8 +19,8 @@ OpIndex = [17.173711, 15.133199, 11.047338, 6.688679, 4.946488, 5.714342]
 
 fig=plt.figure()
 ax = fig.add_subplot(111)
-ax.set_xlabel('Value of Alpha')
-ax.set_ylabel('Matching Time (ms)')
+ax.set_xlabel('Value of Alpha', fontsize=13)
+ax.set_ylabel('Matching Time (ms)', fontsize=13)
 # plt.xticks(range(0,10))
 ax.plot(x, Rein, marker='v', color='r', label=Name[0])
 ax.plot(x, BIOP5DD, marker='.', color='DEEPPINK', label=Name[1])
