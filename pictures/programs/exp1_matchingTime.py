@@ -32,7 +32,7 @@ Memory=[157, 159, 169, 188, 226, 302, 455, 760, 1370, 2591]
 # Swdown = np.random.random(10)*100-10
 # Rn = np.random.random(10)*100-10
 #
-# fig = plt.figure()
+# fig = plt.figure()    
 # ax = fig.add_subplot(111)
 # ax.plot(time, Swdown, '-', label = 'Swdown')
 # ax.plot(time, Rn, '-', label = 'Rn')
@@ -62,7 +62,7 @@ ax.plot(be, BIOP5DD, marker='.', color='DEEPPINK', label=Name[6])
 
 ax.legend(loc=(2.5/10,3.99/5))
 ax.grid()
-ax.set_xlabel('Number of Bit Exponent')
+ax.set_xlabel('Value of Bit Exponent')
 ax.set_ylabel('Matching Time (ms)')
 # plt.xticks(range(0,10))
 ax.set_xlim(-0.5,9.5)
@@ -85,6 +85,6 @@ for a,b in zip(be,Memory):
 
 gcf = plt.gcf()
 plt.show()
-gcf.savefig('matchingTime.eps',format='eps',bbox_inches='tight')
+gcf.savefig('../matchingTime.eps',format='eps',bbox_inches='tight')
 
 

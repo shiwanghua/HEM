@@ -36,7 +36,7 @@ plt.bar(x + 0.5*width, BIOP3PD, width, color='limegreen', label=Name[4])
 plt.bar(x + 1.5*width, BIOP4DS, width, color='brown', label=Name[5])
 plt.bar(x + 2.5*width, BIOP5DD, width, color='DEEPPINK', label=Name[6])
 plt.tick_params(direction='out',labelsize=15,length=5.5,width=1)
-plt.xlabel('Number of Bit Exponent',fontsize=20)
+plt.xlabel('Value of Bit Exponent',fontsize=20)
 plt.ylabel('Marking Time (ms)',fontsize=20)
 # plt.title('4 datasets')
 # x轴刻度标签位置不进行计算
