@@ -20,19 +20,21 @@
 #include <numeric> 
 #include<algorithm>
 
-void run_rein(const intervalGenerator& gen);
+ // The subscription No to be deleted.
+
+void run_rein(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 void run_BIOP(const intervalGenerator& gen);
 void run_BIOP1(const intervalGenerator& gen);
 void run_BIOP2(const intervalGenerator& gen);
 void run_BIOP3(const intervalGenerator& gen);
 void run_BIOP4(const intervalGenerator& gen);
-void run_BIOP5(const intervalGenerator& gen);
+void run_BIOP5(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 void run_BIOPSC(const intervalGenerator& gen);
 void run_BIOPSR(const intervalGenerator& gen);
-void run_Simple(const intervalGenerator& gen);
-void run_Simple2(const intervalGenerator& gen);
-void run_tama(const intervalGenerator& gen);
-void run_adarein(const intervalGenerator& gen);
-void run_opindex(const intervalGenerator& gen);
+void run_Simple(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
+void run_Simple2(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
+void run_tama(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
+void run_adarein(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
+void run_opindex(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 
 #endif

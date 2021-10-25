@@ -125,7 +125,7 @@ Pub intervalGenerator::GenOnePub(int id, int m, int atts, int attDis, int valDis
 	Pub pub;
 //	pub.size = m;
 	pub.size = 1 + random(m);
-	pub.id = id;
+//	pub.id = id;
 
 	if (attDis == 0) // Uniform
 		GenUniformAtts(pub, atts);
