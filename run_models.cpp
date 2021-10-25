@@ -1,6 +1,6 @@
 #include "run_models.h"
 
-void run_rein(const intervalGenerator &gen) {
+void run_rein(const intervalGenerator &gen,unordered_map<int,bool> deleteNo) {
 	Rein rein;
 
 	vector<double> insertTimeList;
@@ -21,14 +21,15 @@ void run_rein(const intervalGenerator &gen) {
 
 	// 验证插入删除正确性
 	if (verifyID) {
-		_for(i, 0, 5000) {
+		for(auto kv : deleteNo) {
 			Timer deleteStart;
-			if (!rein.deleteSubscription(gen.subList[i]))
-				cout << "Rein: sub" << gen.subList[i].id << " is failled to be deleted.\n";
+			if (!rein.deleteSubscription(gen.subList[kv.first]))
+				cout << "Rein: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
-		_for(i, 0, 5000) {
-			rein.insert(gen.subList[i]);
+		cout<<"Rein Deletion Finishes.\n";
+		for(auto kv : deleteNo) {
+			rein.insert(gen.subList[kv.first]);
 		}
 	}
 
@@ -501,7 +502,7 @@ void run_BIOP4(const intervalGenerator &gen) {
 	//Util::WriteData(outputFileName.c_str(), content);
 }
 
-void run_BIOP5(const intervalGenerator &gen) {
+void run_BIOP5(const intervalGenerator &gen,unordered_map<int,bool> deleteNo) {
 	BIOP5 rb5;
 
 	vector<double> insertTimeList;
@@ -527,14 +528,15 @@ void run_BIOP5(const intervalGenerator &gen) {
 
 	// 验证插入删除正确性
 	if (verifyID) {
-		_for(i, 0, 5000) {
+		for(auto kv : deleteNo) {
 			Timer deleteStart;
-			if (!rb5.deleteSubscription(gen.subList[i]))
-				cout << "BIOP5DD: sub" << gen.subList[i].id << " is failled to be deleted.\n";
+			if (!rb5.deleteSubscription(gen.subList[kv.first]))
+				cout << "BIOP5DD: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
-		_for(i, 0, 5000) {
-			rb5.insert_online(gen.subList[i]);
+		cout<<"BIOP5DD Deletion Finishes.\n";
+		for(auto kv : deleteNo) {
+			rb5.insert_online(gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
 		}
 	}
 
@@ -664,7 +666,7 @@ void run_BIOPSC(const intervalGenerator &gen) {
 	Util::WriteData(outputFileName.c_str(), content);
 
 	outputFileName = "ComprehensiveExpTime.txt";
-	content = "BIOP-SC-DD= [";
+	content = "BIOPSCDD= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
 	Util::WriteData(outputFileName.c_str(), content);
@@ -747,13 +749,13 @@ void run_BIOPSR(const intervalGenerator &gen) {
 	Util::WriteData(outputFileName.c_str(), content);
 
 	outputFileName = "ComprehensiveExpTime.txt";
-	content = "BIOP-SR-PS= [";
+	content = "BIOPSRPS= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
 	Util::WriteData(outputFileName.c_str(), content);
 }
 
-void run_Simple(const intervalGenerator &gen) {
+void run_Simple(const intervalGenerator &gen,unordered_map<int,bool> deleteNo) {
 	Simple simple;
 
 	vector<double> insertTimeList;
@@ -774,14 +776,15 @@ void run_Simple(const intervalGenerator &gen) {
 
 	// 验证插入删除正确性
 	if (verifyID) {
-		_for(i, 0, 5000) {
+		for(auto kv : deleteNo) {
 			Timer deleteStart;
-			if (!simple.deleteSubscription(gen.subList[i]))
-				cout << "Simple: sub" << gen.subList[i].id << " is failled to be deleted.\n";
+			if (!simple.deleteSubscription(gen.subList[kv.first]))
+				cout << "Simple: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
-		_for(i, 0, 5000) {
-			simple.insert(gen.subList[i]);
+		cout<<"Simple Deletion Finishes.\n";
+		for(auto kv : deleteNo) {
+			simple.insert(gen.subList[kv.first]);
 		}
 	}
 
@@ -826,7 +829,7 @@ void run_Simple(const intervalGenerator &gen) {
 	Util::WriteData(outputFileName.c_str(), content);
 }
 
-void run_Simple2(const intervalGenerator &gen) {
+void run_Simple2(const intervalGenerator &gen,unordered_map<int,bool> deleteNo) {
 	Simple2 simple2;
 
 	vector<double> insertTimeList;
@@ -843,18 +846,19 @@ void run_Simple2(const intervalGenerator &gen) {
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
-	cout << "Simple2 Insertion Finish.\n";
+	cout << "Simple2 Insertion Finishes.\n";
 
 	// 验证插入删除正确性
 	if (verifyID) {
-		_for(i, 0, 5000) {
+		for(auto kv : deleteNo) {
 			Timer deleteStart;
-			if (!simple2.deleteSubscription(gen.subList[i]))
-				cout << "Simple2: sub" << gen.subList[i].id << " is failled to be deleted.\n";
+			if (!simple2.deleteSubscription(gen.subList[kv.first]))
+				cout << "Simple2: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
-		_for(i, 0, 5000) {
-			simple2.insert(gen.subList[i]);
+		cout<<"Simple2 Deletion Finishes.\n";
+		for(auto kv : deleteNo) {
+			simple2.insert(gen.subList[kv.first]);
 		}
 	}
 
@@ -899,7 +903,7 @@ void run_Simple2(const intervalGenerator &gen) {
 	Util::WriteData(outputFileName.c_str(), content);
 }
 
-void run_tama(const intervalGenerator &gen) {
+void run_tama(const intervalGenerator &gen,unordered_map<int,bool> deleteNo) {
 	Tama tama;
 
 	vector<double> insertTimeList;
@@ -916,18 +920,19 @@ void run_tama(const intervalGenerator &gen) {
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
-	cout << "Tama Insertion Finish.\n";
+	cout << "Tama Insertion Finishes.\n";
 
 	// 验证插入删除正确性
 	if (verifyID) {
-		_for(i, 0, 5000) {
+		for(auto kv : deleteNo) {
 			Timer deleteStart;
-			if (!tama.deleteSubscription(gen.subList[i]))
-				cout << "Tama: sub " << gen.subList[i].id << " is failled to be deleted.\n";
+			if (!tama.deleteSubscription(gen.subList[kv.first]))
+				cout << "Tama: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
-		_for(i, 0, 5000) {
-			tama.insert(gen.subList[i]);
+		cout<<"Tama Deletion Finishes.\n";
+		for(auto kv : deleteNo) {
+			tama.insert(gen.subList[kv.first]);
 		}
 	}
 
@@ -974,7 +979,7 @@ void run_tama(const intervalGenerator &gen) {
 	Util::WriteData(outputFileName.c_str(), content);
 }
 
-void run_adarein(const intervalGenerator &gen) {
+void run_adarein(const intervalGenerator &gen,unordered_map<int,bool> deleteNo) {
 	AdaRein adarein;
 
 	vector<double> insertTimeList;
@@ -1001,14 +1006,15 @@ void run_adarein(const intervalGenerator &gen) {
 
 	// 验证插入删除正确性
 	if (verifyID) {
-		_for(i, 0, 5000) {
+		for(auto kv : deleteNo) {
 			Timer deleteStart;
-			if (!adarein.deleteSubscription(gen.subList[i]))
-				cout << "AdaRein: sub " << gen.subList[i].id << " is failled to be deleted.\n";
+			if (!adarein.deleteSubscription(gen.subList[kv.first]))
+				cout << "AdaRein: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
-		_for(i, 0, 5000) {
-			adarein.insert(gen.subList[i]);
+		cout<<"AdaRein Deletion Finishes.\n";
+		for(auto kv : deleteNo) {
+			adarein.insert(gen.subList[kv.first]);
 		}
 	}
 
@@ -1054,7 +1060,7 @@ void run_adarein(const intervalGenerator &gen) {
 	Util::WriteData(outputFileName.c_str(), content);
 }
 
-void run_opindex(const intervalGenerator &gen) {
+void run_opindex(const intervalGenerator &gen,unordered_map<int,bool> deleteNo) {
 	OpIndex2 opindex;
 
 	vector<double> insertTimeList;
@@ -1078,7 +1084,7 @@ void run_opindex(const intervalGenerator &gen) {
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
-	cout << "OpIndex Insertion Finish.\n";
+	cout << "OpIndex Insertion Finishes.\n";
 
 	if (!display) {// show pivot attribute
 		int counter = 0;
@@ -1092,14 +1098,15 @@ void run_opindex(const intervalGenerator &gen) {
 
 	// 验证插入删除正确性
 	if (verifyID) {
-		_for(i, 0, 5000) {
+		for(auto kv : deleteNo) {
 			Timer deleteStart;
-			if (!opindex.deleteSubscription(gen.subList[i]))
-				cout << "OpIndex: sub " << gen.subList[i].id << " is failled to be deleted.\n";
+			if (!opindex.deleteSubscription(gen.subList[kv.first]))
+				cout << "OpIndex: sub " << gen.subList[kv.first].id << " is failled to be deleted.\n";
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
-		_for(i, 0, 5000) {
-			opindex.insert(gen.subList[i]);
+		cout<<"OpIndex Deletion Finishes.\n";
+		for(auto kv : deleteNo) {
+			opindex.insert(gen.subList[kv.first]);
 		}
 	}
 
