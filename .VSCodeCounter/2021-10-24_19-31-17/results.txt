@@ -1,0 +1,101 @@
+Date : 2021-10-24 19:31:17
+Directory : /home/swh/桌面/BIOP
+Total : 67 files,  7433 codes, 2469 comments, 1291 blanks, all 11193 lines
+
+Languages
++--------------+------------+------------+------------+------------+------------+
+| language     | files      | code       | comment    | blank      | total      |
++--------------+------------+------------+------------+------------+------------+
+| C++          |         42 |      5,545 |      2,140 |        952 |      8,637 |
+| Python       |         17 |        707 |        218 |        145 |      1,070 |
+| HTML         |          1 |        471 |          0 |          2 |        473 |
+| Makefile     |          1 |        447 |        108 |        167 |        722 |
+| Jupyter      |          2 |        160 |          0 |          2 |        162 |
+| Markdown     |          1 |         51 |          0 |         14 |         65 |
+| Shell Script |          2 |         37 |          3 |          9 |         49 |
+| JSON         |          1 |         15 |          0 |          0 |         15 |
++--------------+------------+------------+------------+------------+------------+
+
+Directories
++------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                         | files      | code       | comment    | blank      | total      |
++------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                            |         67 |      7,433 |      2,469 |      1,291 |     11,193 |
+| pictures                                                                     |         17 |        720 |        172 |        127 |      1,019 |
+| pictures/programs                                                            |         17 |        720 |        172 |        127 |      1,019 |
+| pictures/programs/.ipynb_checkpoints                                         |          1 |         80 |          0 |          1 |         81 |
++------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++------------------------------------------------------------------------------+--------------+------------+------------+------------+------------+
+| filename                                                                     | language     | code       | comment    | blank      | total      |
++------------------------------------------------------------------------------+--------------+------------+------------+------------+------------+
+| /home/swh/桌面/BIOP/AdaRein.cpp                                                | C++          |        146 |         10 |         22 |        178 |
+| /home/swh/桌面/BIOP/AdaRein.h                                                  | C++          |         34 |          7 |          8 |         49 |
+| /home/swh/桌面/BIOP/BIOP.cpp                                                   | C++          |        170 |        228 |         32 |        430 |
+| /home/swh/桌面/BIOP/BIOP.h                                                     | C++          |         35 |          7 |          7 |         49 |
+| /home/swh/桌面/BIOP/BIOP1.cpp                                                  | C++          |        250 |        151 |         39 |        440 |
+| /home/swh/桌面/BIOP/BIOP1.h                                                    | C++          |         36 |          7 |          7 |         50 |
+| /home/swh/桌面/BIOP/BIOP2.cpp                                                  | C++          |        301 |        272 |         39 |        612 |
+| /home/swh/桌面/BIOP/BIOP2.h                                                    | C++          |         37 |          6 |          7 |         50 |
+| /home/swh/桌面/BIOP/BIOP3.cpp                                                  | C++          |        253 |        105 |         34 |        392 |
+| /home/swh/桌面/BIOP/BIOP3.h                                                    | C++          |         36 |          6 |          7 |         49 |
+| /home/swh/桌面/BIOP/BIOP4.cpp                                                  | C++          |        361 |        160 |         41 |        562 |
+| /home/swh/桌面/BIOP/BIOP4.h                                                    | C++          |         37 |          6 |          8 |         51 |
+| /home/swh/桌面/BIOP/BIOP5.cpp                                                  | C++          |        435 |        146 |         54 |        635 |
+| /home/swh/桌面/BIOP/BIOP5.h                                                    | C++          |         39 |          6 |          8 |         53 |
+| /home/swh/桌面/BIOP/BIOPSC.cpp                                                 | C++          |        399 |        180 |         45 |        624 |
+| /home/swh/桌面/BIOP/BIOPSC.h                                                   | C++          |         37 |          8 |          8 |         53 |
+| /home/swh/桌面/BIOP/BIOPSR.cpp                                                 | C++          |        170 |        104 |         26 |        300 |
+| /home/swh/桌面/BIOP/BIOPSR.h                                                   | C++          |         39 |          9 |          7 |         55 |
+| /home/swh/桌面/BIOP/CMakeSettings.json                                         | JSON         |         15 |          0 |          0 |         15 |
+| /home/swh/桌面/BIOP/Makefile                                                   | Makefile     |        447 |        108 |        167 |        722 |
+| /home/swh/桌面/BIOP/OpIndex.cpp                                                | C++          |        121 |        215 |         16 |        352 |
+| /home/swh/桌面/BIOP/OpIndex.h                                                  | C++          |         29 |         48 |         12 |         89 |
+| /home/swh/桌面/BIOP/README.md                                                  | Markdown     |         51 |          0 |         14 |         65 |
+| /home/swh/桌面/BIOP/Rein.cpp                                                   | C++          |        103 |         99 |         16 |        218 |
+| /home/swh/桌面/BIOP/Rein.h                                                     | C++          |         28 |         40 |          9 |         77 |
+| /home/swh/桌面/BIOP/Simple.cpp                                                 | C++          |         50 |          1 |          9 |         60 |
+| /home/swh/桌面/BIOP/Simple.h                                                   | C++          |         22 |          8 |          5 |         35 |
+| /home/swh/桌面/BIOP/Simple2.cpp                                                | C++          |         51 |          1 |         10 |         62 |
+| /home/swh/桌面/BIOP/Simple2.h                                                  | C++          |         23 |          7 |          5 |         35 |
+| /home/swh/桌面/BIOP/Tama.cpp                                                   | C++          |        136 |          2 |         10 |        148 |
+| /home/swh/桌面/BIOP/Tama.h                                                     | C++          |         34 |          4 |         18 |         56 |
+| /home/swh/桌面/BIOP/chrono_time.h                                              | C++          |         39 |          0 |         10 |         49 |
+| /home/swh/桌面/BIOP/compile.sh                                                 | Shell Script |         18 |          0 |          6 |         24 |
+| /home/swh/桌面/BIOP/constant.cpp                                               | C++          |         24 |          5 |          5 |         34 |
+| /home/swh/桌面/BIOP/constant.h                                                 | C++          |         31 |          9 |          8 |         48 |
+| /home/swh/桌面/BIOP/data_structure.h                                           | C++          |         56 |          1 |         14 |         71 |
+| /home/swh/桌面/BIOP/draw.py                                                    | Python       |        138 |         15 |         12 |        165 |
+| /home/swh/桌面/BIOP/generator.cpp                                              | C++          |        429 |         21 |         52 |        502 |
+| /home/swh/桌面/BIOP/generator.h                                                | C++          |         69 |          2 |         33 |        104 |
+| /home/swh/桌面/BIOP/main.cpp                                                   | C++          |         43 |         10 |          9 |         62 |
+| /home/swh/桌面/BIOP/match_time.html                                            | HTML         |        471 |          0 |          2 |        473 |
+| /home/swh/桌面/BIOP/pictures/programs/.ipynb_checkpoints/exp1-checkpoint.ipynb | Jupyter      |         80 |          0 |          1 |         81 |
+| /home/swh/桌面/BIOP/pictures/programs/exp1.ipynb                               | Jupyter      |         80 |          0 |          1 |         81 |
+| /home/swh/桌面/BIOP/pictures/programs/exp10_construction.py                    | Python       |         34 |          5 |          6 |         45 |
+| /home/swh/桌面/BIOP/pictures/programs/exp10_deletion.py                        | Python       |         34 |          5 |          7 |         46 |
+| /home/swh/桌面/BIOP/pictures/programs/exp11_memory.py                          | Python       |         35 |          4 |          6 |         45 |
+| /home/swh/桌面/BIOP/pictures/programs/exp1_BIOP5DDTimeDistributionByBe.py      | Python       |         36 |         13 |         12 |         61 |
+| /home/swh/桌面/BIOP/pictures/programs/exp1_markingTime.py                      | Python       |         32 |         56 |          8 |         96 |
+| /home/swh/桌面/BIOP/pictures/programs/exp1_matchingTime.py                     | Python       |         49 |         26 |         16 |         91 |
+| /home/swh/桌面/BIOP/pictures/programs/exp2_markingTime.py                      | Python       |         36 |          6 |         10 |         52 |
+| /home/swh/桌面/BIOP/pictures/programs/exp3_n.py                                | Python       |         35 |          3 |          6 |         44 |
+| /home/swh/桌面/BIOP/pictures/programs/exp4_Ss.py                               | Python       |         34 |          5 |          7 |         46 |
+| /home/swh/桌面/BIOP/pictures/programs/exp5_Se.py                               | Python       |         34 |          5 |          6 |         45 |
+| /home/swh/桌面/BIOP/pictures/programs/exp6_w.py                                | Python       |         34 |          5 |          9 |         48 |
+| /home/swh/桌面/BIOP/pictures/programs/exp7_d.py                                | Python       |         35 |          3 |          6 |         44 |
+| /home/swh/桌面/BIOP/pictures/programs/exp8_attrZipf.py                         | Python       |         34 |          4 |          6 |         44 |
+| /home/swh/桌面/BIOP/pictures/programs/exp9_Comprehensive.py                    | Python       |         55 |         27 |         10 |         92 |
+| /home/swh/桌面/BIOP/pictures/programs/exp_BIOPSR_bitOrTime.py                  | Python       |         43 |          5 |         10 |         58 |
+| /home/swh/桌面/BIOP/printer.cpp                                                | C++          |         74 |         49 |         23 |        146 |
+| /home/swh/桌面/BIOP/printer.h                                                  | C++          |         21 |          3 |         14 |         38 |
+| /home/swh/桌面/BIOP/python_run.py                                              | Python       |          9 |         31 |          8 |         48 |
+| /home/swh/桌面/BIOP/run.sh                                                     | Shell Script |         19 |          3 |          3 |         25 |
+| /home/swh/桌面/BIOP/run_models.cpp                                             | C++          |        850 |        128 |        173 |      1,151 |
+| /home/swh/桌面/BIOP/run_models.h                                               | C++          |         34 |          2 |          5 |         41 |
+| /home/swh/桌面/BIOP/test.cpp                                                   | C++          |          7 |         31 |         10 |         48 |
+| /home/swh/桌面/BIOP/util.cpp                                                   | C++          |        411 |         36 |         65 |        512 |
+| /home/swh/桌面/BIOP/util.h                                                     | C++          |         45 |          0 |         22 |         67 |
+| Total                                                                        |              |      7,433 |      2,469 |      1,291 |     11,193 |
++------------------------------------------------------------------------------+--------------+------------+------------+------------+------------+
