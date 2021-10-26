@@ -26,6 +26,7 @@ Att 31: 0, Att 32: 1, Att 33: 1, Att 34: 1, Att 35: 1,
 Att 36: 1, Att 37: 1, Att 38: 0, Att 39: 1, Att 40: 1,
 Att 41: 0, Att 42: 1, Att 43: 1, Att 44: 1, Att 45: 0,
 Att 46: 1, Att 47: 0, Att 48: 1, Att 49: 0
+Total: 35
 
 
 ExpID = 539. AdaRein: falsePositiveRate = 10, bucketStep = 1000, numBucket = 1000 alpha = 1
@@ -56,7 +57,7 @@ Att 31: 1, Att 32: 1, Att 33: 1, Att 34: 1, Att 35: 1,
 Att 36: 1, Att 37: 1, Att 38: 1, Att 39: 1, Att 40: 1,
 Att 41: 1, Att 42: 1, Att 43: 1, Att 44: 1, Att 45: 1,
 Att 46: 1, Att 47: 1, Att 48: 1, Att 49: 1
-
+Total: 41
 
 ExpID = 540. AdaRein: falsePositiveRate = 10, bucketStep = 1000, numBucket = 1000 alpha = 2
 avgSubSize= 10, avgWidth= 500000, countSum= 10000000, currentSum= 3158865.
@@ -86,6 +87,7 @@ Att 31: 1, Att 32: 1, Att 33: 1, Att 34: 1, Att 35: 1,
 Att 36: 1, Att 37: 1, Att 38: 1, Att 39: 1, Att 40: 1,
 Att 41: 1, Att 42: 1, Att 43: 1, Att 44: 1, Att 45: 1,
 Att 46: 1, Att 47: 1, Att 48: 1, Att 49: 1
+Total: 42
 
 
 ExpID = 541. AdaRein: falsePositiveRate = 10, bucketStep = 1000, numBucket = 1000 alpha = 3
@@ -116,6 +118,7 @@ Att 31: 1, Att 32: 1, Att 33: 1, Att 34: 1, Att 35: 1,
 Att 36: 1, Att 37: 1, Att 38: 1, Att 39: 1, Att 40: 1,
 Att 41: 1, Att 42: 1, Att 43: 1, Att 44: 1, Att 45: 1,
 Att 46: 1, Att 47: 1, Att 48: 1, Att 49: 1
+Total: 41
 
 
 ExpID = 542. AdaRein: falsePositiveRate = 10, bucketStep = 1000, numBucket = 1000 alpha = 4
@@ -146,6 +149,7 @@ Att 31: 1, Att 32: 1, Att 33: 1, Att 34: 1, Att 35: 1,
 Att 36: 1, Att 37: 1, Att 38: 1, Att 39: 1, Att 40: 1,
 Att 41: 1, Att 42: 1, Att 43: 1, Att 44: 1, Att 45: 1,
 Att 46: 1, Att 47: 1, Att 48: 1, Att 49: 1
+Total: 42
 
 
 ExpID = 543. AdaRein: falsePositiveRate = 10, bucketStep = 1000, numBucket = 1000 alpha = 5
@@ -182,3 +186,4 @@ Att 31: 1, Att 32: 1, Att 33: 1, Att 34: 1, Att 35: 1,
 Att 36: 1, Att 37: 1, Att 38: 1, Att 39: 1, Att 40: 1,
 Att 41: 1, Att 42: 1, Att 43: 1, Att 44: 1, Att 45: 1,
 Att 46: 1, Att 47: 1, Att 48: 1, Att 49: 1
+Total: 41
