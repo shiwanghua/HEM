@@ -245,6 +245,7 @@ void OpIndex2::insert(IntervalSub sub) {
 	numSub++;
 }
 
+// 没有更新fre数组, 直接更新会出错
 bool OpIndex2::deleteSubscription(IntervalSub sub) {
 	if(sub.size==0){
 		numSub--;
