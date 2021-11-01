@@ -25,11 +25,16 @@ plt.rcParams['axes.unicode_minus'] = False
 Name = ["REIN", "BIOP5DD", "Simple", "TAMA", "Ada-REIN", "OpIndex"]
 numEvent=1300
 x = [i for i in range(numEvent)]
+# xx=[i*200 for i in range(1,7)]
+fig = plt.figure(figsize=(18, 8))
+# plt.xticks(xx,size = 18) # fontproperties = 'Times New Roman', 
 
-fig = plt.figure()
 ax = fig.add_subplot(111)
-ax.set_xlabel('Event ID', fontsize=13)
-ax.set_ylabel('Matching Time (ms)', fontsize=13)
+
+ax.set_xlabel('Event ID', fontsize=20)
+ax.set_ylabel('Matching Time (ms)', fontsize=20)
+
+
 # plt.xticks(range(0,10))
 # ax.plot(x, OpIndex, marker='h', color='DimGray', label=Name[5]) #   slategray
 # ax.plot(x, Rein, marker='v', color='r', label=Name[0 ])
@@ -62,7 +67,7 @@ ax.plot(x, Tama[:numEvent],  color='DarkCyan', label=Name[3])
 ax.plot(x, AdaRein[:numEvent],  color='DarkMagenta', label=Name[4])
 ax.plot(x, BIOP5DD[:numEvent], color='DEEPPINK', label=Name[1])
 
-ax.legend(ncol=3)  # fontsize=10 loc=(1.36/5,0.01/5),
+ax.legend(fontsize=18,loc='upper center',ncol=6)  # fontsize=10 loc=(1.36/5,0.01/5),
 ax.grid()
 ax.set_xlim(0, numEvent-1)
 ax.set_ylim(0, 23)
@@ -71,7 +76,16 @@ ax.set_ylim(0, 23)
 # ax.set_yscale("log")
 # ax.set_yticks([0,2,8,32,128,256])
 # ax.set_yticklabels(['-1', '0', '1'])
-ax.set_zorder(0)
+# ax.set_zorder(0)
+
+# 方法一
+# for size in ax.get_xticklabels():   #获取x轴上所有坐标，并设置字号
+#     # size.set_fontname('Times New Roman')   
+#     size.set_fontsize('16')
+# # 方法二，不能写在太前面，不然出现两个图，要放到ax后面
+# plt.tick_params(labelsize=16)
+# 方法三
+plt.xticks(fontsize=16) # fontname="Calibri", ,rotation=45
 
 gcf = plt.gcf()
 plt.show()

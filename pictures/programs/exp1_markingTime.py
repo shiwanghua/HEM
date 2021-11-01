@@ -24,7 +24,7 @@ Simple = [13.297686, 13.251958, 13.282044, 13.262612, 13.299794, 13.278775, 13.3
 
 Name = ["Rein", "BIOP0PS", "BIOP1SS", "BIOP2SD", "BIOP3PD", "BIOP4DS", "BIOP5DD", "Simple", "Simple2"]
 
-plt.figure(figsize=(16, 9))
+plt.figure(figsize=(20, 8))
 # plt.subplot()
 x = np.arange(10)  # x轴刻度标签位置
 width = 0.14  # 柱子的宽度
