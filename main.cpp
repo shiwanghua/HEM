@@ -36,9 +36,9 @@ int main(int argc, char **argv) {
 //			cout << i.first << "\n";
 	}
 
-	run_rein(gen,deleteNo);
+	//run_rein(gen,deleteNo);
 	run_BIOP(gen);
-	run_BIOP1(gen);
+	/*run_BIOP1(gen);
 	run_BIOP2(gen);
 	run_BIOP3(gen);
 	run_BIOP4(gen);
@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
 	run_Simple2(gen,deleteNo);
 	run_tama(gen,deleteNo);
 	run_adarein(gen,deleteNo);
-	run_opindex(gen,deleteNo);
+	run_opindex(gen,deleteNo);*/
 
 
 	cout << "Done.\n";

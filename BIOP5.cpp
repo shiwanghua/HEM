@@ -467,10 +467,11 @@ void BIOP5::initBits() {
 //	}
 //
 //	Timer bitStart;
-//	_for(i, 0, subs) if (!b[i]) {
-//			++matchSubs;
-//			//cout << "BIOP5 matches sub: " << i << endl;
-//		}
+////	_for(i, 0, subs) if (!b[i]) {
+////			++matchSubs;
+////			//cout << "BIOP5 matches sub: " << i << endl;
+////		}
+// matchSubs = subs - b.count();
 //	bitTime += (double) bitStart.elapsed_nano();
 //}
 
@@ -552,11 +553,12 @@ void BIOP5::initBits() {
  			b = b | bits[0][i][0];
  	}
 
- 	_for(i, 0, subs) if (!b[i])
- 	{
- 		++matchSubs;
- 		//cout << "BIOP5 matches sub: " << i << endl;
- 	}
+ 	//_for(i, 0, subs) if (!b[i])
+ 	//{
+ 	//	++matchSubs;
+ 	//	//cout << "BIOP5 matches sub: " << i << endl;
+ 	//}
+	matchSubs = subs - b.count();
  }
 
 //void BIOP5::calBucketSize() {
