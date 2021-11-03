@@ -81,8 +81,9 @@ void intervalGenerator::GenPubList2() {
 		return;
 	}
 	double v;
-	for(int i=0;i<4000;i+=8){
-		if(i%8==0){
+	int distance = 4000 / pubs; // 8
+	for(int i=0;i<4000;i+= distance){
+		if(i% distance ==0){
 			Pub pub;
 			pub.id=i/8;
 			pub.size=m;

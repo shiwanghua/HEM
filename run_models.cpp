@@ -36,7 +36,7 @@ void run_rein(const intervalGenerator &gen,unordered_map<int,bool> deleteNo) {
 	// match
 	for (int i = 0; i < pubs; i++) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
-		cout<<"REIN "<<i<<"\n";
+		
 		Timer matchStart;
 
 		rein.match(gen.pubList[i], matchSubs);
