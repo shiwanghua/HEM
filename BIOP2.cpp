@@ -538,12 +538,13 @@ void BIOP2::initBits() {
  				b = b | bits[0][i][0];
  	}
 
- 	_for(i, 0, subs)
- 		if (!b[i])
- 		{
- 			++matchSubs;
- 			//cout << "BIOP2 matches sub: " << i << endl;
- 		}
+// 	_for(i, 0, subs)
+// 		if (!b[i])
+// 		{
+// 			++matchSubs;
+// 			//cout << "BIOP2 matches sub: " << i << endl;
+// 		}
+	matchSubs = subs - b.count();
  }
 
 //void BIOP2::calBucketSize() {

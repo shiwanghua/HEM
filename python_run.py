@@ -9,17 +9,18 @@ expID=int(sys.argv[1])
 #    print('Experiment',str(expID),' ','atts=20, m= ',str(m),'done.\n\n')
 #    expID+=1
 
-# for be in range(9,-1,-1):
-#     os.system('taskset -c 20 ./cmakeRB '+str(expID)+' 10 '+str(be)+' 0.3')
-#     print('Experiment',str(expID),' atts=m=',str(20),' be= ',str(be),' w=0.3 done.\n\n')
-#     expID+=1
-
-
-# Ss size of subscriptions 5-30
-for Ss in range(30,0,-5):
-    os.system('taskset -c 20 ./cmakeRB '+str(expID)+' '+str(Ss)+' 4 0.7')
-    print('Experiment',str(expID),' Ss=',str(Ss),' be= 4, w=0.7 done.\n\n')
+# Exp 1 2
+for be in range(9,-1,-1):
+    os.system('taskset -c 20 ./cmakeRB '+str(expID)+' 10 '+str(be)+' 0.3')
+    print('Experiment',str(expID),' atts=m=',str(20),' be= ',str(be),' w=0.3 done.\n\n')
     expID+=1
+
+
+# # Ss size of subscriptions 5-30
+# for Ss in range(30,0,-5):
+#     os.system('taskset -c 20 ./cmakeRB '+str(expID)+' '+str(Ss)+' 4 0.7')
+#     print('Experiment',str(expID),' Ss=',str(Ss),' be= 4, w=0.7 done.\n\n')
+#     expID+=1
 
 # # Se size of events 30-80
 # for Se in range(80,20,-10):

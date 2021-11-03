@@ -36,6 +36,7 @@ void run_rein(const intervalGenerator &gen,unordered_map<int,bool> deleteNo) {
 	// match
 	for (int i = 0; i < pubs; i++) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
+		cout<<"REIN "<<i<<"\n";
 		Timer matchStart;
 
 		rein.match(gen.pubList[i], matchSubs);
@@ -904,6 +905,8 @@ void run_Simple2(const intervalGenerator &gen,unordered_map<int,bool> deleteNo) 
 }
 
 void run_tama(const intervalGenerator &gen,unordered_map<int,bool> deleteNo) {
+	printf("123\n");
+	fflush(stdout);
 	Tama tama;
 
 	vector<double> insertTimeList;
@@ -914,7 +917,8 @@ void run_tama(const intervalGenerator &gen,unordered_map<int,bool> deleteNo) {
 	// insert
 	for (int i = 0; i < subs; i++) {
 		Timer insertStart;
-
+//		printf("Sub %d\n",i);
+//		fflush(stdout);
 		tama.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.

@@ -71,6 +71,42 @@ void intervalGenerator::GenPubList() {
 	}
 }
 
+void intervalGenerator::GenPubList2() {
+//	freopen("EventsDataset.txt", "r", stdin);
+	ifstream infile;
+	infile.open("EventsDataset.txt", ios::in);
+	if (!infile.is_open())
+	{
+		cout << "读取文件失败" << endl;
+		return;
+	}
+	double v;
+	for(int i=0;i<4000;i+=8){
+		if(i%8==0){
+			Pub pub;
+			pub.id=i/8;
+			pub.size=m;
+			for (int j = 0; j < pub.size; j++) {
+				Pair tmp;
+				tmp.att = j;
+				infile>>v;
+				tmp.value=(int)v;
+//				cout<<pub.id<<" "<<tmp.value<<endl;
+				pub.pairs.push_back(tmp);
+			}
+//			cout<<"\n";
+			pubList.push_back(pub);
+			for(int j=0;j<50-pub.size;j++)
+				infile>>v; // 多余数据
+		}
+		else{
+			for(int j=0;j<50;j++)
+				infile>>v; // 多余数据
+		}
+	}
+	infile.close();
+}
+
 Sub generator::GenOneSub(int id, int size, int atts, int attDis, int valDis, int valDom, double alpha) {
 	Sub sub;
 	sub.id = id;
@@ -88,8 +124,8 @@ IntervalSub intervalGenerator::GenOneSub(int id, int size, int atts, int attDis,
 										 double width) {
 	IntervalSub sub;
 	sub.id = id;
-//	sub.size = size;
-	sub.size = 1 + random(size);
+	sub.size = size;
+//	sub.size = 1 + random(size);
 	if (attDis == 0)
 		GenUniformAtts(sub, atts);
 	else //if (attDis == 1)
@@ -123,9 +159,9 @@ Pub generator::GenOnePub(int m, int atts, int attDis, int valDis, int valDom, do
 
 Pub intervalGenerator::GenOnePub(int id, int m, int atts, int attDis, int valDis, int valDom, double alpha) {
 	Pub pub;
-//	pub.size = m;
-	pub.size = 1 + random(m);
-//	pub.id = id;
+	pub.size = m;
+//	pub.size = 1 + random(m);
+	pub.id = id;
 
 	if (attDis == 0) // Uniform
 		GenUniformAtts(pub, atts);

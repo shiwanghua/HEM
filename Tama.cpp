@@ -5,6 +5,8 @@ void Tama::initiate(int p, int l, int r, int lvl)
 	if (lvl == level)  // level 从1开始
 		return;
 	mid[p] = median(l, r);
+	printf("p %d, l %d, r %d, lvl %d\n",p,l,r,lvl);
+	fflush(stdout);
 	if (l != r)
 	{
 		lchild[p] = ++nodeCounter;// 根节点是0, 第一个左子是1
@@ -12,6 +14,7 @@ void Tama::initiate(int p, int l, int r, int lvl)
 		rchild[p] = ++nodeCounter;
 		initiate(nodeCounter, mid[p] + 1, r, lvl + 1);
 	}
+	cout<<"TAMA initialization finishes.\n";
 }
 
 int Tama::median(int l, int r)

@@ -15,7 +15,8 @@
 | 9    | 10/06 - 10/12 | 写论文Verification Experiment部分，跑实验，画图              |
 | 10   | 10/13 - 10/19 | 实现Rein和BIOP5DD删除算法写论文Verification Experiment、Related Work部分，跑实验，画图，将Tama、AdaRein整合进项目，修改论文某些部分 |
 | 11   | 10/20 - 10/26 | 代码重构，将OpIndex简化后整合进项目，调参跑完所有实验，画图，写论文实验部分  |
-
+| 12   | 10/27 - 11/02 | 整体上修改论文，加入完整匹配例子  |
+| 13   | 11/03 - 11/09 | 压缩论文，去掉两个优化，计数方法改为调用count函数，计数时间减少90%以上，重跑所有实验，重画图，重写实验部分  |
 ## Note
 
 ##### Windows 10 环境：Visual Studio 2022
@@ -31,13 +32,17 @@
 ##### ubuntu 20 环境
 1. Run command "sudo cmake ."
 2. Run command "sudo make"
-3. Run command "sudo ./cmakeRB"
+3. Run command "sudo cpufreq-set -c 20 -g performance" (调整第20号核为性能模式下运行)
+4. sudo cpufreq-set -c 20 -d 3.6G
+5. sudo cpufreq-set -c 20 -u 4.9G
+6. Run command "sudo taskset -c 20 ./cmakeRB" (20指指定第20号核单独运行程序)
 
 ##### 注意事项
 1. "constant.h" 里 MAX_SUBS、MAX_ATTS、MAX_BUCKS 必须大于等于 subs、atts、buks (Now it's obsoleted.)
 2. In "constant.h", the constant `subs` can't be adjusted by input, means you have to run relative experiments one by one.
 
 ## 实验记录
+* 真实数据预处理：https://cdkm.com/cn/xlsx-to-txt
 
 * Default Parameters: n = 1**m**, d = 20, $S_s$ = 10, $S_e$ = 20, w = 0.3, subp = 0, uniform distribution.
 * Model Parameters: 
@@ -48,9 +53,9 @@
 
 | No. | 实验名| 非默认参数设置         | 在txt文件中的记录号（expID）                                                     |
 | ---- | :-------|----- | ---------------- |
-|1|基准验证实验(标记时间、匹配时间)|--|403 ~ 412, 421 ~ 430|
-|2|验证实验(标记时间)|$S_e$=10|434 ~ 443|
-|3|订阅数实验  | n = 300**k** ~ 9**m** | 484 ~ 489|
+|1|基准验证实验(标记时间、匹配时间)|--|403 ~ 412, 421 ~ 430，571 ~ 580|
+|2|空维度验证实验(标记时间)|$S_e$=10, p = 0.5|434 ~ 443, 593 ~ 602|
+|3|订阅数实验  | n = 300**k** ~ 9**m** | 484 ~ 489, 604 ~ 609|
 |4|订阅大小实验 | $S_s$ = 5 ~ 30, d = $S_e$ = 30, w = 0.7 |497 ~ 502, 559 ~ 564|
 |5|事件大小实验 |$S_e$ = 30 ~ 80, d = 80, p = 0.5 | 503 ~ 508|
 |6|订阅宽度实验 |w = 0.1 ~ 0.7, $S_s$ = 5| 517 ~ 523|

@@ -247,12 +247,13 @@ void BIOPSR::match(const Pub& pub, int& matchSubs)
 		globalBitset = globalBitset | bitsSR[g][state];
 	}
 
-	_for(i, 0, subs)
-		if (!globalBitset[i])
-		{
-			++matchSubs;
-			//cout << "BIOPSR matches sub: : " << i << endl;
-		}
+//	_for(i, 0, subs)
+//		if (!globalBitset[i])
+//		{
+//			++matchSubs;
+//			//cout << "BIOPSR matches sub: : " << i << endl;
+//		}
+	matchSubs = subs - globalBitset.count();
 }
 
 //void BIOPSR::calBucketSize() {

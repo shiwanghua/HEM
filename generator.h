@@ -3,6 +3,7 @@
 #include "data_structure.h"
 #include <chrono>
 #include <random>
+#include<fstream>
 #include "constant.h"
 
 #define _for(i,a,b) for( int i=(a); i<(b); ++i)
@@ -51,53 +52,57 @@ public:
 
 
 class intervalGenerator {
-    void GenUniformAtts(IntervalSub &sub, int atts);
-    void GenUniformAtts(Pub &pub, int atts);
+	void GenUniformAtts(IntervalSub &sub, int atts);
 
-    void GenZipfAtts(IntervalSub &sub, int atts, double alpha);
-    void GenZipfAtts(Pub &pub, int atts, double alpha);
+	void GenUniformAtts(Pub &pub, int atts);
 
-    void GenUniformValues(IntervalSub &sub); // fixed width
-    void GenUniformValues_w(IntervalSub& sub);  // random width >=$width
-    void Gen28SubsPredicate(IntervalSub& sub, double l,double h);
-    void GenUniformValues(Pub &pub);
+	void GenZipfAtts(IntervalSub &sub, int atts, double alpha);
 
-	void GenZipfValues(IntervalSub&sub); // random width
-	void GenZipfValues(Pub&pub);
+	void GenZipfAtts(Pub &pub, int atts, double alpha);
 
-	void GenNormalValues(IntervalSub& sub); // fixed width
-	void GenNormalValues_t(IntervalSub& sub); // Normal + two ends
-	void GenNormalValues(Pub& pub);
+	void GenUniformValues(IntervalSub &sub); // fixed width
+	void GenUniformValues_w(IntervalSub &sub);  // random width >=$width
+	void Gen28SubsPredicate(IntervalSub &sub, double l, double h);
 
-    bool CheckExist(vector<int> a, int x);
+	void GenUniformValues(Pub &pub);
 
-    int random(int x);
+	void GenZipfValues(IntervalSub &sub); // random width
+	void GenZipfValues(Pub &pub);
 
-    int zipfDistribution(int n, double alpha);
+	void GenNormalValues(IntervalSub &sub); // fixed width
+	void GenNormalValues_t(IntervalSub &sub); // Normal + two ends
+	void GenNormalValues(Pub &pub);
 
-    IntervalSub GenOneSub(int id, int size, int atts, int attDis, int valDis, int valDom, double alpha, double width);
+	bool CheckExist(vector<int> a, int x);
 
-    Pub GenOnePub(int id, int m, int atts, int attDis, int valDis, int valDom, double alpha);
+	int random(int x);
+
+	int zipfDistribution(int n, double alpha);
+
+	IntervalSub GenOneSub(int id, int size, int atts, int attDis, int valDis, int valDom, double alpha, double width);
+
+	Pub GenOnePub(int id, int m, int atts, int attDis, int valDis, int valDom, double alpha);
 
 public:
-    vector<IntervalSub> subList;
-    vector<Pub> pubList;
-    int subs, pubs, atts, cons, m, attDis, valDis, valDom;
-    double alpha, width,subp;
-    // 0 -- fixed width, 1 -- maxWidth, -1 -- minWidth
-    // 0 ~ [width,width], 1 ~ [0,width], -1 ~ [width,1]
-    int widthType; 
+	vector<IntervalSub> subList;
+	vector<Pub> pubList;
+	int subs, pubs, atts, cons, m, attDis, valDis, valDom;
+	double alpha, width, subp;
+	// 0 -- fixed width, 1 -- maxWidth, -1 -- minWidth
+	// 0 ~ [width,width], 1 ~ [0,width], -1 ~ [width,1]
+	int widthType;
 
-    intervalGenerator(int subs, int pubs, int atts, int cons, int m, int attDis, int valDis, int valDom, double alpha,
-         double p, double width = 0.5) :
-            subs(subs), pubs(pubs), atts(atts), cons(cons), m(m), attDis(attDis), valDis(valDis), valDom(valDom),
-            alpha(alpha), subp(p), width(width)
-    {}
+	intervalGenerator(int subs, int pubs, int atts, int cons, int m, int attDis, int valDis, int valDom, double alpha,
+					  double p, double width = 0.5) :
+		subs(subs), pubs(pubs), atts(atts), cons(cons), m(m), attDis(attDis), valDis(valDis), valDom(valDom),
+		alpha(alpha), subp(p), width(width) {}
 
-    void GenSubList();
-    void GenSubList2(); // 产生取值不均匀的订阅
+	void GenSubList();
 
-    void GenPubList();
+	void GenSubList2(); // 产生取值不均匀的订阅
+
+	void GenPubList();
+
+	void GenPubList2(); // Read from xlsx file
 };
-
 #endif

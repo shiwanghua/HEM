@@ -543,12 +543,13 @@ void BIOPSC::match(const Pub& pub, int& matchSubs)
 				b = b | bits[0][i][j][0];
 	}
 
-	_for(i, 0, subs)
-		if (!b[i])
-		{
-			++matchSubs;
-			//cout << "BIOPSC matches sub: " << i << endl;
-		}
+//	_for(i, 0, subs)
+//		if (!b[i])
+//		{
+//			++matchSubs;
+//			//cout << "BIOPSC matches sub: " << i << endl;
+//		}
+	matchSubs = subs - b.count();
 }
 
 //void BIOPSC::calBucketSize() {
