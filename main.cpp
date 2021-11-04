@@ -8,10 +8,10 @@ int main(int argc, char **argv) {
 
 	if (argc == 5) {
 		expID = to_string(atoi(argv[1]));
+//		cons = atoi(argv[2]);
 //		m = atoi(argv[2]);
-		cons = atoi(argv[2]);
 //		atts=atoi(argv[2]);
-//		alpha=atof(argv[2]);
+		alpha=atof(argv[2]);
 		be = atoi(argv[3]); // 输入一个bits指数
 		width = atof(argv[4]);
 		cout << "argc=" << argc << endl;
@@ -19,9 +19,9 @@ int main(int argc, char **argv) {
 			 << endl;
 	}
 	intervalGenerator gen(subs, pubs, atts, cons, m, attDis, valDis, valDom, alpha, subp, width);
-	gen.GenSubList();
+	gen.GenSubList();//cout<<"Sub fin\n";
 	gen.GenPubList2();
-
+	//cout<<"pubs:"<<gen.pubList.size()<<endl;
 	unordered_map<int,bool> deleteNo;
 	if (verifyID) {
 		srand(time(NULL));
@@ -45,11 +45,12 @@ int main(int argc, char **argv) {
 	run_BIOP5(gen,deleteNo);
 //	run_BIOPSC(gen);
 //	run_BIOPSR(gen);
-//	run_Simple(gen,deleteNo);
-//	run_Simple2(gen,deleteNo);	
-	run_tama(gen,deleteNo);
-	run_adarein(gen, deleteNo);
+	run_Simple(gen,deleteNo);
+//	run_Simple2(gen,deleteNo);
 	run_opindex(gen, deleteNo);
+	run_adarein(gen, deleteNo);
+//	cout<<"haha!\n";
+	run_tama(gen,deleteNo);
 
 	cout << "Done.\n";
 	system("pause");

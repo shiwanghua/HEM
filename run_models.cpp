@@ -905,8 +905,8 @@ void run_Simple2(const intervalGenerator &gen,unordered_map<int,bool> deleteNo) 
 }
 
 void run_tama(const intervalGenerator &gen,unordered_map<int,bool> deleteNo) {
-	printf("123\n");
-	fflush(stdout);
+//	printf("123\n");
+//	fflush(stdout);
 	Tama tama;
 
 	vector<double> insertTimeList;

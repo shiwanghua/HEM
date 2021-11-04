@@ -163,6 +163,7 @@ bool Rein::deleteSubscription(IntervalSub sub)
  	for (int i = 0; i < pub.size; i++)
  	{
  		int value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
+		// cout<<"pubid= "<<pub.id<<" att= "<<att<<" value= "<<value<<endl;
  		attExist[att] = true;
  		// 把下面两个for循环注释了就是模糊匹配, 类似Tama
  		for (int k = 0; k < data[0][att][buck].size(); k++)
@@ -190,7 +191,7 @@ bool Rein::deleteSubscription(IntervalSub sub)
  		if (!bits[i])
  		{
  			++matchSubs;
- 			cout << "rein matches sub: " << i << endl;
+ 			//cout << "rein matches sub: " << i << endl;
  		}
  }
 

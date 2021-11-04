@@ -29,8 +29,8 @@ class Tama {
 
 public:
 	Tama() {
-		printf("In tama ()\n");
-		fflush(stdout);
+//		printf("In tama ()\n");
+//		fflush(stdout);
 		int nodeNumber = 1 << level;
 //        for (int i = 0; i < atts; i++)
 //            data[i] = new vector<int>[nodeNumber];
@@ -39,8 +39,8 @@ public:
 		rchild = new int[nodeNumber];
 		mid = new int[nodeNumber];
 		nodeCounter = 0;
-		printf("begin initiate\n");
-		fflush(stdout);
+//		printf("begin initiate\n");
+//		fflush(stdout);
 		initiate(0, 0, valDom - 1, 1);
 		cout << "ExpID = " << expID << ". Tama: level = " << level << "\n";
 	}

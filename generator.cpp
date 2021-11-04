@@ -72,37 +72,82 @@ void intervalGenerator::GenPubList() {
 }
 
 void intervalGenerator::GenPubList2() {
-//	freopen("EventsDataset.txt", "r", stdin);
+	int id = 0;
+	while (id < subp * pubs) {
+		Pub pub;
+		pub.id = id++;
+//		cout<<"pubid= "<<id<<"\n";
+		pub.size = m;
+		int i = 0;
+		// 让事件在前cons个维度上都有值, 维度较高时, 不至于没有订阅匹配
+		while (i < min(pub.size, cons)) {
+			Pair tmp;
+			tmp.att = i;
+			tmp.value = random(valDom);
+			pub.pairs.push_back(tmp);
+			i++;
+		}
+		vector<int> a;
+		for (; i < pub.size; i++) {
+			int x = random(atts - cons) + cons;
+			while (CheckExist(a, x))
+				x = random(atts - cons) + cons;
+			a.push_back(x);
+			Pair tmp;
+			tmp.att = x;
+			tmp.value = random(valDom);
+			pub.pairs.push_back(tmp);
+		}
+		pubList.push_back(pub);
+	}
+//	cout<<"id= "<<id<<"\n";
+	//	freopen("EventsDataset.txt", "r", stdin);
 	ifstream infile;
 	infile.open("EventsDataset.txt", ios::in);
-	if (!infile.is_open())
-	{
+	if (!infile.is_open()) {
 		cout << "读取文件失败" << endl;
 		return;
 	}
 	double v;
-	int distance = 4000 / pubs; // 8
-	for(int i=0;i<4000;i+= distance){
-		if(i% distance ==0){
+	int distance = 4000 / (pubs - subp * pubs + 1);
+	for (int i = 0; i < 4000; i += distance) {
+//		cout<<"i= "<<i<<"\n";
+		if (i % distance == 0) {
 			Pub pub;
-			pub.id=i/8;
-			pub.size=m;
+			if (id == pubs)
+				break;
+			pub.id = id++;
+//			cout<<id<<" ";
+			pub.size = m;
+			vector<int> a;
+			int x;
 			for (int j = 0; j < pub.size; j++) {
+				// Second way High Dimension such as atts=900
+//				x = random(atts);
+//				while (CheckExist(a, x))
+//					x = random(atts);
+//				a.push_back(x);
+				// Third way
+				x = zipfDistribution(atts, alpha);
+//				cout<<"x= "<<x<<"\n";
+				while (CheckExist(a, x))
+					x = zipfDistribution(atts, alpha);
+				a.push_back(x);
 				Pair tmp;
-				tmp.att = j;
-				infile>>v;
-				tmp.value=(int)v;
-//				cout<<pub.id<<" "<<tmp.value<<endl;
+				tmp.att = x;  // Second way Third way
+//				tmp.att = j;  // First way
+				infile >> v;
+				tmp.value = (int) v;
+//				cout<<pub.id<<" "<<tmp.value<<" ";
 				pub.pairs.push_back(tmp);
 			}
 //			cout<<"\n";
 			pubList.push_back(pub);
-			for(int j=0;j<50-pub.size;j++)
-				infile>>v; // 多余数据
-		}
-		else{
-			for(int j=0;j<50;j++)
-				infile>>v; // 多余数据
+			for (int j = 0; j < 50 - pub.size; j++)
+				infile >> v; // 多余数据
+		} else {
+			for (int j = 0; j < 50; j++)
+				infile >> v; // 多余数据
 		}
 	}
 	infile.close();
@@ -160,9 +205,9 @@ Pub generator::GenOnePub(int m, int atts, int attDis, int valDis, int valDom, do
 
 Pub intervalGenerator::GenOnePub(int id, int m, int atts, int attDis, int valDis, int valDom, double alpha) {
 	Pub pub;
+	pub.id = id;
 	pub.size = m;
 //	pub.size = 1 + random(m);
-	pub.id = id;
 
 	if (attDis == 0) // Uniform
 		GenUniformAtts(pub, atts);
@@ -231,7 +276,7 @@ void intervalGenerator::GenUniformAtts(Pub &pub, int atts) {
 		vector<int> a;
 		int i = 0;
 		// 让事件在前cons个维度上都有值, 维度较高时, 不至于没有订阅匹配
-		while (i < min(pub.size,cons)) {
+		while (i < min(pub.size, cons)) {
 			Pair tmp;
 			tmp.att = i;
 			pub.pairs.push_back(tmp);
