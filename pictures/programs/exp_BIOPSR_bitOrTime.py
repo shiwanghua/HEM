@@ -54,4 +54,4 @@ ax2.set_zorder(1)
 
 fig = plt.gcf()
 plt.show()
-fig.savefig('../exp3_bitOrTime.eps', format='eps', bbox_inches='tight')
+fig.savefig('exp3_bitOrTime.eps', format='eps', bbox_inches='tight')

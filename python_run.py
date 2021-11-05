@@ -39,7 +39,7 @@ for be in range(9,-1,-1):
 #    expID+=1
 
 # # alpha 0-5 attribute distribution
-# for alpha in range(0,6):
+# for alpha in range(5,-1,-1):
 #    os.system('taskset -c 18 ./cmakeRB '+str(expID)+' '+ str(alpha)+ ' 5 0.3')
 #    print('Experiment',str(expID),': alpha=',str(alpha), ', atts=50, m=20, cons=10, be=5, w=0.3 done.\n\n')
 #    expID+=1
