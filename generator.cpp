@@ -128,14 +128,13 @@ void intervalGenerator::GenPubList2() {
 //					x = random(atts);
 //				a.push_back(x);
 				// Third way
-				x = zipfDistribution(atts, alpha);
-//				cout<<"x= "<<x<<"\n";
-				while (CheckExist(a, x))
-					x = zipfDistribution(atts, alpha);
-				a.push_back(x);
+//				x = zipfDistribution(atts, alpha);
+//				while (CheckExist(a, x))
+//					x = zipfDistribution(atts, alpha);
+//				a.push_back(x);
 				Pair tmp;
-				tmp.att = x;  // Second way Third way
-//				tmp.att = j;  // First way
+//				tmp.att = x;  // Second way Third way
+				tmp.att = j;  // First way
 				infile >> v;
 				tmp.value = (int) v;
 //				cout<<pub.id<<" "<<tmp.value<<" ";

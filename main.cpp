@@ -8,10 +8,10 @@ int main(int argc, char **argv) {
 
 	if (argc == 5) {
 		expID = to_string(atoi(argv[1]));
-//		cons = atoi(argv[2]);
+		cons = atoi(argv[2]);
 //		m = atoi(argv[2]);
 //		atts=atoi(argv[2]);
-		alpha=atof(argv[2]);
+//		alpha=atof(argv[2]);
 		be = atoi(argv[3]); // 输入一个bits指数
 		width = atof(argv[4]);
 		cout << "argc=" << argc << endl;
@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
 	}
 	intervalGenerator gen(subs, pubs, atts, cons, m, attDis, valDis, valDom, alpha, subp, width);
 	gen.GenSubList();//cout<<"Sub fin\n";
-	gen.GenPubList2();
+	gen.GenPubList();
 	//cout<<"pubs:"<<gen.pubList.size()<<endl;
 	unordered_map<int,bool> deleteNo;
 	if (verifyID) {

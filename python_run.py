@@ -17,10 +17,10 @@ expID=int(sys.argv[1])
 
 
 # # Ss size of subscriptions 5-30
-# for Ss in range(30,0,-5):
-#     os.system('taskset -c 18 ./cmakeRB '+str(expID)+' '+str(Ss)+' 5 0.7')
-#     print('Experiment',str(expID),' Ss=',str(Ss),' be= 5, w=0.7 done.\n\n')
-#     expID+=1
+for Ss in range(30,0,-5):
+    os.system('taskset -c 18 ./cmakeRB '+str(expID)+' '+str(Ss)+' 5 0.7')
+    print('Experiment',str(expID),' Ss=',str(Ss),' be= 5, w=0.7 done.\n\n')
+    expID+=1
 
 # # Se size of events 30-80
 # for Se in range(80,20,-10):
@@ -43,7 +43,7 @@ expID=int(sys.argv[1])
 #    expID+=1
 
 # # alpha 0-5 attribute distribution
-for alpha in range(0,6):
-   os.system('taskset -c 18 ./cmakeRB '+str(expID)+' '+ str(alpha)+ ' 5 0.3')
-   print('Experiment',str(expID),': alpha=',str(alpha), ', atts=50, m=20, cons=10, be=5, w=0.3 done.\n\n')
-   expID+=1
+# for alpha in range(0,6):
+#    os.system('taskset -c 18 ./cmakeRB '+str(expID)+' '+ str(alpha)+ ' 5 0.3')
+#    print('Experiment',str(expID),': alpha=',str(alpha), ', atts=50, m=20, cons=10, be=5, w=0.3 done.\n\n')
+#    expID+=1

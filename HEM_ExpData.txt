@@ -1615,3 +1615,189 @@ Total pivot attribute: 20
 
 
 
+alpha
+
+ExpID = 666. OpIndex2 begins.
+Att 0: 100104	Att 1: 99887	Att 2: 100034	Att 3: 100592	Att 4: 100121	Att 5: 100104
+Att 6: 99885	Att 7: 99390	Att 8: 100094	Att 9: 99913	Att 10: 100155
+Att 11: 99906	Att 12: 100170	Att 13: 100219	Att 14: 99927	Att 15: 99796
+Att 16: 100004	Att 17: 100107	Att 18: 99644	Att 19: 99663	Att 20: 100261
+Att 21: 99904	Att 22: 99622	Att 23: 99605	Att 24: 99953	Att 25: 100175
+Att 26: 99982	Att 27: 100527	Att 28: 100121	Att 29: 99727	Att 30: 100021
+Att 31: 100476	Att 32: 99759	Att 33: 100008	Att 34: 99756	Att 35: 99703
+Att 36: 100240	Att 37: 99554	Att 38: 100469	Att 39: 99596	Att 40: 100022
+Att 41: 100338	Att 42: 100231	Att 43: 99876	Att 44: 100602	Att 45: 99984
+Att 46: 99573	Att 47: 100380	Att 48: 99876	Att 49: 99944
+OpIndex CalcFrequency Task Finishes.
+OpIndex Insertion Finishes.
+Att 0: 1, Att 1: 1, Att 2: 1, Att 3: 0, Att 4: 1, Att 5: 1,
+Att 6: 1, Att 7: 1, Att 8: 1, Att 9: 1, Att 10: 1,
+Att 11: 1, Att 12: 1, Att 13: 1, Att 14: 1, Att 15: 1,
+Att 16: 1, Att 17: 1, Att 18: 1, Att 19: 1, Att 20: 1,
+Att 21: 1, Att 22: 1, Att 23: 1, Att 24: 1, Att 25: 1,
+Att 26: 1, Att 27: 0, Att 28: 1, Att 29: 1, Att 30: 1,
+Att 31: 0, Att 32: 1, Att 33: 1, Att 34: 1, Att 35: 1,
+Att 36: 1, Att 37: 1, Att 38: 1, Att 39: 1, Att 40: 1,
+Att 41: 1, Att 42: 1, Att 43: 1, Att 44: 0, Att 45: 1,
+Att 46: 1, Att 47: 1, Att 48: 1, Att 49: 1,
+Total pivot attribute: 46
+
+ExpID = 667. OpIndex2 begins.
+Att 0: 750892	Att 1: 504058	Att 2: 371588	Att 3: 291375	Att 4: 240468	Att 5: 204299
+Att 6: 176804	Att 7: 155470	Att 8: 139634	Att 9: 126141	Att 10: 115216
+Att 11: 106516	Att 12: 98846	Att 13: 91417	Att 14: 85749	Att 15: 80288
+Att 16: 75762	Att 17: 72387	Att 18: 68180	Att 19: 64332	Att 20: 61930
+Att 21: 59137	Att 22: 57094	Att 23: 54072	Att 24: 51992	Att 25: 50484
+Att 26: 48247	Att 27: 46968	Att 28: 45017	Att 29: 44068	Att 30: 42034
+Att 31: 40723	Att 32: 39898	Att 33: 38493	Att 34: 37505	Att 35: 36347
+Att 36: 35700	Att 37: 34471	Att 38: 33633	Att 39: 32719	Att 40: 31847
+Att 41: 31279	Att 42: 30540	Att 43: 29944	Att 44: 29194	Att 45: 28591
+Att 46: 28007	Att 47: 27597	Att 48: 26854	Att 49: 26193
+OpIndex CalcFrequency Task Finishes.
+OpIndex Insertion Finishes.
+Att 0: 0, Att 1: 0, Att 2: 0, Att 3: 0, Att 4: 1, Att 5: 1,
+Att 6: 1, Att 7: 1, Att 8: 1, Att 9: 1, Att 10: 1,
+Att 11: 1, Att 12: 1, Att 13: 1, Att 14: 1, Att 15: 1,
+Att 16: 1, Att 17: 1, Att 18: 1, Att 19: 1, Att 20: 1,
+Att 21: 1, Att 22: 1, Att 23: 1, Att 24: 1, Att 25: 1,
+Att 26: 1, Att 27: 1, Att 28: 1, Att 29: 1, Att 30: 1,
+Att 31: 1, Att 32: 1, Att 33: 1, Att 34: 1, Att 35: 1,
+Att 36: 1, Att 37: 1, Att 38: 1, Att 39: 1, Att 40: 1,
+Att 41: 1, Att 42: 1, Att 43: 1, Att 44: 1, Att 45: 1,
+Att 46: 1, Att 47: 1, Att 48: 1, Att 49: 1,
+Total pivot attribute: 46
+
+ExpID = 667. AdaRein: falsePositiveRate = 0.05, bucketStep = 1000, numBucket = 1000
+AdaRein Insertion Finishes.
+avgSubSize= 5, avgWidth= 300000, countSum= 5000000, currentSum= 26193.
+Skip attribute: 49
+Total skipped attribute: 1
+
+ExpID = 668. OpIndex2 begins.
+Att 0: 998168	Att 1: 914302	Att 2: 701854	Att 3: 494192	Att 4: 346842	Att 5: 252042
+Att 6: 189800	Att 7: 147759	Att 8: 118060	Att 9: 96817	Att 10: 79925
+Att 11: 67647	Att 12: 57755	Att 13: 49853	Att 14: 43654	Att 15: 37999
+Att 16: 33948	Att 17: 30457	Att 18: 27271	Att 19: 24752	Att 20: 22286
+Att 21: 20458	Att 22: 18629	Att 23: 17111	Att 24: 15716	Att 25: 14716
+Att 26: 13818	Att 27: 12593	Att 28: 11865	Att 29: 10838	Att 30: 10445
+Att 31: 9753	Att 32: 9047	Att 33: 8452	Att 34: 8116	Att 35: 7682
+Att 36: 7237	Att 37: 6895	Att 38: 6651	Att 39: 6103	Att 40: 5886
+Att 41: 5613	Att 42: 5415	Att 43: 5074	Att 44: 4786	Att 45: 4769
+Att 46: 4538	Att 47: 4318	Att 48: 4136	Att 49: 3957
+
+Att 0: 0, Att 1: 0, Att 2: 0, Att 3: 0, Att 4: 1, Att 5: 1,
+Att 6: 1, Att 7: 1, Att 8: 1, Att 9: 1, Att 10: 1,
+Att 11: 1, Att 12: 1, Att 13: 1, Att 14: 1, Att 15: 1,
+Att 16: 1, Att 17: 1, Att 18: 1, Att 19: 1, Att 20: 1,
+Att 21: 1, Att 22: 1, Att 23: 1, Att 24: 1, Att 25: 1,
+Att 26: 1, Att 27: 1, Att 28: 1, Att 29: 1, Att 30: 1,
+Att 31: 1, Att 32: 1, Att 33: 1, Att 34: 1, Att 35: 1,
+Att 36: 1, Att 37: 1, Att 38: 1, Att 39: 1, Att 40: 1,
+Att 41: 1, Att 42: 1, Att 43: 1, Att 44: 1, Att 45: 1,
+Att 46: 1, Att 47: 1, Att 48: 1, Att 49: 1,
+Total pivot attribute: 46
+
+ExpID = 668. AdaRein: falsePositiveRate = 0.05, bucketStep = 1000, numBucket = 1000
+AdaRein Insertion Finishes.
+avgSubSize= 5, avgWidth= 300000, countSum= 5000000, currentSum= 36993.
+Skip attribute: 42 43 44 45 46 47 48 49
+Total skipped attribute: 8
+
+ExpID = 669. OpIndex2 begins.
+Att 0: 999996	Att 1: 994814	Att 2: 909028	Att 3: 681232	Att 4: 436847	Att 5: 270091
+Att 6: 174615	Att 7: 118798	Att 8: 84195	Att 9: 62011	Att 10: 46579
+Att 11: 35700	Att 12: 28059	Att 13: 22735	Att 14: 18359	Att 15: 15162
+Att 16: 12475	Att 17: 10620	Att 18: 9044	Att 19: 7713	Att 20: 6833
+Att 21: 5850	Att 22: 5063	Att 23: 4498	Att 24: 4091	Att 25: 3553
+Att 26: 3193	Att 27: 2769	Att 28: 2541	Att 29: 2273	Att 30: 2107
+Att 31: 1907	Att 32: 1797	Att 33: 1555	Att 34: 1433	Att 35: 1330
+Att 36: 1253	Att 37: 1120	Att 38: 1070	Att 39: 915	Att 40: 910
+Att 41: 803	Att 42: 774	Att 43: 742	Att 44: 665	Att 45: 686
+Att 46: 556	Att 47: 563	Att 48: 573	Att 49: 504
+OpIndex CalcFrequency Task Finishes.
+OpIndex Insertion Finishes.
+Att 0: 0, Att 1: 0, Att 2: 0, Att 3: 0, Att 4: 1, Att 5: 1,
+Att 6: 1, Att 7: 1, Att 8: 1, Att 9: 1, Att 10: 1,
+Att 11: 1, Att 12: 1, Att 13: 1, Att 14: 1, Att 15: 1,
+Att 16: 1, Att 17: 1, Att 18: 1, Att 19: 1, Att 20: 1,
+Att 21: 1, Att 22: 1, Att 23: 1, Att 24: 1, Att 25: 1,
+Att 26: 1, Att 27: 1, Att 28: 1, Att 29: 1, Att 30: 1,
+Att 31: 1, Att 32: 1, Att 33: 1, Att 34: 1, Att 35: 1,
+Att 36: 1, Att 37: 1, Att 38: 1, Att 39: 1, Att 40: 1,
+Att 41: 1, Att 42: 1, Att 43: 1, Att 44: 1, Att 45: 1,
+Att 46: 1, Att 47: 1, Att 48: 1, Att 49: 1,
+Total pivot attribute: 46
+
+ExpID = 669. AdaRein: falsePositiveRate = 0.05, bucketStep = 1000, numBucket = 1000
+AdaRein Insertion Finishes.
+avgSubSize= 5, avgWidth= 300000, countSum= 5000000, currentSum= 39683.
+Skip attribute: 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49
+Total skipped attribute: 26
+
+ExpID = 670. OpIndex2 begins.
+Att 0: 1000000	Att 1: 999765	Att 2: 977655	Att 3: 817049	Att 4: 513778	Att 5: 265216
+Att 6: 146836	Att 7: 87248	Att 8: 54630	Att 9: 35701	Att 10: 24750
+Att 11: 17317	Att 12: 12468	Att 13: 9269	Att 14: 7040	Att 15: 5539
+Att 16: 4330	Att 17: 3370	Att 18: 2803	Att 19: 2209	Att 20: 1919
+Att 21: 1597	Att 22: 1263	Att 23: 1104	Att 24: 919	Att 25: 746
+Att 26: 671	Att 27: 590	Att 28: 508	Att 29: 463	Att 30: 412
+Att 31: 324	Att 32: 330	Att 33: 266	Att 34: 237	Att 35: 221
+Att 36: 184	Att 37: 163	Att 38: 146	Att 39: 149	Att 40: 128
+Att 41: 103	Att 42: 116	Att 43: 92	Att 44: 72	Att 45: 87
+Att 46: 64	Att 47: 55	Att 48: 57	Att 49: 41
+OpIndex CalcFrequency Task Finishes.
+OpIndex Insertion Finishes.
+Att 0: 0, Att 1: 0, Att 2: 0, Att 3: 0, Att 4: 1, Att 5: 1,
+Att 6: 1, Att 7: 1, Att 8: 1, Att 9: 1, Att 10: 1,
+Att 11: 1, Att 12: 1, Att 13: 1, Att 14: 1, Att 15: 1,
+Att 16: 1, Att 17: 1, Att 18: 1, Att 19: 1, Att 20: 1,
+Att 21: 1, Att 22: 1, Att 23: 1, Att 24: 1, Att 25: 1,
+Att 26: 1, Att 27: 1, Att 28: 1, Att 29: 1, Att 30: 1,
+Att 31: 1, Att 32: 1, Att 33: 1, Att 34: 1, Att 35: 1,
+Att 36: 1, Att 37: 1, Att 38: 1, Att 39: 1, Att 40: 1,
+Att 41: 1, Att 42: 1, Att 43: 1, Att 44: 1, Att 45: 1,
+Att 46: 1, Att 47: 1, Att 48: 1, Att 49: 1,
+Total pivot attribute: 46
+
+ExpID = 670. AdaRein: falsePositiveRate = 0.05, bucketStep = 1000, numBucket = 1000
+AdaRein Insertion Finishes.
+avgSubSize= 5, avgWidth= 300000, countSum= 5000000, currentSum= 38318.
+Skip attribute: 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49
+Total skipped attribute: 36
+
+ExpID = 671. OpIndex2 begins.
+Att 0: 1000000	Att 1: 999991	Att 2: 995047	Att 3: 899773	Att 4: 585096	Att 5: 248275
+Att 6: 117482	Att 7: 60126	Att 8: 33681	Att 9: 20007	Att 10: 12212
+Att 11: 7998	Att 12: 5350	Att 13: 3740	Att 14: 2625	Att 15: 1977
+Att 16: 1415	Att 17: 1056	Att 18: 822	Att 19: 680	Att 20: 464
+Att 21: 362	Att 22: 310	Att 23: 245	Att 24: 205	Att 25: 150
+Att 26: 139	Att 27: 119	Att 28: 93	Att 29: 83	Att 30: 69
+Att 31: 61	Att 32: 47	Att 33: 49	Att 34: 36	Att 35: 24
+Att 36: 28	Att 37: 29	Att 38: 23	Att 39: 18	Att 40: 15
+Att 41: 14	Att 42: 19	Att 43: 9	Att 44: 4	Att 45: 6
+Att 46: 6	Att 47: 8	Att 48: 6	Att 49: 6
+OpIndex CalcFrequency Task Finishes.
+OpIndex Insertion Finishes.
+Att 0: 0, Att 1: 0, Att 2: 0, Att 3: 0, Att 4: 1, Att 5: 1,
+Att 6: 1, Att 7: 1, Att 8: 1, Att 9: 1, Att 10: 1,
+Att 11: 1, Att 12: 1, Att 13: 1, Att 14: 1, Att 15: 1,
+Att 16: 1, Att 17: 1, Att 18: 1, Att 19: 1, Att 20: 1,
+Att 21: 1, Att 22: 1, Att 23: 1, Att 24: 1, Att 25: 1,
+Att 26: 1, Att 27: 1, Att 28: 1, Att 29: 1, Att 30: 1,
+Att 31: 1, Att 32: 1, Att 33: 1, Att 34: 1, Att 35: 1,
+Att 36: 1, Att 37: 1, Att 38: 1, Att 39: 1, Att 40: 1,
+Att 41: 1, Att 42: 1, Att 43: 1, Att 44: 1, Att 45: 1,
+Att 46: 1, Att 47: 1, Att 48: 1, Att 49: 1,
+Total pivot attribute: 46
+
+ExpID = 671. AdaRein: falsePositiveRate = 0.05, bucketStep = 1000, numBucket = 1000
+AdaRein Insertion Finishes.
+avgSubSize= 5, avgWidth= 300000, countSum= 5000000, currentSum= 40522.
+Skip attribute: 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49
+Total skipped attribute: 40
+
+
+
+
+
+
