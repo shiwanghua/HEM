@@ -28,9 +28,7 @@ Simple = [13.297686, 13.251958, 13.282044, 13.262612, 13.299794, 13.278775, 13.3
 Memory=[157, 159, 169, 188, 226, 302, 455, 760, 1370, 2591]
 
 
-
-
-fig=plt.figure()
+fig=plt.figure(figsize=(5, 4))
 ax = fig.add_subplot(111)
 
 # ax.plot(be, Rein, marker='o', color='r', label=Name[0])
@@ -42,7 +40,7 @@ ax.plot(x, HEM, marker='x', color='DODGERBLUE', label=Name[1])
 # ax.plot(be, BIOP5DD, marker='.', color='DEEPPINK', label=Name[6])
 # ax.plot(be, Simple, marker='D',  color='lightseagreen', label=Name[7])
 
-ax.legend(loc=(2.5/10,3.99/5),fontsize=12)
+ax.legend(loc=(2.5/10,3.99/5),fontsize=9)
 ax.grid()
 ax.set_xlabel('Number of Group',fontsize=20)
 ax.set_ylabel('Matching Time (ms)',fontsize=20)
@@ -53,13 +51,13 @@ x_major_locator=MultipleLocator(1)
 ax.xaxis.set_major_locator(x_major_locator)
 for size in ax.get_xticklabels():   #获取x轴上所有坐标，并设置字号
     # size.set_fontname('Times New Roman')   
-    size.set_fontsize('15')
+    size.set_fontsize('14')
 
 ax2 = ax.twinx()
 ax2.bar(x, Memory, color='lightsteelblue',  label = 'Memory (MB)') # alpha=0.7,
-ax2.set_ylabel(r"Memory Size (MB)")
+ax2.set_ylabel(r"Memory Size (MB)",fontsize=20)
 ax2.set_ylim(0, 2700)
-ax2.legend(loc=(5.5/10,3.99/5),fontsize=12)
+ax2.legend(loc=(5.5/10,3.99/5),fontsize=9)
 ax2.set_zorder(1)
 # for size in ax2.get_xticklabels():   #获取x轴上所有坐标，并设置字号
 #     # size.set_fontname('Times New Roman')   

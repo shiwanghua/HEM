@@ -23,11 +23,11 @@ AdaREIN = [6.252634, 5.618747, 4.911578, 4.339218, 3.792963, 3.269768, 2.688518,
 OpIndex = [10.698055, 10.208228, 9.910692, 10.159506, 10.383417, 10.356466, 10.134858, 10.778922, 11.532879							
 ]
 
-lsize=16
+lsize=20
 
 fig=plt.figure()
 ax = fig.add_subplot(111)
-ax.set_xlabel('Number of Predicate Widths', fontsize=lsize)
+ax.set_xlabel('Value of Predicate Widths', fontsize=lsize)
 ax.set_ylabel('Matching Time (ms)', fontsize=lsize)
 # plt.xticks(range(0,10))
 ax.plot(x, Rein, marker='v', color='r', label=Name[0])
@@ -37,7 +37,7 @@ ax.plot(x, TAMA, marker='*', color='DarkCyan', label=Name[3])
 ax.plot(x, AdaREIN, marker='x', color='DarkMagenta', label=Name[4])
 ax.plot(x, OpIndex, marker='h', color='DimGray', label=Name[5]) #   slategray
 
-ax.legend( fontsize=10, ncol=3) #fontsize=10 loc=(1.36/5,0.05/5),
+ax.legend( fontsize=13, ncol=3) #fontsize=10 loc=(1.36/5,0.05/5),
 ax.grid()
 ax.set_xlim(0.1,0.9)
 ax.set_xticks(x)
@@ -47,7 +47,7 @@ ax.set_ylim(0,16)
 # ax.set_yticks([0,3,6,9,12,15])
 # ax.set_yticklabels(['-1', '0', '1'])
 ax.set_zorder(0)
-plt.tick_params(labelsize=13)
+plt.tick_params(labelsize=15)
 gcf = plt.gcf()
 plt.show()
 gcf.savefig('../exp6_w.eps',format='eps',bbox_inches='tight')

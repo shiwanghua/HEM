@@ -40,7 +40,7 @@ ax.plot(x, TAMA, marker='*', color='DarkCyan', label=Name[3])
 ax.plot(x, AdaREIN, marker='x', color='DarkMagenta', label=Name[4])
 ax.plot(x, OpIndex, marker='h', color='DimGray', label=Name[5]) #   slategray
 
-ax.legend( fontsize=10,ncol=3) #fontsize=10 , loc=(1.36/5,0.05/5)
+ax.legend( fontsize=13,ncol=3) #fontsize=10 , loc=(1.36/5,0.05/5)
 ax.grid()
 ax.set_xlim(5,30)
 ax.set_xticks(x)

@@ -22,7 +22,7 @@ AdaREIN = [14.382465, 13.749294, 13.252763, 12.87528, 12.639115, 11.999519
 ]
 OpIndex = [9.475935, 11.562274, 14.261331, 17.027247, 20.460719, 24.468937					
 ]
-lsize=16
+lsize=20
 
 fig=plt.figure()
 ax = fig.add_subplot(111)
@@ -36,7 +36,7 @@ ax.plot(x, TAMA, marker='*', color='DarkCyan', label=Name[3])
 ax.plot(x, AdaREIN, marker='x', color='DarkMagenta', label=Name[4])
 ax.plot(x, OpIndex, marker='h', color='DimGray', label=Name[5]) #   slategray
 
-ax.legend( fontsize=10,ncol=3) #fontsize=10  loc=(1.36/5,0.05/5)
+ax.legend( fontsize=14,ncol=2) #fontsize=10  loc=(1.36/5,0.05/5)
 ax.grid()
 ax.set_xlim(30,80)
 ax.set_xticks(x)
@@ -46,7 +46,7 @@ ax.set_ylim(0,25)
 # ax.set_yticks([2,4,8,16])
 # ax.set_yticklabels(['-1', '0', '1'])
 ax.set_zorder(0)
-plt.tick_params(labelsize=13)
+plt.tick_params(labelsize=15)
 gcf = plt.gcf()
 plt.show()
 gcf.savefig('../exp5_Se.eps',format='eps',bbox_inches='tight')
