@@ -26,7 +26,7 @@ AdaREIN = [3.021985, 4.700881, 6.42731, 7.79122, 9.242951, 10.924326
 OpIndex = [9.652425, 16.21203, 22.26091, 29.071672, 36.013989, 45.053037										
 ]
 
-lsize=16
+lsize=20
 
 fig=plt.figure()
 ax = fig.add_subplot(111)
@@ -51,7 +51,7 @@ ax.set_ylim(0.25,52)
 # ax.set_yticks([0,2,8,32])
 ax.set_yticklabels(['0','0.25','1', '4', '16','64'])
 ax.set_zorder(0)
-plt.tick_params(labelsize=13)
+plt.tick_params(labelsize=15)
 gcf = plt.gcf()
 plt.show()
 gcf.savefig('../exp4_Ss.eps',format='eps',bbox_inches='tight')

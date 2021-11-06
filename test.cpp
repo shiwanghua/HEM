@@ -1,8 +1,29 @@
 #include "Rein.h"
 #include "BIOP.h"
+#include<iomanip>
 
-int main22(int argc, char** argv)
+void p(int n) {
+	int d = 0;
+	int nn = n;
+	while (nn) {
+		d++;
+		nn /= 10;
+	}
+	for (int i = 0; i < 5 - d; i++)
+		printf("_");
+	printf("%d",n);
+}
+
+int main2(int argc, char** argv)
 {
+	p(1256);
+	printf("+");
+	p(20);
+	printf("=");
+	p(1276);
+	
+	system("pause");
+
 	/*Timer s;
 	bool bits[100000000] = { 0 };
 	for (int i = 0; i < 100000000; i++)
@@ -41,8 +62,5 @@ int main22(int argc, char** argv)
 	//if (-3.10628)
 	//	cout << "skip it2";
 
-	
-
-	system("pause");
 	return 0;
 }

@@ -17,7 +17,7 @@ TAMA = [0.704289, 3.219745, 13.40329, 26.586104, 50.579369, 81.963197]
 AdaREIN = [2.720448, 8.021952, 20.41238, 36.483386, 54.157477, 72.381039]
 OpIndex = [5.371004, 18.298927, 55.104239, 91.46666, 132.142078, 182.600677]
 
-lsize=16
+lsize=20
 
 fig=plt.figure()
 ax = fig.add_subplot(111)
@@ -40,7 +40,7 @@ ax.set_yscale("log")
 # ax.set_yticks([0,2,8,32,128,256])
 # ax.set_yticklabels(['-1', '0', '1'])
 ax.set_zorder(0)
-plt.tick_params(labelsize=13)
+plt.tick_params(labelsize=15)
 gcf = plt.gcf()
 plt.show()
 gcf.savefig('../exp3_n.eps',format='eps',bbox_inches='tight')
