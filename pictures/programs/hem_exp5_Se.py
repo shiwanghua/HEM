@@ -6,7 +6,7 @@ from matplotlib.pyplot import MultipleLocator
 rc('mathtext', default='regular')
 
 plt.rcParams['axes.unicode_minus'] = False
-
+plt.rcParams['font.family'] = ['Times New Roman'] # 
 Name = ["REIN", "HEM", "Simple", "TAMA", "Ada-REIN", "OpIndex"]
 x = [30,40,50,60,70,80]
 

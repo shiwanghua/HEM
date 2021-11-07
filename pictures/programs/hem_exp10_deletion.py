@@ -7,7 +7,7 @@ from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 rc('mathtext', default='regular')
 
 plt.rcParams['axes.unicode_minus'] = False
-
+plt.rcParams['font.family'] = ['Times New Roman'] # 
 Name = ["REIN", "HEM", "Simple", "TAMA", "Ada-REIN", "OpIndex"]
 x = [5,10,15,20,25,30]
 
@@ -59,7 +59,7 @@ ax.set_xlim(5,30)
 ax.set_xticklabels(x)
 # ax.set_yscale("log")
 ax.set_yscale("log",base=10,subs=[2,3,4,5,6,7,8,9])
-ax.set_ylim(0,23)
+ax.set_ylim(0,24)
 # ax.set_yticks([0,2,4,8,16])
 # ax.set_yticklabels([0,2,4,8,16])
 ax.set_zorder(0)

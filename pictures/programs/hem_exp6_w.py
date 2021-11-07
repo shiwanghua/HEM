@@ -6,7 +6,7 @@ from matplotlib.pyplot import MultipleLocator
 rc('mathtext', default='regular')
 
 plt.rcParams['axes.unicode_minus'] = False
-
+plt.rcParams['font.family'] = ['Times New Roman'] # 
 Name = ["REIN", "HEM", "Simple", "TAMA", "Ada-REIN", "OpIndex"]
 x = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
 
@@ -37,7 +37,7 @@ ax.plot(x, TAMA, marker='*', color='DarkCyan', label=Name[3])
 ax.plot(x, AdaREIN, marker='x', color='DarkMagenta', label=Name[4])
 ax.plot(x, OpIndex, marker='h', color='DimGray', label=Name[5]) #   slategray
 
-ax.legend( fontsize=13, ncol=3) #fontsize=10 loc=(1.36/5,0.05/5),
+ax.legend( fontsize=14, ncol=3) #fontsize=10 loc=(1.36/5,0.05/5),
 ax.grid()
 ax.set_xlim(0.1,0.9)
 ax.set_xticks(x)

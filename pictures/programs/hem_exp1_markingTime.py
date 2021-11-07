@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 # 解决坐标轴负号问题
 plt.rcParams['axes.unicode_minus'] = False
+plt.rcParams['font.family'] = ['Times New Roman'] # 
 
 be = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]
 Rein = [6.748365, 6.75273, 6.740895, 6.764119, 6.759414, 6.752019, 6.851964, 6.906145, 6.794111, 6.787625]

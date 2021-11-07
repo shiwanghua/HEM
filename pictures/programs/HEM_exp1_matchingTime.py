@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib import rc
 from matplotlib.pyplot import MultipleLocator
 rc('mathtext', default='regular')
-
+plt.rcParams['font.family'] = ['Times New Roman'] # 
 plt.rcParams['axes.unicode_minus'] = False
 
 g = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]
@@ -40,7 +40,7 @@ ax.plot(x, HEM, marker='x', color='DODGERBLUE', label=Name[1])
 # ax.plot(be, BIOP5DD, marker='.', color='DEEPPINK', label=Name[6])
 # ax.plot(be, Simple, marker='D',  color='lightseagreen', label=Name[7])
 
-ax.legend(loc=(2.5/10,3.99/5),fontsize=9)
+ax.legend(loc=(3/10,4/5),fontsize=16)
 ax.grid()
 ax.set_xlabel('Number of Group',fontsize=20)
 ax.set_ylabel('Matching Time (ms)',fontsize=20)
@@ -57,7 +57,7 @@ ax2 = ax.twinx()
 ax2.bar(x, Memory, color='lightsteelblue',  label = 'Memory (MB)') # alpha=0.7,
 ax2.set_ylabel(r"Memory Size (MB)",fontsize=20)
 ax2.set_ylim(0, 2700)
-ax2.legend(loc=(5.5/10,3.99/5),fontsize=9)
+ax2.legend(loc=(3/10,3.3/5),fontsize=16,ncol=1)
 ax2.set_zorder(1)
 # for size in ax2.get_xticklabels():   #获取x轴上所有坐标，并设置字号
 #     # size.set_fontname('Times New Roman')   

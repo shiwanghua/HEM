@@ -6,7 +6,7 @@ from matplotlib.ticker import FuncFormatter
 from matplotlib.pyplot import MultipleLocator
 rc('mathtext', default='regular')
 plt.rcParams['axes.unicode_minus'] = False
-# plt.rcParams['font.family'] = ['normal'] # Times New Roman
+plt.rcParams['font.family'] = ['Times New Roman'] # 
 # plt.rcParams.update({'font.size': 8})
 plt.figure(figsize=(5, 4))
 be = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]
