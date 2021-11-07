@@ -26,9 +26,9 @@ AdaREIN = [3.021985, 4.700881, 6.42731, 7.79122, 9.242951, 10.924326
 OpIndex = [9.652425, 16.21203, 22.26091, 29.071672, 36.013989, 45.053037										
 ]
 
-lsize=20
+lsize=24
 
-fig=plt.figure()
+fig=plt.figure(figsize=(5, 4))
 ax = fig.add_subplot(111)
 ax.set_xlabel('Size of Subscriptions', fontsize=lsize)
 ax.set_ylabel('Matching Time (ms)', fontsize=lsize)
@@ -40,7 +40,7 @@ ax.plot(x, TAMA, marker='*', color='DarkCyan', label=Name[3])
 ax.plot(x, AdaREIN, marker='x', color='DarkMagenta', label=Name[4])
 ax.plot(x, OpIndex, marker='h', color='DimGray', label=Name[5]) #   slategray
 
-ax.legend( fontsize=13,ncol=3) #fontsize=10 , loc=(1.36/5,0.05/5)
+ax.legend( fontsize=11,ncol=3) #fontsize=10 , loc=(1.36/5,0.05/5)
 ax.grid()
 ax.set_xlim(5,30)
 ax.set_xticks(x)
@@ -51,7 +51,7 @@ ax.set_ylim(0.25,52)
 # ax.set_yticks([0,2,8,32])
 ax.set_yticklabels(['0','0.25','1', '4', '16','64'])
 ax.set_zorder(0)
-plt.tick_params(labelsize=15)
+plt.tick_params(labelsize=22)
 gcf = plt.gcf()
 plt.show()
 gcf.savefig('../exp4_Ss.eps',format='eps',bbox_inches='tight')

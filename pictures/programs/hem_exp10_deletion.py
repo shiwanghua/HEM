@@ -39,8 +39,8 @@ TAMA=np.array(TAMA)*mul
 AdaREIN=np.array(AdaREIN)*mul
 OpIndex=np.array(OpIndex)*mul
 
-fig=plt.figure()
-lsize=20
+fig=plt.figure(figsize=(5, 4))
+lsize=24
 ax = fig.add_subplot(111)
 ax.set_xlabel('Size of Subscriptions', fontsize=lsize)
 ax.set_ylabel('Deleting Time (ms)', fontsize=lsize)
@@ -52,7 +52,7 @@ ax.plot(x, TAMA, marker='*', color='DarkCyan', label=Name[3])
 ax.plot(x, AdaREIN, marker='x', color='DarkMagenta', label=Name[4])
 ax.plot(x, OpIndex, marker='h', color='DimGray', label=Name[5]) #   slategray
 
-ax.legend( fontsize=15, ncol=2) #fontsize=10 loc=(1.36/5,0.01/5),
+ax.legend( fontsize=12, ncol=2) #fontsize=10 loc=(1.36/5,0.01/5),
 ax.grid()
 ax.set_xlim(5,30)
 # ax.set_xticks([0,1,2,3,4,5])
@@ -73,7 +73,7 @@ ax.set_zorder(0)
 # ax.yaxis.set_major_locator(ymajorLocator)
 # yminorLocator   = MultipleLocator(1)
 # ax.yaxis.set_minor_locator(yminorLocator)
-plt.tick_params(labelsize=15)
+plt.tick_params(labelsize=18)
 gcf = plt.gcf()
 plt.show()
 gcf.savefig('../exp10_deletion.eps',format='eps',bbox_inches='tight')

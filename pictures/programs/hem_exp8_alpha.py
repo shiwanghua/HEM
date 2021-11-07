@@ -22,8 +22,8 @@ AdaREIN = [9.069874, 7.438771, 5.4714, 4.701095, 4.30008, 4.122378
 ]
 OpIndex = [3.981058, 4.508727, 6.888271, 8.516064, 8.77222, 8.579291					
 ]	
-lsize=20
-fig=plt.figure()
+lsize=24
+fig=plt.figure(figsize=(5, 4))
 ax = fig.add_subplot(111)
 ax.set_xlabel('Value of Alpha', fontsize=lsize)
 ax.set_ylabel('Matching Time (ms)', fontsize=lsize)
@@ -35,7 +35,7 @@ ax.plot(x, TAMA, marker='*', color='DarkCyan', label=Name[3])
 ax.plot(x, AdaREIN, marker='x', color='DarkMagenta', label=Name[4])
 ax.plot(x, OpIndex, marker='h', color='DimGray', label=Name[5]) #   slategray
 
-ax.legend( fontsize=13,loc=(0.5/5,1.17/5), ncol=3) #fontsize=10 
+ax.legend( fontsize=10,loc=(0.5/5,1.17/5), ncol=3) #fontsize=10 
 ax.grid()
 ax.set_xlim(0,5)
 ax.set_xticks([0,1,2,3,4,5])
@@ -44,7 +44,7 @@ ax.set_xticklabels(x)
 # ax.set_yticks([0,2,8,32,128,256])
 # ax.set_yticklabels(['-1', '0', '1'])
 ax.set_zorder(0)
-plt.tick_params(labelsize=15)
+plt.tick_params(labelsize=22)
 gcf = plt.gcf()
 plt.show()
 gcf.savefig('../exp8_alpha.eps',format='eps',bbox_inches='tight')

@@ -26,10 +26,12 @@ TAMA=np.array(TAMA)*mul
 AdaREIN=np.array(AdaREIN)*mul
 OpIndex=np.array(OpIndex)*mul
 
-fig=plt.figure()
+lsize=24
+
+fig=plt.figure(figsize=(5, 4))
 ax = fig.add_subplot(111)
-ax.set_xlabel('Size of Subscriptions', fontsize=20)
-ax.set_ylabel('Inserting Time (us)', fontsize=20,labelpad=0)
+ax.set_xlabel('Size of Subscriptions', fontsize=lsize)
+ax.set_ylabel('Inserting Time (us)', fontsize=lsize,labelpad=0)
 # plt.xticks(range(0,10))
 ax.plot(x, Rein, marker='v', color='r', label=Name[0])
 ax.plot(x, HEM, marker='.', color='DODGERBLUE', label=Name[1])
@@ -38,7 +40,7 @@ ax.plot(x, TAMA, marker='*', color='DarkCyan', label=Name[3])
 ax.plot(x, AdaREIN, marker='x', color='DarkMagenta', label=Name[4])
 ax.plot(x, OpIndex, marker='h', color='DimGray', label=Name[5]) #   slategray
 
-ax.legend(loc=(1.8/5,2.75/5), ncol=2,fontsize=14)# 
+ax.legend(loc=(1.62/5,2.75/5), ncol=2,fontsize=12)# 
 ax.grid()
 ax.set_xlim(5,30)
 # ax.set_xticks([0,1,2,3,4,5])
@@ -48,7 +50,7 @@ ax.set_ylim(0,12)
 # ax.set_yticks([0,2,8,32,128,256])
 # ax.set_yticklabels(['-1', '0', '1'])
 ax.set_zorder(0)
-plt.tick_params(labelsize=15)
+plt.tick_params(labelsize=18)
 gcf = plt.gcf()
 plt.show()
 gcf.savefig('../exp10_construction.eps',format='eps',bbox_inches='tight')
