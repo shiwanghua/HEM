@@ -53,7 +53,7 @@ ax.xaxis.set_major_locator(x_major_locator)
 for size in ax.get_xticklabels():   #获取x轴上所有坐标，并设置字号
     # size.set_fontname('Times New Roman')   
     size.set_fontsize('16')
-
+plt.tick_params(direction='out',labelsize=18,length=4,width=1)
 ax2 = ax.twinx()
 ax2.bar(x, Memory, color='lightsteelblue',  label = 'Memory (MB)') # alpha=0.7,
 ax2.set_ylabel(r"Memory Size (MB)",fontsize=lsize)
@@ -64,7 +64,7 @@ ax2.set_zorder(1)
 #     # size.set_fontname('Times New Roman')   
 #     size.set_fontsize('16')
 plt.xticks(x, labels=g)
-plt.tick_params(direction='out',labelsize=16,length=4,width=1)
+plt.tick_params(direction='out',labelsize=18,length=4,width=1)
 for a,b in zip(x,Memory):
     c=b-160
     if a<5 :
@@ -74,5 +74,3 @@ for a,b in zip(x,Memory):
 gcf = plt.gcf()
 plt.show()
 gcf.savefig('../matchingTime.eps',format='eps',bbox_inches='tight')
-
-
