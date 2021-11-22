@@ -1,4 +1,4 @@
-# Install script for directory: /home/swh/桌面/BIOP
+# Install script for directory: /home/swh/桌面/MyProgram/MatchingAlgorithmsComparison
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/swh/桌面/BIOP/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

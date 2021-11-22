@@ -1,6 +1,6 @@
-# BIOP
+# ReadMe
 
-## 2021 - 开发周志
+# 2021 - HEM 开发周志
 
 | 周数 | 时间          | 进展情况                                                     |
 | ---- | :------------ | ------------------------------------------------------------ |
@@ -21,7 +21,7 @@
 
 ## NOTE
 
-##### Windows 10 环境：Visual Studio 2022
+#### Windows 10 环境：Visual Studio 2022
 
 1. 属性页，配置(C): 选择 "活动(Debug)" 或 "活动(Release)"，平台(P): 选择 "活动(x64)"
 2. 配置属性 - C/C++ - 优化 - 优化，选择 "优化(优选速度) (/Ox)"
@@ -31,7 +31,7 @@
 6. 配置属性 - 链接器 - 系统 - 四个大小，都填3221225472
 7. 左上角的下拉框里进入配置管理器，活动解决方案配置为 "Debug"，下面的配置为 "Release"，勾选生成
 
-##### ubuntu 20 环境
+#### ubuntu 20 环境
 1. Run command "sudo cmake ."
 2. Run command "sudo make"
 3. Run command "sudo cpufreq-set -c 20 -g performance" (调整第20号核为性能模式下运行)
@@ -39,7 +39,7 @@
 5. sudo cpufreq-set -c 20 -u 4.9G
 6. Run command "sudo taskset -c 20 ./cmakeRB" (20指指定第20号核单独运行程序)
 
-##### 注意事项
+#### 注意事项
 1. "constant.h" 里 MAX_SUBS、MAX_ATTS、MAX_BUCKS 必须大于等于 subs、atts、buks (Now it's obsoleted.)
 2. In "constant.h", the constant `subs` can't be adjusted by input, means you have to run relative experiments one by one.
 
@@ -68,8 +68,13 @@
 |10|构建时间、删除时间实验(即实验4)| $S_s$ = 5 ~ 30, d = $S_e$ = 30, w = 0.7, 补: p = 0.5  |559 ~ 564; 674 ~ 679|
 |11|内存实验(即实验3)|n = 300**k** ~ 9**m**|484 ~ 489; 613 ~ 618|
 
-## Unresolved Error
+#### Unresolved Error
 
 * 实验9的匹配个数有错，两个Simple算法的结果是一样的，其他所有算法的结果是一样的，在500、10000个事件时两个平均匹配个数相差**都**少于1
 * Why can setting p=0.5 increase the matching probability clearly in Exp 3 and 4 for real data set ?
 
+# BG-Tree 开发周志
+
+| 周数 | 时间          | 进展情况 |
+| ---- | :------------ | -------- |
+| 1    | 11/19 - 11/25 |          |

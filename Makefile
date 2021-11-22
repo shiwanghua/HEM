@@ -57,10 +57,10 @@ RM = /snap/clion/169/bin/cmake/linux/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/swh/桌面/BIOP
+CMAKE_SOURCE_DIR = /home/swh/桌面/MyProgram/MatchingAlgorithmsComparison
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/swh/桌面/BIOP
+CMAKE_BINARY_DIR = /home/swh/桌面/MyProgram/MatchingAlgorithmsComparison
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/swh/桌面/BIOP/CMakeFiles /home/swh/桌面/BIOP//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/CMakeFiles /home/swh/桌面/MyProgram/MatchingAlgorithmsComparison//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/swh/桌面/BIOP/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -152,6 +152,30 @@ AdaRein.s: AdaRein.cpp.s
 AdaRein.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/AdaRein.cpp.s
 .PHONY : AdaRein.cpp.s
+
+BGTree.o: BGTree.cpp.o
+.PHONY : BGTree.o
+
+# target to build an object file
+BGTree.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BGTree.cpp.o
+.PHONY : BGTree.cpp.o
+
+BGTree.i: BGTree.cpp.i
+.PHONY : BGTree.i
+
+# target to preprocess a source file
+BGTree.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BGTree.cpp.i
+.PHONY : BGTree.cpp.i
+
+BGTree.s: BGTree.cpp.s
+.PHONY : BGTree.s
+
+# target to generate assembly for a file
+BGTree.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cmakeRB.dir/build.make CMakeFiles/cmakeRB.dir/BGTree.cpp.s
+.PHONY : BGTree.cpp.s
 
 BIOP.o: BIOP.cpp.o
 .PHONY : BIOP.o
@@ -645,6 +669,9 @@ help:
 	@echo "... AdaRein.o"
 	@echo "... AdaRein.i"
 	@echo "... AdaRein.s"
+	@echo "... BGTree.o"
+	@echo "... BGTree.i"
+	@echo "... BGTree.s"
 	@echo "... BIOP.o"
 	@echo "... BIOP.i"
 	@echo "... BIOP.s"
