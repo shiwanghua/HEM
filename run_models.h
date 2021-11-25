@@ -18,6 +18,7 @@
 #include "AdaRein.h"
 #include "OpIndex.h"
 #include "pRein.h"
+#include "bTama.h"
 
 #include <numeric> 
 #include<algorithm>
@@ -36,6 +37,7 @@ void run_BIOPSR(const intervalGenerator& gen);
 void run_Simple(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 void run_Simple2(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 void run_tama(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
+void run_btama(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 void run_adarein(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 void run_opindex(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 void run_pRein(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);

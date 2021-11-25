@@ -42,15 +42,16 @@ int main(int argc, char **argv) {
 //	run_BIOP2(gen);
 //	run_BIOP3(gen);
 //	run_BIOP4(gen);
-//	run_BIOP5(gen,deleteNo);
+	run_BIOP5(gen,deleteNo);
 //	run_BIOPSC(gen);
 //	run_BIOPSR(gen);
 //	run_Simple(gen,deleteNo);
 ////	run_Simple2(gen,deleteNo);
 //	run_opindex(gen, deleteNo);
 //	run_adarein(gen, deleteNo);
-//	run_tama(gen,deleteNo);
-	run_pRein(gen,deleteNo);
+	run_tama(gen,deleteNo);
+	run_btama(gen, deleteNo);
+	//run_pRein(gen,deleteNo);
 
 	cout << "Done.\n";
 	system("pause");

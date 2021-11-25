@@ -583,11 +583,11 @@ void run_BIOP5(const intervalGenerator &gen,unordered_map<int,bool> deleteNo) {
 					 + " attTypes= " + Util::Int2String(atts);
 	Util::WriteData(outputFileName.c_str(), content);
 
-	outputFileName = "ComprehensiveExpTime.txt";
+	/*outputFileName = "ComprehensiveExpTime.txt";
 	content = "BIOP5DD= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData(outputFileName.c_str(), content);*/
 
 	//outputFileName = "BIOP5BucketSize.txt";
 	//rb5.calBucketSize();
@@ -976,11 +976,90 @@ void run_tama(const intervalGenerator &gen,unordered_map<int,bool> deleteNo) {
 					 + " alpha= " + Util::Double2String(alpha);
 	Util::WriteData(outputFileName.c_str(), content);
 
-	outputFileName = "ComprehensiveExpTime.txt";
+	/*outputFileName = "ComprehensiveExpTime.txt";
 	content = "Tama= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
+	Util::WriteData(outputFileName.c_str(), content);*/
+}
+
+void run_btama(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) {
+	//	printf("123\n");
+	//	fflush(stdout);
+	bTama btama;
+
+	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchSubList;
+
+	// insert
+	for (int i = 0; i < subs; i++) {
+		Timer insertStart;
+		//		printf("Sub %d\n",i);
+		//		fflush(stdout);
+		btama.insert(gen.subList[i]); // Insert sub[i] into data structure.
+
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double)insertTime / 1000000);
+	}
+	cout << "bTama Insertion Finishes.\n";
+
+	// 验证插入删除正确性
+	if (verifyID) {
+		for (auto kv : deleteNo) {
+			Timer deleteStart;
+			if (!btama.deleteSubscription(gen.subList[kv.first]))
+				cout << "bTama: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+		}
+		cout << "bTama Deletion Finishes.\n";
+		for (auto kv : deleteNo) {
+			btama.insert(gen.subList[kv.first]);
+		}
+	}
+
+	// match
+	for (int i = 0; i < pubs; i++) {
+		int matchSubs = 0; // Record the number of matched subscriptions.
+		Timer matchStart;
+
+		btama.match_accurate(gen.pubList[i], matchSubs, gen.subList);
+		//tama.match_vague(gen.pubList[i], matchSubs, gen.subList);
+
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double)eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "bTama Event " << i << " is matched.\n";
+	}
+	cout << endl;
+
+	// output
+	string outputFileName = "bTama.txt";
+	string content = expID
+		+ " memory= " + Util::Int2String(btama.calMemory())
+		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+		+ " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+		+ " ms level= " + Util::Int2String(level)
+		+ " numSub= " + Util::Int2String(subs)
+		+ " subSize= " + Util::Int2String(cons)
+		+ " numPub= " + Util::Int2String(pubs)
+		+ " pubSize= " + Util::Int2String(m)
+		+ " attTypes= " + Util::Int2String(atts)
+		+ " attDis= " + Util::Int2String(attDis)
+		+ " valDis= " + Util::Int2String(valDis)
+		+ " width= " + Util::Double2String(width)
+		+ " alpha= " + Util::Double2String(alpha);
 	Util::WriteData(outputFileName.c_str(), content);
+
+	/*outputFileName = "ComprehensiveExpTime.txt";
+	content = "Tama= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData(outputFileName.c_str(), content);*/
 }
 
 void run_adarein(const intervalGenerator &gen,unordered_map<int,bool> deleteNo) {
