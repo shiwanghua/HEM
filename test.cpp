@@ -2,27 +2,42 @@
 #include "BIOP.h"
 #include<iomanip>
 #include <iostream>
+#include <omp.h>
+#include<mpi.h>
+#include <unistd.h>
+
 using namespace std;
 
-void print(char*, int = 0); // 默认值应该加在函数声明中，即int后面“=0”
+void hello(int& a) {
+	int my_rank = omp_get_thread_num();
+	int thread_count = omp_get_num_threads();
 
-// Don't modify main function.
-int main222()
+	a=my_rank;
+	usleep(1000000);
+	printf("hello from rank %d of %d, a= %d\n", my_rank, thread_count,a);
+	fflush(stdout);
+}
+
+int main2(int argc, char **argv)
 {
-	char str[12] = "OneTwoThree";
-	print(str);
-	print(str, 2);
-	print(str, 0);
-	print(str, 44);
+
+	int thread_count = 4;
+	int a=5;
+#pragma omp parallel num_threads(thread_count) default(none) shared(a)
+	hello(a);
+
+
+
 	return 0;
 }
 
-// 请在下面实现print函数
-void print(char str[], int p) {
-	static int numCall = 0;
-	numCall++;
-	if (p != 0) {
-		for (int i = 0; i < numCall; i++)
-			cout << "第" << numCall << "次调用:" << str << "\n";
-	}
-}
+//int myid, numprocs, namelen;
+//	cout<<MPI_MAX_PROCESSOR_NAME<<"---\n";
+//	char processor_name[MPI_MAX_PROCESSOR_NAME];
+//	MPI_Init(&argc, &argv);        // starts MPI
+//	MPI_Comm_rank(MPI_COMM_WORLD, &myid);  // get current process id
+//	MPI_Comm_size(MPI_COMM_WORLD, &numprocs);      // get number of processes
+//	MPI_Get_processor_name(processor_name, &namelen);
+//	if (myid == 0) printf("number of processes: %d\n...", numprocs);
+//	printf("%s: Hello world from process %d \n", processor_name, myid);
+//	MPI_Finalize();

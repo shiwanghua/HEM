@@ -78,9 +78,9 @@ private:
 
 	void insertIntoGreenNode(rgreennode *&r, const int &subID, const int &h);
 
-	bitset<subs> *&vectorToBitset(vector<int> &v);
-
-	vector<int> &bitsetToVector(bitset<subs> *&b);
+//	bitset<subs> *&vectorToBitset(vector<int> &v);
+//
+//	vector<int> &bitsetToVector(bitset<subs> *&b);
 
 	void vectorToBitset(vector<int> &v, bitset<subs> *&);
 

@@ -118,6 +118,10 @@ void BGTree::insertIntoGreenNode(rgreennode *&r, const int &subID, const int &l)
 
 }
 
+void BGTree::vectorToBitset(vector<int> &v, bitset<subs> *&) {}
+
+void BGTree::bitsetToVector(bitset<subs> *&b, vector<int> &) {}
+
 void BGTree::forward_match(const Pub &pub, int &matchSubs) {
 
 }
@@ -128,6 +132,7 @@ void BGTree::backward_match(const Pub &pub, int &matchSubs) {
 
 int BGTree::calMemory() {
 
+	return 1;
 }
 
 void BGTree::printBGTree() {
