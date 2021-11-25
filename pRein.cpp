@@ -108,10 +108,14 @@ bool pRein::deleteSubscription(IntervalSub sub) {
 void pRein::match(const Pub &pub, int &matchSubs) {
 	vector<bool> bits(numSub, false);
 	vector<bool> attExist(numDimension, false);
-#pragma omp parallel for schedule(static, 4) num_threads(pD) default(none) shared(pub, attExist, bits, data) private(stdout)// dynamic
+	Timer logStart;
+//#pragma omp parallel shared(pub, attExist, bits, data, logStart)  private(stdout)
+{
+	//#pragma omp parallel for schedule(static, 5) num_threads(pD) default(none) shared(pub, attExist, bits, data, logStart) private(stdout) //dynamic
+#pragma omp parallel for num_threads(pD)  schedule(static, 10) default(shared) // private(stdout)
 	for (int i = 0; i < pub.size; i++) {
-//		printf("hello from rank %d of %d\n", omp_get_thread_num(), omp_get_num_threads());
-//		fflush(stdout);
+		/*printf("rank %d of %d: %.4f\n", omp_get_thread_num(), omp_get_num_threads(), (double)logStart.elapsed_nano());
+		fflush(stdout);*/
 		int value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 		// cout<<"pubid= "<<pub.id<<" att= "<<att<<" value= "<<value<<endl;
 		attExist[att] = true;
@@ -130,6 +134,8 @@ void pRein::match(const Pub &pub, int &matchSubs) {
 			for (int k = 0; k < data[1][att][j].size(); k++)
 				bits[data[1][att][j][k].subID] = true;
 	}
+}
+
 //#pragma omp parallel for schedule(dynamic) num_threads(pD) default(none) shared(numDimension,attExist,bits,data)
 	for (int i = 0; i < numDimension; i++)
 		if (!attExist[i])
@@ -168,9 +174,19 @@ void pRein::parallelMatch(const Pub &pub, int &matchSubs) {
 	memset(attExist, 0, sizeof(bool) * numDimension);
 	parallelData pdata;
 	pdata.bits = bits;
+	pdata.attExist = attExist;
+	pdata.data = data;
+	pdata.pub = &pub;
+	pdata.buckStep = buckStep;
+	int seg = (pub.size+pD-1) / pD;
+	thread* threads=new thread[pD];
+	for (int i = 0; i < pD; i++) {
+		pdata.begin = seg * i;
+		pdata.end = min(pub.size, seg * (i + 1));
+		threads[i] = thread(pReinThreadFunction, &pdata);
+	}
 	_for(i, 0, pD) {
-		thread t(pReinThreadFunction,&pdata);
-
+		threads[i].join();
 	}
 	for (int i = 0; i < numDimension; i++)
 		if (!attExist[i])
@@ -185,35 +201,26 @@ void pRein::parallelMatch(const Pub &pub, int &matchSubs) {
 		}
 }
 
-void pReinThreadFunction(parallelData *pd) {
-	for (int i = 0; i < pub.size; i++) {
-		int value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
-		attExist[att] = true;
+void pReinThreadFunction(void *pd1) {
+	parallelData* pd = (parallelData*)pd1;
+	printf("ThreadID: %d\n", this_thread::get_id());
+	fflush(stdout);
+	for (int i = pd->begin; i < pd->end; i++) {
+		int value = pd->pub->pairs[i].value, att = pd->pub->pairs[i].att, buck = value / pd->buckStep;
+		pd->attExist[att] = true;
 
-		for (int k = 0; k < data[0][att][buck].size(); k++)
-			if (data[0][att][buck][k].val > value)
-				bits[data[0][att][buck][k].subID] = true;
-		for (int k = 0; k < data[1][att][buck].size(); k++)
-			if (data[1][att][buck][k].val < value)
-				bits[data[1][att][buck][k].subID] = true;
+		for (int k = 0; k < pd->data[0][att][buck].size(); k++)
+			if (pd->data[0][att][buck][k].val > value)
+				pd->bits[pd->data[0][att][buck][k].subID] = true;
+		for (int k = 0; k < pd->data[1][att][buck].size(); k++)
+			if (pd->data[1][att][buck][k].val < value)
+				pd->bits[pd->data[1][att][buck][k].subID] = true;
 
-		for (int j = buck + 1; j < numBucket; j++)
-			for (int k = 0; k < data[0][att][j].size(); k++)
-				bits[data[0][att][j][k].subID] = true;
+		for (int j = buck + 1; j < pd->data[1][att].size(); j++)
+			for (int k = 0; k < pd->data[0][att][j].size(); k++)
+				pd->bits[pd->data[0][att][j][k].subID] = true;
 		for (int j = buck - 1; j >= 0; j--)
-			for (int k = 0; k < data[1][att][j].size(); k++)
-				bits[data[1][att][j][k].subID] = true;
+			for (int k = 0; k < pd->data[1][att][j].size(); k++)
+				pd->bits[pd->data[1][att][j][k].subID] = true;
 	}
 }
-
-parallelData::parallelData(bool *bs, bool *ae, vector<vector<vector<Combo>>> *dt,
-						   const Pub *pb, const int& bg, const int& na) {
-	bits = bs;
-	attExist = ae;
-	data = dt;
-	pub = pb;
-	begin = bg;
-	numAtt = na;
-}
-
-parallelData::parallelData(){}

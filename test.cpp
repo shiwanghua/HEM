@@ -3,8 +3,8 @@
 #include<iomanip>
 #include <iostream>
 #include <omp.h>
-#include<mpi.h>
-#include <unistd.h>
+//#include<mpi.h>
+//#include <unistd.h>
 
 using namespace std;
 
@@ -13,21 +13,18 @@ void hello(int& a) {
 	int thread_count = omp_get_num_threads();
 
 	a=my_rank;
-	usleep(1000000);
+	//usleep(1000000);
 	printf("hello from rank %d of %d, a= %d\n", my_rank, thread_count,a);
 	fflush(stdout);
 }
 
-int main2(int argc, char **argv)
+int maint(int argc, char **argv)
 {
-
 	int thread_count = 4;
 	int a=5;
 #pragma omp parallel num_threads(thread_count) default(none) shared(a)
 	hello(a);
-
-
-
+	system("pause");
 	return 0;
 }
 

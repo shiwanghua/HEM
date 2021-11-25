@@ -1,5 +1,5 @@
 #include "constant.h"
-string expID = "693";       // Record the experiment ID number
+string expID = "694";       // Record the experiment ID number
 const bool display = false; // whether to print the mapping relation
 const bool verifyID = false; // whether to verify Insertion and Deletion function
 const int interval = 100;   // after a interval of events is matched, print a log
@@ -36,4 +36,4 @@ const double falsePositiveRate = 0.05;
 const int initH = 4;           // Initial height
 
 // pRein
-int parallelDegree=5;
+int parallelDegree=2;

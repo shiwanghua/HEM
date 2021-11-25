@@ -36,7 +36,7 @@ int main(int argc, char **argv) {
 //			cout << i.first << "\n";
 	}
 
-//	run_rein(gen,deleteNo);
+	run_rein(gen,deleteNo);
 //	run_BIOP(gen);
 //	run_BIOP1(gen);
 //	run_BIOP2(gen);

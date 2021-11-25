@@ -1188,12 +1188,14 @@ void run_pRein(const intervalGenerator &gen,unordered_map<int,bool> deleteNo) {
 	}
 
 	// match
+//#pragma omp parallel for schedule(static, 5) num_threads(4) default(none) shared(prein,gen.pubList,matchTimeList,matchSubList) private(stdout) //dynamic
 	for (int i = 0; i < pubs; i++) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 
 		Timer matchStart;
 
 		prein.match(gen.pubList[i], matchSubs);
+		//prein.parallelMatch(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double) eventTime / 1000000);

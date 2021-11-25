@@ -19,18 +19,16 @@
 #define mmfor(i,a,b) for(int i=(a);i>=(b);--i)
 
 struct parallelData{
-	parallelData(bool *bs, bool *ae, vector<vector<vector<Combo>>> *dt,
-				 const Pub *pb, const int& bg, const int& na);
-	parallelData();
 	bool* bits;
 	bool* attExist;
 	vector<vector<vector<Combo>>>* data;
 	const Pub* pub;
 	int begin;
-	int numAtt;
+	int end;
+	int buckStep;
 };
 
-void pReinThreadFunction(parallelData* pd);
+void pReinThreadFunction(void* pd1);
 
 // Parallel Rein in openmp
 class pRein {
