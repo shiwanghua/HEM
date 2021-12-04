@@ -88,12 +88,16 @@ void bTama::match_accurate(const Pub& pub, int& matchSubs, const vector<Interval
 	//_for(i, 0, subs)
 	//	gB[i] = 1;
 	gB.set();
+	vector<bool> attExist(atts, false);
 	for (int i = 0; i < pub.size; i++) {
 		mB = nB[pub.pairs[i].att];
+		attExist[pub.pairs[i].att] = true;
 		match_accurate(0, pub.pairs[i].att, 0, valDom - 1, pub.pairs[i].value, 1, subList,mB);
 		gB = gB & mB;
 	}
-	
+	_for(i, 0, atts)
+		if (!attExist[i])
+			gB = gB & nB[i];
 	//_for(i, 0, subs) 
 	//	if (gB[i])
 	//{
