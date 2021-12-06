@@ -37,7 +37,9 @@ void run_BIOPSR(const intervalGenerator& gen);
 void run_Simple(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 void run_Simple2(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 void run_tama(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
-void run_btama(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
+void run_btama_forward(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);   // bTAMA6
+void run_btama_backward1(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);  // bTAMA7
+void run_btama_backward2(const intervalGenerator& gen, unordered_map<int, bool> deleteNo); // bTAMA8
 void run_adarein(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 void run_opindex(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 void run_pRein(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);

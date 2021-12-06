@@ -558,7 +558,7 @@ void BIOP5::initBits() {
  	//	++matchSubs;
  	//	//cout << "BIOP5 matches sub: " << i << endl;
  	//}
-	matchSubs = subs - b.count();
+	matchSubs = numSub - b.count();
  }
 
 //void BIOP5::calBucketSize() {

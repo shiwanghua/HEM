@@ -28,9 +28,12 @@ void bTama::insert(IntervalSub sub)
 	for (int i = 0; i < sub.size; i++) {
 		insert(0, sub.constraints[i].att, sub.id, 0, valDom - 1, sub.constraints[i].lowValue, sub.constraints[i].highValue, 1);
 		attrExist[sub.constraints[i].att] = true;
+		nnB[sub.constraints[i].att][sub.id] = 1;
 	}
 	_for(i, 0, atts)
-		if (!attrExist[i]) nB[i][sub.id] = 1;
+		if (!attrExist[i]) 
+			nB[i][sub.id] = 1;
+	numSub++;
 }
 
 void bTama::insert(int p, int att, int subID, int l, int r, int low, int high, int lvl)
@@ -53,9 +56,17 @@ void bTama::insert(int p, int att, int subID, int l, int r, int low, int high, i
 
 bool bTama::deleteSubscription(IntervalSub sub) {
 	bool find = true;
-	for (int i = 0; i < sub.size; i++)
+	vector<bool> attrExist(atts, false);
+	for (int i = 0; i < sub.size; i++) {
 		if (!deleteSubscription(0, sub.constraints[i].att, sub.id, 0, valDom - 1, sub.constraints[i].lowValue, sub.constraints[i].highValue, 1))
 			find = false;
+		attrExist[sub.constraints[i].att] = true;
+		nnB[sub.constraints[i].att][sub.id] = 0;
+	}
+	_for(i, 0, atts)
+		if (!attrExist[i]) 
+			nB[i][sub.id] = 0;
+	numSub--;
 	return find;
 }
 
@@ -82,9 +93,10 @@ bool bTama::deleteSubscription(int p, int att, int subID, int l, int r, int low,
 		return find;
 	}
 }
-void bTama::match_accurate(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
+
+void bTama::forward_match_accurate(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
 {
-	bitset<subs> gB,mB; // global bitset
+	bitset<subs> gB, mB; // global bitset
 	//_for(i, 0, subs)
 	//	gB[i] = 1;
 	gB.set();
@@ -92,7 +104,7 @@ void bTama::match_accurate(const Pub& pub, int& matchSubs, const vector<Interval
 	for (int i = 0; i < pub.size; i++) {
 		mB = nB[pub.pairs[i].att];
 		attExist[pub.pairs[i].att] = true;
-		match_accurate(0, pub.pairs[i].att, 0, valDom - 1, pub.pairs[i].value, 1, subList,mB);
+		forward_match_accurate(0, pub.pairs[i].att, 0, valDom - 1, pub.pairs[i].value, 1, subList, mB);
 		gB = gB & mB;
 	}
 	_for(i, 0, atts)
@@ -107,7 +119,29 @@ void bTama::match_accurate(const Pub& pub, int& matchSubs, const vector<Interval
 	matchSubs = gB.count();
 }
 
-void bTama::match_accurate(int p, int att, int l, int r, const int value, int lvl, const vector<IntervalSub>& subList, bitset<subs>& mB)
+void bTama::backward1_match_accurate(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
+{
+	bitset<subs> gB, mB; // global bitset
+	vector<bool> attExist(atts, false);
+	for (int i = 0; i < pub.size; i++) {
+		mB = nB[pub.pairs[i].att];
+		attExist[pub.pairs[i].att] = true;
+		forward_match_accurate(0, pub.pairs[i].att, 0, valDom - 1, pub.pairs[i].value, 1, subList, mB);
+		gB = gB | (mB.flip());
+	}
+	_for(i, 0, atts)
+		if (!attExist[i])
+			gB = gB | nnB[i];
+	//_for(i, 0, subs) 
+	//	if (gB[i])
+	//{
+	//	++matchSubs;
+	//	//cout << "bTama matches sub: " << i << endl;
+	//}
+	matchSubs = numSub - gB.count();
+}
+
+void bTama::forward_match_accurate(int p, int att, int l, int r, const int value, int lvl, const vector<IntervalSub>& subList, bitset<subs>& mB)
 {
 	if (level == lvl) {
 		int id = -1;
@@ -127,9 +161,57 @@ void bTama::match_accurate(int p, int att, int l, int r, const int value, int lv
 	if (l == r) // 这里l有可能等于r吗？当取值范围比较小, 层数很高时会等于; 当事件值刚好等于边界时也会等于!
 		return;
 	else if (value <= mid[p])
-		match_accurate(lchild[p], att, l, mid[p], value, lvl + 1, subList,mB);
+		forward_match_accurate(lchild[p], att, l, mid[p], value, lvl + 1, subList, mB);
 	else
-		match_accurate(rchild[p], att, mid[p] + 1, r, value, lvl + 1, subList,mB);
+		forward_match_accurate(rchild[p], att, mid[p] + 1, r, value, lvl + 1, subList, mB);
+}
+
+// bTAMA8
+void bTama::backward2_match_accurate(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
+{
+	bitset<subs> gB, mB;
+	vector<bool> attExist(atts, false);
+	for (int i = 0; i < pub.size; i++) {
+		mB = nnB[pub.pairs[i].att]; // based on a non null bitset!
+		attExist[pub.pairs[i].att] = true;
+		backward2_match_accurate(0, pub.pairs[i].att, 0, valDom - 1, pub.pairs[i].value, 1, subList, mB);
+		gB = gB | mB;
+	}
+	_for(i, 0, atts)
+		if (!attExist[i])
+			gB = gB | nnB[i];
+	//_for(i, 0, subs) 
+	//	if (gB[i])
+	//{
+	//	++matchSubs;
+	//	//cout << "bTama matches sub: " << i << endl;
+	//}
+	matchSubs = numSub - gB.count();
+}
+
+void bTama::backward2_match_accurate(int p, int att, int l, int r, const int value, int lvl, const vector<IntervalSub>& subList, bitset<subs>& mB)
+{
+	if (level == lvl) {
+		int id = -1;
+		for (auto& id : data[att][p])
+		{
+			for (auto& predicate : subList[id].constraints)
+				if (att == predicate.att) {
+					if (predicate.lowValue <= value && value <= predicate.highValue)
+						mB[id] = 0;
+					break;
+				}
+		}
+		return;
+	}
+	for (int i = 0; i < data[att][p].size(); i++)
+		mB[data[att][p][i]] = 0;
+	if (l == r) // 这里l有可能等于r吗？当取值范围比较小, 层数很高时会等于; 当事件值刚好等于边界时也会等于!
+		return;
+	else if (value <= mid[p])
+		backward2_match_accurate(lchild[p], att, l, mid[p], value, lvl + 1, subList, mB);
+	else
+		backward2_match_accurate(rchild[p], att, mid[p] + 1, r, value, lvl + 1, subList, mB);
 }
 
 int bTama::calMemory() {

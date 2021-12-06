@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
 	}
 
 	run_rein(gen,deleteNo);
-	run_pRein(gen,deleteNo);
+//	run_pRein(gen,deleteNo);
 //	run_BIOP(gen);
 //	run_BIOP1(gen);
 //	run_BIOP2(gen);
@@ -51,8 +51,9 @@ int main(int argc, char **argv) {
 //	run_opindex(gen, deleteNo);
 //	run_adarein(gen, deleteNo);
 	run_tama(gen,deleteNo);
-	run_btama(gen, deleteNo);
-
+	run_btama_forward(gen, deleteNo); // bTAMA6
+	run_btama_backward1(gen, deleteNo);// bTAMA7
+	run_btama_backward2(gen, deleteNo); // bTAMA8
 
 	cout << "Done.\n";
 	system("pause");
