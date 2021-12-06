@@ -351,3 +351,147 @@ int OpIndex2::calMemory() {
 	size = size / 1024 / 1024;                                                         // MB
 	return (int) size;
 }
+
+
+
+bOpIndex::bOpIndex() : numSub(0) {
+	data.resize(atts, vector<vector<IntervalCombo>>(atts));
+	fre.resize(atts, 0);
+	pivotCount.resize(atts, 0);
+	isPivot.resize(atts, false);
+	nB.resize(atts);
+	cout << "ExpID = " << expID << ". OpIndex2 begins. " << endl;
+}
+
+bOpIndex::~bOpIndex() {
+
+}
+
+void bOpIndex::insert(IntervalSub sub) {
+	if(sub.size==0){
+		numSub++;
+		return;
+	}
+	vector<bool> attrExist(atts, false);
+	int pivotAtt = getMinFre(sub);
+	isPivot[pivotAtt] = true;
+	pivotCount[pivotAtt]++;
+	for (int i = 0; i < sub.size; i++) {
+		IntervalCombo e;
+		e.subID = sub.id;
+		e.lowValue = sub.constraints[i].lowValue;
+		e.highValue = sub.constraints[i].highValue;
+		data[pivotAtt][sub.constraints[i].att].push_back(e);
+		attrExist[sub.constraints[i].att] = true;
+	}
+	_for(i, 0, atts)
+		if (!attrExist[i]) nB[i][sub.id] = 1;
+	numSub++;
+}
+
+// 没有更新fre数组, 直接更新会出错
+bool bOpIndex::deleteSubscription(IntervalSub sub) {
+	if(sub.size==0){
+		numSub--;
+		return true;
+	}
+	int find = 0;
+	int id = sub.id;
+	int pivotAtt = getMinFre(sub);
+	pivotCount[pivotAtt]--;
+	if (pivotCount[pivotAtt] == 0)
+		isPivot[pivotAtt] = false;
+
+	for (int i = 0; i < sub.size; i++) {
+		int att = sub.constraints[i].att;
+		vector<IntervalCombo>::iterator it;
+		for (it = data[pivotAtt][att].begin(); it != data[pivotAtt][att].end(); it++)
+			if (it->subID == id) {
+				data[pivotAtt][att].erase(it);
+				find++;
+				break;
+			}
+	}
+
+	if (find == sub.size)
+		numSub--;
+	return find == sub.size;
+}
+
+void bOpIndex::match(Pub pub, int &matchSubs, const vector<IntervalSub> &subList) {
+	vector<int> counter(subs);
+	for (int i = 0; i < subList.size(); i++){
+		counter[i] = subList[i].size;
+		if(counter[i]==0)
+			++matchSubs;
+	}
+
+	for (int i = 0; i < pub.size; i++) {
+		int piv_att = pub.pairs[i].att;
+		if (!isPivot[piv_att])
+			continue;
+
+		for (int j = 0; j < pub.size; j++) {
+			int att = pub.pairs[j].att, value = pub.pairs[j].value;
+			for (int k = 0; k < data[piv_att][att].size(); k++) {
+				IntervalCombo ic = data[piv_att][att][k];
+				if (ic.lowValue <= value && value <= ic.highValue) {
+					--counter[ic.subID];
+					if (counter[ic.subID] == 0)
+						++matchSubs;
+				}
+			}
+		}
+	}
+}
+
+int bOpIndex::getMinFre(Sub x) {
+	int pAtt = x.constraints.at(0).att;
+	for (int i = 1; i < x.size; i++)
+		if (fre[x.constraints[i].att] < fre[pAtt])
+			pAtt = x.constraints[i].att;
+	return pAtt;
+}
+
+int bOpIndex::getMinFre(IntervalSub x) {
+	int pAtt = x.constraints.at(0).att;
+	for (int i = 1; i < x.size; i++)
+		if (fre[x.constraints[i].att] < fre[pAtt])
+			pAtt = x.constraints[i].att;
+	return pAtt;
+}
+
+void bOpIndex::calcFrequency(const vector<Sub> &subList) {
+	fre.resize(atts, 0);
+	for (int i = 0; i < subList.size(); i++)
+		for (int j = 0; j < subList[i].size; j++)
+			++fre[subList[i].constraints[j].att];
+}
+
+void bOpIndex::calcFrequency(const vector<IntervalSub> &subList) {
+	fre.resize(atts, 0);
+	for (int i = 0; i < subList.size(); i++)
+		for (int j = 0; j < subList[i].size; j++)
+			++fre[subList[i].constraints[j].att];
+
+	if (!display){
+		for (int i = 0; i < atts; i++) {
+			cout << "Att " << i << ": " << fre[i] << "\t";
+			if (i > 0 && i % 5 == 0)
+				cout << endl;
+		}
+		cout << endl;
+	}
+}
+
+int bOpIndex::calMemory() {
+	long long size = 0; // Byte
+	_for(i, 0, atts) {
+		_for(j, 0, atts) {
+			size += data[i][j].size() * sizeof(IntervalCombo); // sig 数组
+		}
+	}
+	size += atts * sizeof(bool) + atts * sizeof(int); // isPivot, fre
+	size = size / 1024 / 1024;                                                         // MB
+	return (int) size;
+}

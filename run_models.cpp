@@ -1273,8 +1273,8 @@ void run_pRein(const intervalGenerator &gen,unordered_map<int,bool> deleteNo) {
 
 		Timer matchStart;
 
-		prein.match(gen.pubList[i], matchSubs);
-		//prein.parallelMatch(gen.pubList[i], matchSubs);
+//		prein.match(gen.pubList[i], matchSubs);
+		prein.parallelMatch(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double) eventTime / 1000000);

@@ -1,25 +1,32 @@
 cmake_minimum_required(VERSION 3.6)
 project(MAC)
 
-FIND_PACKAGE(OpenMP REQUIRED)
-if(OPENMP_FOUND)
-    message("OPENMP FOUND")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS} -O3 -std=c++0x")
-endif()
+# 设置用debug还是release模式。debug允许断点，而release更快
+#set( CMAKE_BUILD_TYPE Debug )
+set( CMAKE_BUILD_TYPE Release )
+
+#FIND_PACKAGE(OpenMP REQUIRED)
+#if(OPENMP_FOUND)
+#    message("OPENMP FOUND")
+#    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS} -O3 -std=c++0x")
+#endif()
 
 
-set(CMAKE_C_COMPILER /usr/bin/mpicc)
-set(CMAKE_CXX_COMPILER /usr/bin/mpic++)
+#set(CMAKE_C_COMPILER /usr/bin/mpicc)
+#set(CMAKE_CXX_COMPILER /usr/bin/mpic++)
+SET(CMAKE_CXX_COMPILER "g++")
 #find_package(MPI REQUIRED)
 
 # 按地址把MPI库包含进来
 #include_directories(${MPI_INCLUDE_PATH})
 #message("MPI_INCLUDE_PATH: ${MPI_INCLUDE_PATH}")
 
-# 如果代码需要支持C++11，就直接加上这句
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS} -O3 -std=c++0x")
-set(CMAKE_C_STANDARD 17)
+
+#SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++0x")
+#set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3" )
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -march=native -O3 -pthread" )
+#set(CMAKE_C_STANDARD 17)
 #set(CMAKE_CXX_FLAGS_DEBUG “${CMAKE_CXX_FLAGS_DEBUG} -O0”)
 #set(CMAKE_C_FLAGS_DEBUG “${CMAKE_C_FLAGS_DEBUG} -O0”)
 # 如果想要生成的可执行文件拥有符号表，可以gdb调试，就直接加上这句
@@ -32,7 +39,7 @@ set(CMAKE_C_STANDARD 17)
 # add_executable(main ${SOURCE_FILES})
 
 aux_source_directory(. SRC_LIST)
-add_executable(run ${SRC_LIST} pRein.cpp pRein.h)
+add_executable(run ${SRC_LIST} ) # pRein.cpp pRein.h
 # target_link_libraries(hello ${MPI_LIBRARIES})
 
 

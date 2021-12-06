@@ -8,6 +8,7 @@
 #include <string>
 #include <cstring>
 #include"constant.h"
+#include <bitset>
 
 //const int MAX_ATTS = 101;
 //const int MAX_SUBS = 2000001;
@@ -71,6 +72,35 @@ public:
 	
 	OpIndex2();
 	~OpIndex2();
+
+	void calcFrequency(const vector<Sub>& subList);
+	void calcFrequency(const vector<IntervalSub>& subList);
+
+	// void insert(Sub x);
+	void insert(IntervalSub x);
+	bool deleteSubscription(IntervalSub sub);
+
+	// void match(Pub x, int& matchSubs, const vector<Sub>& subList);
+	void match(Pub x, int& matchSubs, const vector<IntervalSub>& subList);
+
+	int calMemory();      // 计算占用内存大小, 返回MB
+};
+
+class bOpIndex {
+	vector<vector<vector<IntervalCombo>>> data;
+	vector<int> fre;
+	vector<int> pivotCount; // record how many subs in this pivot attribute, use for deletion decision
+	vector<bitset<subs>> nB; // null bitset
+
+	int getMinFre(Sub x);
+	int getMinFre(IntervalSub x);
+
+public:
+	int numSub;
+	vector<bool> isPivot;
+
+	bOpIndex();
+	~bOpIndex();
 
 	void calcFrequency(const vector<Sub>& subList);
 	void calcFrequency(const vector<IntervalSub>& subList);

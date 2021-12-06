@@ -172,6 +172,12 @@
 		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/Tama.h">
 			<Option target="run"/>
 		</Unit>
+		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/bTama.cpp">
+			<Option target="run"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/bTama.h">
+			<Option target="run"/>
+		</Unit>
 		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/constant.cpp">
 			<Option target="run"/>
 		</Unit>

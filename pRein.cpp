@@ -189,11 +189,12 @@ void pRein::parallelMatch(const Pub &pub, int &matchSubs) {
 		threads[i].join();
 	}
 	for (int i = 0; i < numDimension; i++)
-		if (!attExist[i])
+		if (!attExist[i]) {
+			cout<<"Null attribute: "<<i<<endl;
 			for (int j = 0; j < numBucket; j++)
 				for (int k = 0; k < data[0][i][j].size(); k++)
 					bits[data[0][i][j][k].subID] = true;
-
+		}
 	for (int i = 0; i < subs; i++)
 		if (!bits[i]) {
 			++matchSubs;
@@ -203,8 +204,8 @@ void pRein::parallelMatch(const Pub &pub, int &matchSubs) {
 
 void pReinThreadFunction(void *pd1) {
 	parallelData* pd = (parallelData*)pd1;
-	printf("ThreadID: %d\n", this_thread::get_id());
-	fflush(stdout);
+//	printf("ThreadID: %d\n", this_thread::get_id());
+//	fflush(stdout);
 	for (int i = pd->begin; i < pd->end; i++) {
 		int value = pd->pub->pairs[i].value, att = pd->pub->pairs[i].att, buck = value / pd->buckStep;
 		pd->attExist[att] = true;
@@ -224,3 +225,4 @@ void pReinThreadFunction(void *pd1) {
 				pd->bits[pd->data[1][att][j][k].subID] = true;
 	}
 }
+
