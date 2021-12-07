@@ -1,13 +1,13 @@
 #include "constant.h"
-string expID = "717";       // Record the experiment ID number
+string expID = "732";       // Record the experiment ID number
 const bool display = false; // whether to print the mapping relation
 const bool verifyID = false; // whether to verify Insertion and Deletion function
 const int interval = 100;   // after a interval of events is matched, print a log
-const double subp = 0.5;      // subp比例的订阅的谓词定义在前cons个维度上 in order to make the number of matching subscriptions > 0
+const double subp = 0;      // subp比例的订阅的谓词定义在前cons个维度上 in order to make the number of matching subscriptions > 0
 //const int subs = 1000000; // Number of subscriptions.
 const int pubs = 500;       // Number of publications.
-int atts = 1000;              // Total number of attributes, i.e. dimensions.
-int cons = 5;              // Number of constraints(predicates) in one sub.
+int atts = 100;              // Total number of attributes, i.e. dimensions.
+int cons = 10;              // Number of constraints(predicates) in one sub.
 int m = 50;                 // Number of constraints in one pub.
 const int attDis = 0;       // The distribution of attributes in subs and pubs. 0:uniform distribution | 1:Zipf distribution
 const int valDis = 0;       // The distribution of values in subs and pubs. 0:uniform + fixed width | 1: random width >= $width + Uniform | 2: Zipf + fixed width | 3: Normal + fixed width | 4: Normal + two ends
@@ -36,4 +36,4 @@ const double falsePositiveRate = 0.05;
 const int initH = 4;           // Initial height
 
 // pRein
-int parallelDegree=10;
+int parallelDegree=2;

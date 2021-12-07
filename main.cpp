@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
 	}
 
 	run_rein(gen,deleteNo);
-//	run_pRein(gen,deleteNo);
+	run_pRein(gen,deleteNo);
 //	run_BIOP(gen);
 //	run_BIOP1(gen);
 //	run_BIOP2(gen);

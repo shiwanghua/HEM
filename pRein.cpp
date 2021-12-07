@@ -110,31 +110,31 @@ void pRein::match(const Pub &pub, int &matchSubs) {
 	vector<bool> attExist(numDimension, false);
 	Timer logStart;
 //#pragma omp parallel shared(pub, attExist, bits, data, logStart)  private(stdout)
-{
-	//#pragma omp parallel for schedule(static, 5) num_threads(pD) default(none) shared(pub, attExist, bits, data, logStart) private(stdout) //dynamic
+	{
+		//#pragma omp parallel for schedule(static, 5) num_threads(pD) default(none) shared(pub, attExist, bits, data, logStart) private(stdout) //dynamic
 #pragma omp parallel for num_threads(pD)  schedule(static, 10) default(shared) // private(stdout)
-	for (int i = 0; i < pub.size; i++) {
-		/*printf("rank %d of %d: %.4f\n", omp_get_thread_num(), omp_get_num_threads(), (double)logStart.elapsed_nano());
-		fflush(stdout);*/
-		int value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
-		// cout<<"pubid= "<<pub.id<<" att= "<<att<<" value= "<<value<<endl;
-		attExist[att] = true;
-		// 把下面两个for循环注释了就是模糊匹配, 类似Tama
-		for (int k = 0; k < data[0][att][buck].size(); k++)
-			if (data[0][att][buck][k].val > value)
-				bits[data[0][att][buck][k].subID] = true;
-		for (int k = 0; k < data[1][att][buck].size(); k++)
-			if (data[1][att][buck][k].val < value)
-				bits[data[1][att][buck][k].subID] = true;
+		for (int i = 0; i < pub.size; i++) {
+			/*printf("rank %d of %d: %.4f\n", omp_get_thread_num(), omp_get_num_threads(), (double)logStart.elapsed_nano());
+			fflush(stdout);*/
+			int value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
+			// cout<<"pubid= "<<pub.id<<" att= "<<att<<" value= "<<value<<endl;
+			attExist[att] = true;
+			// 把下面两个for循环注释了就是模糊匹配, 类似Tama
+			for (int k = 0; k < data[0][att][buck].size(); k++)
+				if (data[0][att][buck][k].val > value)
+					bits[data[0][att][buck][k].subID] = true;
+			for (int k = 0; k < data[1][att][buck].size(); k++)
+				if (data[1][att][buck][k].val < value)
+					bits[data[1][att][buck][k].subID] = true;
 
-		for (int j = buck + 1; j < numBucket; j++)
-			for (int k = 0; k < data[0][att][j].size(); k++)
-				bits[data[0][att][j][k].subID] = true;
-		for (int j = buck - 1; j >= 0; j--)
-			for (int k = 0; k < data[1][att][j].size(); k++)
-				bits[data[1][att][j][k].subID] = true;
+			for (int j = buck + 1; j < numBucket; j++)
+				for (int k = 0; k < data[0][att][j].size(); k++)
+					bits[data[0][att][j][k].subID] = true;
+			for (int j = buck - 1; j >= 0; j--)
+				for (int k = 0; k < data[1][att][j].size(); k++)
+					bits[data[1][att][j][k].subID] = true;
+		}
 	}
-}
 
 //#pragma omp parallel for schedule(dynamic) num_threads(pD) default(none) shared(numDimension,attExist,bits,data)
 	for (int i = 0; i < numDimension; i++)
@@ -172,25 +172,28 @@ void pRein::parallelMatch(const Pub &pub, int &matchSubs) {
 	memset(bits, 0, sizeof(bool) * numSub);
 	bool *attExist = new bool[numDimension];
 	memset(attExist, 0, sizeof(bool) * numDimension);
-	parallelData pdata;
-	pdata.bits = bits;
-	pdata.attExist = attExist;
-	pdata.data = data;
-	pdata.pub = &pub;
-	pdata.buckStep = buckStep;
-	int seg = (pub.size+pD-1) / pD;
-	thread* threads=new thread[pD];
+	int seg = (pub.size + pD - 1) / pD;
+	thread *threads = new thread[pD];
 	for (int i = 0; i < pD; i++) {
-		pdata.begin = seg * i;
-		pdata.end = min(pub.size, seg * (i + 1));
-		threads[i] = thread(pReinThreadFunction, &pdata);
+//		parallelData pdata;
+//		pdata.bits = bits;
+//		pdata.attExist = attExist;
+//		pdata.data = data;
+//		pdata.pub = &pub;
+//		pdata.buckStep = buckStep;
+//		pdata.begin = seg * i;
+//		pdata.end = min(pub.size, seg * (i + 1));
+//		threads[i] = thread(pReinThreadFunction, &pdata);
+//		threads[i] = thread(pReinThreadFunction, ref(bits),ref(attExist),ref(data),ref(pub),seg * i,min(pub.size, seg * (i + 1)),buckStep);
+		threads[i] = thread(pReinThreadFunction, bits, attExist, data, pub, seg * i, min(pub.size, seg * (i + 1)),
+							buckStep);
 	}
 	_for(i, 0, pD) {
 		threads[i].join();
 	}
 	for (int i = 0; i < numDimension; i++)
 		if (!attExist[i]) {
-			cout<<"Null attribute: "<<i<<endl;
+//			cout << "Null attribute: " << i << endl;
 			for (int j = 0; j < numBucket; j++)
 				for (int k = 0; k < data[0][i][j].size(); k++)
 					bits[data[0][i][j][k].subID] = true;
@@ -202,27 +205,48 @@ void pRein::parallelMatch(const Pub &pub, int &matchSubs) {
 		}
 }
 
-void pReinThreadFunction(void *pd1) {
-	parallelData* pd = (parallelData*)pd1;
-//	printf("ThreadID: %d\n", this_thread::get_id());
-//	fflush(stdout);
-	for (int i = pd->begin; i < pd->end; i++) {
-		int value = pd->pub->pairs[i].value, att = pd->pub->pairs[i].att, buck = value / pd->buckStep;
-		pd->attExist[att] = true;
+//void pReinThreadFunction(void *pd1) {
+//	parallelData* pd = (parallelData*)pd1;
+////	printf("ThreadID: %d\n", this_thread::get_id());
+////	fflush(stdout);
+//	for (int i = pd->begin; i < pd->end; i++) {
+//		int value = pd->pub->pairs[i].value, att = pd->pub->pairs[i].att, buck = value / pd->buckStep;
+//		pd->attExist[att] = true;
+//
+//		for (int k = 0; k < pd->data[0][att][buck].size(); k++)
+//			if (pd->data[0][att][buck][k].val > value)
+//				pd->bits[pd->data[0][att][buck][k].subID] = true;
+//		for (int k = 0; k < pd->data[1][att][buck].size(); k++)
+//			if (pd->data[1][att][buck][k].val < value)
+//				pd->bits[pd->data[1][att][buck][k].subID] = true;
+//
+//		for (int j = buck + 1; j < pd->data[1][att].size(); j++)
+//			for (int k = 0; k < pd->data[0][att][j].size(); k++)
+//				pd->bits[pd->data[0][att][j][k].subID] = true;
+//		for (int j = buck - 1; j >= 0; j--)
+//			for (int k = 0; k < pd->data[1][att][j].size(); k++)
+//				pd->bits[pd->data[1][att][j][k].subID] = true;
+//	}
+//}
 
-		for (int k = 0; k < pd->data[0][att][buck].size(); k++)
-			if (pd->data[0][att][buck][k].val > value)
-				pd->bits[pd->data[0][att][buck][k].subID] = true;
-		for (int k = 0; k < pd->data[1][att][buck].size(); k++)
-			if (pd->data[1][att][buck][k].val < value)
-				pd->bits[pd->data[1][att][buck][k].subID] = true;
+void pReinThreadFunction(bool bits[], bool attExist[], vector<vector<vector<Combo>>> data[], const Pub &pub, int begin,
+						 int end, int buckStep) {
+	for (int i = begin; i < end; i++) {
+		int value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
+		attExist[att] = true;
 
-		for (int j = buck + 1; j < pd->data[1][att].size(); j++)
-			for (int k = 0; k < pd->data[0][att][j].size(); k++)
-				pd->bits[pd->data[0][att][j][k].subID] = true;
+		for (int k = 0; k < data[0][att][buck].size(); k++)
+			if (data[0][att][buck][k].val > value)
+				bits[data[0][att][buck][k].subID] = true;
+		for (int k = 0; k < data[1][att][buck].size(); k++)
+			if (data[1][att][buck][k].val < value)
+				bits[data[1][att][buck][k].subID] = true;
+
+		for (int j = buck + 1; j < data[1][att].size(); j++)
+			for (int k = 0; k < data[0][att][j].size(); k++)
+				bits[data[0][att][j][k].subID] = true;
 		for (int j = buck - 1; j >= 0; j--)
-			for (int k = 0; k < pd->data[1][att][j].size(); k++)
-				pd->bits[pd->data[1][att][j][k].subID] = true;
+			for (int k = 0; k < data[1][att][j].size(); k++)
+				bits[data[1][att][j][k].subID] = true;
 	}
 }
-

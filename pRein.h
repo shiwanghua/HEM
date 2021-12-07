@@ -28,7 +28,7 @@ struct parallelData{
 	int buckStep;
 };
 
-void pReinThreadFunction(void* pd1);
+void pReinThreadFunction(bool bits[],bool attExist[],vector<vector<vector<Combo>>> data[],const Pub& pub,int begin,int end,int buckStep);
 
 // Parallel Rein in openmp
 class pRein {
