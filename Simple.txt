@@ -1,3 +1,11 @@
+736 memory= 122 MB AvgMatchNum= 5.630000 AvgInsertTime= 0.000189 ms AvgDeleteTime= -nan(ind) ms AvgMatchTime= 29.146088 ms numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20
+736 memory= 122 MB AvgMatchNum= 1008.750000 AvgInsertTime= 0.000183 ms AvgDeleteTime= -nan(ind) ms AvgMatchTime= 39.253489 ms numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20
+735 memory= 122 MB AvgMatchNum= 1110.660000 AvgInsertTime= 0.001002 ms AvgDeleteTime= -nan(ind) ms AvgMatchTime= 55.547055 ms numSub= 1000000 subSize= 10 numPub= 100 pubSize= 20 attTypes= 20
+735 memory= 122 MB AvgMatchNum= 1110.660000 AvgInsertTime= 0.000981 ms AvgDeleteTime= -nan(ind) ms AvgMatchTime= 53.637447 ms numSub= 1000000 subSize= 10 numPub= 100 pubSize= 20 attTypes= 20
+735 memory= 122 MB AvgMatchNum= 1110.660000 AvgInsertTime= 0.001968 ms AvgDeleteTime= -nan(ind) ms AvgMatchTime= 178.968791 ms numSub= 1000000 subSize= 10 numPub= 100 pubSize= 20 attTypes= 20
+735 memory= 122 MB AvgMatchNum= 1110.660000 AvgInsertTime= 0.001942 ms AvgDeleteTime= -nan(ind) ms AvgMatchTime= 179.354259 ms numSub= 1000000 subSize= 10 numPub= 100 pubSize= 20 attTypes= 20
+734 memory= 122 MB AvgMatchNum= 1110.660000 AvgInsertTime= 0.001932 ms AvgDeleteTime= -nan(ind) ms AvgMatchTime= 180.467888 ms numSub= 1000000 subSize= 10 numPub= 100 pubSize= 20 attTypes= 20
+733 memory= 122 MB AvgMatchNum= 0.570000 AvgInsertTime= 0.001896 ms AvgDeleteTime= -nan(ind) ms AvgMatchTime= 123.087210 ms numSub= 1000000 subSize= 10 numPub= 100 pubSize= 50 attTypes= 100
 732 memory= 122 MB AvgMatchNum= 0.572000 AvgInsertTime= 0.000043 ms AvgDeleteTime= -nan ms AvgMatchTime= 12.290526 ms numSub= 1000000 subSize= 10 numPub= 500 pubSize= 50 attTypes= 100
 731 memory= 122 MB AvgMatchNum= 935.970000 AvgInsertTime= 0.000053 ms AvgDeleteTime= -nan ms AvgMatchTime= 16.438821 ms numSub= 1000000 subSize= 10 numPub= 500 pubSize= 50 attTypes= 50
 725 memory= 122 MB AvgMatchNum= 1023.270000 AvgInsertTime= 0.000052 ms AvgDeleteTime= -nan ms AvgMatchTime= 15.820460 ms numSub= 1000000 subSize= 10 numPub= 2000 pubSize= 20 attTypes= 20

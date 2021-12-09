@@ -169,7 +169,7 @@ void bTama::forward_match_accurate(int p, int att, int l, int r, const int value
 // bTAMA8
 void bTama::backward2_match_accurate(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
 {
-	bitset<subs> gB, mB;
+	register bitset<subs> gB, mB;
 	vector<bool> attExist(atts, false);
 	for (int i = 0; i < pub.size; i++) {
 		mB = nnB[pub.pairs[i].att]; // based on a non null bitset!

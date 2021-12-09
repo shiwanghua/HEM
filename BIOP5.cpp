@@ -6,7 +6,7 @@ BIOP5::BIOP5() {
 	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
 	cout << "ExpID = " << expID << ". BIOP5DD: bit exponent = " << be << ", bucketStep = " << buckStep
-		 << ", numBucket = " << numBucket << endl;
+		<< ", numBucket = " << numBucket << endl;
 
 	//bucketSub.resize(numBucket);
 	data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
@@ -21,12 +21,12 @@ BIOP5::BIOP5() {
 
 	//else bitStep = numBucket >> 1;
 
-	doubleReverse[0] = new bool *[numDimension];
-	doubleReverse[1] = new bool *[numDimension];
-	endBucket[0] = new int *[numDimension];
-	endBucket[1] = new int *[numDimension];
-	bitsID[0] = new int *[numDimension];
-	bitsID[1] = new int *[numDimension];
+	doubleReverse[0] = new bool* [numDimension];
+	doubleReverse[1] = new bool* [numDimension];
+	endBucket[0] = new int* [numDimension];
+	endBucket[1] = new int* [numDimension];
+	bitsID[0] = new int* [numDimension];
+	bitsID[1] = new int* [numDimension];
 	_for(i, 0, numDimension) {
 		doubleReverse[0][i] = new bool[numBucket];
 		doubleReverse[1][i] = new bool[numBucket];
@@ -42,7 +42,7 @@ BIOP5::BIOP5() {
 
 BIOP5::~BIOP5() {
 	_for(i, 0,
-		 numDimension) delete[] doubleReverse[0][i], doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
+		numDimension) delete[] doubleReverse[0][i], doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1], doubleReverse[0], doubleReverse[1];
 }
 
@@ -146,14 +146,14 @@ void BIOP5::initBits() {
 
 	// 如果有多次初始化
 	_for(i, 0,
-		 numDimension) delete[] doubleReverse[0][i], doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
+		numDimension) delete[] doubleReverse[0][i], doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1], doubleReverse[0], doubleReverse[1];
-	doubleReverse[0] = new bool *[numDimension];
-	doubleReverse[1] = new bool *[numDimension];
-	endBucket[0] = new int *[numDimension];
-	endBucket[1] = new int *[numDimension];
-	bitsID[0] = new int *[numDimension];
-	bitsID[1] = new int *[numDimension];
+	doubleReverse[0] = new bool* [numDimension];
+	doubleReverse[1] = new bool* [numDimension];
+	endBucket[0] = new int* [numDimension];
+	endBucket[1] = new int* [numDimension];
+	bitsID[0] = new int* [numDimension];
+	bitsID[1] = new int* [numDimension];
 	_for(i, 0, numDimension) {
 		doubleReverse[0][i] = new bool[numBucket];
 		doubleReverse[1][i] = new bool[numBucket];
@@ -212,13 +212,15 @@ void BIOP5::initBits() {
 					bitsID[0][i][j] = 0;
 					endBucket[0][i][j] = lowHalfPoint; // 遍历到小于 lowCriticalPoint
 					doubleReverse[0][i][j] = false;
-				} else if (j < lowQuarterPoint) {
+				}
+				else if (j < lowQuarterPoint) {
 					bitsID[0][i][j] = 0;
 					endBucket[0][i][j] = lowHalfPoint; // 从 j 二重反向遍历到等于 lowCriticalPoint(都包含)
 					doubleReverse[0][i][j] = true;
 					_for(k, 0, data[0][i][j].size()) // 桶里每个订阅
 						bits[0][i][0][data[0][i][j][k].subID] = 1;
-				} else {
+				}
+				else {
 					bitsID[0][i][j] = -1;
 					endBucket[0][i][j] = numBucket;
 					doubleReverse[0][i][j] = false;
@@ -231,13 +233,15 @@ void BIOP5::initBits() {
 					doubleReverse[1][i][j] = false;
 					_for(k, 0, data[1][i][j].size()) // 桶里每个订阅
 						bits[1][i][0][data[1][i][j][k].subID] = 1;
-				} else if (j < highHalfPoint) {
+				}
+				else if (j < highHalfPoint) {
 					bitsID[1][i][j] = 0;
 					endBucket[1][i][j] = highHalfPoint; // 从 j 二重反向遍历到大于等于 highCriticalPoint
 					doubleReverse[1][i][j] = true;
 					_for(k, 0, data[1][i][j].size()) // 桶里每个订阅
 						bits[1][i][0][data[1][i][j][k].subID] = 1;
-				} else {
+				}
+				else {
 					bitsID[1][i][j] = 0;
 					endBucket[1][i][j] = highHalfPoint; // 从 j-1 遍历到大于等于 highHalfPoint, 和以前保持一致
 					doubleReverse[1][i][j] = false;
@@ -320,12 +324,14 @@ void BIOP5::initBits() {
 				bitsID[1][i][j] = numBits - 1;
 				endBucket[1][i][j] = j + 1; // 如果是第一次进来, j号桶非空, 需要二重反向标记, 否则是空桶, 可以兼容这种情况
 				doubleReverse[1][i][j] = true;
-			} else if (fix[1][i][j] - fix[1][i][highBktId] <=
-					   fix[1][i][highContain[hi]] - fix[1][i][j]) { // Bug: 没有减highBktId
+			}
+			else if (fix[1][i][j] - fix[1][i][highBktId] <=
+				fix[1][i][highContain[hi]] - fix[1][i][j]) { // Bug: 没有减highBktId
 				bitsID[1][i][j] = highBid;
 				endBucket[1][i][j] = highBktId; // 遍历到大于等于endBucket[1][i][j]
 				doubleReverse[1][i][j] = false;
-			} else {
+			}
+			else {
 				bitsID[1][i][j] = hi - 1;              // highBid+1
 				endBucket[1][i][j] = highContain[hi]; // 从j往右遍历到小于endBucket[1][i][j]
 				doubleReverse[1][i][j] = true;
@@ -338,12 +344,14 @@ void BIOP5::initBits() {
 				bitsID[0][i][numBucket - j - 1] = numBits - 1;
 				endBucket[0][i][numBucket - j - 1] = numBucket - j - 1;
 				doubleReverse[0][i][numBucket - j - 1] = true;
-			} else if (fix[0][i][numBucket - j] - fix[0][i][lowBktId] <=
-					   fix[0][i][lowContain[li]] - fix[0][i][numBucket - j]) {
+			}
+			else if (fix[0][i][numBucket - j] - fix[0][i][lowBktId] <=
+				fix[0][i][lowContain[li]] - fix[0][i][numBucket - j]) {
 				bitsID[0][i][numBucket - j - 1] = lowBid;
 				endBucket[0][i][numBucket - j - 1] = lowBktId;
 				doubleReverse[0][i][numBucket - j - 1] = false;
-			} else {
+			}
+			else {
 				bitsID[0][i][numBucket - j - 1] = li - 1; // lowBktId+1
 				endBucket[0][i][numBucket - j - 1] = lowContain[li];
 				doubleReverse[0][i][numBucket - j - 1] = true;
@@ -476,90 +484,91 @@ void BIOP5::initBits() {
 //}
 
 // 不计算时间组成
- void BIOP5::match(const Pub& pub, int& matchSubs)
- {
- 	bitset<subs> b, bLocal;
- 	vector<bool> attExist(numDimension, false);
- 	int value, att, buck;
+void BIOP5::match(const Pub& pub, int& matchSubs)
+{
+	register bitset<subs> b;
+	bitset<subs> bLocal;
+	vector<bool> attExist(numDimension, false);
+    int value, att, buck;
 
- 	_for(i, 0, pub.size)
- 	{
- 		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
- 		attExist[att] = true;
- 		_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
- 			b[data[0][att][buck][k].subID] = 1;
- 		_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
- 			b[data[1][att][buck][k].subID] = 1;
+	_for(i, 0, pub.size)
+	{
+		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
+		attExist[att] = true;
+		_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
+			b[data[0][att][buck][k].subID] = 1;
+		_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
+			b[data[1][att][buck][k].subID] = 1;
 
- 		if (doubleReverse[0][att][buck])
- 		{
- 			if (bitsID[0][att][buck] == numBits - 1 && numBits > 1)
- 				bLocal = fullBits[att];
- 			else
- 				bLocal = bits[0][att][bitsID[0][att][buck]];
- 			_for(j, endBucket[0][att][buck], buck + 1)
- 				_for(k, 0, data[0][att][j].size())
- 				bLocal[data[0][att][j][k].subID] = 0;
+		if (doubleReverse[0][att][buck])
+		{
+			if (bitsID[0][att][buck] == numBits - 1 && numBits > 1)
+				bLocal = fullBits[att];
+			else
+				bLocal = bits[0][att][bitsID[0][att][buck]];
+			_for(j, endBucket[0][att][buck], buck + 1)
+				_for(k, 0, data[0][att][j].size())
+				bLocal[data[0][att][j][k].subID] = 0;
 
- 			b = b | bLocal;
- 		}
- 		else
- 		{
- 			_for(j, buck + 1, endBucket[0][att][buck])
- 				_for(k, 0, data[0][att][j].size())
- 				b[data[0][att][j][k].subID] = 1;
+			b = b | bLocal;
+		}
+		else
+		{
+			_for(j, buck + 1, endBucket[0][att][buck])
+				_for(k, 0, data[0][att][j].size())
+				b[data[0][att][j][k].subID] = 1;
 
- 			if (bitsID[0][att][buck] != -1)
- 				b = b | bits[0][att][bitsID[0][att][buck]];
- 		}
+			if (bitsID[0][att][buck] != -1)
+				b = b | bits[0][att][bitsID[0][att][buck]];
+		}
 
- 		if (doubleReverse[1][att][buck])
- 		{
- 			if (bitsID[1][att][buck] == numBits - 1 && numBits > 1)
- 				bLocal = fullBits[att];
- 			else
- 				bLocal = bits[1][att][bitsID[1][att][buck]];
+		if (doubleReverse[1][att][buck])
+		{
+			if (bitsID[1][att][buck] == numBits - 1 && numBits > 1)
+				bLocal = fullBits[att];
+			else
+				bLocal = bits[1][att][bitsID[1][att][buck]];
 
- 			_for(j, buck, endBucket[1][att][buck])
- 				_for(k, 0, data[1][att][j].size())
- 				bLocal[data[1][att][j][k].subID] = 0;
+			_for(j, buck, endBucket[1][att][buck])
+				_for(k, 0, data[1][att][j].size())
+				bLocal[data[1][att][j][k].subID] = 0;
 
- 			b = b | bLocal;
- 		}
- 		else
- 		{
- 			_for(j, endBucket[1][att][buck], buck)
- 				_for(k, 0, data[1][att][j].size())
- 				b[data[1][att][j][k].subID] = 1;
+			b = b | bLocal;
+		}
+		else
+		{
+			_for(j, endBucket[1][att][buck], buck)
+				_for(k, 0, data[1][att][j].size())
+				b[data[1][att][j][k].subID] = 1;
 
- 			if (bitsID[1][att][buck] != -1)
- 				b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
- 		}
- 	}
+			if (bitsID[1][att][buck] != -1)
+				b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
+		}
+	}
 
- 	if (numBits > 1)
- 	{
- 		_for(i, 0, numDimension) if (!attExist[i])
- 			b = b | fullBits[i];
- 	}
- 	else
- 	{
- 		_for(i, 0, numDimension) if (!attExist[i])
- 			_for(j, 0, endBucket[0][i][0])
- 			_for(k, 0, data[0][i][j].size())
- 			b[data[0][i][j][k].subID] = 1;
+	if (numBits > 1)
+	{
+		_for(i, 0, numDimension) if (!attExist[i])
+			b = b | fullBits[i];
+	}
+	else
+	{
+		_for(i, 0, numDimension) if (!attExist[i])
+			_for(j, 0, endBucket[0][i][0])
+			_for(k, 0, data[0][i][j].size())
+			b[data[0][i][j][k].subID] = 1;
 
- 		_for(i, 0, numDimension) if (!attExist[i])
- 			b = b | bits[0][i][0];
- 	}
+		_for(i, 0, numDimension) if (!attExist[i])
+			b = b | bits[0][i][0];
+	}
 
- 	//_for(i, 0, subs) if (!b[i])
- 	//{
- 	//	++matchSubs;
- 	//	//cout << "BIOP5 matches sub: " << i << endl;
- 	//}
+	//_for(i, 0, subs) if (!b[i])
+	//{
+	//	++matchSubs;
+	//	//cout << "BIOP5 matches sub: " << i << endl;
+	//}
 	matchSubs = numSub - b.count();
- }
+}
 
 //void BIOP5::calBucketSize() {
 //	bucketSub.clear();
@@ -591,43 +600,43 @@ int BIOP5::calMemory() {
 	// 两个endBucket、两个bitsID、两个doubleReverse
 	size += (4 * sizeof(int) + 2 * sizeof(bool)) * numDimension * numBucket;
 	size = size / 1024 / 1024; // MB
-	return (int) size;
+	return (int)size;
 }
 
 void BIOP5::printRelation(int dimension_i) {
 	cout << "\n\nBIOP5DDMap\n";
 	if (dimension_i == -1)
 		_for(i, 0, numDimension) {
-			cout << "\nDimension " << i << "    LowBucket Predicates: " << fix[0][i][0] << "   ----------------\n";
-			_for(j, 0, numBucket) {
-				cout << "lBkt" << j << ": bID=" << bitsID[0][i][j] << ", eBkt=" << endBucket[0][i][j] << ", dRvs="
-					 << doubleReverse[0][i][j] << "; ";
-				if (j % 5 == 0 && j > 0)
-					cout << "\n";
-			}
-			cout << "\n\nDimension " << i << "    HighBucket Predicates: " << fix[1][i][numBucket]
-				 << "   ----------------\n";
-			_for(j, 0, numBucket) {
-				cout << "hBkt" << j << ": bID=" << bitsID[1][i][j] << ", eBkt=" << endBucket[1][i][j] << ", dRvs="
-					 << doubleReverse[1][i][j] << "; ";
-				if (j % 5 == 0 && j > 0)
-					cout << "\n";
-			}
+		cout << "\nDimension " << i << "    LowBucket Predicates: " << fix[0][i][0] << "   ----------------\n";
+		_for(j, 0, numBucket) {
+			cout << "lBkt" << j << ": bID=" << bitsID[0][i][j] << ", eBkt=" << endBucket[0][i][j] << ", dRvs="
+				<< doubleReverse[0][i][j] << "; ";
+			if (j % 5 == 0 && j > 0)
+				cout << "\n";
 		}
+		cout << "\n\nDimension " << i << "    HighBucket Predicates: " << fix[1][i][numBucket]
+			<< "   ----------------\n";
+		_for(j, 0, numBucket) {
+			cout << "hBkt" << j << ": bID=" << bitsID[1][i][j] << ", eBkt=" << endBucket[1][i][j] << ", dRvs="
+				<< doubleReverse[1][i][j] << "; ";
+			if (j % 5 == 0 && j > 0)
+				cout << "\n";
+		}
+	}
 	else {
 		cout << "\nDimension: " << dimension_i << "    LowBucket Predicates: " << fix[0][dimension_i][0]
-			 << "   ----------------\n";
+			<< "   ----------------\n";
 		_for(i, 0, numBucket) {
 			cout << "lBkt" << i << ": bID=" << bitsID[0][dimension_i][i] << ", eBkt=" << endBucket[0][dimension_i][i]
-				 << ", dRvs=" << doubleReverse[0][dimension_i][i] << "; ";
+				<< ", dRvs=" << doubleReverse[0][dimension_i][i] << "; ";
 			if (i % 5 == 0 && i > 0)
 				cout << "\n";
 		}
 		cout << "\n\nDimension: " << dimension_i << "    HighBucket Predicates: " << fix[1][dimension_i][numBucket]
-			 << "   ----------------\n";
+			<< "   ----------------\n";
 		_for(i, 0, numBucket) {
 			cout << "hBkt" << i << ": bID=" << bitsID[1][dimension_i][i] << ", eBkt=" << endBucket[1][dimension_i][i]
-				 << ", dRvs=" << doubleReverse[1][dimension_i][i] << "; ";
+				<< ", dRvs=" << doubleReverse[1][dimension_i][i] << "; ";
 			if (i % 5 == 0 && i > 0)
 				cout << "\n";
 		}

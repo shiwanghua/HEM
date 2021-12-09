@@ -1,12 +1,12 @@
-#include "Rein.h"
-#include "BIOP.h"
-#include<iomanip>
-#include <iostream>
-//#include <omp.h>
-//#include<mpi.h>
-//#include <unistd.h>
-
-using namespace std;
+//#include "Rein.h"
+//#include "BIOP.h"
+//#include<iomanip>
+//#include <iostream>
+////#include <omp.h>
+////#include<mpi.h>
+////#include <unistd.h>
+//
+//using namespace std;
 
 //void hello(int& a) {
 //	int my_rank = omp_get_thread_num();
