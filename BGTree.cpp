@@ -85,7 +85,8 @@ void BGTree::releaseGreenNode(rgreennode *&r) {
 }
 
 void BGTree::insert(IntervalSub sub) {
-	_for(i, 0, sub.size) insertIntoBlueNode(roots[sub.constraints[i].att], sub.id, sub.constraints[i].lowValue,
+	_for(i, 0, sub.size) 
+		insertIntoBlueNode(roots[sub.constraints[i].att], sub.id, sub.constraints[i].lowValue,
 											sub.constraints[i].highValue);
 }
 
