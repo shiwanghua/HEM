@@ -1,3 +1,5 @@
+738 memory= 122 MB AvgMatchNum= 5.630000 AvgInsertTime= 0.000600 ms AvgDeleteTime= -nan(ind) ms AvgMatchTime= 64.610186 ms numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20
+737 memory= 122 MB AvgMatchNum= 5.630000 AvgInsertTime= 0.000582 ms AvgDeleteTime= -nan(ind) ms AvgMatchTime= 57.533604 ms numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20
 736 memory= 122 MB AvgMatchNum= 5.630000 AvgInsertTime= 0.000189 ms AvgDeleteTime= -nan(ind) ms AvgMatchTime= 29.146088 ms numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20
 736 memory= 122 MB AvgMatchNum= 1008.750000 AvgInsertTime= 0.000183 ms AvgDeleteTime= -nan(ind) ms AvgMatchTime= 39.253489 ms numSub= 1000000 subSize= 10 numPub= 500 pubSize= 20 attTypes= 20
 735 memory= 122 MB AvgMatchNum= 1110.660000 AvgInsertTime= 0.001002 ms AvgDeleteTime= -nan(ind) ms AvgMatchTime= 55.547055 ms numSub= 1000000 subSize= 10 numPub= 100 pubSize= 20 attTypes= 20

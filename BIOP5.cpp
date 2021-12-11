@@ -486,7 +486,7 @@ void BIOP5::initBits() {
 // 不计算时间组成
 void BIOP5::match(const Pub& pub, int& matchSubs)
 {
-	register bitset<subs> b;
+	bitset<subs> b; // register
 	bitset<subs> bLocal;
 	vector<bool> attExist(numDimension, false);
     int value, att, buck;
@@ -560,7 +560,7 @@ void BIOP5::match(const Pub& pub, int& matchSubs)
 
 		_for(i, 0, numDimension) if (!attExist[i])
 			b = b | bits[0][i][0];
-	}
+	}  
 
 	//_for(i, 0, subs) if (!b[i])
 	//{

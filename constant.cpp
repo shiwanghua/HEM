@@ -1,5 +1,5 @@
 #include "constant.h"
-string expID = "736";       // Record the experiment ID number
+string expID = "739";       // Record the experiment ID number
 const bool display = false; // whether to print the mapping relation
 const bool verifyID = false; // whether to verify Insertion and Deletion function
 const int interval = 100;   // after a interval of events is matched, print a log
@@ -27,6 +27,7 @@ const int lvls = 2;         // BIOPSC number of levels
 int gs = 5;                 // BIOPSR Group Size 一组有多少个维度
 
 // Tama
+
 const int level = 13;
 
 //AdaRein
@@ -36,4 +37,4 @@ const double falsePositiveRate = 0.05;
 const int initH = 4;           // Initial height
 
 // pRein
-int parallelDegree=5;
+int parallelDegree=1;

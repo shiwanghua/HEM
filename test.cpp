@@ -39,4 +39,3 @@
 //	if (myid == 0) printf("number of processes: %d\n...", numprocs);
 //	printf("%s: Hello world from process %d \n", processor_name, myid);
 //	MPI_Finalize();
-
