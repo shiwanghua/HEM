@@ -34,25 +34,37 @@ bitset<subs>*& vectorToBitset(vector<int>& v) {
 	return bs;
 }
 
-int main(int argc, char** argv)
+//int& t(double d) {
+//	int ans = d;
+//	cout << "ans= " << &ans << "\n";
+//	return ans;
+//}
+
+int main22(int argc, char** argv)
 {
 	//	int thread_count = 4;
 	//	int a=5;
 	//#pragma omp parallel num_threads(thread_count) default(none) shared(a)
 	//	hello(a);
-	bitset<subs>* bs = new bitset<subs>;
-	vector<int> v{ 5 };
-	cout << "bs1: " << bs << " " << &bs << "\n";
-	cout << v.size() << " " << (*bs)[5] << "\n";
-	vectorToBitset(v, bs);
-	cout << v.size() << " " << (*bs)[5] << "\n";
-	v.push_back(999999);
-	cout << "bs2: " << bs << " " << &bs << "\n";
-	delete bs;
-	cout << "bs3: " << bs << " " << &bs << "\n";
-	bs = vectorToBitset(v);
-	cout << "bs4: " << bs << " " << &bs << "\n";
-	cout << v.size() << (*bs)[999999] << " " << (*bs)[5];
+	//bitset<subs>* bs = new bitset<subs>;
+	//vector<int> v{ 5 };
+	//cout << "bs1: " << bs << " " << &bs << "\n";
+	//cout << v.size() << " " << (*bs)[5] << "\n";
+	//vectorToBitset(v, bs);
+	//cout << v.size() << " " << (*bs)[5] << "\n";
+	//v.push_back(999999);
+	//cout << "bs2: " << bs << " " << &bs << "\n";
+	//delete bs;
+	//cout << "bs3: " << bs << " " << &bs << "\n";
+	//bs = vectorToBitset(v);
+	//cout << "bs4: " << bs << " " << &bs << "\n";
+	//cout << v.size() << (*bs)[999999] << " " << (*bs)[5];
+
+	//int a = 1;
+	//cout << "a: " << &a << "\n";
+	//t(a);
+	//cout << "a: " << &a << "\n";
+
 
 	system("pause");
 	return 0;
@@ -68,3 +80,4 @@ int main(int argc, char** argv)
 //	if (myid == 0) printf("number of processes: %d\n...", numprocs);
 //	printf("%s: Hello world from process %d \n", processor_name, myid);
 //	MPI_Finalize();
+

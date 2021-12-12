@@ -61,29 +61,22 @@ private:
 	vector<bluenode *> roots;
 
 	void initBlueNode(bluenode *&r);
-
 	void initGreenNode(lgreennode *&r);
-
 	void initGreenNode(rgreennode *&r);
 
 	void releaseBlueNode(bluenode *&r);
-
 	void releaseGreenNode(lgreennode *&r);
-
 	void releaseGreenNode(rgreennode *&r);
 
 	void insertIntoBlueNode(bluenode *&r, const int &subID, const int &l, const int &h);
-
 	void insertIntoGreenNode(lgreennode *&r, const int &subID, const int &l);
-
 	void insertIntoGreenNode(rgreennode *&r, const int &subID, const int &h);
 
-//	bitset<subs> *&vectorToBitset(vector<int> &v);
-//
-//	vector<int> &bitsetToVector(bitset<subs> *&b);
+	bool deleteFromBlueNode(bluenode*& r, const int& subID, const int& l, const int& h);
+	bool deleteFromGreenNode(lgreennode*& r, const int& subID, const int& l);
+	bool deleteFromGreenNode(rgreennode*& r, const int& subID, const int& h);
 
 	void vectorToBitset(vector<int> &v, bitset<subs> *&);
-
 	void bitsetToVector(bitset<subs> *&b, vector<int> &);
 
 public:
@@ -93,11 +86,14 @@ public:
 
 	void insert(IntervalSub sub);
 
+	bool deleteSub(IntervalSub sub);
+
 	void forward_match(const Pub &pub, int &matchSubs);
 
 	void backward_match(const Pub &pub, int &matchSubs);
 
 	int calMemory();      // 计算占用内存大小
+
 	void printBGTree();
 };
 

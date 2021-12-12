@@ -20,24 +20,24 @@ BGTree::~BGTree() {
 	}
 }
 
-void BGTree::initBlueNode(bluenode *&r) {
+void BGTree::initBlueNode(bluenode*& r) {
 	if (r->levelid == initHeight) {
 		r->isleaf = true;
 		return;
 	}
 	int mid = (r->l + r->h) >> 1, nextLevelID = r->levelid + 1;
-	r->leftBlueChild = new bluenode(r->l, mid, ++numNode, nextLevelID, {}, nullptr, nullptr, nullptr, nullptr, nullptr);
-	initBlueNode(r->leftBlueChild);
-	r->leftGreenChild = new lgreennode(r->l, mid, ++numNode, nextLevelID, {}, nullptr, nullptr, nullptr);
+	r->leftGreenChild = new lgreennode(r->l, mid - 1, ++numNode, nextLevelID, {}, nullptr, nullptr, nullptr);
 	initGreenNode(r->leftGreenChild);
 	r->rightGreenChild = new rgreennode(mid + 1, r->h, ++numNode, nextLevelID, {}, nullptr, nullptr, nullptr);
 	initGreenNode(r->rightGreenChild);
+	r->leftBlueChild = new bluenode(r->l, mid, ++numNode, nextLevelID, {}, nullptr, nullptr, nullptr, nullptr, nullptr);
+	initBlueNode(r->leftBlueChild);
 	r->rightBlueChild = new bluenode(mid + 1, r->h, ++numNode, nextLevelID, {}, nullptr, nullptr, nullptr, nullptr,
-									 nullptr);
+		nullptr);
 	initBlueNode(r->rightBlueChild);
 }
 
-void BGTree::initGreenNode(lgreennode *&r) {
+void BGTree::initGreenNode(lgreennode*& r) {
 	if (r->levelid == initHeight) {
 		r->isleaf = true;
 		return;
@@ -49,7 +49,7 @@ void BGTree::initGreenNode(lgreennode *&r) {
 	initGreenNode(r->rightChild);
 }
 
-void BGTree::initGreenNode(rgreennode *&r) {
+void BGTree::initGreenNode(rgreennode*& r) {
 	if (r->levelid == initHeight) {
 		r->isleaf = true;
 		return;
@@ -61,73 +61,161 @@ void BGTree::initGreenNode(rgreennode *&r) {
 	initGreenNode(r->rightChild);
 }
 
-void BGTree::releaseBlueNode(bluenode *&r) {
+void BGTree::releaseBlueNode(bluenode*& r) {
 	if (r->leftGreenChild) releaseGreenNode(r->leftGreenChild);
 	if (r->rightGreenChild) releaseGreenNode(r->rightGreenChild);
 	if (r->leftBlueChild) releaseBlueNode(r->leftBlueChild);
 	if (r->rightBlueChild) releaseBlueNode(r->rightBlueChild);
-	if (r->bst) delete r->bst;
+	if (r->bst != nullptr) delete r->bst;
 	delete r;
 }
 
-void BGTree::releaseGreenNode(lgreennode *&r) {
+void BGTree::releaseGreenNode(lgreennode*& r) {
 	if (r->leftChild) releaseGreenNode(r->leftChild);
 	if (r->rightChild) releaseGreenNode(r->rightChild);
-	if (r->bst) delete r->bst;
+	if (r->bst != nullptr) delete r->bst;
 	delete r;
 }
 
-void BGTree::releaseGreenNode(rgreennode *&r) {
+void BGTree::releaseGreenNode(rgreennode*& r) {
 	if (r->leftChild) releaseGreenNode(r->leftChild);
 	if (r->rightChild) releaseGreenNode(r->rightChild);
-	if (r->bst) delete r->bst;
+	if (r->bst != nullptr) delete r->bst;
 	delete r;
 }
 
 void BGTree::insert(IntervalSub sub) {
-	_for(i, 0, sub.size) 
+	_for(i, 0, sub.size)
 		insertIntoBlueNode(roots[sub.constraints[i].att], sub.id, sub.constraints[i].lowValue,
-											sub.constraints[i].highValue);
+			sub.constraints[i].highValue);
 }
 
-void BGTree::insertIntoBlueNode(bluenode *&r, const int &subID, const int &l, const int &h) {
-
-	r->subids.push_back(subID);
-	if (r->numNodeSub > boundaryNumSub) //r->subids.size()==r->numNodeSub
-		vectorToBitset(r->subids, r->bst);
-	else if (r->numNodeSub < boundaryNumSub) // could define a $numNodeSub to replace 'r->bst->count()'
-		bitsetToVector(r->bst, r->subids);
+void BGTree::insertIntoBlueNode(bluenode*& r, const int& subID, const int& l, const int& h) {
+	r->numNodeSub++;
+	if (r->bst == nullptr) {
+		r->subids.push_back(subID);
+		if (r->numNodeSub >= boundaryNumSub) //r->subids.size()==r->numNodeSub
+			vectorToBitset(r->subids, r->bst);
+	}
+	else {
+		(*(r->bst))[subID] = 1;
+	}
 
 	int mid = (r->l + r->h) >> 1;
-	if (r->leftBlueChild && h <= mid)
+	if (r->leftBlueChild != nullptr && h <= mid)
 		insertIntoBlueNode(r->leftBlueChild, subID, l, h);
-	else if (r->rightBlueChild && l >= mid)
+	else if (r->rightBlueChild != nullptr && l >= mid)
 		insertIntoBlueNode(r->rightBlueChild, subID, l, h);
+	else if (r->leftGreenChild) {// l<mid<h
+		insertIntoGreenNode(r->leftGreenChild, subID, l);
+		insertIntoGreenNode(r->rightGreenChild, subID, h);
+	}
+}
+void BGTree::insertIntoGreenNode(lgreennode*& r, const int& subID, const int& l) {
+	r->numNodeSub++;
+	if (r->bst == nullptr) {
+		r->subids.push_back(subID);
+		if (r->numNodeSub >= boundaryNumSub) //r->subids.size()==r->numNodeSub
+			vectorToBitset(r->subids, r->bst);
+	}
 	else {
-		if (r->leftGreenChild)
-			insertIntoGreenNode(r->leftGreenChild, subID, l);
-		if (r->rightGreenChild)
-			insertIntoGreenNode(r->rightGreenChild, subID, h);
+		(*(r->bst))[subID] = 1;
+	}
+
+	int mid = (r->l + r->h) >> 1;
+	if (r->leftChild != nullptr) {
+		if (l <= mid)
+			insertIntoGreenNode(r->leftChild, subID, l);
+		else insertIntoGreenNode(r->rightChild, subID, l);
+	}
+}
+void BGTree::insertIntoGreenNode(rgreennode*& r, const int& subID, const int& l) {
+	r->numNodeSub++;
+	if (r->bst == nullptr) {
+		r->subids.push_back(subID);
+		if (r->numNodeSub >= boundaryNumSub) //r->subids.size()==r->numNodeSub
+			vectorToBitset(r->subids, r->bst);
+	}
+	else {
+		(*(r->bst))[subID] = 1;
+	}
+
+	int mid = (r->l + r->h) >> 1;
+	if (r->leftChild != nullptr) {
+		if (l <= mid)
+			insertIntoGreenNode(r->leftChild, subID, l);
+		else insertIntoGreenNode(r->rightChild, subID, l);
 	}
 }
 
-void BGTree::insertIntoGreenNode(lgreennode *&r, const int &subID, const int &l) {
+bool BGTree::deleteFromBlueNode(bluenode*& r, const int& subID, const int& l, const int& h) {
+	bool find = false;
+	r->numNodeSub--;
+	if (r->bst == nullptr) {
+		for (vector<int>::iterator it = r->subids.begin(); it != r->subids.end(); it++) {
+			if (*it == subID) {
+				r->subids.erase(it);
+				find = true;
+				break;
+			}
+		}
+	}
+	else if((*(r->bst))[subID]) {
+		(*(r->bst))[subID] = 0;
+	}
+	else return false;
+
+	int mid = (r->l + r->h) >> 1;
+	if (r->leftBlueChild != nullptr && h <= mid)
+		find&=deleteFromBlueNode(r->leftBlueChild, subID, l, h);
+	else if (r->rightBlueChild != nullptr && l >= mid)
+		find&=deleteFromBlueNode(r->rightBlueChild, subID, l, h);
+	else if (r->leftGreenChild) {// l<mid<h
+		find&=deleteFromGreenNode(r->leftGreenChild, subID, l);
+		find&=deleteFromGreenNode(r->rightGreenChild, subID, h);
+	}
+}
+bool BGTree::deleteFromGreenNode(lgreennode*& r, const int& subID, const int& l) {
+	bool find = false;
+	r->numNodeSub--;
+	if (r->bst == nullptr) {
+		for (vector<int>::iterator it = r->subids.begin(); it != r->subids.end(); it++)
+		{
+			if (*it == subID) {
+				r->subids.erase(it);
+				find = true;
+				break;
+			}
+		}
+	}
+	else if ((*(r->bst))[subID]) {
+		(*(r->bst))[subID] = 0;
+	}
+	else return false;
+	
+}
+bool BGTree::deleteFromGreenNode(rgreennode*& r, const int& subID, const int& h) {
 
 }
 
-void BGTree::insertIntoGreenNode(rgreennode *&r, const int &subID, const int &l) {
+void BGTree::vectorToBitset(vector<int>& v, bitset<subs>*& b) {
+	for (int i = 0; i < v.size(); i++)
+		(*b)[v[i]] = 1;
+	v.resize(0);
+}
+
+void BGTree::bitsetToVector(bitset<subs>*& b, vector<int>& v) {
+	_for(i, 0, subs)
+		if ((*b)[i])
+			v.push_back(i);
+	delete b;
+}
+
+void BGTree::forward_match(const Pub& pub, int& matchSubs) {
 
 }
 
-void BGTree::vectorToBitset(vector<int> &v, bitset<subs> *&) {}
-
-void BGTree::bitsetToVector(bitset<subs> *&b, vector<int> &) {}
-
-void BGTree::forward_match(const Pub &pub, int &matchSubs) {
-
-}
-
-void BGTree::backward_match(const Pub &pub, int &matchSubs) {
+void BGTree::backward_match(const Pub& pub, int& matchSubs) {
 
 }
 
