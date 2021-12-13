@@ -11,43 +11,49 @@
 #include <bitset>
 
 struct lgreennode {
-	bool isleaf = false;
 	// low/high boundary
-	int l, h, nodeid, levelid, numNodeSub = 0;
+	int l, h, mid, nodeid, levelid, numNodeSub = 0;
+	bitset<subs>* bst;
 	vector<int> subids; // Either bst is nullptr or subids.size()==0
-	bitset<subs> *bst;
-	lgreennode *leftChild, *rightChild;
+	vector<int> lequal; // Record subID with predicate [l,]
+	lgreennode *leftChild, *rightChild; // 2个节点指针要么都是空的, 要么都是非空
 
 	lgreennode(int low, int high, int nid, int lid, vector<int> subIDs, bitset<subs> *bits, lgreennode *lc,
 			   lgreennode *rc)
-		: l(low), h(high), nodeid(nid), levelid(lid), subids(subIDs), bst(bits), leftChild(lc), rightChild(rc) {}
+		: l(low), h(high), nodeid(nid), levelid(lid), subids(subIDs), bst(bits), leftChild(lc), rightChild(rc) {
+		mid = (l + h) >> 1;
+	}
 };
 
 struct rgreennode {
-	bool isleaf = false;
-	int l, h, nodeid, levelid, numNodeSub = 0;
+	int l, h, mid, nodeid, levelid, numNodeSub = 0;
+	bitset<subs>* bst;
 	vector<int> subids;
-	bitset<subs> *bst;
+	vector<int> requal; // Record subID with predicate [,h]
 	rgreennode *leftChild, *rightChild;
 
 	rgreennode(int low, int high, int nid, int lid, vector<int> subIDs, bitset<subs> *bits, rgreennode *lc,
 			   rgreennode *rc)
-		: l(low), h(high), nodeid(nid), levelid(lid), subids(subIDs), bst(bits), leftChild(lc), rightChild(rc) {}
+		: l(low), h(high), nodeid(nid), levelid(lid), subids(subIDs), bst(bits), leftChild(lc), rightChild(rc) {
+		mid = (l + h) >> 1;
+	}
 };
 
 struct bluenode {
-	bool isleaf = false;
-	int l, h, nodeid, levelid, numNodeSub = 0;
-	vector<int> subids;
-	bitset<subs> *bst;
-	lgreennode *leftGreenChild;
+	int l, h, mid, nodeid, levelid, numNodeSub = 0;
+	bitset<subs>* bst;
+	vector<int> subids;         // 对于内部节点, 只能用于反向标记
+	vector<int> lequal, requal; // Record subID with predicate [l,] or [,h]
+	lgreennode *leftGreenChild; // 4个节点指针要么都是空的, 要么都是非空
 	rgreennode *rightGreenChild;
 	bluenode *leftBlueChild, *rightBlueChild;
 
 	bluenode(int low, int high, int nid, int lid, vector<int> subIDs, bitset<subs> *bits, lgreennode *lc,
 			 rgreennode *rc, bluenode *lbc, bluenode *rbc)
 		: l(low), h(high), nodeid(nid), levelid(lid), subids(subIDs), bst(bits), leftGreenChild(lc),
-		  rightGreenChild(rc), leftBlueChild(lbc), rightBlueChild(rbc) {}
+		  rightGreenChild(rc), leftBlueChild(lbc), rightBlueChild(rbc) {
+		mid = (l + h) >> 1;
+	}
 };
 
 // Version1: can't expand node, height is fixed.
@@ -58,6 +64,8 @@ private:
 	int numNode;        // Number of all nodes
 	int height;         // The height of BGTree with only one node is 1
 	int initHeight;     // Initial height constructing the BGTree, >=1
+	int subPredicate[subs];
+	int counter[subs];
 	vector<bluenode *> roots;
 
 	void initBlueNode(bluenode *&r);
@@ -79,6 +87,9 @@ private:
 	void vectorToBitset(vector<int> &v, bitset<subs> *&);
 	void bitsetToVector(bitset<subs> *&b, vector<int> &);
 
+	void forward_match_blueNode(bluenode*& r, int att, int value, const vector<IntervalSub>& subList);
+	void forward_match_lgreenNode(lgreennode*& r, int att, int value, const vector<IntervalSub>& subList);
+	void forward_match_rgreenNode(rgreennode*& r, int att, int value, const vector<IntervalSub>& subList);
 public:
 	BGTree();
 
@@ -88,7 +99,7 @@ public:
 
 	bool deleteSub(IntervalSub sub);
 
-	void forward_match(const Pub &pub, int &matchSubs);
+	void forward_match(const Pub &pub, int &matchSubs, const vector<IntervalSub>& subList);
 
 	void backward_match(const Pub &pub, int &matchSubs);
 

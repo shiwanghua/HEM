@@ -40,7 +40,7 @@ bitset<subs>*& vectorToBitset(vector<int>& v) {
 //	return ans;
 //}
 
-int main22(int argc, char** argv)
+int masin(int argc, char** argv)
 {
 	//	int thread_count = 4;
 	//	int a=5;
@@ -64,11 +64,11 @@ int main22(int argc, char** argv)
 	//cout << "a: " << &a << "\n";
 	//t(a);
 	//cout << "a: " << &a << "\n";
-
-
 	system("pause");
 	return 0;
 }
+
+	
 
 //int myid, numprocs, namelen;
 //	cout<<MPI_MAX_PROCESSOR_NAME<<"---\n";
