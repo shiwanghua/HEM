@@ -40,7 +40,7 @@ bitset<subs>*& vectorToBitset(vector<int>& v) {
 //	return ans;
 //}
 
-int masin(int argc, char** argv)
+int main(int argc, char** argv)
 {
 	//	int thread_count = 4;
 	//	int a=5;
@@ -64,6 +64,11 @@ int masin(int argc, char** argv)
 	//cout << "a: " << &a << "\n";
 	//t(a);
 	//cout << "a: " << &a << "\n";
+	bitset<1000000> b;
+	b.set();
+	b[999999] = 0;
+	b[12345] = 0;
+	cout << b.count();
 	system("pause");
 	return 0;
 }

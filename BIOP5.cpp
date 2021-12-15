@@ -108,8 +108,8 @@ bool BIOP5::deleteSubscription(IntervalSub sub) {
 		cnt = sub.constraints[i];
 
 		bucketID = cnt.lowValue / buckStep;
-		vector<Combo>::iterator it;
-		for (it = data[0][cnt.att][bucketID].begin(); it != data[0][cnt.att][bucketID].end(); it++)
+		vector<Combo>::const_iterator it;
+		for (it = data[0][cnt.att][bucketID].cbegin(); it != data[0][cnt.att][bucketID].cend(); it++)
 			if (it->subID == id) {
 				data[0][cnt.att][bucketID].erase(it); // it = 
 				find++;
@@ -123,7 +123,7 @@ bool BIOP5::deleteSubscription(IntervalSub sub) {
 		_for(q, b, numBits - 1) bits[0][cnt.att][q][sub.id] = 0;
 
 		bucketID = cnt.highValue / buckStep;
-		for (it = data[1][cnt.att][bucketID].begin(); it != data[1][cnt.att][bucketID].end(); it++)
+		for (it = data[1][cnt.att][bucketID].cbegin(); it != data[1][cnt.att][bucketID].cend(); it++)
 			if (it->subID == id) {
 				data[1][cnt.att][bucketID].erase(it); // it = 
 				find++;

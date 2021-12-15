@@ -15,7 +15,7 @@ struct lgreennode {
 	int l, h, mid, nodeid, levelid, numNodeSub = 0;
 	bitset<subs>* bst;
 	vector<int> subids; // Either bst is nullptr or subids.size()==0
-	vector<int> lequal; // Record subID with predicate [l,]
+	vector<int> midequal; // Record subID with predicate including mid
 	lgreennode *leftChild, *rightChild; // 2个节点指针要么都是空的, 要么都是非空
 
 	lgreennode(int low, int high, int nid, int lid, vector<int> subIDs, bitset<subs> *bits, lgreennode *lc,
@@ -29,7 +29,7 @@ struct rgreennode {
 	int l, h, mid, nodeid, levelid, numNodeSub = 0;
 	bitset<subs>* bst;
 	vector<int> subids;
-	vector<int> requal; // Record subID with predicate [,h]
+	vector<int> midEqual; // Record subID with predicate including mid
 	rgreennode *leftChild, *rightChild;
 
 	rgreennode(int low, int high, int nid, int lid, vector<int> subIDs, bitset<subs> *bits, rgreennode *lc,
@@ -43,7 +43,7 @@ struct bluenode {
 	int l, h, mid, nodeid, levelid, numNodeSub = 0;
 	bitset<subs>* bst;
 	vector<int> subids;         // 对于内部节点, 只能用于反向标记
-	vector<int> lequal, requal; // Record subID with predicate [l,] or [,h]
+	vector<int> midEqual;       // Record subID with predicate including mid
 	lgreennode *leftGreenChild; // 4个节点指针要么都是空的, 要么都是非空
 	rgreennode *rightGreenChild;
 	bluenode *leftBlueChild, *rightBlueChild;

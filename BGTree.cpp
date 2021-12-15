@@ -14,7 +14,6 @@ BGTree::BGTree() {
 	}
 	height = initHeight;
 }
-
 BGTree::~BGTree() {
 	_for(i, 0, atts) {
 		releaseBlueNode(roots[i]);
@@ -37,7 +36,6 @@ void BGTree::initBlueNode(bluenode*& r) {
 		nullptr);
 	initBlueNode(r->rightBlueChild);
 }
-
 void BGTree::initGreenNode(lgreennode*& r) {
 	if (r->levelid == initHeight) {
 		return;
@@ -48,15 +46,15 @@ void BGTree::initGreenNode(lgreennode*& r) {
 	r->rightChild = new lgreennode(r->mid + 1, r->h, ++numNode, nextLevelID, {}, nullptr, nullptr, nullptr);
 	initGreenNode(r->rightChild);
 }
-
 void BGTree::initGreenNode(rgreennode*& r) {
 	if (r->levelid == initHeight) {
 		return;
 	}
 	int nextLevelID = r->levelid + 1;
-	r->leftChild = new rgreennode(r->l, r->mid, ++numNode, nextLevelID, {}, nullptr, nullptr, nullptr);
+	// 注意右绿节点的左子区间为 [l,mid-1], 对称美
+	r->leftChild = new rgreennode(r->l, r->mid-1, ++numNode, nextLevelID, {}, nullptr, nullptr, nullptr);
 	initGreenNode(r->leftChild);
-	r->rightChild = new rgreennode(r->mid + 1, r->h, ++numNode, nextLevelID, {}, nullptr, nullptr, nullptr);
+	r->rightChild = new rgreennode(r->mid, r->h, ++numNode, nextLevelID, {}, nullptr, nullptr, nullptr);
 	initGreenNode(r->rightChild);
 }
 
@@ -68,14 +66,12 @@ void BGTree::releaseBlueNode(bluenode*& r) {
 	if (r->bst != nullptr) delete r->bst;
 	delete r;
 }
-
 void BGTree::releaseGreenNode(lgreennode*& r) {
 	if (r->leftChild) releaseGreenNode(r->leftChild);
 	if (r->rightChild) releaseGreenNode(r->rightChild);
 	if (r->bst != nullptr) delete r->bst;
 	delete r;
 }
-
 void BGTree::releaseGreenNode(rgreennode*& r) {
 	if (r->leftChild) releaseGreenNode(r->leftChild);
 	if (r->rightChild) releaseGreenNode(r->rightChild);
@@ -89,7 +85,6 @@ void BGTree::insert(IntervalSub sub) {
 		insertIntoBlueNode(roots[sub.constraints[i].att], sub.id, sub.constraints[i].lowValue,
 			sub.constraints[i].highValue);
 }
-
 void BGTree::insertIntoBlueNode(bluenode*& r, const int& subID, const int& l, const int& h) {
 	r->numNodeSub++;
 	if (r->bst == nullptr) {
@@ -101,8 +96,8 @@ void BGTree::insertIntoBlueNode(bluenode*& r, const int& subID, const int& l, co
 		(*(r->bst))[subID] = 1;
 	}
 
-	if (l == r->l)
-		r->lequal.push_back(subID);
+	if (r->mid == l||r->mid==h)
+		r->midEqual.push_back(subID);
 
 	if (r->leftBlueChild != nullptr) { // 有子节点
 		if (h <= r->mid)
@@ -110,6 +105,7 @@ void BGTree::insertIntoBlueNode(bluenode*& r, const int& subID, const int& l, co
 		else if (l >= r->mid)
 			insertIntoBlueNode(r->rightBlueChild, subID, l, h);
 		else {  // l<mid<h
+			r->midEqual.push_back(subID);
 			insertIntoGreenNode(r->leftGreenChild, subID, l);
 			insertIntoGreenNode(r->rightGreenChild, subID, h);
 		}
@@ -144,9 +140,9 @@ void BGTree::insertIntoGreenNode(rgreennode*& r, const int& subID, const int& h)
 	}
 
 	if (r->leftChild != nullptr) {
-		if (h <= r->mid)
-			insertIntoGreenNode(r->leftChild, subID, h);
-		else insertIntoGreenNode(r->rightChild, subID, h);
+		if (h >= r->mid)
+			insertIntoGreenNode(r->rightChild, subID, h);
+		else insertIntoGreenNode(r->leftChild, subID, h);
 	}
 }
 
@@ -154,7 +150,7 @@ bool BGTree::deleteFromBlueNode(bluenode*& r, const int& subID, const int& l, co
 	bool find = false;
 	r->numNodeSub--;
 	if (r->bst == nullptr) {
-		for (vector<int>::iterator it = r->subids.begin(); it != r->subids.end(); it++) {
+		for (vector<int>::const_iterator it = r->subids.cbegin(); it != r->subids.cend(); it++) {
 			if (*it == subID) {
 				r->subids.erase(it);
 				find = true;
@@ -164,20 +160,34 @@ bool BGTree::deleteFromBlueNode(bluenode*& r, const int& subID, const int& l, co
 	}
 	else if ((*(r->bst))[subID]) {
 		(*(r->bst))[subID] = 0;
+		find = true;
 	}
-	else return false;
+	
+	if (!find) return false;
 
-	if (r->leftBlueChild != nullptr) {
-		if (h <= r->mid)
-			find &= deleteFromBlueNode(r->leftBlueChild, subID, l, h);
-		else if (l >= r->mid)
-			find &= deleteFromBlueNode(r->rightBlueChild, subID, l, h);
-		else {// l<mid<h
-			find &= deleteFromGreenNode(r->leftGreenChild, subID, l);
-			find &= deleteFromGreenNode(r->rightGreenChild, subID, h);
+	if (r->mid == l || r->mid == h) {
+		find = false;
+		for (auto it = r->midEqual.cbegin(); it!= r->midEqual.cend();it++) {
+			if (*it == subID) {
+				r->midEqual.erase(it);
+				find = true;
+				break;
+			}
 		}
 	}
 
+	if (!find) return false;
+
+	if (r->leftBlueChild != nullptr) {
+		if (h <= r->mid)
+			find = deleteFromBlueNode(r->leftBlueChild, subID, l, h);
+		else if (l >= r->mid)
+			find = deleteFromBlueNode(r->rightBlueChild, subID, l, h);
+		else {// l<mid<h
+			find = deleteFromGreenNode(r->leftGreenChild, subID, l);
+			find &= deleteFromGreenNode(r->rightGreenChild, subID, h);
+		}
+	}
 
 	return find;
 }
@@ -185,7 +195,7 @@ bool BGTree::deleteFromGreenNode(lgreennode*& r, const int& subID, const int& l)
 	bool find = false;
 	r->numNodeSub--;
 	if (r->bst == nullptr) {
-		for (vector<int>::iterator it = r->subids.begin(); it != r->subids.end(); it++)
+		for (vector<int>::const_iterator it = r->subids.begin(); it != r->subids.cend(); it++)
 		{
 			if (*it == subID) {
 				r->subids.erase(it);
@@ -196,13 +206,15 @@ bool BGTree::deleteFromGreenNode(lgreennode*& r, const int& subID, const int& l)
 	}
 	else if ((*(r->bst))[subID]) {
 		(*(r->bst))[subID] = 0;
+		find = true;
 	}
-	else return false;
+
+	if (!find) return false;
 
 	if (r->leftChild != nullptr) {
 		if (l <= r->mid)
-			find &= deleteFromGreenNode(r->leftChild, subID, l);
-		else find &= deleteFromGreenNode(r->rightChild, subID, l);
+			find = deleteFromGreenNode(r->leftChild, subID, l);
+		else find = deleteFromGreenNode(r->rightChild, subID, l);
 	}
 	return find;
 }
@@ -210,7 +222,7 @@ bool BGTree::deleteFromGreenNode(rgreennode*& r, const int& subID, const int& h)
 	bool find = false;
 	r->numNodeSub--;
 	if (r->bst == nullptr) {
-		for (vector<int>::iterator it = r->subids.begin(); it != r->subids.end(); it++)
+		for (vector<int>::const_iterator it = r->subids.cbegin(); it != r->subids.cend(); it++)
 		{
 			if (*it == subID) {
 				r->subids.erase(it);
@@ -221,13 +233,15 @@ bool BGTree::deleteFromGreenNode(rgreennode*& r, const int& subID, const int& h)
 	}
 	else if ((*(r->bst))[subID]) {
 		(*(r->bst))[subID] = 0;
+		find = true;
 	}
-	else return false;
+
+	if (!find) return false;
 
 	if (r->leftChild != nullptr) {
 		if (h <= r->mid)
-			find &= deleteFromGreenNode(r->leftChild, subID, h);
-		else find &= deleteFromGreenNode(r->rightChild, subID, h);
+			find = deleteFromGreenNode(r->leftChild, subID, h);
+		else find = deleteFromGreenNode(r->rightChild, subID, h);
 	}
 	return find;
 }
