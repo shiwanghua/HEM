@@ -40,7 +40,7 @@ bitset<subs>*& vectorToBitset(vector<int>& v) {
 //	return ans;
 //}
 
-int main(int argc, char** argv)
+int m7ain(int argc, char** argv)
 {
 	//	int thread_count = 4;
 	//	int a=5;
