@@ -217,3 +217,18 @@ int Rein::calMemory() {
 	size = size / 1024 / 1024; // MB
 	return (int)size;
 }
+
+vector<int> Rein::calMarkNumForBuckets() {
+	vector<int> numMarking(numBucket,0);
+	_for(i, 0, numBucket) {
+		_for(j, 0, numDimension) {
+			_for(k, i, numBucket) {
+				numMarking[i] += data[0][j][k].size();
+			}
+			_for(k, 0, i + 1) {
+				numMarking[i] += data[1][j][k].size();
+			}
+		}
+	}
+	return numMarking;
+}

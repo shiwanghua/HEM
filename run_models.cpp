@@ -1553,3 +1553,27 @@ void run_BGTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 	//	content[content.length() - 2] = ']';
 	//	Util::WriteData(outputFileName.c_str(), content);
 }
+
+void measure_numMark(const intervalGenerator& gen) {
+	Rein rein;
+	BIOP5 hem5;
+
+	for (int i = 0; i < subs; i++) {
+		rein.insert(gen.subList[i]); 
+		hem5.insert(gen.subList[i]);
+	}
+
+	hem5.initBits();
+
+	vector<int> reinMarkNum = rein.calMarkNumForBuckets();
+	vector<int> hem5MarkNum = hem5.calMarkNumForBuckets();
+
+	cout << "rein=[";
+	for(auto && i :reinMarkNum)
+		cout << i << ", ";
+	cout << "]\n\nhem5=[";
+	for(auto && i :hem5MarkNum)
+		cout << i << ", ";
+	cout << "]\n";
+
+}

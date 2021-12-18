@@ -2,8 +2,7 @@
 
 int main(int argc, char **argv) {
 	//freopen("paras.txt", "r", stdin);
-	//cin >> subs >> pubs >> atts >> cons>> buks >> m >> attDis >> valDis >> valDom;
-	//cin >> alpha >> width;
+	//cin >> subs >> pubs >> atts >> cons>> buks >> m >> attDis >> valDis >> valDom >> alpha >> width;
 	//m = atts; // Note that Rein requires m == atts.
 
 	if (argc == 5) {
@@ -18,10 +17,11 @@ int main(int argc, char **argv) {
 		cout << argv[0] << "  " << argv[1] << "  " << argv[2] << "  " << argv[3] << "  " << argv[4] << "  n=" << subs
 			 << endl;
 	}
+
 	intervalGenerator gen(subs, pubs, atts, cons, m, attDis, valDis, valDom, alpha, subp, width);
-	gen.GenSubList();//cout<<"Sub fin\n";
+	gen.GenSubList();
 	gen.GenPubList();
-	//cout<<"pubs:"<<gen.pubList.size()<<endl;
+	
 	unordered_map<int,bool> deleteNo;
 	if (verifyID) {
 		srand(time(NULL));
@@ -32,11 +32,9 @@ int main(int argc, char **argv) {
 				id = rand() % subs;
 			deleteNo[id] = true;
 		}
-//		for (auto i: deleteNo)
-//			cout << i.first << "\n";
 	}
 
-	run_rein(gen,deleteNo);
+//	run_rein(gen,deleteNo);
 	//run_pRein(gen,deleteNo);
 
 	//	run_BIOP(gen);
@@ -44,7 +42,7 @@ int main(int argc, char **argv) {
 //	run_BIOP2(gen);
 //	run_BIOP3(gen);
 //	run_BIOP4(gen);
-	run_BIOP5(gen,deleteNo);
+//	run_BIOP5(gen,deleteNo);
 //	run_BIOPSC(gen);
 //	run_BIOPSR(gen);
 
@@ -53,12 +51,15 @@ int main(int argc, char **argv) {
 
 //	run_opindex(gen, deleteNo);
 //	run_adarein(gen, deleteNo);
-	run_tama(gen,deleteNo);
-	run_btama_forward(gen, deleteNo); // bTAMA6
+//	run_tama(gen,deleteNo);
+	//run_btama_forward(gen, deleteNo); // bTAMA6
 	//run_btama_backward1(gen, deleteNo);// bTAMA7
-	run_btama_backward2(gen, deleteNo); // bTAMA8
+	//run_btama_backward2(gen, deleteNo); // bTAMA8
 
-	run_BGTREE(gen, deleteNo);
+	//run_BGTREE(gen, deleteNo);
+
+	measure_numMark(gen);
+
 	cout << "Done.\n";
 	system("pause");
 

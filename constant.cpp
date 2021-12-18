@@ -13,7 +13,7 @@ const int attDis = 0;       // The distribution of attributes in subs and pubs. 
 const int valDis = 0;       // The distribution of values in subs and pubs. 0:uniform + fixed width | 1: random width >= $width + Uniform | 2: Zipf + fixed width | 3: Normal + fixed width | 4: Normal + two ends
 const int valDom = 1000000; // Cardinality of values.
 double alpha = 0;           // Parameter for Zipf distribution.
-double width = 0.5;         // Width of a predicate.
+double width = 0.1;         // Width of a predicate.
 double mean = 0.2;          // Mean of Normal Distribution. For events it's ( 1 - mean ).
 double stddev = 1;          // Standard deviation: The square root of variance, representing the dispersion of values from the distribution mean. >0
 

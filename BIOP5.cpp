@@ -643,3 +643,35 @@ void BIOP5::printRelation(int dimension_i) {
 	}
 	cout << "\n\n";
 }
+
+vector<int> BIOP5::calMarkNumForBuckets() {
+	vector<int> numMarking(numBucket, 0);
+	_for(i, 0, numBucket) {
+		_for(j, 0, numDimension) {
+			numMarking[i] += data[0][j][i].size() + data[1][j][i].size(); // ±È½Ï
+
+			if (doubleReverse[0][j][i])
+			{
+				_for(k, endBucket[0][j][i], i + 1)
+					numMarking[i] += data[0][j][k].size();
+			}
+			else
+			{
+				_for(k, i + 1, endBucket[0][j][i])
+					numMarking[i] += data[0][j][k].size();
+			}
+
+			if (doubleReverse[1][j][i])
+			{
+				_for(k, i, endBucket[1][j][i])
+					numMarking[i] += data[0][j][k].size();
+			}
+			else
+			{
+				_for(k, endBucket[1][j][i], i)
+					numMarking[i] += data[1][j][k].size();
+			}
+		}
+	}
+	return numMarking;
+}

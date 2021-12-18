@@ -35,6 +35,7 @@ public:
 	bool deleteSubscription(IntervalSub sub);
 	void calBucketSize(); // 计算bucketSize
 	int calMemory();     // 计算占用内存大小, 返回MB
+	vector<int> calMarkNumForBuckets(); // 计算事件落到每个桶里时需要标记和比较的谓词个数
 };
 
 // 01在第二维，全动态

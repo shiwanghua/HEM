@@ -55,4 +55,5 @@ void run_opindex(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 
 void run_BGTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 
+void measure_numMark(const intervalGenerator& gen);
 #endif
