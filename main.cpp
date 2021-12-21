@@ -52,11 +52,11 @@ int main(int argc, char **argv) {
 //	run_opindex(gen, deleteNo);
 //	run_adarein(gen, deleteNo);
 //	run_tama(gen,deleteNo);
-	//run_btama_forward(gen, deleteNo); // bTAMA6
-	//run_btama_backward1(gen, deleteNo);// bTAMA7
-	//run_btama_backward2(gen, deleteNo); // bTAMA8
+//	run_btama_forward(gen, deleteNo); // bTAMA6
+//	run_btama_backward1(gen, deleteNo);// bTAMA7
+//	run_btama_backward2(gen, deleteNo); // bTAMA8
 
-	//run_BGTREE(gen, deleteNo);
+//	run_BGTREE(gen, deleteNo);
 
 	measure_numMark(gen);
 

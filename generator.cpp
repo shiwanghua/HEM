@@ -400,7 +400,7 @@ void intervalGenerator::GenZipfValues(IntervalSub &sub) {
 		y = x + w;
 		sub.constraints[i].lowValue = x;
 		sub.constraints[i].highValue = y;
-		//cout << sub.id << ": " << sub.constraints[i].lowValue << " " << sub.constraints[i].highValue << endl;
+//		cout << sub.id << ": " << sub.constraints[i].lowValue << " " << sub.constraints[i].highValue << endl;
 	}
 }
 

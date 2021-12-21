@@ -2,28 +2,28 @@
 #include "BIOP.h"
 #include<iomanip>
 #include <iostream>
-#include <omp.h>
+//#include <omp.h>
 //#include<mpi.h>
 //#include <unistd.h>
 
 using namespace std;
 
-void hello(int& a) {
-	int my_rank = omp_get_thread_num();
-	int thread_count = omp_get_num_threads();
-
-	a = my_rank;
-	//usleep(1000000);
-	printf("hello from rank %d of %d, a= %d\n", my_rank, thread_count, a);
-	fflush(stdout);
-}
-
-void vectorToBitset(vector<int>& v, bitset<subs>*& bt) {
-	cout << "btf1: " << bt << " " << &bt << "\n";
-	for (int i = 0; i < v.size(); i++)
-		(*bt)[v[i]] = 1;
-	v.resize(0);
-}
+//void hello(int& a) {
+//	int my_rank = omp_get_thread_num();
+//	int thread_count = omp_get_num_threads();
+//
+//	a = my_rank;
+//	//usleep(1000000);
+//	printf("hello from rank %d of %d, a= %d\n", my_rank, thread_count, a);
+//	fflush(stdout);
+//}
+//
+//void vectorToBitset(vector<int>& v, bitset<subs>*& bt) {
+//	cout << "btf1: " << bt << " " << &bt << "\n";
+//	for (int i = 0; i < v.size(); i++)
+//		(*bt)[v[i]] = 1;
+//	v.resize(0);
+//}
 
 bitset<subs>*& vectorToBitset(vector<int>& v) {
 	bitset<subs>* bs = new bitset<subs>;
