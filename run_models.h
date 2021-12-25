@@ -23,6 +23,7 @@
 #include "OpIndex.h"
 #include "bTama.h"
 #include "BGTree.h"
+#include "PSTree.h"
 
 #include <numeric> 
 #include<algorithm>
@@ -54,6 +55,8 @@ void run_btama_backward2(const intervalGenerator& gen, unordered_map<int, bool> 
 void run_opindex(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 
 void run_BGTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
+
+void run_PSTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 
 void measure_numMark(const intervalGenerator& gen);
 #endif

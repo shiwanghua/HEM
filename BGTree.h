@@ -67,6 +67,7 @@ private:
 	int subPredicate[subs];
 	int counter[subs];
 	vector<bluenode*> roots;
+	vector<vector< Combo>> data[2]; // 
 
 	void initBlueNode(bluenode*& r);
 	void initGreenNode(lgreennode*& r);
@@ -91,6 +92,8 @@ private:
 	void forward_match_lgreenNode(lgreennode*& l, const int& att, const int& value, const vector<IntervalSub>& subList);
 	void forward_match_rgreenNode(rgreennode*& r, const int& att, const int& value, const vector<IntervalSub>& subList);
 public:
+	int hit = 0; // mid ÃüÖÐ´ÎÊý
+
 	BGTree();
 
 	~BGTree();

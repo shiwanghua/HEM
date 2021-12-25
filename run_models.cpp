@@ -1554,6 +1554,103 @@ void run_BGTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 	//	Util::WriteData(outputFileName.c_str(), content);
 }
 
+void run_PSTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) {
+	PSTree psTree;
+
+	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchSubList;
+
+	Sub2 sub; // 需要转换一下
+	Cnt2 cnt2;
+	cnt2.op = 3;
+	vector<Sub2> subList;
+	for (auto& iSub : gen.subList) {
+		sub.id = iSub.id;
+		sub.size = iSub.size;
+		sub.constraints.resize(0);
+		for (auto& iCnt : iSub.constraints) {
+			cnt2.att = iCnt.att;
+			cnt2.value[0] = iCnt.lowValue;
+			cnt2.value[1] = iCnt.highValue;
+			sub.constraints.push_back(cnt2);
+		}
+		subList.push_back(sub);
+	}
+
+	// insert
+	for (int i = 0; i < subs; i++) {
+		Timer insertStart;
+
+		psTree.insert(subList[i]);
+
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double)insertTime / 1000000);
+	}
+	cout << "PS-Tree Insertion Finishes.\n";
+
+	// 验证插入删除正确性
+	if (verifyID) {
+		//for (auto kv : deleteNo) {
+		//	Timer deleteStart;
+		//	if (!psTree.deleteSubscription(gen.subList[kv.first]))
+		//		cout << "PS-Tree: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+		//	deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+		//}
+		//cout << "PS-Tree Deletion Finishes.\n";
+		//for (auto kv : deleteNo) {
+		//	psTree.insert(gen.subList[kv.first]);
+		//}
+	}
+
+	// match
+
+	for (int i = 0; i < pubs; i++) {
+		int matchSubs = 0; // Record the number of matched subscriptions.
+
+		Timer matchStart;
+
+		psTree.MatchEvent(gen.pubList[i], matchSubs, subList);
+
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double)eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "PS-Tree Event " << i << " is matched.\n";
+	}
+	cout << endl;
+
+	// output
+	string outputFileName = "PSTree.txt";
+	string content = expID
+		+ " memory= " + Util::Int2String(psTree.calMemory())
+		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+		+ " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+		+ " ms level = " + Util::Int2String(PSTree_level)
+		+ " numSub= " + Util::Int2String(subs)
+		+ " subSize= " + Util::Int2String(cons)
+		+ " numPub= " + Util::Int2String(pubs)
+		+ " pubSize= " + Util::Int2String(m)
+		+ " attTypes= " + Util::Int2String(atts)
+		+ " attDis= " + Util::Int2String(attDis)
+		+ " valDis= " + Util::Int2String(valDis)
+		+ " width= " + Util::Double2String(width)
+		+ " alpha= " + Util::Double2String(alpha)
+		+ " subp= " + Util::Double2String(subp)
+		+ " mean= " + Util::Double2String(mean)
+		+ " stddev= " + Util::Double2String(stddev);
+	Util::WriteData(outputFileName.c_str(), content);
+
+	//	outputFileName = "ComprehensiveExpTime.txt";
+	//	content = "PS-Tree= [";
+	//	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	//	content[content.length() - 2] = ']';
+	//	Util::WriteData(outputFileName.c_str(), content);
+}
+
 void measure_numMark(const intervalGenerator& gen) {
 	Rein rein;
 	BIOP5 hem5;

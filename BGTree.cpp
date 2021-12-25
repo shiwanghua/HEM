@@ -280,6 +280,7 @@ void BGTree::forward_match(const Pub& pub, int& matchSubs, const vector<Interval
 
 void BGTree::forward_match_blueNode(bluenode*& r, const int& att, const int& value, const vector<IntervalSub>& subList) {
 	if (r->mid == value) { // 1.等于中点, 直接得到匹配结果
+		hit++;
 		for (auto&& i : r->midEqual) {
 			counter[i]--;
 		}
@@ -340,6 +341,7 @@ void BGTree::forward_match_lgreenNode(lgreennode*& l, const int& att, const int&
 		}
 	}
 	else if (value == l->mid) { // 2.等于中点且有左绿左子节点, 左绿左子节点即为匹配结果
+		hit++;
 		if (l->leftChild->bst == nullptr)
 			for (auto&& i : l->leftChild->subids) {
 				counter[i]--;
@@ -392,6 +394,7 @@ void BGTree::forward_match_rgreenNode(rgreennode*& r, const int& att, const int&
 		}
 	}
 	else if (value == r->mid) { // 2.等于中点且有右绿右子节点, 右绿右子节点即为匹配结果
+		hit++;
 		if (r->rightChild->bst == nullptr)
 			for (auto&& i : r->rightChild->subids) {
 				counter[i]--;
