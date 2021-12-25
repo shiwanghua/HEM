@@ -34,7 +34,7 @@ int main(int argc, char **argv) {
 		}
 	}
 
-	//run_rein(gen,deleteNo);
+	run_rein(gen,deleteNo);
 	//run_pRein(gen,deleteNo);
 //	run_adarein(gen, deleteNo);
 
@@ -43,14 +43,14 @@ int main(int argc, char **argv) {
 //	run_BIOP2(gen);
 //	run_BIOP3(gen);
 //	run_BIOP4(gen);
-	//run_BIOP5(gen,deleteNo);
+//	run_BIOP5(gen,deleteNo);
 //	run_BIOPSC(gen);
 //	run_BIOPSR(gen);
 
 	//run_Simple(gen,deleteNo);
 ////	run_Simple2(gen,deleteNo);
 
-//	run_tama(gen,deleteNo);
+	run_tama(gen,deleteNo);
 //	run_btama_forward(gen, deleteNo); // bTAMA6
 //	run_btama_backward1(gen, deleteNo);// bTAMA7
 //	run_btama_backward2(gen, deleteNo); // bTAMA8
