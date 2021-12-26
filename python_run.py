@@ -1,15 +1,25 @@
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
 import os
 import sys
-os.system('ulimit -s unlimited;sudo chmod 777 cmakeRB')
-os.system('sudo chmod 777 *.txt')
-expID=int(sys.argv[1])
+# os.system('ulimit -s unlimited;sudo chmod 777 cmakeRB')
+# os.system('sudo chmod 777 *.txt')
+# expID=int(sys.argv[1])
 
-
-# Exp 1 2
-for be in range(9,-1,-1):
-    os.system('taskset -c 18 ./cmakeRB '+str(expID)+' 20 '+str(be)+' 0.3')
-    print('Experiment',str(expID),' atts=m=',str(20),' be= ',str(be),' w=0.3 done.\n\n')
-    expID+=1
+path="tmpData"
+content=""
+for fileName in os.listdir(path):
+    file_path = os.path.join(path, fileName)
+    f=open(file_path,'r')
+    content+=fileName[:-4]+" = ["+f.read()+"]\n"
+print(content)
+os.system("rm tmpData/*.txt")
+# # Exp 1 2
+# for be in range(9,-1,-1):
+#     os.system('taskset -c 18 ./cmakeRB '+str(expID)+' 20 '+str(be)+' 0.3')
+#     print('Experiment',str(expID),' atts=m=',str(20),' be= ',str(be),' w=0.3 done.\n\n')
+#     expID+=1
 
 
 # # Ss size of subscriptions 5-30

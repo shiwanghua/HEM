@@ -7,14 +7,14 @@
 #include "pRein.h"
 #include "AdaRein.h"
 
-#include "BIOP.h"
-#include "BIOP1.h"
-#include "BIOP2.h"
-#include "BIOP3.h"
-#include "BIOP4.h"
-#include "BIOP5.h"
-#include "BIOPSC.h"
-#include "BIOPSR.h"
+#include "HEM.h"
+#include "HEM1.h"
+#include "HEM2.h"
+#include "HEM3.h"
+#include "HEM4.h"
+#include "HEM5.h"
+#include "HEMSC.h"
+#include "HEMSR.h"
 
 #include "Simple.h"
 #include "Simple2.h"
@@ -34,14 +34,14 @@ void run_rein(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 void run_pRein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 void run_adarein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 
-void run_BIOP(const intervalGenerator& gen);
-void run_BIOP1(const intervalGenerator& gen);
-void run_BIOP2(const intervalGenerator& gen);
-void run_BIOP3(const intervalGenerator& gen);
-void run_BIOP4(const intervalGenerator& gen);
-void run_BIOP5(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
-void run_BIOPSC(const intervalGenerator& gen);
-void run_BIOPSR(const intervalGenerator& gen);
+void run_HEM(const intervalGenerator& gen);
+void run_HEM1(const intervalGenerator& gen);
+void run_HEM2(const intervalGenerator& gen);
+void run_HEM3(const intervalGenerator& gen);
+void run_HEM4(const intervalGenerator& gen);
+void run_HEM5(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
+void run_HEMSC(const intervalGenerator& gen);
+void run_HEMSR(const intervalGenerator& gen);
 
 void run_Simple(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 void run_Simple2(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);

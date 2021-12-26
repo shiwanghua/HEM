@@ -90,21 +90,24 @@ using namespace std;
 		paras+=string("  attDis=")+Util::Int2String(attDis);
 		paras+=string("  valDis=")+Util::Int2String(valDis);
 		paras+=string("  alpha=")+Util::Double2String(alpha)+string("\n");
-		Util::WriteData(fileName.c_str(),paras);
-		//Util::WriteData(fileName.c_str(), PrintParameters(argc, argv));
-		Util::WriteData(fileName.c_str(), "Statistics of Insert Times (ms):\n" + PrintTimeStatistics(insertTimeList));
-		Util::WriteData(fileName.c_str(), "Statistics of Match Times (ms):\n" + PrintTimeStatistics(matchTimeList));
-		//Util::WriteData(fileName.c_str(), "Statistics of Delete Times (ms):\n" + PrintTimeStatistics(deleteTimeList));
-		Util::WriteData(fileName.c_str(), PrintMatchSubStatistics(matchSubList));
-		Util::WriteData(fileName.c_str(),"-----------------------------------------------------------------------\n");
+		Util::WriteData2Begin(fileName.c_str(), paras);
+		//Util::WriteData2Begin(fileName.c_str(), PrintParameters(argc, argv));
+		Util::WriteData2Begin(fileName.c_str(),
+							  "Statistics of Insert Times (ms):\n" + PrintTimeStatistics(insertTimeList));
+		Util::WriteData2Begin(fileName.c_str(),
+							  "Statistics of Match Times (ms):\n" + PrintTimeStatistics(matchTimeList));
+		//Util::WriteData2Begin(fileName.c_str(), "Statistics of Delete Times (ms):\n" + PrintTimeStatistics(deleteTimeList));
+		Util::WriteData2Begin(fileName.c_str(), PrintMatchSubStatistics(matchSubList));
+		Util::WriteData2Begin(fileName.c_str(),
+							  "-----------------------------------------------------------------------\n");
 		string text = "matchSubs\t matchTime\n";
 		for (unsigned int i = 0; i<matchSubList.size(); i++)
 		{
 			text += Util::Int2String(matchSubList.at(i)) + "\t" + Util::RemoveLastZero(Util::Double2String(matchTimeList.at(i))) + "\n";
 		}
 		//fileName = fileName.substr(0, fileName.size() - 4) + "_details.txt";
-		//Util::WriteData(fileName.c_str(), PrintParameters(argc, argv));
-		//Util::WriteData(fileName.c_str(), text);
+		//Util::WriteData2Begin(fileName.c_str(), PrintParameters(argc, argv));
+		//Util::WriteData2Begin(fileName.c_str(), text);
 	}
 
 

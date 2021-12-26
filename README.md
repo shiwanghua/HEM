@@ -5,15 +5,15 @@
 | 周数 | 时间          | 进展情况                                                     |
 | ---- | :------------ | ------------------------------------------------------------ |
 | 1    | 8/11 - 8/17   | 提出优化 5、6、7，Rein时间分布测量                           |
-| 2    | 8/18 - 8/24   | 提出 6 种模式，实现BIOPPS、BIOP2SD，实现 Rein 和 BIOP 的空属性匹配功能 |
-| 3    | 8/25 - 8/31   | 实现 BIOP1SS，修改 BIOPPS、BIOP2SD，low、high 两端统一用同一套覆盖分区，做实验，数据处理 |
-| 4    | 9/1 - 9/7     | 实现 BIOP3PS、BIOP4DS、BIOP5DD                               |
-| 5    | 9/8 - 9/14    | 实现 BIOPSCDD，设置两种full Bitset，修复空桶带来的bug，修改订阅产生算法(热点区域) |
+| 2    | 8/18 - 8/24   | 提出 6 种模式，实现HEMPS、HEM2SD，实现 Rein 和 HEM 的空属性匹配功能 |
+| 3    | 8/25 - 8/31   | 实现 HEM1SS，修改 HEMPS、HEM2SD，low、high 两端统一用同一套覆盖分区，做实验，数据处理 |
+| 4    | 9/1 - 9/7     | 实现 HEM3PS、HEM4DS、HEM5DD                               |
+| 5    | 9/8 - 9/14    | 实现 HEMSCDD，设置两种full Bitset，修复空桶带来的bug，修改订阅产生算法(热点区域) |
 | 6    | 9/15 - 9/21   | 写论文 Design 章节大部分+修改，画图                          |
-| 7    | 9/22 - 9/28   | 实现 BIOPSRPS，写论文 Introduction、State Reduction Optimization、Theoretical Analysis、Achievement |
-| 8    | 9/29 - 10/05  | 写论文、Setup部分(找baseline参数未果)，实现BIOP5DD插入算法、两个暴力匹配Simple和Simple2算法，优化BIOPSRPS选择bitset策略 |
+| 7    | 9/22 - 9/28   | 实现 HEMSRPS，写论文 Introduction、State Reduction Optimization、Theoretical Analysis、Achievement |
+| 8    | 9/29 - 10/05  | 写论文、Setup部分(找baseline参数未果)，实现HEM5DD插入算法、两个暴力匹配Simple和Simple2算法，优化HEMSRPS选择bitset策略 |
 | 9    | 10/06 - 10/12 | 写论文Verification Experiment部分，跑实验，画图              |
-| 10   | 10/13 - 10/19 | 实现Rein和BIOP5DD删除算法写论文Verification Experiment、Related Work部分，跑实验，画图，将Tama、AdaRein整合进项目，修改论文某些部分 |
+| 10   | 10/13 - 10/19 | 实现Rein和HEM5DD删除算法写论文Verification Experiment、Related Work部分，跑实验，画图，将Tama、AdaRein整合进项目，修改论文某些部分 |
 | 11   | 10/20 - 10/26 | 代码重构，将OpIndex简化后整合进项目，调参跑完所有实验，画图，写论文实验部分  |
 | 12   | 10/27 - 11/02 | 整体上修改论文，加入完整匹配例子  |
 | 13   | 11/03 - 11/09 | 压缩论文，去掉两个优化，计数方法改为调用count函数，计数时间减少90%以上，重跑所有实验，重画图，重写实验部分，11-08提交论文 |
@@ -49,7 +49,7 @@
 * Default Parameters: n = 1**m**, d = 20, $S_s$ = 10, $S_e$ = 20, w = 0.3, subp = 0, uniform distribution.
 * Model Parameters: 
   * Rein: b = 1000
-  * BIOP5DD: b = 1000, be = 4
+  * HEM5DD: b = 1000, be = 4
   * Tama: level = 13
   * AdaRein: falsePositiveRate = 10
 

@@ -1,11 +1,11 @@
-#include "BIOP3.h"
+#include "HEM3.h"
 
-BIOP3::BIOP3() {
+HEM3::HEM3() {
 	numSub = 0;
 	numDimension = atts;
 	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
-	cout << "ExpID = " << expID << ". BIOP3PD: bit exponent = " << be << ", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
+	cout << "ExpID = " << expID << ". HEM3PD: bit exponent = " << be << ", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
 
 	//bucketSub.resize(numBucket);
 	data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
@@ -35,13 +35,13 @@ BIOP3::BIOP3() {
 	fix[1].resize(numDimension, vector<int>(numBucket + 1));
 }
 
-BIOP3::~BIOP3() {
+HEM3::~HEM3() {
 	_for(i, 0, numDimension)
 		delete[] endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1];
 }
 
-void BIOP3::insert(IntervalSub sub)
+void HEM3::insert(IntervalSub sub)
 {
 	for (int i = 0; i < sub.size; i++)
 	{
@@ -58,7 +58,7 @@ void BIOP3::insert(IntervalSub sub)
 }
 
 // fullBits单独存储的版本
-void BIOP3::initBits() {
+void HEM3::initBits() {
 
 	// 如果有多次初始化
 	_for(i, 0, numDimension)
@@ -203,7 +203,7 @@ void BIOP3::initBits() {
 }
 
 //// 计算时间组成
-//void BIOP3::match(const Pub& pub, int& matchSubs)
+//void HEM3::match(const Pub& pub, int& matchSubs)
 //{
 //	bitset<subs> b;
 //	vector<bool> attExist(numDimension, false);
@@ -266,13 +266,13 @@ void BIOP3::initBits() {
 //		if (!b[i])
 //		{
 //			++matchSubs;
-//			//cout << "BIOP3 matches sub: : " << i << endl;
+//			//cout << "HEM3 matches sub: : " << i << endl;
 //		}
 //	bitTime += (double)bitStart.elapsed_nano();
 //}
 
 // 不计算时间组成
- void BIOP3::match(const Pub& pub, int& matchSubs)
+ void HEM3::match(const Pub& pub, int& matchSubs)
  {
  	bitset<subs> b;
  	vector<bool> attExist(numDimension, false);
@@ -322,12 +322,12 @@ void BIOP3::initBits() {
  	//	if (!b[i])
  	//	{
  	//		++matchSubs;
- 	//		//cout << "BIOP3 matches sub: : " << i << endl;
+ 	//		//cout << "HEM3 matches sub: : " << i << endl;
  	//	}
 	matchSubs = subs - b.count();
  }
 
-//void BIOP3::calBucketSize() {
+//void HEM3::calBucketSize() {
 //	bucketSub.clear();
 //	bucketSub.resize(numBucket);
 //	_for(i, 0, numDimension)
@@ -340,7 +340,7 @@ void BIOP3::initBits() {
 //		}
 //}
 
-int BIOP3::calMemory() {
+int HEM3::calMemory() {
 	long long size = 0; // Byte
 	_for(i, 0, numDimension) {
 		// 若每个维度上bits数组个数一样就是 2*sizeof(bitset<subs>)*numDimension*numBits
@@ -361,8 +361,8 @@ int BIOP3::calMemory() {
 	return (int)size;
 }
 
-void BIOP3::printRelation(int dimension_i) {
-	cout << "\n\nBIOP3PDMap\n";
+void HEM3::printRelation(int dimension_i) {
+	cout << "\n\nHEM3PDMap\n";
 	if (dimension_i == -1)
 		_for(i, 0, numDimension) {
 		cout << "\nDimension " << i << "    LowBucket Predicates: " << fix[0][i][numBucket] << "   ----------------\n";

@@ -1,11 +1,11 @@
-#include "BIOP1.h"
+#include "HEM1.h"
 
-BIOP1::BIOP1(){
+HEM1::HEM1(){
 	numSub = 0;
 	numDimension = atts;
 	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
-    cout <<"ExpID = "<<expID<< ". BIOP1SS: bit exponent = "<< be<<", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
+    cout <<"ExpID = "<<expID<< ". HEM1SS: bit exponent = "<< be<<", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
 	// 如果桶数会变化，以下代码也要放入init函数里
 	//bucketSub.resize(numBucket);
 	data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
@@ -33,11 +33,11 @@ BIOP1::BIOP1(){
 	//fix[1].resize(numDimension, vector<int>(numBucket + 1, 0));
 }
 
-BIOP1::~BIOP1() {
+HEM1::~HEM1() {
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1], doubleReverse[0], doubleReverse[1];
 }
 
-void BIOP1::insert(IntervalSub sub)
+void HEM1::insert(IntervalSub sub)
 {
 	for (int i = 0; i < sub.size; i++)
 	{
@@ -54,7 +54,7 @@ void BIOP1::insert(IntervalSub sub)
 }
 
 // fullBits单独存储的版本
-void BIOP1::initBits() {
+void HEM1::initBits() {
 
 	// 如果有多次初始化
 	delete[] doubleReverse[0], doubleReverse[1], endBucket[0], endBucket[1], bitsID[0], bitsID[1];
@@ -197,7 +197,7 @@ void BIOP1::initBits() {
 }
 
 //// 计算时间组成
-//void BIOP1::match(const Pub& pub, int& matchSubs)
+//void HEM1::match(const Pub& pub, int& matchSubs)
 //{
 //	bitset<subs> b, bLocal;
 //	vector<bool> attExist(numDimension, false);
@@ -298,13 +298,13 @@ void BIOP1::initBits() {
 //		if (!b[i])
 //		{
 //			++matchSubs;
-//			//cout << "BIOP1 matches sub: " << i << endl;
+//			//cout << "HEM1 matches sub: " << i << endl;
 //		}
 //	bitTime += (double)bitStart.elapsed_nano();
 //}
 
 // 不计算时间组成
- void BIOP1::match(const Pub& pub, int& matchSubs)
+ void HEM1::match(const Pub& pub, int& matchSubs)
  {
  	bitset<subs> b, bLocal;
  	vector<bool> attExist(numDimension, false);
@@ -385,12 +385,12 @@ void BIOP1::initBits() {
 // 		if (!b[i])
 // 		{
 // 			++matchSubs;
-// 			//cout << "BIOP1 matches sub: " << i << endl;
+// 			//cout << "HEM1 matches sub: " << i << endl;
 // 		}
 	matchSubs = subs - b.count();
  }
 
-//void BIOP1::calBucketSize() {
+//void HEM1::calBucketSize() {
 //	bucketSub.clear();
 //	bucketSub.resize(numBucket);
 //	_for(i, 0, numDimension)
@@ -403,7 +403,7 @@ void BIOP1::initBits() {
 //		}
 //}
 
-int BIOP1::calMemory() {
+int HEM1::calMemory() {
 	long long size = 0; // Byte
 	_for(i, 0, numDimension) {
 		// 若每个维度上bits数组个数一样就是 2*sizeof(bitset<subs>)*numDimension*numBits
@@ -424,13 +424,13 @@ int BIOP1::calMemory() {
 	return (int)size;
 }
 
-void BIOP1::printRelation() {
-	cout << "\n\nBIOP1SSMap    LowBucket   ----------------\n";
+void HEM1::printRelation() {
+	cout << "\n\nHEM1SSMap    LowBucket   ----------------\n";
 	_for(i, 0, numBucket) {
 		cout << "lBkt" << i << ": bID=" << bitsID[0][i] << ", eBkt=" << endBucket[0][i] << ", dRvs=" << doubleReverse[0][i] << "; ";
 		if (i % 5 == 0 && i > 0)cout << "\n";
 	}
-	cout << "\n\nBIOP1SSMap    HighBucket   ----------------\n";
+	cout << "\n\nHEM1SSMap    HighBucket   ----------------\n";
 	_for(i, 0, numBucket) {
 		cout << "hBkt" << i << ": bID=" << bitsID[1][i] << ", eBkt=" << endBucket[1][i] << ", dRvs=" << doubleReverse[1][i] << "; ";
 		if (i % 5 == 0 && i > 0)cout << "\n";

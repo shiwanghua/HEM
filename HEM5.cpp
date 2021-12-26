@@ -1,11 +1,11 @@
-#include "BIOP5.h"
+#include "HEM5.h"
 
-BIOP5::BIOP5() {
+HEM5::HEM5() {
 	numSub = 0;
 	numDimension = atts;
 	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
-	cout << "ExpID = " << expID << ". BIOP5DD: bit exponent = " << be << ", bucketStep = " << buckStep
+	cout << "ExpID = " << expID << ". HEM5DD: bit exponent = " << be << ", bucketStep = " << buckStep
 		<< ", numBucket = " << numBucket << endl;
 
 	//bucketSub.resize(numBucket);
@@ -40,13 +40,13 @@ BIOP5::BIOP5() {
 	fix[1].resize(numDimension, vector<int>(numBucket + 1));
 }
 
-BIOP5::~BIOP5() {
+HEM5::~HEM5() {
 	_for(i, 0,
 		numDimension) delete[] doubleReverse[0][i], doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1], doubleReverse[0], doubleReverse[1];
 }
 
-void BIOP5::insert(IntervalSub sub) {
+void HEM5::insert(IntervalSub sub) {
 	for (int i = 0; i < sub.size; i++) {
 		IntervalCnt cnt = sub.constraints[i];
 		Combo c;
@@ -60,7 +60,7 @@ void BIOP5::insert(IntervalSub sub) {
 	numSub++;
 }
 
-void BIOP5::insert_online(IntervalSub sub) {
+void HEM5::insert_online(IntervalSub sub) {
 	IntervalCnt cnt;
 	Combo c;
 	int b, bucketID;
@@ -93,7 +93,7 @@ void BIOP5::insert_online(IntervalSub sub) {
 	numSub++;
 }
 
-bool BIOP5::deleteSubscription(IntervalSub sub) {
+bool HEM5::deleteSubscription(IntervalSub sub) {
 	int find = 0;
 	IntervalCnt cnt;
 	int b, bucketID, id = sub.id;
@@ -142,7 +142,7 @@ bool BIOP5::deleteSubscription(IntervalSub sub) {
 }
 
 // fullBits单独存储的版本
-void BIOP5::initBits() {
+void HEM5::initBits() {
 
 	// 如果有多次初始化
 	_for(i, 0,
@@ -248,7 +248,7 @@ void BIOP5::initBits() {
 				}
 			}
 		}
-		//cout << "BIOP5DD Stop.\n";
+		//cout << "HEM5DD Stop.\n";
 		return;
 	}
 
@@ -391,11 +391,11 @@ void BIOP5::initBits() {
 			}
 		}
 	}
-	//cout << "BIOP5DD Stop.\n";
+	//cout << "HEM5DD Stop.\n";
 }
 
 // 计算时间组成
-//void BIOP5::match(const Pub &pub, int &matchSubs) {
+//void HEM5::match(const Pub &pub, int &matchSubs) {
 //	bitset<subs> b, bLocal;
 //	vector<bool> attExist(numDimension, false);
 //	int value, att, buck;
@@ -477,14 +477,14 @@ void BIOP5::initBits() {
 //	Timer bitStart;
 ////	_for(i, 0, subs) if (!b[i]) {
 ////			++matchSubs;
-////			//cout << "BIOP5 matches sub: " << i << endl;
+////			//cout << "HEM5 matches sub: " << i << endl;
 ////		}
 // matchSubs = subs - b.count();
 //	bitTime += (double) bitStart.elapsed_nano();
 //}
 
 // 不计算时间组成
-void BIOP5::match(const Pub& pub, int& matchSubs)
+void HEM5::match(const Pub& pub, int& matchSubs)
 {
 	bitset<subs> b; // register
 	bitset<subs> bLocal;
@@ -565,12 +565,12 @@ void BIOP5::match(const Pub& pub, int& matchSubs)
 	//_for(i, 0, subs) if (!b[i])
 	//{
 	//	++matchSubs;
-	//	//cout << "BIOP5 matches sub: " << i << endl;
+	//	//cout << "HEM5 matches sub: " << i << endl;
 	//}
 	matchSubs = numSub - b.count();
 }
 
-//void BIOP5::calBucketSize() {
+//void HEM5::calBucketSize() {
 //	bucketSub.clear();
 //	bucketSub.resize(numBucket);
 //	_for(i, 0, numDimension)
@@ -583,7 +583,7 @@ void BIOP5::match(const Pub& pub, int& matchSubs)
 //		}
 //}
 
-int BIOP5::calMemory() {
+int HEM5::calMemory() {
 	long long size = 0; // Byte
 	_for(i, 0, numDimension) {
 		// 若每个维度上bits数组个数一样就是 2*sizeof(bitset<subs>)*numDimension*numBits
@@ -603,8 +603,8 @@ int BIOP5::calMemory() {
 	return (int)size;
 }
 
-void BIOP5::printRelation(int dimension_i) {
-	cout << "\n\nBIOP5DDMap\n";
+void HEM5::printRelation(int dimension_i) {
+	cout << "\n\nHEM5DDMap\n";
 	if (dimension_i == -1)
 		_for(i, 0, numDimension) {
 		cout << "\nDimension " << i << "    LowBucket Predicates: " << fix[0][i][0] << "   ----------------\n";
@@ -644,7 +644,7 @@ void BIOP5::printRelation(int dimension_i) {
 	cout << "\n\n";
 }
 
-vector<int> BIOP5::calMarkNumForBuckets() {
+vector<int> HEM5::calMarkNumForBuckets() {
 	vector<int> numMarking(numBucket, 0);
 	_for(i, 0, numBucket) {
 		_for(j, 0, numDimension) {

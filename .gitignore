@@ -56,10 +56,9 @@ cmake_install.cmake
 CMakeCache.txt
 CMakeFiles
 # Rein.txt
-# BIOP.txt
+# HEM.txt
 # ReinBucketSize.txt
-# BIOPBucketSize.txt
-/Testing/
+# HEMBucketSize.txt
 /cmake-build-debug/
 /build/
 cmakeRB

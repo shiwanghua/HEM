@@ -1,6 +1,6 @@
-#include "BIOPSR.h"
+#include "HEMSR.h"
 
-BIOPSR::BIOPSR() {
+HEMSR::HEMSR() {
 	numSub = 0;
 	numDimension = atts;
 	numGroup = (numDimension - 1) / gs + 1;
@@ -9,7 +9,7 @@ BIOPSR::BIOPSR() {
 	numBucket = (valDom - 1) / buckStep + 1;
 	bitStep = numBucket >> 1;
 
-	cout << "ExpID = " << expID << ". BIOPSRPS: bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
+	cout << "ExpID = " << expID << ". HEMSRPS: bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
 
 	if (be != 0) be = 0;
 	//assert(be == 0);
@@ -24,11 +24,11 @@ BIOPSR::BIOPSR() {
 	bitsID[1] = new int[numBucket];
 }
 
-BIOPSR::~BIOPSR() {
+HEMSR::~HEMSR() {
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1];
 }
 
-void BIOPSR::insert(IntervalSub sub)
+void HEMSR::insert(IntervalSub sub)
 {
 	for (int i = 0; i < sub.size; i++)
 	{
@@ -44,7 +44,7 @@ void BIOPSR::insert(IntervalSub sub)
 	numSub++;
 }
 
-void BIOPSR::initBits() {
+void HEMSR::initBits() {
 
 	// 如果有多次初始化
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1];
@@ -108,7 +108,7 @@ void BIOPSR::initBits() {
 }
 
 // 计算时间组成
-//void BIOPSR::match(const Pub& pub, int& matchSubs)
+//void HEMSR::match(const Pub& pub, int& matchSubs)
 //{
 //	bitset<subs> globalBitset;
 //	vector<int> attExist(numDimension, -1);
@@ -181,13 +181,13 @@ void BIOPSR::initBits() {
 //		if (!globalBitset[i])
 //		{
 //			++matchSubs;
-//			//cout << "BIOPSR matches sub: : " << i << endl;
+//			//cout << "HEMSR matches sub: : " << i << endl;
 //		}
 //	bitTime += (double)bitStart.elapsed_nano();
 //}
 
 //// 不计算时间组成
-void BIOPSR::match(const Pub& pub, int& matchSubs)
+void HEMSR::match(const Pub& pub, int& matchSubs)
 {
 	bitset<subs> globalBitset;
 	vector<int> attExist(numDimension, -1);
@@ -251,12 +251,12 @@ void BIOPSR::match(const Pub& pub, int& matchSubs)
 //		if (!globalBitset[i])
 //		{
 //			++matchSubs;
-//			//cout << "BIOPSR matches sub: : " << i << endl;
+//			//cout << "HEMSR matches sub: : " << i << endl;
 //		}
 	matchSubs = subs - globalBitset.count();
 }
 
-//void BIOPSR::calBucketSize() {
+//void HEMSR::calBucketSize() {
 //	bucketSub.clear();
 //	bucketSub.resize(numBucket);
 //	_for(i, 0, numDimension)
@@ -269,7 +269,7 @@ void BIOPSR::match(const Pub& pub, int& matchSubs)
 //		}
 //}
 
-int BIOPSR::calMemory() {
+int HEMSR::calMemory() {
 	long long size = 0; // Byte
 	size += 2 * numDimension * sizeof(bitset<subs>); // bits
 	size += numGroup*numState* sizeof(bitset<subs>); // bitsSR
@@ -285,13 +285,13 @@ int BIOPSR::calMemory() {
 	return (int)size;
 }
 
-void BIOPSR::printRelation() {
-	cout << "\n\nBIOP-SR-PS Map LowBucket\n";
+void HEMSR::printRelation() {
+	cout << "\n\nHEM-SR-PS Map LowBucket\n";
 	_for(i, 0, numBucket) {
 		cout << "LBkt" << i << ": bID=" << bitsID[0][i] << ", eBkt=" << endBucket[0][i] << "; ";
 		if (i % 5 == 0 && i > 0)cout << "\n";
 	}
-	cout << "\n\nBIOP-SR-PS Map HighBucket\n";
+	cout << "\n\nHEM-SR-PS Map HighBucket\n";
 	_for(i, 0, numBucket) {
 		cout << "HBkt" << i << ": bID=" << bitsID[1][i] << ", eBkt=" << endBucket[1][i] << "; ";
 		if (i % 5 == 0 && i > 0)cout << "\n";

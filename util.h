@@ -12,6 +12,7 @@
 #include "printer.h"
 #include <cmath>
 #include <vector>
+
 using namespace std;
 
 class Util {
@@ -26,7 +27,9 @@ public:
 
 	static std::string RemoveLastZero(std::string str);
 
-	static void WriteData(string fileName, string text);
+	static void WriteData2Begin(string fileName, string text);
+
+	static void WriteData2End(string fileName, string text);
 
 	static string Double2String(double value);
 
@@ -60,7 +63,7 @@ public:
 
 	static vector<double> ComputeIntStatistics(vector<int> data);
 
-	static void Pub2dPub(Pub pub, dPub& dpub);
+	static void Pub2dPub(Pub pub, dPub &dpub);
 };
 
 #endif

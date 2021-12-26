@@ -126,19 +126,26 @@ std::string Util::RemoveLastZero(std::string str)
 	return str;
 }
 
-void Util::WriteData(string fileName, string text)
+void Util::WriteData2Begin(string fileName, string text)
 {
-	
 	ifstream ifs(fileName); // 读文件
-	string content((istreambuf_iterator<char>(ifs)), (istreambuf_iterator<char>()));
-	ifs.close();
 	if (!ifs)
 	{
 		cout << "Create file failed!" << endl;
 	}
-	fileStream.open(fileName.c_str(), ios::binary | ios::ate); //  插入到文件末尾
+	string content((istreambuf_iterator<char>(ifs)), (istreambuf_iterator<char>()));
+	ifs.close();
+	fileStream.open(fileName.c_str(), ios::binary | ios::ate);
 	fileStream.seekp(0, ios::beg);
 	fileStream << text << endl << content; // 插入到文件头部
+	fileStream << flush;
+	fileStream.close();
+}
+
+void Util::WriteData2End(string fileName, string text)
+{
+	fileStream.open(fileName.c_str(), ios::binary | ios::app); //  插入到文件末尾
+	fileStream << text; // 插入到文件头部
 	fileStream << flush;
 	fileStream.close();
 }
@@ -252,24 +259,25 @@ double Util::P2U(double value, double mean, double scale)
 
 void Util::OutputResult(string filename, int ope, int att, int ite, int subDis, int pubDis, double wid, int sub, int pub, double zip, double total, double avg, double max, double min, double std, int matchNo, string matchList)
 {
-	Util::WriteData(filename.c_str(), "Operation: \t" + Util::Int2String(ope));
-	Util::WriteData(filename.c_str(), "Attributes: \t" + Util::Int2String(att));
-	Util::WriteData(filename.c_str(), "Constraints: \t" + Util::Int2String(ite));
-	Util::WriteData(filename.c_str(), "Constraint dis: \t" + Util::Int2String(subDis));
-	Util::WriteData(filename.c_str(), "Event dis: \t" + Util::Int2String(pubDis));
-	Util::WriteData(filename.c_str(), "Width : \t" + Util::RemoveLastZero(Util::Double2String(wid)));
-	Util::WriteData(filename.c_str(), "Subs: \t" + Util::Int2String(sub));
-	Util::WriteData(filename.c_str(), "Pubs: \t" + Util::Int2String(pub));
-	Util::WriteData(filename.c_str(), "Zipf: \t" + Util::RemoveLastZero(Util::Double2String(zip)));
-	Util::WriteData(filename.c_str(), "Total time(s): \t" + Util::RemoveLastZero(Util::Double2String(total / 1000)));
-	Util::WriteData(filename.c_str(), "Avg time(s): \t" + Util::RemoveLastZero(Util::Double2String(avg / 1000)));
-	Util::WriteData(filename.c_str(), "Max time(s): \t" + Util::RemoveLastZero(Util::Double2String(max / 1000)));
-	Util::WriteData(filename.c_str(), "Min time(s): \t" + Util::RemoveLastZero(Util::Double2String(min / 1000)));
-	Util::WriteData(filename.c_str(), "Std time(s): \t" + Util::RemoveLastZero(Util::Double2String(std / 1000)));
+	Util::WriteData2Begin(filename.c_str(), "Operation: \t" + Util::Int2String(ope));
+	Util::WriteData2Begin(filename.c_str(), "Attributes: \t" + Util::Int2String(att));
+	Util::WriteData2Begin(filename.c_str(), "Constraints: \t" + Util::Int2String(ite));
+	Util::WriteData2Begin(filename.c_str(), "Constraint dis: \t" + Util::Int2String(subDis));
+	Util::WriteData2Begin(filename.c_str(), "Event dis: \t" + Util::Int2String(pubDis));
+	Util::WriteData2Begin(filename.c_str(), "Width : \t" + Util::RemoveLastZero(Util::Double2String(wid)));
+	Util::WriteData2Begin(filename.c_str(), "Subs: \t" + Util::Int2String(sub));
+	Util::WriteData2Begin(filename.c_str(), "Pubs: \t" + Util::Int2String(pub));
+	Util::WriteData2Begin(filename.c_str(), "Zipf: \t" + Util::RemoveLastZero(Util::Double2String(zip)));
+	Util::WriteData2Begin(filename.c_str(),
+						  "Total time(s): \t" + Util::RemoveLastZero(Util::Double2String(total / 1000)));
+	Util::WriteData2Begin(filename.c_str(), "Avg time(s): \t" + Util::RemoveLastZero(Util::Double2String(avg / 1000)));
+	Util::WriteData2Begin(filename.c_str(), "Max time(s): \t" + Util::RemoveLastZero(Util::Double2String(max / 1000)));
+	Util::WriteData2Begin(filename.c_str(), "Min time(s): \t" + Util::RemoveLastZero(Util::Double2String(min / 1000)));
+	Util::WriteData2Begin(filename.c_str(), "Std time(s): \t" + Util::RemoveLastZero(Util::Double2String(std / 1000)));
 
-	Util::WriteData(filename.c_str(), "Matched Subs: \t" + Util::Int2String(matchNo));
-	//Util::WriteData (filename.c_str (), "Matched subs list: \n" + matchList);
-	Util::WriteData(filename.c_str(), "\n");
+	Util::WriteData2Begin(filename.c_str(), "Matched Subs: \t" + Util::Int2String(matchNo));
+	//Util::WriteData2Begin (filename.c_str (), "Matched subs list: \n" + matchList);
+	Util::WriteData2Begin(filename.c_str(), "\n");
 
 }
 
@@ -291,13 +299,13 @@ void Util::OutputStatistics(string method, int pubs, int subs, int atts, int com
 		+ "\n  Pubs Dis:\t" + Util::Int2String(pubDis) + "\n  Subs Dis:\t" + Util::Int2String(subDis)
 		+ "\n  Zipf:\t" + Util::RemoveLastZero(Util::Double2String(zipf)) + "\n  Time uint:\t(ms) ";
 
-	//Util::WriteData (detTimeByPubsFile.c_str (), commonTitle);
-	//Util::WriteData (intervalFile.c_str (), commonTitle);
-	Util::WriteData(statisticsFile.c_str(), commonTitle);
+	//Util::WriteData2Begin (detTimeByPubsFile.c_str (), commonTitle);
+	//Util::WriteData2Begin (intervalFile.c_str (), commonTitle);
+	Util::WriteData2Begin(statisticsFile.c_str(), commonTitle);
 
 	//string staTitle = "PubId\tmatSubs\tpreTime\tfinTime\tmatTime\tLFD\tLFR\tfirDet\tlasDet\tavgDet\tstdDet";
 	//NS_LOG_INFO(staTitle);
-	//Util::WriteData (statisticsFile.c_str (), staTitle);
+	//Util::WriteData2Begin (statisticsFile.c_str (), staTitle);
 
 	vector<double> lasDetList;
 	vector<double> firDetList;
@@ -348,15 +356,15 @@ void Util::OutputStatistics(string method, int pubs, int subs, int atts, int com
 		//	+ Util::RemoveLastZero (Util::Double2String (temp[2])) + "\t"
 		//	+ Util::RemoveLastZero (Util::Double2String (temp[3])) + "\t";
 
-		//Util::WriteData (detTimeByPubsFile.c_str (), detTimeText);
-		//Util::WriteData (intervalFile.c_str (), intervalText);
-		//Util::WriteData (statisticsFile.c_str (), staText);
+		//Util::WriteData2Begin (detTimeByPubsFile.c_str (), detTimeText);
+		//Util::WriteData2Begin (intervalFile.c_str (), intervalText);
+		//Util::WriteData2Begin (statisticsFile.c_str (), staText);
 
 		//NS_LOG_INFO ("Pub" << i << "\t" << matSubList.at(i) << "\t" << temp[0] << "\t" << finTime
 		//		<< "\t" <<matTimeList.at(i) << "\t" << lfd << "\t"<< lfr << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2] << "\t" << temp[3]);
 	}
 
-	Util::WriteData(statisticsFile.c_str(), "");
+	Util::WriteData2Begin(statisticsFile.c_str(), "");
 
 	vector<double> matSubSta = Util::ComputeIntStatistics(matSubList);
 	vector<double> matTimeSta = Util::ComputeDoubleStatistics(matTimeList);
@@ -372,7 +380,7 @@ void Util::OutputStatistics(string method, int pubs, int subs, int atts, int com
 	string staResultTitle = method +
 		"\tStatistics:\nType\tmatSubs\tpreTime\tfinTime\tmatTime\tlfd\tlfr\tIntvl\tfirDet\tlasDet\tavgDet\tstdDet";
 
-	Util::WriteData(statisticsFile.c_str(), staResultTitle);
+	Util::WriteData2Begin(statisticsFile.c_str(), staResultTitle);
 	string minText = "Min\t"
 		+ Util::RemoveLastZero(Util::Double2String(matSubSta[0])) + "\t"
 		+ Util::RemoveLastZero(Util::Double2String(firDetSta[0])) + "\t"
@@ -428,14 +436,14 @@ void Util::OutputStatistics(string method, int pubs, int subs, int atts, int com
 	for (int i = 0; i < atts; i++)
 		freqText += Util::Int2String(freq[i]) + "\t";
 
-	Util::WriteData(statisticsFile.c_str(), minText);
-	Util::WriteData(statisticsFile.c_str(), maxText);
-	Util::WriteData(statisticsFile.c_str(), stdText);
-	Util::WriteData(statisticsFile.c_str(), avgText);
-	Util::WriteData(statisticsFile.c_str(), freqText);
-	Util::WriteData(statisticsFile.c_str(), "");
-	Util::WriteData(statisticsFile.c_str(), "");
-	Util::WriteData(statisticsFile.c_str(), "");
+	Util::WriteData2Begin(statisticsFile.c_str(), minText);
+	Util::WriteData2Begin(statisticsFile.c_str(), maxText);
+	Util::WriteData2Begin(statisticsFile.c_str(), stdText);
+	Util::WriteData2Begin(statisticsFile.c_str(), avgText);
+	Util::WriteData2Begin(statisticsFile.c_str(), freqText);
+	Util::WriteData2Begin(statisticsFile.c_str(), "");
+	Util::WriteData2Begin(statisticsFile.c_str(), "");
+	Util::WriteData2Begin(statisticsFile.c_str(), "");
 }
 
 //compute min, max, avg, and std of data

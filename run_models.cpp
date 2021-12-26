@@ -74,13 +74,13 @@ void run_rein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 					 + " mean= " + Util::Double2String(mean)
 					 + " stddev= " + Util::Double2String(stddev)
 					 + " valDom= " + Util::Double2String(valDom);
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 //	outputFileName = "ComprehensiveExpTime.txt";
 //	content = "Rein= [";
 //	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 //	content[content.length() - 2] = ']';
-//	Util::WriteData(outputFileName.c_str(), content);
+//	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	//outputFileName = "ReinBucketSize.txt";
 	//rein.calBucketSize();
@@ -90,11 +90,15 @@ void run_rein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	//	+ " minBukSetSize= " + to_string(min_element(rein.bucketSub.begin(), rein.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
 	//_for(i, 0, rein.numBucket)
 	//	content += " " + to_string(rein.bucketSub[i].size());
-	//Util::WriteData(outputFileName.c_str(), content);
+	//Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	outputFileName = "tmpData/Rein.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_BIOP(const intervalGenerator &gen) {
-	BIOP rb;
+void run_HEM(const intervalGenerator &gen) {
+	HEM rb;
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -110,7 +114,7 @@ void run_BIOP(const intervalGenerator &gen) {
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
-	cout << "BIOP Insertion Finishes.\n";
+	cout << "HEM Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
@@ -128,14 +132,14 @@ void run_BIOP(const intervalGenerator &gen) {
 		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "BIOP Event " << i << " is matched.\n";
+			cout << "HEM Event " << i << " is matched.\n";
 	}
 	cout << endl;
 
 	if (display)
 		rb.printRelation();
 	// output
-	string outputFileName = "BIOP.txt";
+	string outputFileName = "HEM.txt";
 	string content = expID
 					 + " bits= " + Util::Int2String(be)
 					 + " memory= " + Util::Int2String(rb.calMemory())
@@ -155,15 +159,15 @@ void run_BIOP(const intervalGenerator &gen) {
 					 + " numPub= " + Util::Int2String(pubs)
 					 + " pubSize= " + Util::Int2String(m)
 					 + " attTypes= " + Util::Int2String(atts);
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
-	outputFileName = "ComprehensiveExpTime.txt";
-	content = "BIOP0PS= [";
-	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
-	content[content.length() - 2] = ']';
-	Util::WriteData(outputFileName.c_str(), content);
+//	outputFileName = "ComprehensiveExpTime.txt";
+//	content = "HEM0PS= [";
+//	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+//	content[content.length() - 2] = ']';
+//	Util::WriteData2Begin(outputFileName.c_str(), content);
 
-	//outputFileName = "BIOPBucketSize.txt";
+	//outputFileName = "HEMBucketSize.txt";
 	//rb.calBucketSize();
 	//content = expID + " numBucket= " + Util::Int2String(rb.numBucket)
 	//	//+ " sumBukSetSize= " + to_string(accumulate(rein.bucketSub.begin(), rein.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
@@ -171,12 +175,16 @@ void run_BIOP(const intervalGenerator &gen) {
 	//	+ " minBukSetSize= " + to_string(min_element(rb.bucketSub.begin(), rb.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
 	//_for(i, 0, rb.numBucket)
 	//	content += " " + to_string(rb.bucketSub[i].size());
-	//Util::WriteData(outputFileName.c_str(), content);
+	//Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	outputFileName = "tmpData/HEM.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
 // 静静模式
-void run_BIOP1(const intervalGenerator &gen) {
-	BIOP1 rb1;
+void run_HEM1(const intervalGenerator &gen) {
+	HEM1 rb1;
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -192,7 +200,7 @@ void run_BIOP1(const intervalGenerator &gen) {
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
-	cout << "BIOP1 Insertion Finishes.\n";
+	cout << "HEM1 Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
@@ -210,7 +218,7 @@ void run_BIOP1(const intervalGenerator &gen) {
 		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "BIOP1 Event " << i << " is matched.\n";
+			cout << "HEM1 Event " << i << " is matched.\n";
 	}
 
 	if (display)
@@ -218,7 +226,7 @@ void run_BIOP1(const intervalGenerator &gen) {
 	cout << endl;
 
 	// output
-	string outputFileName = "BIOP1.txt";
+	string outputFileName = "HEM1.txt";
 	string content = expID
 					 + " bits= " + Util::Int2String(be)
 					 + " memory= " + Util::Int2String(rb1.calMemory())
@@ -238,15 +246,15 @@ void run_BIOP1(const intervalGenerator &gen) {
 					 + " numPub= " + Util::Int2String(pubs)
 					 + " pubSize= " + Util::Int2String(m)
 					 + " attTypes= " + Util::Int2String(atts);
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "ComprehensiveExpTime.txt";
-	content = "BIOP1SS= [";
+	content = "HEM1SS= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
-	//outputFileName = "BIOP1BucketSize.txt";
+	//outputFileName = "HEM1BucketSize.txt";
 	//rb.calBucketSize();
 	//content = expID + " numBucket= " + Util::Int2String(rb.numBucket)
 	//	//+ " sumBukSetSize= " + to_string(accumulate(rein.bucketSub.begin(), rein.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
@@ -254,12 +262,16 @@ void run_BIOP1(const intervalGenerator &gen) {
 	//	+ " minBukSetSize= " + to_string(min_element(rb.bucketSub.begin(), rb.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
 	//_for(i, 0, rb.numBucket)
 	//	content += " " + to_string(rb.bucketSub[i].size());
-	//Util::WriteData(outputFileName.c_str(), content);
+	//Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	outputFileName = "tmpData/HEM1.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
 // 静动模式
-void run_BIOP2(const intervalGenerator &gen) {
-	BIOP2 rb2;
+void run_HEM2(const intervalGenerator &gen) {
+	HEM2 rb2;
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -275,7 +287,7 @@ void run_BIOP2(const intervalGenerator &gen) {
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
-	cout << "BIOP2 Insertion Finishes.\n";
+	cout << "HEM2 Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
@@ -293,7 +305,7 @@ void run_BIOP2(const intervalGenerator &gen) {
 		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "BIOP2 Event " << i << " is matched.\n";
+			cout << "HEM2 Event " << i << " is matched.\n";
 	}
 
 	if (display)
@@ -301,7 +313,7 @@ void run_BIOP2(const intervalGenerator &gen) {
 	cout << endl;
 
 	// output
-	string outputFileName = "BIOP2.txt";
+	string outputFileName = "HEM2.txt";
 	string content = expID
 					 + " bits= " + Util::Int2String(be)
 					 + " memory= " + Util::Int2String(rb2.calMemory())
@@ -321,15 +333,15 @@ void run_BIOP2(const intervalGenerator &gen) {
 					 + " numPub= " + Util::Int2String(pubs)
 					 + " pubSize= " + Util::Int2String(m)
 					 + " attTypes= " + Util::Int2String(atts);
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "ComprehensiveExpTime.txt";
-	content = "BIOP2SD= [";
+	content = "HEM2SD= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
-	//outputFileName = "BIOP2BucketSize.txt";
+	//outputFileName = "HEM2BucketSize.txt";
 	//rb.calBucketSize();
 	//content = expID + " numBucket= " + Util::Int2String(rb.numBucket)
 	//	//+ " sumBukSetSize= " + to_string(accumulate(rein.bucketSub.begin(), rein.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
@@ -337,11 +349,15 @@ void run_BIOP2(const intervalGenerator &gen) {
 	//	+ " minBukSetSize= " + to_string(min_element(rb.bucketSub.begin(), rb.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
 	//_for(i, 0, rb.numBucket)
 	//	content += " " + to_string(rb.bucketSub[i].size());
-	//Util::WriteData(outputFileName.c_str(), content);
+	//Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	outputFileName = "tmpData/HEM2.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_BIOP3(const intervalGenerator &gen) {
-	BIOP3 rb3;
+void run_HEM3(const intervalGenerator &gen) {
+	HEM3 hem3;
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -352,16 +368,16 @@ void run_BIOP3(const intervalGenerator &gen) {
 	for (int i = 0; i < subs; i++) {
 		Timer insertStart;
 
-		rb3.insert(gen.subList[i]); // Insert sub[i] into data structure.
+		hem3.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
-	cout << "BIOP3 Insertion Finishes.\n";
+	cout << "HEM3 Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
-	rb3.initBits();
+	hem3.initBits();
 	initTime = (double) initStart.elapsed_nano() / 1000000.0;
 
 	// match
@@ -369,61 +385,65 @@ void run_BIOP3(const intervalGenerator &gen) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
-		rb3.match(gen.pubList[i], matchSubs);
+		hem3.match(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "BIOP3 Event " << i << " is matched.\n";
+			cout << "HEM3 Event " << i << " is matched.\n";
 	}
 
 	if (display)
-		rb3.printRelation(1);
+		hem3.printRelation(1);
 	cout << endl;
 
 	// output
-	string outputFileName = "BIOP3.txt";
+	string outputFileName = "HEM3.txt";
 	string content = expID
 					 + " bits= " + Util::Int2String(be)
-					 + " memory= " + Util::Int2String(rb3.calMemory())
+					 + " memory= " + Util::Int2String(hem3.calMemory())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 					 + " ms InitTime= " + Util::Double2String(initTime)
 					 + " ms AvgConstructionTime= " +
 					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
 					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(rb3.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(rb3.markTime / pubs / 1000000)
-					 + " ms OrTime= " + to_string(rb3.orTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(rb3.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(rb3.numBucket)
+					 + " ms AvgCmpTime= " + to_string(hem3.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(hem3.markTime / pubs / 1000000)
+					 + " ms OrTime= " + to_string(hem3.orTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(hem3.bitTime / pubs / 1000000)
+					 + " ms numBuk= " + Util::Int2String(hem3.numBucket)
 					 + " numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
 					 + " numPub= " + Util::Int2String(pubs)
 					 + " pubSize= " + Util::Int2String(m)
 					 + " attTypes= " + Util::Int2String(atts);
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "ComprehensiveExpTime.txt";
-	content = "BIOP3PD= [";
+	content = "HEM3PD= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
-	//outputFileName = "BIOP3BucketSize.txt";
+	//outputFileName = "HEM3BucketSize.txt";
 	//rb.calBucketSize();
-	//content = expID + " numBucket= " + Util::Int2String(rb3.numBucket)
-	//	//+ " sumBukSetSize= " + to_string(accumulate(rb3.bucketSub.begin(), rb3.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
-	//	+ " maxBukSetSize= " + to_string((*max_element(rb3.bucketSub.begin(), rb3.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
-	//	+ " minBukSetSize= " + to_string(min_element(rb3.bucketSub.begin(), rb3.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
-	//_for(i, 0, rb3.numBucket)
-	//	content += " " + to_string(rb3.bucketSub[i].size());
-	//Util::WriteData(outputFileName.c_str(), content);
+	//content = expID + " numBucket= " + Util::Int2String(hem3.numBucket)
+	//	//+ " sumBukSetSize= " + to_string(accumulate(hem3.bucketSub.begin(), hem3.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
+	//	+ " maxBukSetSize= " + to_string((*max_element(hem3.bucketSub.begin(), hem3.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
+	//	+ " minBukSetSize= " + to_string(min_element(hem3.bucketSub.begin(), hem3.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
+	//_for(i, 0, hem3.numBucket)
+	//	content += " " + to_string(hem3.bucketSub[i].size());
+	//Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	outputFileName = "tmpData/HEM3.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_BIOP4(const intervalGenerator &gen) {
-	BIOP4 rb4;
+void run_HEM4(const intervalGenerator &gen) {
+	HEM4 hem4;
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -434,16 +454,16 @@ void run_BIOP4(const intervalGenerator &gen) {
 	for (int i = 0; i < subs; i++) {
 		Timer insertStart;
 
-		rb4.insert(gen.subList[i]); // Insert sub[i] into data structure.
+		hem4.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
-	cout << "BIOP4DS Insertion Finishes.\n";
+	cout << "HEM4DS Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
-	rb4.initBits();
+	hem4.initBits();
 	initTime = (double) initStart.elapsed_nano() / 1000000.0;
 
 	// match
@@ -451,61 +471,65 @@ void run_BIOP4(const intervalGenerator &gen) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
-		rb4.match(gen.pubList[i], matchSubs);
+		hem4.match(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "BIOP4DS Event " << i << " is matched.\n";
+			cout << "HEM4DS Event " << i << " is matched.\n";
 	}
 
 	if (display)
-		rb4.printRelation(1);
+		hem4.printRelation(1);
 	cout << endl;
 
 	// output
-	string outputFileName = "BIOP4.txt";
+	string outputFileName = "HEM4.txt";
 	string content = expID
 					 + " bits= " + Util::Int2String(be)
-					 + " memory= " + Util::Int2String(rb4.calMemory())
+					 + " memory= " + Util::Int2String(hem4.calMemory())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 					 + " ms InitTime= " + Util::Double2String(initTime)
 					 + " ms AvgConstructionTime= " +
 					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
 					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(rb4.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(rb4.markTime / pubs / 1000000)
-					 + " ms OrTime= " + to_string(rb4.orTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(rb4.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(rb4.numBucket)
+					 + " ms AvgCmpTime= " + to_string(hem4.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(hem4.markTime / pubs / 1000000)
+					 + " ms OrTime= " + to_string(hem4.orTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(hem4.bitTime / pubs / 1000000)
+					 + " ms numBuk= " + Util::Int2String(hem4.numBucket)
 					 + " numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
 					 + " numPub= " + Util::Int2String(pubs)
 					 + " pubSize= " + Util::Int2String(m)
 					 + " attTypes= " + Util::Int2String(atts);
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "ComprehensiveExpTime.txt";
-	content = "BIOP4DS= [";
+	content = "HEM4DS= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
-	//outputFileName = "BIOP4BucketSize.txt";
-	//rb4.calBucketSize();
-	//content = expID + " numBucket= " + Util::Int2String(rb4.numBucket)
-	//	//+ " sumBukSetSize= " + to_string(accumulate(rb4.bucketSub.begin(), rb4.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
-	//	+ " maxBukSetSize= " + to_string((*max_element(rb4.bucketSub.begin(), rb4.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
-	//	+ " minBukSetSize= " + to_string(min_element(rb4.bucketSub.begin(), rb4.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
-	//_for(i, 0, rb4.numBucket)
+	//outputFileName = "HEM4BucketSize.txt";
+	//hem4.calBucketSize();
+	//content = expID + " numBucket= " + Util::Int2String(hem4.numBucket)
+	//	//+ " sumBukSetSize= " + to_string(accumulate(hem4.bucketSub.begin(), hem4.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
+	//	+ " maxBukSetSize= " + to_string((*max_element(hem4.bucketSub.begin(), hem4.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
+	//	+ " minBukSetSize= " + to_string(min_element(hem4.bucketSub.begin(), hem4.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
+	//_for(i, 0, hem4.numBucket)
 	//	content += " " + to_string(rb3.bucketSub[i].size());
-	//Util::WriteData(outputFileName.c_str(), content);
+	//Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	outputFileName = "tmpData/HEM4.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_BIOP5(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
-	BIOP5 rb5;
+void run_HEM5(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
+	HEM5 hem5;
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -516,29 +540,29 @@ void run_BIOP5(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) 
 	for (int i = 0; i < subs; i++) {
 		Timer insertStart;
 
-		rb5.insert(gen.subList[i]); // Insert sub[i] into data structure.
+		hem5.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
-	cout << "BIOP5DD Insertion Finishes.\n";
+	cout << "HEM5DD Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
-	rb5.initBits();
+	hem5.initBits();
 	initTime = (double) initStart.elapsed_nano() / 1000000.0;
 
 	// 验证插入删除正确性
 	if (verifyID) {
 		for (auto kv: deleteNo) {
 			Timer deleteStart;
-			if (!rb5.deleteSubscription(gen.subList[kv.first]))
-				cout << "BIOP5DD: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+			if (!hem5.deleteSubscription(gen.subList[kv.first]))
+				cout << "HEM5DD: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
-		cout << "BIOP5DD Deletion Finishes.\n";
+		cout << "HEM5DD Deletion Finishes.\n";
 		for (auto kv: deleteNo) {
-			rb5.insert_online(gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
+			hem5.insert_online(gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
 		}
 	}
 
@@ -547,24 +571,24 @@ void run_BIOP5(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) 
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
-		rb5.match(gen.pubList[i], matchSubs);
+		hem5.match(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "BIOP5DD Event " << i << " is matched.\n";
+			cout << "HEM5DD Event " << i << " is matched.\n";
 	}
 
 	if (display)
-		rb5.printRelation(1);
+		hem5.printRelation(1);
 	cout << endl;
 
 	// output
-	string outputFileName = "BIOP5.txt";
+	string outputFileName = "HEM5.txt";
 	string content = expID
 					 + " bits= " + Util::Int2String(be)
-					 + " memory= " + Util::Int2String(rb5.calMemory())
+					 + " memory= " + Util::Int2String(hem5.calMemory())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 					 + " ms InitTime= " + Util::Double2String(initTime)
@@ -572,38 +596,42 @@ void run_BIOP5(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) 
 					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
 					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
 					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(rb5.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(rb5.markTime / pubs / 1000000)
-					 + " ms OrTime= " + to_string(rb5.orTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(rb5.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(rb5.numBucket)
+					 + " ms AvgCmpTime= " + to_string(hem5.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(hem5.markTime / pubs / 1000000)
+					 + " ms OrTime= " + to_string(hem5.orTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(hem5.bitTime / pubs / 1000000)
+					 + " ms numBuk= " + Util::Int2String(hem5.numBucket)
 					 + " numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
 					 + " numPub= " + Util::Int2String(pubs)
 					 + " pubSize= " + Util::Int2String(m)
 					 + " attTypes= " + Util::Int2String(atts)
 					 + " valDom= " + Util::Double2String(valDom);
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	/*outputFileName = "ComprehensiveExpTime.txt";
-	content = "BIOP5DD= [";
+	content = "HEM5DD= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
-	Util::WriteData(outputFileName.c_str(), content);*/
+	Util::WriteData2Begin(outputFileName.c_str(), content);*/
 
-	//outputFileName = "BIOP5BucketSize.txt";
-	//rb5.calBucketSize();
-	//content = expID + " numBucket= " + Util::Int2String(rb5.numBucket)
-	//	//+ " sumBukSetSize= " + to_string(accumulate(rb5.bucketSub.begin(), rb5.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
-	//	+ " maxBukSetSize= " + to_string((*max_element(rb5.bucketSub.begin(), rb5.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
-	//	+ " minBukSetSize= " + to_string(min_element(rb5.bucketSub.begin(), rb5.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
-	//_for(i, 0, rb5.numBucket)
-	//	content += " " + to_string(rb5.bucketSub[i].size());
-	//Util::WriteData(outputFileName.c_str(), content);
+	//outputFileName = "HEM5BucketSize.txt";
+	//hem5.calBucketSize();
+	//content = expID + " numBucket= " + Util::Int2String(hem5.numBucket)
+	//	//+ " sumBukSetSize= " + to_string(accumulate(hem5.bucketSub.begin(), hem5.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
+	//	+ " maxBukSetSize= " + to_string((*max_element(hem5.bucketSub.begin(), hem5.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
+	//	+ " minBukSetSize= " + to_string(min_element(hem5.bucketSub.begin(), hem5.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
+	//_for(i, 0, hem5.numBucket)
+	//	content += " " + to_string(hem5.bucketSub[i].size());
+	//Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	outputFileName = "tmpData/HEM5.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_BIOPSC(const intervalGenerator &gen) {
-	BIOPSC biopsc;
+void run_HEMSC(const intervalGenerator &gen) {
+	HEMSC HEMsc;
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -614,16 +642,16 @@ void run_BIOPSC(const intervalGenerator &gen) {
 	for (int i = 0; i < subs; i++) {
 		Timer insertStart;
 
-		biopsc.insert(gen.subList[i]); // Insert sub[i] into data structure.
+		HEMsc.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
-	cout << "BIOP-SC-DD Insertion Finishes.\n";
+	cout << "HEM-SC-DD Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
-	biopsc.initBits();
+	HEMsc.initBits();
 	initTime = (double) initStart.elapsed_nano() / 1000000.0;
 
 	// match
@@ -631,62 +659,66 @@ void run_BIOPSC(const intervalGenerator &gen) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 		//cout << "Begin to match event " << i << endl;
-		biopsc.match(gen.pubList[i], matchSubs);
+		HEMsc.match(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "BIOP-SC-DD Event " << i << " is matched.\n";
+			cout << "HEM-SC-DD Event " << i << " is matched.\n";
 	}
 
 	if (display)
-		biopsc.printRelation(1, 2);
+		HEMsc.printRelation(1, 2);
 	cout << endl;
 
 	// output
-	string outputFileName = "BIOPSC.txt";
+	string outputFileName = "HEMSC.txt";
 	string content = expID
 					 + " bits= " + Util::Int2String(be)
-					 + " memory= " + Util::Int2String(biopsc.calMemory())
+					 + " memory= " + Util::Int2String(HEMsc.calMemory())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 					 + " ms InitTime= " + Util::Double2String(initTime)
 					 + " ms AvgConstructionTime= " +
 					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
 					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(biopsc.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(biopsc.markTime / pubs / 1000000)
-					 + " ms OrTime= " + to_string(biopsc.orTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(biopsc.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(biopsc.numBucket)
+					 + " ms AvgCmpTime= " + to_string(HEMsc.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(HEMsc.markTime / pubs / 1000000)
+					 + " ms OrTime= " + to_string(HEMsc.orTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(HEMsc.bitTime / pubs / 1000000)
+					 + " ms numBuk= " + Util::Int2String(HEMsc.numBucket)
 					 + " numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
 					 + " numPub= " + Util::Int2String(pubs)
 					 + " pubSize= " + Util::Int2String(m)
 					 + " attTypes= " + Util::Int2String(atts)
 					 + " lvls=" + Util::Int2String(lvls);
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "ComprehensiveExpTime.txt";
-	content = "BIOPSCDD= [";
+	content = "HEMSCDD= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
-	//outputFileName = "BIOPSCBucketSize.txt";
-	//biopsc.calBucketSize();
-	//content = expID + " numBucket= " + Util::Int2String(biopsc.numBucket)
-	//	//+ " sumBukSetSize= " + to_string(accumulate(biopsc.bucketSub.begin(), biopsc.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
-	//	+ " maxBukSetSize= " + to_string((*max_element(biopsc.bucketSub.begin(), biopsc.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
-	//	+ " minBukSetSize= " + to_string(min_element(biopsc.bucketSub.begin(), biopsc.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
-	//_for(i, 0, biopsc.numBucket)
-	//	content += " " + to_string(biopsc.bucketSub[i].size());
-	//Util::WriteData(outputFileName.c_str(), content);
+	//outputFileName = "HEMSCBucketSize.txt";
+	//HEMsc.calBucketSize();
+	//content = expID + " numBucket= " + Util::Int2String(HEMsc.numBucket)
+	//	//+ " sumBukSetSize= " + to_string(accumulate(HEMsc.bucketSub.begin(), HEMsc.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
+	//	+ " maxBukSetSize= " + to_string((*max_element(HEMsc.bucketSub.begin(), HEMsc.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
+	//	+ " minBukSetSize= " + to_string(min_element(HEMsc.bucketSub.begin(), HEMsc.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
+	//_for(i, 0, HEMsc.numBucket)
+	//	content += " " + to_string(HEMsc.bucketSub[i].size());
+	//Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	outputFileName = "tmpData/HEMSC.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_BIOPSR(const intervalGenerator &gen) {
-	BIOPSR biopsr;
+void run_HEMSR(const intervalGenerator &gen) {
+	HEMSR hemSR;
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -697,16 +729,16 @@ void run_BIOPSR(const intervalGenerator &gen) {
 	for (int i = 0; i < subs; i++) {
 		Timer insertStart;
 
-		biopsr.insert(gen.subList[i]); // Insert sub[i] into data structure.
+		hemSR.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
-	cout << "BIOP-SR-PS Insertion Finishes.\n";
+	cout << "HEM-SR-PS Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
-	biopsr.initBits();
+	hemSR.initBits();
 	initTime = (double) initStart.elapsed_nano() / 1000000.0;
 
 	// match
@@ -714,48 +746,52 @@ void run_BIOPSR(const intervalGenerator &gen) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 		//cout << "Begin to match event " << i << endl;
-		biopsr.match(gen.pubList[i], matchSubs);
+		hemSR.match(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "BIOP-SR-PS Event " << i << " is matched.\n";
+			cout << "HEM-SR-PS Event " << i << " is matched.\n";
 	}
 
 	if (display)
-		biopsr.printRelation();
+		hemSR.printRelation();
 	cout << endl;
 
 	// output
-	string outputFileName = "BIOPSR.txt";
+	string outputFileName = "HEMSR.txt";
 	string content = expID
 					 + " bits= " + Util::Int2String(be)
-					 + " memory= " + Util::Int2String(biopsr.calMemory())
+					 + " memory= " + Util::Int2String(hemSR.calMemory())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 					 + " ms InitTime= " + Util::Double2String(initTime)
 					 + " ms AvgConstructionTime= " +
 					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
 					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(biopsr.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(biopsr.markTime / pubs / 1000000)
-					 + " ms OrTime= " + to_string(biopsr.orTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(biopsr.bitTime / pubs / 1000000)
+					 + " ms AvgCmpTime= " + to_string(hemSR.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(hemSR.markTime / pubs / 1000000)
+					 + " ms OrTime= " + to_string(hemSR.orTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(hemSR.bitTime / pubs / 1000000)
 					 + " ms GroupSize=" + Util::Int2String(gs)
-					 + " numBuk= " + Util::Int2String(biopsr.numBucket)
+					 + " numBuk= " + Util::Int2String(hemSR.numBucket)
 					 + " numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
 					 + " numPub= " + Util::Int2String(pubs)
 					 + " pubSize= " + Util::Int2String(m)
 					 + " attTypes= " + Util::Int2String(atts);
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "ComprehensiveExpTime.txt";
-	content = "BIOPSRPS= [";
+	content = "HEMSRPS= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	outputFileName = "tmpData/HEMSR.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
 void run_Simple(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
@@ -823,13 +859,17 @@ void run_Simple(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 					 + " numPub= " + Util::Int2String(pubs)
 					 + " pubSize= " + Util::Int2String(m)
 					 + " attTypes= " + Util::Int2String(atts);
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
-	outputFileName = "ComprehensiveExpTime.txt";
-	content = "Simple= [";
-	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
-	content[content.length() - 2] = ']';
-	Util::WriteData(outputFileName.c_str(), content);
+//	outputFileName = "ComprehensiveExpTime.txt";
+//	content = "Simple= [";
+//	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+//	content[content.length() - 2] = ']';
+//	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	outputFileName = "tmpData/Simple.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
 void run_Simple2(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
@@ -897,13 +937,17 @@ void run_Simple2(const intervalGenerator &gen, unordered_map<int, bool> deleteNo
 					 + " numPub= " + Util::Int2String(pubs)
 					 + " pubSize= " + Util::Int2String(m)
 					 + " attTypes= " + Util::Int2String(atts);
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
-	outputFileName = "ComprehensiveExpTime.txt";
-	content = "Simple2= [";
-	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
-	content[content.length() - 2] = ']';
-	Util::WriteData(outputFileName.c_str(), content);
+//	outputFileName = "ComprehensiveExpTime.txt";
+//	content = "Simple2= [";
+//	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+//	content[content.length() - 2] = ']';
+//	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	outputFileName = "tmpData/Simple2.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
 void run_tama(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
@@ -976,13 +1020,17 @@ void run_tama(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 					 + " valDis= " + Util::Int2String(valDis)
 					 + " width= " + Util::Double2String(width)
 					 + " alpha= " + Util::Double2String(alpha);
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	/*outputFileName = "ComprehensiveExpTime.txt";
 	content = "Tama= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
-	Util::WriteData(outputFileName.c_str(), content);*/
+	Util::WriteData2Begin(outputFileName.c_str(), content);*/
+
+	outputFileName = "tmpData/Tama.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
 void run_btama_forward(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
@@ -1055,13 +1103,17 @@ void run_btama_forward(const intervalGenerator &gen, unordered_map<int, bool> de
 					 + " valDis= " + Util::Int2String(valDis)
 					 + " width= " + Util::Double2String(width)
 					 + " alpha= " + Util::Double2String(alpha);
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	/*outputFileName = "ComprehensiveExpTime.txt";
 	content = "Tama= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
-	Util::WriteData(outputFileName.c_str(), content);*/
+	Util::WriteData2Begin(outputFileName.c_str(), content);*/
+
+	outputFileName = "tmpData/bTama6.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
 void run_btama_backward1(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
@@ -1132,13 +1184,17 @@ void run_btama_backward1(const intervalGenerator &gen, unordered_map<int, bool> 
 					 + " valDis= " + Util::Int2String(valDis)
 					 + " width= " + Util::Double2String(width)
 					 + " alpha= " + Util::Double2String(alpha);
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	/*outputFileName = "ComprehensiveExpTime.txt";
 	content = "Tama= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
-	Util::WriteData(outputFileName.c_str(), content);*/
+	Util::WriteData2Begin(outputFileName.c_str(), content);*/
+
+	outputFileName = "tmpData/bTama7.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
 void run_btama_backward2(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
@@ -1210,13 +1266,17 @@ void run_btama_backward2(const intervalGenerator &gen, unordered_map<int, bool> 
 					 + " width= " + Util::Double2String(width)
 					 + " alpha= " + Util::Double2String(alpha)
 					 + " valDom= " + Util::Double2String(valDom);
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	/*outputFileName = "ComprehensiveExpTime.txt";
 	content = "Tama= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
-	Util::WriteData(outputFileName.c_str(), content);*/
+	Util::WriteData2Begin(outputFileName.c_str(), content);*/
+
+	outputFileName = "tmpData/bTama8.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
 void run_adarein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
@@ -1292,13 +1352,17 @@ void run_adarein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo
 					 + " pubSize= " + Util::Int2String(m)
 					 + " attTypes= " + Util::Int2String(atts)
 					 + " valDom= " + Util::Double2String(valDom);
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
-	outputFileName = "ComprehensiveExpTime.txt";
-	content = "AdaRein= [";
-	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
-	content[content.length() - 2] = ']';
-	Util::WriteData(outputFileName.c_str(), content);
+//	outputFileName = "ComprehensiveExpTime.txt";
+//	content = "AdaRein= [";
+//	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+//	content[content.length() - 2] = ']';
+//	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	outputFileName = "tmpData/bTama8.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
 void run_opindex(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
@@ -1383,13 +1447,17 @@ void run_opindex(const intervalGenerator &gen, unordered_map<int, bool> deleteNo
 					 + " pubSize= " + Util::Int2String(m)
 					 + " attTypes= " + Util::Int2String(atts)
 					 + " valDom= " + Util::Double2String(valDom);
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "ComprehensiveExpTime.txt";
 	content = "OpIndex= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	outputFileName = "tmpData/OpIndex.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
 void run_pRein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
@@ -1469,13 +1537,17 @@ void run_pRein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) 
 					 + " mean= " + Util::Double2String(mean)
 					 + " stddev= " + Util::Double2String(stddev)
 					 + " valDom= " + Util::Double2String(valDom);
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 //	outputFileName = "ComprehensiveExpTime.txt";
 //	content = "pRein= [";
 //	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 //	content[content.length() - 2] = ']';
-//	Util::WriteData(outputFileName.c_str(), content);
+//	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	outputFileName = "tmpData/pRein.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
 void run_BGTREE(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
@@ -1539,7 +1611,7 @@ void run_BGTREE(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 					 + " ms height = " + Util::Int2String(bgTree.getHeight())
 					 + " numNode = " + Util::Int2String(bgTree.getNumNode())
 					 + " BNS = " + Util::Int2String(bgTree.getBoundaryNumSub())
-					 + " AvgHit = " + Util::Int2String(bgTree.hit/pubs)
+					 + " AvgHit = " + Util::Int2String(bgTree.hit / pubs)
 					 + " numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
 					 + " numPub= " + Util::Int2String(pubs)
@@ -1553,13 +1625,17 @@ void run_BGTREE(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 					 + " mean= " + Util::Double2String(mean)
 					 + " stddev= " + Util::Double2String(stddev)
 					 + " valDom= " + Util::Double2String(valDom);
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	//	outputFileName = "ComprehensiveExpTime.txt";
 	//	content = "BG-Tree= [";
 	//	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	//	content[content.length() - 2] = ']';
-	//	Util::WriteData(outputFileName.c_str(), content);
+	//	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	outputFileName = "tmpData/BGTree.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
 void run_PSTREE(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
@@ -1651,18 +1727,22 @@ void run_PSTREE(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 					 + " mean= " + Util::Double2String(mean)
 					 + " stddev= " + Util::Double2String(stddev)
 					 + " valDom= " + Util::Double2String(valDom);
-	Util::WriteData(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	//	outputFileName = "ComprehensiveExpTime.txt";
 	//	content = "PS-Tree= [";
 	//	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	//	content[content.length() - 2] = ']';
-	//	Util::WriteData(outputFileName.c_str(), content);
+	//	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	outputFileName = "tmpData/PSTree.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
 void measure_numMark(const intervalGenerator &gen) {
 	Rein rein;
-	BIOP5 hem5;
+	HEM5 hem5;
 
 	for (int i = 0; i < subs; i++) {
 		rein.insert(gen.subList[i]);

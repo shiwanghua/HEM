@@ -1,6 +1,6 @@
-#include "BIOPSC.h"
+#include "HEMSC.h"
 
-BIOPSC::BIOPSC() {
+HEMSC::HEMSC() {
 	numSub = 0;
 	numDimension = atts;
 	levelStep = (valDom - 1) / lvls + 1;
@@ -9,7 +9,7 @@ BIOPSC::BIOPSC() {
 	//buckStep = buckStep * numLevel; // 没用
 	numBucket = (valDom - 1) / buckStep + 1;
 
-	cout << "ExpID = " << expID << ". BIOPSC: numLevel = " << numLevel << ", levelStep = " << levelStep << ", numBucket = " << numBucket << ", bucketStep = " << buckStep << ", bit exponent = " << be << endl;
+	cout << "ExpID = " << expID << ". HEMSC: numLevel = " << numLevel << ", levelStep = " << levelStep << ", numBucket = " << numBucket << ", bucketStep = " << buckStep << ", bit exponent = " << be << endl;
 
 	//bucketSub.resize(numBucket);
 	data[0].resize(numDimension, vector<vector<vector<Combo>>>(numLevel, vector<vector<Combo>>(numBucket)));
@@ -47,7 +47,7 @@ BIOPSC::BIOPSC() {
 	fix[1].resize(numDimension, vector<vector<int>>(numLevel, vector<int>(numBucket + 1, 0)));
 }
 
-BIOPSC::~BIOPSC() {
+HEMSC::~HEMSC() {
 	_for(lh, 0, 2) { // 0 or 1 low/high
 		_for(i, 0, numDimension) {
 			_for(j, 0, numLevel)
@@ -58,7 +58,7 @@ BIOPSC::~BIOPSC() {
 	}
 }
 
-void BIOPSC::insert(IntervalSub sub)
+void HEMSC::insert(IntervalSub sub)
 {
 	for (int i = 0; i < sub.size; i++)
 	{
@@ -84,7 +84,7 @@ void BIOPSC::insert(IntervalSub sub)
 }
 
 // fullBits单独存储的版本
-void BIOPSC::initBits() {
+void HEMSC::initBits() {
 
 	// 如果有多次初始化
 	_for(lh, 0, 2) { // 0 or 1 low/high
@@ -204,7 +204,7 @@ void BIOPSC::initBits() {
 				}
 			}  // level
 		}      // dimension
-		//cout << "BIOPSCDD Stop.\n";
+		//cout << "HEMSCDD Stop.\n";
 		return;
 	}
 
@@ -348,11 +348,11 @@ void BIOPSC::initBits() {
 			}
 		}
 	}
-	//cout << "BIOPSCDD Stop.\n";
+	//cout << "HEMSCDD Stop.\n";
 }
 
 //// 计算时间组成
-//void BIOPSC::match(const Pub& pub, int& matchSubs)
+//void HEMSC::match(const Pub& pub, int& matchSubs)
 //{
 //	bitset<subs> b, bLocal;
 //	vector<bool> attExist(numDimension, false);
@@ -459,13 +459,13 @@ void BIOPSC::initBits() {
 //		if (!b[i])
 //		{
 //			++matchSubs;
-//			//cout << "BIOPSC matches sub: " << i << endl;
+//			//cout << "HEMSC matches sub: " << i << endl;
 //		}
 //	bitTime += (double)bitStart.elapsed_nano();
 //}
 
 // 不计算时间组成
-void BIOPSC::match(const Pub& pub, int& matchSubs)
+void HEMSC::match(const Pub& pub, int& matchSubs)
 {
 	bitset<subs> b, bLocal;
 	vector<bool> attExist(numDimension, false);
@@ -547,12 +547,12 @@ void BIOPSC::match(const Pub& pub, int& matchSubs)
 //		if (!b[i])
 //		{
 //			++matchSubs;
-//			//cout << "BIOPSC matches sub: " << i << endl;
+//			//cout << "HEMSC matches sub: " << i << endl;
 //		}
 	matchSubs = subs - b.count();
 }
 
-//void BIOPSC::calBucketSize() {
+//void HEMSC::calBucketSize() {
 //	bucketSub.clear();
 //	bucketSub.resize(numBucket);
 //	_for(i, 0, numDimension)
@@ -565,7 +565,7 @@ void BIOPSC::match(const Pub& pub, int& matchSubs)
 //		}
 //}
 
-int BIOPSC::calMemory() {
+int HEMSC::calMemory() {
 	long long size = 0; // Byte
 	_for(i, 0, numDimension) {
 		_for(j, 0, numLevel) {
@@ -591,8 +591,8 @@ int BIOPSC::calMemory() {
 	return (int)size;
 }
 
-void BIOPSC::printRelation(int dimension_i, int li) { // 维度号和层号
-	cout << "\n\nBIOPSCDDMap\n";
+void HEMSC::printRelation(int dimension_i, int li) { // 维度号和层号
+	cout << "\n\nHEMSCDDMap\n";
 	if (dimension_i == -1)
 		_for(i, 0, numDimension) {
 		_for(j, 0, numLevel) {

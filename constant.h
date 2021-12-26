@@ -25,11 +25,11 @@ extern double stddev;      // Standard deviation: The square root of variance, r
 // Rein
 extern const int buks;     // Number of buckets.
 
-// BIOP
+// HEM
 extern int be;             // 每个维度上 2 * 2^bits个bits数组
 extern int be2;            // be=-1时每个维度上 2 * be2 个bits数组
-extern const int lvls;     // BIOPSC 层数
-extern int gs;             // BIOPSR 一组有多少个维度
+extern const int lvls;     // HEMSC 层数
+extern int gs;             // HEMSR 一组有多少个维度
 
 // Tama
 extern const int level;

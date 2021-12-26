@@ -1,6 +1,6 @@
 //#pragma once
-#ifndef BIOPSR_H
-#define BIOPSR_H
+#ifndef HEMSR_H
+#define HEMSR_H
 
 #include <cstring>
 #include "util.h"
@@ -17,7 +17,7 @@
 #define mmfor(i,a,b) for(int i=(a);i>=(b);--i)
 
 // 基于纯静模式的状态压缩优化 State Reduction
-class BIOPSR
+class HEMSR
 {
 private:
 	int numSub, numDimension;
@@ -37,8 +37,8 @@ public:
 	double bitTime = 0.0;                   // 遍历bits数组得到结果所需的时间
 	//vector<unordered_set<int>> bucketSub;   // id相同的桶存储的不同订阅个数的和
 
-	BIOPSR();
-	~BIOPSR();
+	HEMSR();
+	~HEMSR();
 
 	//void insert(Sub sub);
 	void insert(IntervalSub sub);
