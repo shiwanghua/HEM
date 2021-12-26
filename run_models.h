@@ -46,15 +46,17 @@ void run_HEMSR(const intervalGenerator& gen);
 void run_Simple(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 void run_Simple2(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 
-void run_tama(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
-void run_btama_forward(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);   // bTAMA6
-void run_btama_backward1(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);  // bTAMA7
-void run_btama_backward2(const intervalGenerator& gen, unordered_map<int, bool> deleteNo); // bTAMA8
+void run_tama(const intervalGenerator& gen,unordered_map<int,bool> deleteNo); // Original forward TANA
+void run_btama_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);   // bTAMA6
+void run_btama_backward1_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);  // bTAMA7
+void run_btama_backward2_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo); // bTAMA8
 
 
 void run_opindex(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 
-void run_BGTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
+void run_BGTREE_forward(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
+void run_BGTREE_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
+void run_BGTREE_backward_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 
 void run_PSTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 

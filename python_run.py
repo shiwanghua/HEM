@@ -7,14 +7,6 @@ import sys
 # os.system('sudo chmod 777 *.txt')
 # expID=int(sys.argv[1])
 
-path="tmpData"
-content=""
-for fileName in os.listdir(path):
-    file_path = os.path.join(path, fileName)
-    f=open(file_path,'r')
-    content+=fileName[:-4]+" = ["+f.read()+"]\n"
-print(content)
-os.system("rm tmpData/*.txt")
 # # Exp 1 2
 # for be in range(9,-1,-1):
 #     os.system('taskset -c 18 ./cmakeRB '+str(expID)+' 20 '+str(be)+' 0.3')
@@ -53,3 +45,12 @@ os.system("rm tmpData/*.txt")
 #    os.system('taskset -c 18 ./cmakeRB '+str(expID)+' '+ str(alpha)+ ' 5 0.3')
 #    print('Experiment',str(expID),': alpha=',str(alpha), ', atts=50, m=20, cons=10, be=5, w=0.3 done.\n\n')
 #    expID+=1
+
+path="tmpData"
+content=""
+for fileName in os.listdir(path):
+    file_path = os.path.join(path, fileName)
+    f=open(file_path,'r')
+    content+=fileName[:-4]+" = ["+f.read()[:-2]+"]\n"
+print(content)
+os.system("rm tmpData/*.txt")

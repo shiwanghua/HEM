@@ -56,7 +56,7 @@ public:
 
 	bool deleteSubscription(IntervalSub sub);
 
-	// bTAMA6
+	// bTAMA6 C-BOMP
 	void forward_match_accurate(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
 
 	// bTAMA7

@@ -67,7 +67,10 @@ private:
 	int subPredicate[subs];
 	int counter[subs];
 	vector<bluenode*> roots;
-	vector<vector< Combo>> data[2]; // 
+	vector<vector< Combo>> data[2];
+
+	vector<bitset<subs>> nB; // null bitset for C-BOMP
+	vector<bitset<subs>> nnB; // non-null bitset for backward matching, same as HEM
 
 	void initBlueNode(bluenode*& r);
 	void initGreenNode(lgreennode*& r);
@@ -91,6 +94,11 @@ private:
 	void forward_match_blueNode(bluenode*& r, const int& att, const int& value, const vector<IntervalSub>& subList);
 	void forward_match_lgreenNode(lgreennode*& l, const int& att, const int& value, const vector<IntervalSub>& subList);
 	void forward_match_rgreenNode(rgreennode*& r, const int& att, const int& value, const vector<IntervalSub>& subList);
+
+	void forward_match_blueNode_C_BOMP(bluenode*& r, const int& att, const int& value, const vector<IntervalSub>& subList,bitset<subs>& mB);
+	void forward_match_lgreenNode_C_BOMP(lgreennode*& l, const int& att, const int& value, const vector<IntervalSub>& subList,bitset<subs>& mB);
+	void forward_match_rgreenNode_C_BOMP(rgreennode*& r, const int& att, const int& value, const vector<IntervalSub>& subList,bitset<subs>& mB);
+
 public:
 	int hit = 0; // mid 命中次数
 
@@ -104,7 +112,11 @@ public:
 
 	void forward_match(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
 
-	void backward_match(const Pub& pub, int& matchSubs);
+	// Similar to bTama6
+	void forward_match_C_BOMP(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
+
+	// Similar to bTama8
+	void backward_match(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
 
 	int calMemory();      // 计算占用内存大小
 
