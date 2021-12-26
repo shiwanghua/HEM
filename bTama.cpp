@@ -171,10 +171,10 @@ void bTama::backward2_match_accurate(const Pub& pub, int& matchSubs, const vecto
 {
 	bitset<subs> gB, mB; // register
 	vector<bool> attExist(atts, false);
-	for (int i = 0; i < pub.size; i++) {
-		mB = nnB[pub.pairs[i].att]; // based on a non null bitset!
-		attExist[pub.pairs[i].att] = true;
-		backward2_match_accurate(0, pub.pairs[i].att, 0, valDom - 1, pub.pairs[i].value, 1, subList, mB);
+	for (auto&& pi : pub.pairs) {
+		mB = nnB[pi.att]; // based on a non null bitset!
+		attExist[pi.att] = true;
+		backward2_match_accurate(0, pi.att, 0, valDom - 1, pi.value, 1, subList, mB);
 		gB = gB | mB;
 	}
 	_for(i, 0, atts)

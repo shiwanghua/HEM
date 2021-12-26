@@ -3,9 +3,9 @@
 
 import os
 import sys
-# os.system('ulimit -s unlimited;sudo chmod 777 cmakeRB')
-# os.system('sudo chmod 777 *.txt')
-# expID=int(sys.argv[1])
+os.system('ulimit -s unlimited;sudo chmod 777 cmakeRB')
+os.system('sudo chmod 777 *.txt')
+expID=int(sys.argv[1])
 
 # # Exp 1 2
 # for be in range(9,-1,-1):
@@ -34,11 +34,11 @@ import sys
 #     expID+=1
 #     width-=0.1
 
-# # atts 30-900
-# for atts in [900,700,500,300,100,30]:
-#    os.system('taskset -c 18 ./cmakeRB '+str(expID)+' '+ str(atts)+ ' 5 0.5')
-#    print('Experiment',str(expID),': atts=',str(atts), ', m=20, be=5, w=0.5 done.\n\n')
-#    expID+=1
+# atts 30-900
+for atts in [900,700,500,300,100,30]:
+   os.system('taskset -c 18 ./cmakeRB '+str(expID)+' '+ str(atts)+ ' 5 0.5')
+   print('Experiment',str(expID),': atts=',str(atts), ', m=20, be=5, w=0.5 done.\n\n')
+   expID+=1
 
 # # alpha 0-5 attribute distribution
 # for alpha in range(5,-1,-1):

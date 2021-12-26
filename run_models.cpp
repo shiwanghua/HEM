@@ -1365,7 +1365,7 @@ void run_adarein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_opindex(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
+void run_OpIndex(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	OpIndex2 opindex;
 
 	vector<double> insertTimeList;
@@ -1449,11 +1449,11 @@ void run_opindex(const intervalGenerator &gen, unordered_map<int, bool> deleteNo
 					 + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
-	outputFileName = "ComprehensiveExpTime.txt";
+	/*outputFileName = "ComprehensiveExpTime.txt";
 	content = "OpIndex= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
-	Util::WriteData2Begin(outputFileName.c_str(), content);
+	Util::WriteData2Begin(outputFileName.c_str(), content);*/
 
 	outputFileName = "tmpData/OpIndex.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
@@ -1762,7 +1762,7 @@ void run_BGTREE_backward_C_BOMP(const intervalGenerator& gen, unordered_map<int,
 
 		Timer matchStart;
 
-		bgTree.backward_match(gen.pubList[i], matchSubs, gen.subList);
+		bgTree.backward_match_C_BOMP(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double) eventTime / 1000000);

@@ -99,6 +99,10 @@ private:
 	void forward_match_lgreenNode_C_BOMP(lgreennode*& l, const int& att, const int& value, const vector<IntervalSub>& subList,bitset<subs>& mB);
 	void forward_match_rgreenNode_C_BOMP(rgreennode*& r, const int& att, const int& value, const vector<IntervalSub>& subList,bitset<subs>& mB);
 
+	void backward_match_blueNode_C_BOMP(bluenode*& r, const int& att, const int& value, const vector<IntervalSub>& subList, bitset<subs>& mB);
+	void backward_match_lgreenNode_C_BOMP(lgreennode*& l, const int& att, const int& value, const vector<IntervalSub>& subList, bitset<subs>& mB);
+	void backward_match_rgreenNode_C_BOMP(rgreennode*& r, const int& att, const int& value, const vector<IntervalSub>& subList, bitset<subs>& mB);
+
 public:
 	int hit = 0; // mid 命中次数
 
@@ -116,11 +120,11 @@ public:
 	void forward_match_C_BOMP(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
 
 	// Similar to bTama8
-	void backward_match(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
+	void backward_match_C_BOMP(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
 
 	int calMemory();      // 计算占用内存大小
 
-	void printBGTree();
+	void printBGTree();   // 找每一层的存储订阅数最大的节点 
 
 	int getHeight() { return height; }
 	int getBoundaryNumSub() { return boundaryNumSub; }
