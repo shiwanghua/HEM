@@ -9,6 +9,7 @@
 #include "util.h"
 #include "constant.h"
 #include "omp.h"
+#include "boost/thread/thread_pool.hpp"
 #include <algorithm>
 #include <unordered_set>
 #include <thread>
