@@ -1,12 +1,12 @@
 #include "constant.h"
-string expID = "792";       // Record the experiment ID number
+string expID = "793";       // Record the experiment ID number
 const bool display = false; // whether to print the mapping relation
 const bool verifyID = false; // whether to verify Insertion and Deletion function
 const int interval = 100;   // after a interval of events is matched, print a log
 const double subp = 0;      // subp比例的订阅的谓词定义在前cons个维度上 in order to make the number of matching subscriptions > 0
 //const int subs = 1000000; // Number of subscriptions.
 const int pubs = 1000;       // Number of publications.
-int atts = 1000;            // Total number of attributes, i.e. dimensions.
+int atts = 20;            // Total number of attributes, i.e. dimensions.
 int cons = 10;              // Number of constraints(predicates) in one sub.
 int m = 20;                 // Number of constraints in one pub.
 const int attDis = 0;       // The distribution of attributes in subs and pubs. 0:uniform distribution | 1:Zipf distribution
