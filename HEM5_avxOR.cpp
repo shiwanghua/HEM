@@ -1,6 +1,6 @@
-#include "HEM5_256OR.h"
+#include "HEM5_avxOR.h"
 
-HEM5_256OR::HEM5_256OR() {
+HEM5_avxOR::HEM5_avxOR() {
 	numSub = 0;
 	numDimension = atts;
 	buckStep = (valDom - 1) / buks + 1;
@@ -40,13 +40,13 @@ HEM5_256OR::HEM5_256OR() {
 	fix[1].resize(numDimension, vector<int>(numBucket + 1));
 }
 
-HEM5_256OR::~HEM5_256OR() {
+HEM5_avxOR::~HEM5_avxOR() {
 	_for(i, 0,
 		numDimension) delete[] doubleReverse[0][i], doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1], doubleReverse[0], doubleReverse[1];
 }
 
-void HEM5_256OR::insert(IntervalSub sub) {
+void HEM5_avxOR::insert(IntervalSub sub) {
 	for (int i = 0; i < sub.size; i++) {
 		IntervalCnt cnt = sub.constraints[i];
 		Combo c;
@@ -60,7 +60,7 @@ void HEM5_256OR::insert(IntervalSub sub) {
 	numSub++;
 }
 
-void HEM5_256OR::insert_online(IntervalSub sub) {
+void HEM5_avxOR::insert_online(IntervalSub sub) {
 	IntervalCnt cnt;
 	Combo c;
 	int b, bucketID;
@@ -93,7 +93,7 @@ void HEM5_256OR::insert_online(IntervalSub sub) {
 	numSub++;
 }
 
-bool HEM5_256OR::deleteSubscription(IntervalSub sub) {
+bool HEM5_avxOR::deleteSubscription(IntervalSub sub) {
 	int find = 0;
 	IntervalCnt cnt;
 	int b, bucketID, id = sub.id;
@@ -142,7 +142,7 @@ bool HEM5_256OR::deleteSubscription(IntervalSub sub) {
 }
 
 // fullBits单独存储的版本
-void HEM5_256OR::initBits() {
+void HEM5_avxOR::initBits() {
 
 	// 如果有多次初始化
 	_for(i, 0,
@@ -395,7 +395,7 @@ void HEM5_256OR::initBits() {
 }
 
 // 计算时间组成
-//void HEM5_256OR::match(const Pub& pub, int& matchSubs) {
+//void HEM5_avxOR::match(const Pub& pub, int& matchSubs) {
 //	bitset<subs> b, bLocal;
 //	vector<bool> attExist(numDimension, false);
 //	int value, att, buck;
@@ -480,14 +480,14 @@ void HEM5_256OR::initBits() {
 //	Timer bitStart;
 //	//	_for(i, 0, subs) if (!b[i]) {
 //	//			++matchSubs;
-//	//			//cout << "HEM5_256OR matches sub: " << i << endl;
+//	//			//cout << "HEM5_avxOR matches sub: " << i << endl;
 //	//		}
 //	matchSubs = subs - b.count();
 //	bitTime += (double)bitStart.elapsed_nano();
 //}
 
 // 不计算时间组成
-void HEM5_256OR::match(const Pub& pub, int& matchSubs)
+void HEM5_avxOR::match(const Pub& pub, int& matchSubs)
 {
 	bitset<subs> b; // register
 	bitset<subs> bLocal;
@@ -568,12 +568,12 @@ void HEM5_256OR::match(const Pub& pub, int& matchSubs)
 	//_for(i, 0, subs) if (!b[i])
 	//{
 	//	++matchSubs;
-	//	//cout << "HEM5_256OR matches sub: " << i << endl;
+	//	//cout << "HEM5_avxOR matches sub: " << i << endl;
 	//}
 	matchSubs = numSub - b.count();
 }
 
-//void HEM5_256OR::calBucketSize() {
+//void HEM5_avxOR::calBucketSize() {
 //	bucketSub.clear();
 //	bucketSub.resize(numBucket);
 //	_for(i, 0, numDimension)
@@ -586,7 +586,7 @@ void HEM5_256OR::match(const Pub& pub, int& matchSubs)
 //		}
 //}
 
-int HEM5_256OR::calMemory() {
+int HEM5_avxOR::calMemory() {
 	long long size = 0; // Byte
 	_for(i, 0, numDimension) {
 		// 若每个维度上bits数组个数一样就是 2*sizeof(bitset<subs>)*numDimension*numBits
@@ -606,7 +606,7 @@ int HEM5_256OR::calMemory() {
 	return (int)size;
 }
 
-void HEM5_256OR::printRelation(int dimension_i) {
+void HEM5_avxOR::printRelation(int dimension_i) {
 	cout << "\n\nHEM5_256ORDDMap\n";
 	if (dimension_i == -1)
 		_for(i, 0, numDimension) {
@@ -647,7 +647,7 @@ void HEM5_256OR::printRelation(int dimension_i) {
 	cout << "\n\n";
 }
 
-vector<int> HEM5_256OR::calMarkNumForBuckets() {
+vector<int> HEM5_avxOR::calMarkNumForBuckets() {
 	vector<int> numMarking(numBucket, 0);
 	_for(i, 0, numBucket) {
 		_for(j, 0, numDimension) {

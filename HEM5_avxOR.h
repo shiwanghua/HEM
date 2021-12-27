@@ -15,7 +15,7 @@
 #define mmfor(i,a,b) for(int i=(a);i>=(b);--i)
 
 // 动动模式 用avx2 做256位的或运算
-class HEM5_256OR
+class HEM5_avxOR
 {
 private:
 	int numSub, numDimension, buckStep, numBits;
@@ -34,8 +34,8 @@ public:
 	double bitTime = 0.0;                   // 遍历bits数组得到结果所需的时间
 	//vector<unordered_set<int>> bucketSub;   // id相同的桶存储的不同订阅个数的和
 
-	HEM5_256OR();
-	~HEM5_256OR();
+	HEM5_avxOR();
+	~HEM5_avxOR();
 
 	//void insert(Sub sub);
 	void insert(IntervalSub sub); // 没有bitset时的插入算法

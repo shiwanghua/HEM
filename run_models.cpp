@@ -630,8 +630,8 @@ void run_HEM5(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_HEM5_256OR(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) {
-	HEM5_256OR hem5_256or;
+void run_HEM5_avxOR(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) {
+	HEM5_avxOR hem5_avxor;
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -642,29 +642,29 @@ void run_HEM5_256OR(const intervalGenerator& gen, unordered_map<int, bool> delet
 	for (int i = 0; i < subs; i++) {
 		Timer insertStart;
 
-		hem5_256or.insert(gen.subList[i]); // Insert sub[i] into data structure.
+		hem5_avxor.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
 	}
-	cout << "HEM5DD_256OR Insertion Finishes.\n";
+	cout << "HEM5DD_avxOR Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
-	hem5_256or.initBits();
+	hem5_avxor.initBits();
 	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 
 	// 验证插入删除正确性
 	if (verifyID) {
 		for (auto kv : deleteNo) {
 			Timer deleteStart;
-			if (!hem5_256or.deleteSubscription(gen.subList[kv.first]))
-				cout << "HEM5DD_256OR: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+			if (!hem5_avxor.deleteSubscription(gen.subList[kv.first]))
+				cout << "HEM5DD_avxOR: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
 			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
 		}
-		cout << "HEM5DD_256OR Deletion Finishes.\n";
+		cout << "HEM5DD_avxOR Deletion Finishes.\n";
 		for (auto kv : deleteNo) {
-			hem5_256or.insert_online(gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
+			hem5_avxor.insert_online(gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
 		}
 	}
 
@@ -673,24 +673,24 @@ void run_HEM5_256OR(const intervalGenerator& gen, unordered_map<int, bool> delet
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
-		hem5_256or.match(gen.pubList[i], matchSubs);
+		hem5_avxor.match(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "HEM5DD_256OR Event " << i << " is matched.\n";
+			cout << "HEM5DD_avxOR Event " << i << " is matched.\n";
 	}
 
 	if (display)
-		hem5_256or.printRelation(1);
+		hem5_avxor.printRelation(1);
 	cout << endl;
 
 	// output
-	string outputFileName = "HEM5_256OR.txt";
+	string outputFileName = "HEM5_avxOR.txt";
 	string content = expID
 		+ " bits= " + Util::Int2String(be)
-		+ " memory= " + Util::Int2String(hem5_256or.calMemory())
+		+ " memory= " + Util::Int2String(hem5_avxor.calMemory())
 		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 		+ " ms InitTime= " + Util::Double2String(initTime)
@@ -698,11 +698,11 @@ void run_HEM5_256OR(const intervalGenerator& gen, unordered_map<int, bool> delet
 		Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
 		+ " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
 		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-		+ " ms AvgCmpTime= " + to_string(hem5_256or.compareTime / pubs / 1000000)
-		+ " ms AvgMarkTime= " + to_string(hem5_256or.markTime / pubs / 1000000)
-		+ " ms OrTime= " + to_string(hem5_256or.orTime / pubs / 1000000)
-		+ " ms AvgBitTime= " + to_string(hem5_256or.bitTime / pubs / 1000000)
-		+ " ms numBuk= " + Util::Int2String(hem5_256or.numBucket)
+		+ " ms AvgCmpTime= " + to_string(hem5_avxor.compareTime / pubs / 1000000)
+		+ " ms AvgMarkTime= " + to_string(hem5_avxor.markTime / pubs / 1000000)
+		+ " ms OrTime= " + to_string(hem5_avxor.orTime / pubs / 1000000)
+		+ " ms AvgBitTime= " + to_string(hem5_avxor.bitTime / pubs / 1000000)
+		+ " ms numBuk= " + Util::Int2String(hem5_avxor.numBucket)
 		+ " numSub= " + Util::Int2String(subs)
 		+ " subSize= " + Util::Int2String(cons)
 		+ " numPub= " + Util::Int2String(pubs)
@@ -718,16 +718,16 @@ void run_HEM5_256OR(const intervalGenerator& gen, unordered_map<int, bool> delet
 	Util::WriteData2Begin(outputFileName.c_str(), content);*/
 
 	//outputFileName = "HEM5BucketSize.txt";
-	//hem5_256or.calBucketSize();
-	//content = expID + " numBucket= " + Util::Int2String(hem5_256or.numBucket)
-	//	//+ " sumBukSetSize= " + to_string(accumulate(hem5_256or.bucketSub.begin(), hem5_256or.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
-	//	+ " maxBukSetSize= " + to_string((*max_element(hem5_256or.bucketSub.begin(), hem5_256or.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
-	//	+ " minBukSetSize= " + to_string(min_element(hem5_256or.bucketSub.begin(), hem5_256or.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
-	//_for(i, 0, hem5_256or.numBucket)
-	//	content += " " + to_string(hem5_256or.bucketSub[i].size());
+	//hem5_avxor.calBucketSize();
+	//content = expID + " numBucket= " + Util::Int2String(hem5_avxor.numBucket)
+	//	//+ " sumBukSetSize= " + to_string(accumulate(hem5_avxor.bucketSub.begin(), hem5_avxor.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
+	//	+ " maxBukSetSize= " + to_string((*max_element(hem5_avxor.bucketSub.begin(), hem5_avxor.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
+	//	+ " minBukSetSize= " + to_string(min_element(hem5_avxor.bucketSub.begin(), hem5_avxor.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
+	//_for(i, 0, hem5_avxor.numBucket)
+	//	content += " " + to_string(hem5_avxor.bucketSub[i].size());
 	//Util::WriteData2Begin(outputFileName.c_str(), content);
 
-	outputFileName = "tmpData/HEM5_256OR.txt";
+	outputFileName = "tmpData/HEM5_avxOR.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }

@@ -13,7 +13,7 @@
 #include "HEM3.h"
 #include "HEM4.h"
 #include "HEM5.h"
-#include "HEM5_256OR.h"
+#include "HEM5_avxOR.h"
 #include "HEMSC.h"
 #include "HEMSR.h"
 
@@ -41,7 +41,7 @@ void run_HEM2(const intervalGenerator& gen);
 void run_HEM3(const intervalGenerator& gen);
 void run_HEM4(const intervalGenerator& gen);
 void run_HEM5(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
-void run_HEM5_256OR(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
+void run_HEM5_avxOR(const intervalGenerator& gen, unordered_map<int,bool> deleteNo);
 void run_HEMSC(const intervalGenerator& gen);
 void run_HEMSR(const intervalGenerator& gen);
 

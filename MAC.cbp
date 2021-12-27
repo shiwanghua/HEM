@@ -130,10 +130,10 @@
 		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/HEM5.h">
 			<Option target="run"/>
 		</Unit>
-		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/HEM5_256OR.cpp">
+		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/HEM5_avxOR.cpp">
 			<Option target="run"/>
 		</Unit>
-		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/HEM5_256OR.h">
+		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/HEM5_avxOR.h">
 			<Option target="run"/>
 		</Unit>
 		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/HEMSC.cpp">
