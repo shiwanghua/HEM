@@ -395,183 +395,183 @@ void HEM5_256OR::initBits() {
 }
 
 // 计算时间组成
-void HEM5_256OR::match(const Pub& pub, int& matchSubs) {
-	bitset<subs> b, bLocal;
-	vector<bool> attExist(numDimension, false);
-	int value, att, buck;
-
-	_for(i, 0, pub.size) {
-		Timer compareStart;
-		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
-		attExist[att] = true;
-		_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
-			b[data[0][att][buck][k].subID] = 1;
-		_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
-			b[data[1][att][buck][k].subID] = 1;
-		compareTime += (double)compareStart.elapsed_nano();
-
-		if (doubleReverse[0][att][buck]) {
-			Timer markStart;
-			if (bitsID[0][att][buck] == numBits - 1 && numBits > 1)
-				bLocal = fullBits[att];
-			else
-				bLocal = bits[0][att][bitsID[0][att][buck]];
-			_for(j, endBucket[0][att][buck], buck + 1) _for(k, 0,
-				data[0][att][j].size()) bLocal[data[0][att][j][k].subID] = 0;
-			markTime += (double)markStart.elapsed_nano();
-
-			Timer orStart;
-			Util::bitsetOr(b, bLocal);
-			orTime += (double)orStart.elapsed_nano();
-		}
-		else {
-			Timer markStart;
-			_for(j, buck + 1, endBucket[0][att][buck]) _for(k, 0,
-				data[0][att][j].size()) b[data[0][att][j][k].subID] = 1;
-			markTime += (double)markStart.elapsed_nano();
-			Timer orStart;
-			if (bitsID[0][att][buck] != -1)
-				Util::bitsetOr(b, bits[0][att][bitsID[0][att][buck]]);
-			orTime += (double)orStart.elapsed_nano();
-		}
-
-		if (doubleReverse[1][att][buck]) {
-			Timer markStart;
-			if (bitsID[1][att][buck] == numBits - 1 && numBits > 1)
-				bLocal = fullBits[att];
-			else
-				bLocal = bits[1][att][bitsID[1][att][buck]];
-			_for(j, buck, endBucket[1][att][buck]) _for(k, 0,
-				data[1][att][j].size()) bLocal[data[1][att][j][k].subID] = 0;
-			markTime += (double)markStart.elapsed_nano();
-			Timer orStart;
-			Util::bitsetOr(b, bLocal);
-			orTime += (double)orStart.elapsed_nano();
-		}
-		else {
-			Timer markStart;
-			_for(j, endBucket[1][att][buck], buck) _for(k, 0, data[1][att][j].size()) b[data[1][att][j][k].subID] = 1;
-			markTime += (double)markStart.elapsed_nano();
-			Timer orStart;
-			if (bitsID[1][att][buck] != -1)
-				Util::bitsetOr(b, bits[1][att][bitsID[1][att][buck]]);
-			orTime += (double)orStart.elapsed_nano();
-		}
-	}
-
-	if (numBits > 1) {
-		Timer orStart;
-		_for(i, 0, numDimension) if (!attExist[i])
-			Util::bitsetOr(b, fullBits[i]);
-		orTime += (double)orStart.elapsed_nano();
-	}
-	else {
-		Timer markStart;
-		_for(i, 0, numDimension) if (!attExist[i])
-			_for(j, 0, endBucket[0][i][0]) _for(k, 0, data[0][i][j].size()) b[data[0][i][j][k].subID] = 1;
-		markTime += (double)markStart.elapsed_nano();
-
-		Timer orStart;
-		_for(i, 0, numDimension) if (!attExist[i])
-			Util::bitsetOr(b, bits[0][i][0]);
-		orTime += (double)orStart.elapsed_nano();
-	}
-
-	Timer bitStart;
-	//	_for(i, 0, subs) if (!b[i]) {
-	//			++matchSubs;
-	//			//cout << "HEM5_256OR matches sub: " << i << endl;
-	//		}
-	matchSubs = subs - b.count();
-	bitTime += (double)bitStart.elapsed_nano();
-}
-
-// 不计算时间组成
-//void HEM5_256OR::match(const Pub& pub, int& matchSubs)
-//{
-//	bitset<subs> b; // register
-//	bitset<subs> bLocal;
+//void HEM5_256OR::match(const Pub& pub, int& matchSubs) {
+//	bitset<subs> b, bLocal;
 //	vector<bool> attExist(numDimension, false);
 //	int value, att, buck;
 //
-//	_for(i, 0, pub.size)
-//	{
+//	_for(i, 0, pub.size) {
+//		Timer compareStart;
 //		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 //		attExist[att] = true;
 //		_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
 //			b[data[0][att][buck][k].subID] = 1;
 //		_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
 //			b[data[1][att][buck][k].subID] = 1;
+//		compareTime += (double)compareStart.elapsed_nano();
 //
-//		if (doubleReverse[0][att][buck])
-//		{
+//		if (doubleReverse[0][att][buck]) {
+//			Timer markStart;
 //			if (bitsID[0][att][buck] == numBits - 1 && numBits > 1)
 //				bLocal = fullBits[att];
 //			else
 //				bLocal = bits[0][att][bitsID[0][att][buck]];
-//			_for(j, endBucket[0][att][buck], buck + 1)
-//				_for(k, 0, data[0][att][j].size())
-//				bLocal[data[0][att][j][k].subID] = 0;
+//			_for(j, endBucket[0][att][buck], buck + 1) _for(k, 0,
+//				data[0][att][j].size()) bLocal[data[0][att][j][k].subID] = 0;
+//			markTime += (double)markStart.elapsed_nano();
 //
-//			Util::bitsetOr(b, bLocal); //b = b | bLocal;
+//			Timer orStart;
+//			Util::bitsetOr(b, bLocal);
+//			orTime += (double)orStart.elapsed_nano();
 //		}
-//		else
-//		{
-//			_for(j, buck + 1, endBucket[0][att][buck])
-//				_for(k, 0, data[0][att][j].size())
-//				b[data[0][att][j][k].subID] = 1;
-//
+//		else {
+//			Timer markStart;
+//			_for(j, buck + 1, endBucket[0][att][buck]) _for(k, 0,
+//				data[0][att][j].size()) b[data[0][att][j][k].subID] = 1;
+//			markTime += (double)markStart.elapsed_nano();
+//			Timer orStart;
 //			if (bitsID[0][att][buck] != -1)
 //				Util::bitsetOr(b, bits[0][att][bitsID[0][att][buck]]);
+//			orTime += (double)orStart.elapsed_nano();
 //		}
 //
-//		if (doubleReverse[1][att][buck])
-//		{
+//		if (doubleReverse[1][att][buck]) {
+//			Timer markStart;
 //			if (bitsID[1][att][buck] == numBits - 1 && numBits > 1)
 //				bLocal = fullBits[att];
 //			else
 //				bLocal = bits[1][att][bitsID[1][att][buck]];
-//
-//			_for(j, buck, endBucket[1][att][buck])
-//				_for(k, 0, data[1][att][j].size())
-//				bLocal[data[1][att][j][k].subID] = 0;
-//
+//			_for(j, buck, endBucket[1][att][buck]) _for(k, 0,
+//				data[1][att][j].size()) bLocal[data[1][att][j][k].subID] = 0;
+//			markTime += (double)markStart.elapsed_nano();
+//			Timer orStart;
 //			Util::bitsetOr(b, bLocal);
+//			orTime += (double)orStart.elapsed_nano();
 //		}
-//		else
-//		{
-//			_for(j, endBucket[1][att][buck], buck)
-//				_for(k, 0, data[1][att][j].size())
-//				b[data[1][att][j][k].subID] = 1;
-//
+//		else {
+//			Timer markStart;
+//			_for(j, endBucket[1][att][buck], buck) _for(k, 0, data[1][att][j].size()) b[data[1][att][j][k].subID] = 1;
+//			markTime += (double)markStart.elapsed_nano();
+//			Timer orStart;
 //			if (bitsID[1][att][buck] != -1)
 //				Util::bitsetOr(b, bits[1][att][bitsID[1][att][buck]]);
+//			orTime += (double)orStart.elapsed_nano();
 //		}
 //	}
 //
-//	if (numBits > 1)
-//	{
+//	if (numBits > 1) {
+//		Timer orStart;
 //		_for(i, 0, numDimension) if (!attExist[i])
-//			Util::bitsetOr(b,fullBits[i]);
+//			Util::bitsetOr(b, fullBits[i]);
+//		orTime += (double)orStart.elapsed_nano();
 //	}
-//	else // 只有一半用了bitset覆盖
-//	{
+//	else {
+//		Timer markStart;
 //		_for(i, 0, numDimension) if (!attExist[i])
-//			_for(j, 0, endBucket[0][i][0])
-//			for(auto&& kId:data[0][i][j])
-//				b[kId.subID] = 1;
+//			_for(j, 0, endBucket[0][i][0]) _for(k, 0, data[0][i][j].size()) b[data[0][i][j][k].subID] = 1;
+//		markTime += (double)markStart.elapsed_nano();
 //
+//		Timer orStart;
 //		_for(i, 0, numDimension) if (!attExist[i])
 //			Util::bitsetOr(b, bits[0][i][0]);
+//		orTime += (double)orStart.elapsed_nano();
 //	}
 //
-//	//_for(i, 0, subs) if (!b[i])
-//	//{
-//	//	++matchSubs;
-//	//	//cout << "HEM5_256OR matches sub: " << i << endl;
-//	//}
-//	matchSubs = numSub - b.count();
+//	Timer bitStart;
+//	//	_for(i, 0, subs) if (!b[i]) {
+//	//			++matchSubs;
+//	//			//cout << "HEM5_256OR matches sub: " << i << endl;
+//	//		}
+//	matchSubs = subs - b.count();
+//	bitTime += (double)bitStart.elapsed_nano();
 //}
+
+// 不计算时间组成
+void HEM5_256OR::match(const Pub& pub, int& matchSubs)
+{
+	bitset<subs> b; // register
+	bitset<subs> bLocal;
+	vector<bool> attExist(numDimension, false);
+	int value, att, buck;
+
+	_for(i, 0, pub.size)
+	{
+		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
+		attExist[att] = true;
+		_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
+			b[data[0][att][buck][k].subID] = 1;
+		_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
+			b[data[1][att][buck][k].subID] = 1;
+
+		if (doubleReverse[0][att][buck])
+		{
+			if (bitsID[0][att][buck] == numBits - 1 && numBits > 1)
+				bLocal = fullBits[att];
+			else
+				bLocal = bits[0][att][bitsID[0][att][buck]];
+			_for(j, endBucket[0][att][buck], buck + 1)
+				_for(k, 0, data[0][att][j].size())
+				bLocal[data[0][att][j][k].subID] = 0;
+
+			Util::bitsetOr(b, bLocal); //b = b | bLocal;
+		}
+		else
+		{
+			_for(j, buck + 1, endBucket[0][att][buck])
+				_for(k, 0, data[0][att][j].size())
+				b[data[0][att][j][k].subID] = 1;
+
+			if (bitsID[0][att][buck] != -1)
+				Util::bitsetOr(b, bits[0][att][bitsID[0][att][buck]]);
+		}
+
+		if (doubleReverse[1][att][buck])
+		{
+			if (bitsID[1][att][buck] == numBits - 1 && numBits > 1)
+				bLocal = fullBits[att];
+			else
+				bLocal = bits[1][att][bitsID[1][att][buck]];
+
+			_for(j, buck, endBucket[1][att][buck])
+				_for(k, 0, data[1][att][j].size())
+				bLocal[data[1][att][j][k].subID] = 0;
+
+			Util::bitsetOr(b, bLocal);
+		}
+		else
+		{
+			_for(j, endBucket[1][att][buck], buck)
+				_for(k, 0, data[1][att][j].size())
+				b[data[1][att][j][k].subID] = 1;
+
+			if (bitsID[1][att][buck] != -1)
+				Util::bitsetOr(b, bits[1][att][bitsID[1][att][buck]]);
+		}
+	}
+
+	if (numBits > 1)
+	{
+		_for(i, 0, numDimension) if (!attExist[i])
+			Util::bitsetOr(b,fullBits[i]);
+	}
+	else // 只有一半用了bitset覆盖
+	{
+		_for(i, 0, numDimension) if (!attExist[i])
+			_for(j, 0, endBucket[0][i][0])
+			for(auto&& kId:data[0][i][j])
+				b[kId.subID] = 1;
+
+		_for(i, 0, numDimension) if (!attExist[i])
+			Util::bitsetOr(b, bits[0][i][0]);
+	}
+
+	//_for(i, 0, subs) if (!b[i])
+	//{
+	//	++matchSubs;
+	//	//cout << "HEM5_256OR matches sub: " << i << endl;
+	//}
+	matchSubs = numSub - b.count();
+}
 
 //void HEM5_256OR::calBucketSize() {
 //	bucketSub.clear();

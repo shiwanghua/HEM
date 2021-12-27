@@ -34,7 +34,7 @@ int main(int argc, char **argv) {
 		}
 	}
 
-	//run_rein(gen,deleteNo);
+	run_rein(gen,deleteNo);
 	//run_pRein(gen,deleteNo);
 //	run_adarein(gen, deleteNo);
 

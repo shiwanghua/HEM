@@ -1,12 +1,12 @@
 #include "constant.h"
-string expID = "790";       // Record the experiment ID number
+string expID = "792";       // Record the experiment ID number
 const bool display = false; // whether to print the mapping relation
 const bool verifyID = false; // whether to verify Insertion and Deletion function
 const int interval = 100;   // after a interval of events is matched, print a log
 const double subp = 0;      // subp比例的订阅的谓词定义在前cons个维度上 in order to make the number of matching subscriptions > 0
 //const int subs = 1000000; // Number of subscriptions.
-const int pubs = 10;       // Number of publications.
-int atts = 20;            // Total number of attributes, i.e. dimensions.
+const int pubs = 1000;       // Number of publications.
+int atts = 1000;            // Total number of attributes, i.e. dimensions.
 int cons = 10;              // Number of constraints(predicates) in one sub.
 int m = 20;                 // Number of constraints in one pub.
 const int attDis = 0;       // The distribution of attributes in subs and pubs. 0:uniform distribution | 1:Zipf distribution
@@ -21,7 +21,7 @@ double stddev = 1;          // Standard deviation: The square root of variance, 
 const int buks = 1000;       // Number of buckets.
 
 // HEM
-int be = 7;                 // bit exponent. In each dimension, there are 2 * 2^{be} bitsets.
+int be = 5;                 // bit exponent. In each dimension, there are 2 * 2^{be} bitsets.
 int be2 = 5;                // When be=-1, be2 is adopted. In each dimension, there are 2 * be2 bitsets.
 const int lvls = 2;         // HEMSC number of levels
 int gs = 5;                 // HEMSR Group Size 一组有多少个维度

@@ -108,11 +108,6 @@ bool pRein::deleteSubscription(IntervalSub sub) {
 void pRein::match(const Pub &pub, int &matchSubs) {
 	vector<bool> bits(numSub, false);
 	vector<bool> attExist(numDimension, false);
-	Timer logStart;
-//#pragma omp parallel shared(pub, attExist, bits, data, logStart)  private(stdout)
-	{
-		//#pragma omp parallel for schedule(static, 5) num_threads(pD) default(none) shared(pub, attExist, bits, data, logStart) private(stdout) //dynamic
-#pragma omp parallel for num_threads(pD)  schedule(static, 10) default(shared) // private(stdout)
 		for (int i = 0; i < pub.size; i++) {
 			/*printf("rank %d of %d: %.4f\n", omp_get_thread_num(), omp_get_num_threads(), (double)logStart.elapsed_nano());
 			fflush(stdout);*/
@@ -134,9 +129,6 @@ void pRein::match(const Pub &pub, int &matchSubs) {
 				for (int k = 0; k < data[1][att][j].size(); k++)
 					bits[data[1][att][j][k].subID] = true;
 		}
-	}
-
-//#pragma omp parallel for schedule(dynamic) num_threads(pD) default(none) shared(numDimension,attExist,bits,data)
 	for (int i = 0; i < numDimension; i++)
 		if (!attExist[i])
 			for (int j = 0; j < numBucket; j++)

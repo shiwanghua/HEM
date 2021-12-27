@@ -26,7 +26,7 @@ SET(CMAKE_CXX_COMPILER "g++")
 
 #SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++0x")
 #set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3" )
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -march=native -O3 -pthread" )
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -march=native -O3 -pthread -mavx2" )
 #set(CMAKE_C_STANDARD 17)
 #set(CMAKE_CXX_FLAGS_DEBUG “${CMAKE_CXX_FLAGS_DEBUG} -O0”)
 #set(CMAKE_C_FLAGS_DEBUG “${CMAKE_C_FLAGS_DEBUG} -O0”)
