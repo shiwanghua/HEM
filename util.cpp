@@ -479,26 +479,26 @@ void Util::Pub2dPub(Pub pub, dPub &dpub) {
 }
 
 // 256
-//void Util::bitsetOr(bitset<subs> &b1, bitset<subs> &b2) { // b1=b1|b2;
-//	__m256i b1_256, b2_256;
-//	long long int *begin1 = reinterpret_cast<long long int *> (&b1);
-//	long long int *begin2 = reinterpret_cast<long long int *> (&b2);
-//
-//	_for(i, 0, blockNum) {
-//		b1_256 = _mm256_maskload_epi64(begin1, mask);
-//		b2_256 = _mm256_maskload_epi64(begin2, mask);
-//
-//		b1_256 = _mm256_or_si256(b1_256, b2_256);
-//
-//		_mm256_maskstore_epi64(begin1, mask, b1_256);
-//
-//		begin1 += ptrIncrement;
-//		begin2 += ptrIncrement;
-//	}
-//}
+void Util::bitsetOr(bitset<subs> &b1, bitset<subs> &b2) { // b1=b1|b2;
+	__m256i b1_256, b2_256;
+	long long int *begin1 = reinterpret_cast<long long int *> (&b1);
+	long long int *begin2 = reinterpret_cast<long long int *> (&b2);
+
+	_for(i, 0, blockNum) {
+		b1_256 = _mm256_maskload_epi64(begin1, mask);
+		b2_256 = _mm256_maskload_epi64(begin2, mask);
+
+		b1_256 = _mm256_or_si256(b1_256, b2_256);
+
+		_mm256_maskstore_epi64(begin1, mask, b1_256);
+
+		begin1 += ptrIncrement;
+		begin2 += ptrIncrement;
+	}
+}
 
 // 512
-void Util::bitsetOr(bitset<subs> &b1, bitset<subs> &b2) { // b1=b1|b2;
+/*void Util::bitsetOr(bitset<subs> &b1, bitset<subs> &b2) { // b1=b1|b2;
 	__m512i b1_512, b2_512;
 	long long int *begin1 = reinterpret_cast<long long int *> (&b1);
 	long long int *begin2 = reinterpret_cast<long long int *> (&b2);
@@ -515,7 +515,7 @@ void Util::bitsetOr(bitset<subs> &b1, bitset<subs> &b2) { // b1=b1|b2;
 		begin1 += ptrIncrement;
 		begin2 += ptrIncrement;
 	}
-}
+}*/
 
 // Win10
 //void Util::bitsetOr(bitset<subs>& b1, bitset<subs>& b2) { // b1=b1|b2;
