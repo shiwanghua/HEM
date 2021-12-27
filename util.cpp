@@ -515,5 +515,21 @@ void Util::Pub2dPub(Pub pub, dPub& dpub) {
 	}
 }
 
+void Util::bitsetOr(bitset<subs>& b1, bitset<subs>& b2) { // b1=b1|b2;
+	__m256i b1_256, b2_256;
+	__int64* begin1 = reinterpret_cast<__int64*> (&b1);
+	__int64* begin2 = reinterpret_cast<__int64*> (&b2);
 
+	_for(i, 0, blockNum) {
+		b1_256 = _mm256_maskload_epi64(begin1, mask);
+		b2_256 = _mm256_maskload_epi64(begin2, mask);
+
+		b1_256 = _mm256_or_si256(b1_256, b2_256);
+
+		_mm256_maskstore_epi64(begin1, mask, b1_256);
+
+		begin1 += ptrIncrement;
+		begin2 += ptrIncrement;
+	}
+}
 

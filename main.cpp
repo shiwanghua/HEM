@@ -1,6 +1,6 @@
 #include "run_models.h"
 
-int maisn(int argc, char **argv) {
+int main(int argc, char **argv) {
 	//freopen("paras.txt", "r", stdin);
 	//cin >> subs >> pubs >> atts >> cons>> buks >> m >> attDis >> valDis >> valDom >> alpha >> width;
 	//m = atts; // Note that Rein requires m == atts.
@@ -34,7 +34,7 @@ int maisn(int argc, char **argv) {
 		}
 	}
 
-	run_rein(gen,deleteNo);
+	//run_rein(gen,deleteNo);
 	//run_pRein(gen,deleteNo);
 //	run_adarein(gen, deleteNo);
 
@@ -44,6 +44,7 @@ int maisn(int argc, char **argv) {
 //	run_HEM3(gen);
 //	run_HEM4(gen);
 	run_HEM5(gen,deleteNo);
+	run_HEM5_256OR(gen,deleteNo);
 //	run_HEMSC(gen);
 //	run_HEMSR(gen);
 

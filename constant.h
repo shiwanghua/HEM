@@ -2,6 +2,8 @@
 #ifndef _CONST_H
 #define _CONST_H
 #include<iostream>
+#include <immintrin.h> //AVX(include wmmintrin.h)
+
 using namespace std;
 
 extern string expID;       // 记录实验id
@@ -30,6 +32,11 @@ extern int be;             // 每个维度上 2 * 2^bits个bits数组
 extern int be2;            // be=-1时每个维度上 2 * be2 个bits数组
 extern const int lvls;     // HEMSC 层数
 extern int gs;             // HEMSR 一组有多少个维度
+extern const int blockSize;
+extern const int ptrSize;
+extern const int blockNum; // 或运算次数
+extern const int ptrIncrement;
+extern const __m256i mask;
 
 // Tama
 extern const int level;

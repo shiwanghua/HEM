@@ -64,6 +64,8 @@ public:
 	static vector<double> ComputeIntStatistics(vector<int> data);
 
 	static void Pub2dPub(Pub pub, dPub &dpub);
+
+	static void bitsetOr(bitset<subs>& b1, bitset<subs>& b2); // b1=b1|b2;
 };
 
 #endif

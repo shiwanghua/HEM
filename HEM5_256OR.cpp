@@ -1,11 +1,11 @@
-#include "HEM5.h"
+#include "HEM5_256OR.h"
 
-HEM5::HEM5() {
+HEM5_256OR::HEM5_256OR() {
 	numSub = 0;
 	numDimension = atts;
 	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
-	cout << "ExpID = " << expID << ". HEM5DD: bit exponent = " << be << ", bucketStep = " << buckStep
+	cout << "ExpID = " << expID << ". HEM5_256ORDD: bit exponent = " << be << ", bucketStep = " << buckStep
 		<< ", numBucket = " << numBucket << endl;
 
 	//bucketSub.resize(numBucket);
@@ -40,13 +40,13 @@ HEM5::HEM5() {
 	fix[1].resize(numDimension, vector<int>(numBucket + 1));
 }
 
-HEM5::~HEM5() {
+HEM5_256OR::~HEM5_256OR() {
 	_for(i, 0,
 		numDimension) delete[] doubleReverse[0][i], doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1], doubleReverse[0], doubleReverse[1];
 }
 
-void HEM5::insert(IntervalSub sub) {
+void HEM5_256OR::insert(IntervalSub sub) {
 	for (int i = 0; i < sub.size; i++) {
 		IntervalCnt cnt = sub.constraints[i];
 		Combo c;
@@ -60,7 +60,7 @@ void HEM5::insert(IntervalSub sub) {
 	numSub++;
 }
 
-void HEM5::insert_online(IntervalSub sub) {
+void HEM5_256OR::insert_online(IntervalSub sub) {
 	IntervalCnt cnt;
 	Combo c;
 	int b, bucketID;
@@ -93,7 +93,7 @@ void HEM5::insert_online(IntervalSub sub) {
 	numSub++;
 }
 
-bool HEM5::deleteSubscription(IntervalSub sub) {
+bool HEM5_256OR::deleteSubscription(IntervalSub sub) {
 	int find = 0;
 	IntervalCnt cnt;
 	int b, bucketID, id = sub.id;
@@ -142,7 +142,7 @@ bool HEM5::deleteSubscription(IntervalSub sub) {
 }
 
 // fullBits单独存储的版本
-void HEM5::initBits() {
+void HEM5_256OR::initBits() {
 
 	// 如果有多次初始化
 	_for(i, 0,
@@ -248,7 +248,7 @@ void HEM5::initBits() {
 				}
 			}
 		}
-		//cout << "HEM5DD Stop.\n";
+		//cout << "HEM5_256ORDD Stop.\n";
 		return;
 	}
 
@@ -391,11 +391,11 @@ void HEM5::initBits() {
 			}
 		}
 	}
-	//cout << "HEM5DD Stop.\n";
+	//cout << "HEM5_256ORDD Stop.\n";
 }
 
 // 计算时间组成
-void HEM5::match(const Pub &pub, int &matchSubs) {
+void HEM5_256OR::match(const Pub& pub, int& matchSubs) {
 	bitset<subs> b, bLocal;
 	vector<bool> attExist(numDimension, false);
 	int value, att, buck;
@@ -405,10 +405,10 @@ void HEM5::match(const Pub &pub, int &matchSubs) {
 		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 		attExist[att] = true;
 		_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
-				b[data[0][att][buck][k].subID] = 1;
+			b[data[0][att][buck][k].subID] = 1;
 		_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
-				b[data[1][att][buck][k].subID] = 1;
-		compareTime += (double) compareStart.elapsed_nano();
+			b[data[1][att][buck][k].subID] = 1;
+		compareTime += (double)compareStart.elapsed_nano();
 
 		if (doubleReverse[0][att][buck]) {
 			Timer markStart;
@@ -417,21 +417,22 @@ void HEM5::match(const Pub &pub, int &matchSubs) {
 			else
 				bLocal = bits[0][att][bitsID[0][att][buck]];
 			_for(j, endBucket[0][att][buck], buck + 1) _for(k, 0,
-															data[0][att][j].size()) bLocal[data[0][att][j][k].subID] = 0;
-			markTime += (double) markStart.elapsed_nano();
+				data[0][att][j].size()) bLocal[data[0][att][j][k].subID] = 0;
+			markTime += (double)markStart.elapsed_nano();
 
 			Timer orStart;
-			b = b | bLocal;
-			orTime += (double) orStart.elapsed_nano();
-		} else {
+			Util::bitsetOr(b, bLocal);
+			orTime += (double)orStart.elapsed_nano();
+		}
+		else {
 			Timer markStart;
 			_for(j, buck + 1, endBucket[0][att][buck]) _for(k, 0,
-															data[0][att][j].size()) b[data[0][att][j][k].subID] = 1;
-			markTime += (double) markStart.elapsed_nano();
+				data[0][att][j].size()) b[data[0][att][j][k].subID] = 1;
+			markTime += (double)markStart.elapsed_nano();
 			Timer orStart;
 			if (bitsID[0][att][buck] != -1)
-				b = b | bits[0][att][bitsID[0][att][buck]];
-			orTime += (double) orStart.elapsed_nano();
+				Util::bitsetOr(b, bits[0][att][bitsID[0][att][buck]]);
+			orTime += (double)orStart.elapsed_nano();
 		}
 
 		if (doubleReverse[1][att][buck]) {
@@ -441,55 +442,57 @@ void HEM5::match(const Pub &pub, int &matchSubs) {
 			else
 				bLocal = bits[1][att][bitsID[1][att][buck]];
 			_for(j, buck, endBucket[1][att][buck]) _for(k, 0,
-														data[1][att][j].size()) bLocal[data[1][att][j][k].subID] = 0;
-			markTime += (double) markStart.elapsed_nano();
+				data[1][att][j].size()) bLocal[data[1][att][j][k].subID] = 0;
+			markTime += (double)markStart.elapsed_nano();
 			Timer orStart;
-			b = b | bLocal;
-			orTime += (double) orStart.elapsed_nano();
-		} else {
+			Util::bitsetOr(b, bLocal);
+			orTime += (double)orStart.elapsed_nano();
+		}
+		else {
 			Timer markStart;
 			_for(j, endBucket[1][att][buck], buck) _for(k, 0, data[1][att][j].size()) b[data[1][att][j][k].subID] = 1;
-			markTime += (double) markStart.elapsed_nano();
+			markTime += (double)markStart.elapsed_nano();
 			Timer orStart;
 			if (bitsID[1][att][buck] != -1)
-				b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
-			orTime += (double) orStart.elapsed_nano();
+				Util::bitsetOr(b, bits[1][att][bitsID[1][att][buck]]);
+			orTime += (double)orStart.elapsed_nano();
 		}
 	}
 
 	if (numBits > 1) {
 		Timer orStart;
 		_for(i, 0, numDimension) if (!attExist[i])
-				b = b | fullBits[i];
-		orTime += (double) orStart.elapsed_nano();
-	} else {
+			Util::bitsetOr(b, fullBits[i]);
+		orTime += (double)orStart.elapsed_nano();
+	}
+	else {
 		Timer markStart;
 		_for(i, 0, numDimension) if (!attExist[i])
-				_for(j, 0, endBucket[0][i][0]) _for(k, 0, data[0][i][j].size()) b[data[0][i][j][k].subID] = 1;
-		markTime += (double) markStart.elapsed_nano();
+			_for(j, 0, endBucket[0][i][0]) _for(k, 0, data[0][i][j].size()) b[data[0][i][j][k].subID] = 1;
+		markTime += (double)markStart.elapsed_nano();
 
 		Timer orStart;
 		_for(i, 0, numDimension) if (!attExist[i])
-				b = b | bits[0][i][0];
-		orTime += (double) orStart.elapsed_nano();
+			Util::bitsetOr(b, bits[0][i][0]);
+		orTime += (double)orStart.elapsed_nano();
 	}
 
 	Timer bitStart;
-//	_for(i, 0, subs) if (!b[i]) {
-//			++matchSubs;
-//			//cout << "HEM5 matches sub: " << i << endl;
-//		}
- matchSubs = subs - b.count();
-	bitTime += (double) bitStart.elapsed_nano();
+	//	_for(i, 0, subs) if (!b[i]) {
+	//			++matchSubs;
+	//			//cout << "HEM5_256OR matches sub: " << i << endl;
+	//		}
+	matchSubs = subs - b.count();
+	bitTime += (double)bitStart.elapsed_nano();
 }
 
 // 不计算时间组成
-//void HEM5::match(const Pub& pub, int& matchSubs)
+//void HEM5_256OR::match(const Pub& pub, int& matchSubs)
 //{
 //	bitset<subs> b; // register
 //	bitset<subs> bLocal;
 //	vector<bool> attExist(numDimension, false);
-//    int value, att, buck;
+//	int value, att, buck;
 //
 //	_for(i, 0, pub.size)
 //	{
@@ -510,7 +513,7 @@ void HEM5::match(const Pub &pub, int &matchSubs) {
 //				_for(k, 0, data[0][att][j].size())
 //				bLocal[data[0][att][j][k].subID] = 0;
 //
-//			b = b | bLocal;
+//			Util::bitsetOr(b, bLocal); //b = b | bLocal;
 //		}
 //		else
 //		{
@@ -519,7 +522,7 @@ void HEM5::match(const Pub &pub, int &matchSubs) {
 //				b[data[0][att][j][k].subID] = 1;
 //
 //			if (bitsID[0][att][buck] != -1)
-//				b = b | bits[0][att][bitsID[0][att][buck]];
+//				Util::bitsetOr(b, bits[0][att][bitsID[0][att][buck]]);
 //		}
 //
 //		if (doubleReverse[1][att][buck])
@@ -533,7 +536,7 @@ void HEM5::match(const Pub &pub, int &matchSubs) {
 //				_for(k, 0, data[1][att][j].size())
 //				bLocal[data[1][att][j][k].subID] = 0;
 //
-//			b = b | bLocal;
+//			Util::bitsetOr(b, bLocal);
 //		}
 //		else
 //		{
@@ -542,35 +545,35 @@ void HEM5::match(const Pub &pub, int &matchSubs) {
 //				b[data[1][att][j][k].subID] = 1;
 //
 //			if (bitsID[1][att][buck] != -1)
-//				b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
+//				Util::bitsetOr(b, bits[1][att][bitsID[1][att][buck]]);
 //		}
 //	}
 //
 //	if (numBits > 1)
 //	{
 //		_for(i, 0, numDimension) if (!attExist[i])
-//			b = b | fullBits[i];
+//			Util::bitsetOr(b,fullBits[i]);
 //	}
-//	else
+//	else // 只有一半用了bitset覆盖
 //	{
 //		_for(i, 0, numDimension) if (!attExist[i])
 //			_for(j, 0, endBucket[0][i][0])
-//			_for(k, 0, data[0][i][j].size())
-//			b[data[0][i][j][k].subID] = 1;
+//			for(auto&& kId:data[0][i][j])
+//				b[kId.subID] = 1;
 //
 //		_for(i, 0, numDimension) if (!attExist[i])
-//			b = b | bits[0][i][0];
-//	}  
+//			Util::bitsetOr(b, bits[0][i][0]);
+//	}
 //
 //	//_for(i, 0, subs) if (!b[i])
 //	//{
 //	//	++matchSubs;
-//	//	//cout << "HEM5 matches sub: " << i << endl;
+//	//	//cout << "HEM5_256OR matches sub: " << i << endl;
 //	//}
 //	matchSubs = numSub - b.count();
 //}
 
-//void HEM5::calBucketSize() {
+//void HEM5_256OR::calBucketSize() {
 //	bucketSub.clear();
 //	bucketSub.resize(numBucket);
 //	_for(i, 0, numDimension)
@@ -583,7 +586,7 @@ void HEM5::match(const Pub &pub, int &matchSubs) {
 //		}
 //}
 
-int HEM5::calMemory() {
+int HEM5_256OR::calMemory() {
 	long long size = 0; // Byte
 	_for(i, 0, numDimension) {
 		// 若每个维度上bits数组个数一样就是 2*sizeof(bitset<subs>)*numDimension*numBits
@@ -603,8 +606,8 @@ int HEM5::calMemory() {
 	return (int)size;
 }
 
-void HEM5::printRelation(int dimension_i) {
-	cout << "\n\nHEM5DDMap\n";
+void HEM5_256OR::printRelation(int dimension_i) {
+	cout << "\n\nHEM5_256ORDDMap\n";
 	if (dimension_i == -1)
 		_for(i, 0, numDimension) {
 		cout << "\nDimension " << i << "    LowBucket Predicates: " << fix[0][i][0] << "   ----------------\n";
@@ -644,7 +647,7 @@ void HEM5::printRelation(int dimension_i) {
 	cout << "\n\n";
 }
 
-vector<int> HEM5::calMarkNumForBuckets() {
+vector<int> HEM5_256OR::calMarkNumForBuckets() {
 	vector<int> numMarking(numBucket, 0);
 	_for(i, 0, numBucket) {
 		_for(j, 0, numDimension) {
