@@ -1,5 +1,5 @@
 #include "constant.h"
-string expID = "797";       // Record the experiment ID number
+string expID = "798";       // Record the experiment ID number
 const bool display = false; // whether to print the mapping relation
 const bool verifyID = false; // whether to verify Insertion and Deletion function
 const int interval = 100;   // after a interval of events is matched, print a log
@@ -21,7 +21,7 @@ double stddev = 1;          // Standard deviation: The square root of variance, 
 const int buks = 1000;       // Number of buckets.
 
 // HEM
-int be = 8;                 // bit exponent. In each dimension, there are 2 * 2^{be} bitsets.
+int be = 5;                 // bit exponent. In each dimension, there are 2 * 2^{be} bitsets.
 int be2 = 5;                // When be=-1, be2 is adopted. In each dimension, there are 2 * be2 bitsets.
 const int lvls = 2;         // HEMSC number of levels
 int gs = 5;                 // HEMSR Group Size 一组有多少个维度
@@ -38,10 +38,10 @@ const int level = 13;
 const double falsePositiveRate = 0.05;
 
 // pRein
-int parallelDegree = 1;
+int parallelDegree = 4;
 
 // BG-Tree
-const int initH = 15;           // Initial height
+const int initH = 11;           // Initial height
 
 // PS-Tree
 const int PSTree_level = 4;

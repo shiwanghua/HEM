@@ -9,10 +9,13 @@
 #include "util.h"
 #include "constant.h"
 #include "omp.h"
-#include "boost/thread/thread_pool.hpp"
+//#include <boost/thread/thread_pool.hpp>
+#include <boost/thread/thread.hpp>
+#include <boost/bind.hpp>
 #include <algorithm>
 #include <unordered_set>
 #include <thread>
+#include <boost/asio.hpp>
 
 #define _for(i,a,b) for( int i=(a); i<(b); ++i)
 #define __for(i,a,b) for( int i=(a); i<=(b); ++i)
@@ -35,6 +38,8 @@ void pReinThreadFunction(bool bits[],bool attExist[],vector<vector<vector<Combo>
 class pRein {
 	int numSub, numDimension, buckStep,pD;    // parallelDegree
 	vector<vector<vector<Combo>>> data[2];    // 0:left parenthesis, 1:right parenthesis
+	boost::thread_group threadPool;
+	boost::asio::thread_pool pool;
 
 public:
 	int numBucket;
