@@ -18,7 +18,7 @@ void run_rein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "Rein Insertion Finishes.\n";
-
+	
 	// 验证插入删除正确性
 	if (verifyID) {
 		for (auto kv: deleteNo) {
@@ -28,9 +28,9 @@ void run_rein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "Rein Deletion Finishes.\n";
-		for (auto kv: deleteNo) {
+		/*for (auto kv: deleteNo) {
 			rein.insert(gen.subList[kv.first]);
-		}
+		}*/
 	}
 
 	// match
@@ -561,9 +561,9 @@ void run_HEM5(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "HEM5DD Deletion Finishes.\n";
-		for (auto kv: deleteNo) {
-			hem5.insert_online(gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
-		}
+		//for (auto kv: deleteNo) {
+		//	hem5.insert_online(gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
+		//}
 	}
 
 	// match
@@ -663,9 +663,9 @@ void run_HEM5_avxOR(const intervalGenerator& gen, unordered_map<int, bool> delet
 			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "HEM5DD_avxOR Deletion Finishes.\n";
-		for (auto kv : deleteNo) {
-			hem5_avxor.insert_online(gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
-		}
+		//for (auto kv : deleteNo) {
+		//	hem5_avxor.insert_online(gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
+		//}
 	}
 
 	// match
@@ -924,9 +924,9 @@ void run_Simple(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "Simple Deletion Finishes.\n";
-		for (auto kv: deleteNo) {
+		/*for (auto kv: deleteNo) {
 			simple.insert(gen.subList[kv.first]);
-		}
+		}*/
 	}
 
 	// match
@@ -1002,9 +1002,9 @@ void run_Simple2(const intervalGenerator &gen, unordered_map<int, bool> deleteNo
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "Simple2 Deletion Finishes.\n";
-		for (auto kv: deleteNo) {
+		/*for (auto kv: deleteNo) {
 			simple2.insert(gen.subList[kv.first]);
-		}
+		}*/
 	}
 
 	// match
@@ -1083,9 +1083,9 @@ void run_tama(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "Tama Deletion Finishes.\n";
-		for (auto kv: deleteNo) {
+		/*for (auto kv: deleteNo) {
 			tama.insert(gen.subList[kv.first]);
-		}
+		}*/
 	}
 
 	// match
@@ -1166,9 +1166,9 @@ void run_btama_forward_C_BOMP(const intervalGenerator &gen, unordered_map<int, b
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "bTama_forward Deletion Finishes.\n";
-		for (auto kv: deleteNo) {
+		/*for (auto kv: deleteNo) {
 			btama.insert(gen.subList[kv.first]);
-		}
+		}*/
 	}
 
 	// match
@@ -1247,9 +1247,9 @@ void run_btama_backward1_C_BOMP(const intervalGenerator &gen, unordered_map<int,
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "bTama_backward1 Deletion Finishes.\n";
-		for (auto kv: deleteNo) {
+		/*for (auto kv: deleteNo) {
 			btama.insert(gen.subList[kv.first]);
-		}
+		}*/
 	}
 
 	// match
@@ -1328,9 +1328,9 @@ void run_btama_backward2_CBOMP(const intervalGenerator &gen, unordered_map<int, 
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "bTama_backward2 Deletion Finishes.\n";
-		for (auto kv: deleteNo) {
+		/*for (auto kv: deleteNo) {
 			btama.insert(gen.subList[kv.first]);
-		}
+		}*/
 	}
 
 	// match
@@ -1415,9 +1415,9 @@ void run_adarein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "AdaRein Deletion Finishes.\n";
-		for (auto kv: deleteNo) {
+		/*for (auto kv: deleteNo) {
 			adarein.insert(gen.subList[kv.first]);
-		}
+		}*/
 	}
 
 	// match
@@ -1512,9 +1512,9 @@ void run_OpIndex(const intervalGenerator &gen, unordered_map<int, bool> deleteNo
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "OpIndex Deletion Finishes.\n";
-		for (auto kv: deleteNo) {
+		/*for (auto kv: deleteNo) {
 			opindex.insert(gen.subList[kv.first]);
-		}
+		}*/
 	}
 
 	// match
@@ -1590,9 +1590,9 @@ void run_pRein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) 
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "pRein Deletion Finishes.\n";
-		for (auto kv: deleteNo) {
+		/*for (auto kv: deleteNo) {
 			prein.insert(gen.subList[kv.first]);
-		}
+		}*/
 	}
 
 	// match
@@ -1670,19 +1670,19 @@ void run_BGTREE_forward(const intervalGenerator &gen, unordered_map<int, bool> d
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "BG-Tree Forward Insertion Finishes.\n";
-
+	
 	// 验证插入删除正确性
 	if (verifyID) {
 		for (auto kv: deleteNo) {
 			Timer deleteStart;
 			if (!bgTree.deleteSubscription(gen.subList[kv.first]))
-				cout << "BG-Tree: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+				cout << "BG-Tree Forward: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "BG-Tree Forward Deletion Finishes.\n";
-		for (auto kv: deleteNo) {
+		/*for (auto kv: deleteNo) {
 			bgTree.insert(gen.subList[kv.first]);
-		}
+		}*/
 	}
 
 	// match
@@ -1763,13 +1763,13 @@ void run_BGTREE_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, 
 		for (auto kv: deleteNo) {
 			Timer deleteStart;
 			if (!bgTree.deleteSubscription(gen.subList[kv.first]))
-				cout << "BG-Tree: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+				cout << "BG-Tree(C-BOMP) forward: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
-		cout << "BG-Tree(C-BOMP) Deletion Finishes.\n";
-		for (auto kv: deleteNo) {
+		cout << "BG-Tree(C-BOMP) Forward Deletion Finishes.\n";
+		/*for (auto kv: deleteNo) {
 			bgTree.insert(gen.subList[kv.first]);
-		}
+		}*/
 	}
 
 	// match
@@ -1849,13 +1849,13 @@ void run_BGTREE_backward_C_BOMP(const intervalGenerator& gen, unordered_map<int,
 		for (auto kv: deleteNo) {
 			Timer deleteStart;
 			if (!bgTree.deleteSubscription(gen.subList[kv.first]))
-				cout << "BG-Tree: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+				cout << "BG-Tree(C-BOMP) Backward: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "BG-Tree(C-BOMP) Backward Deletion Finishes.\n";
-		for (auto kv: deleteNo) {
+		/*for (auto kv: deleteNo) {
 			bgTree.insert(gen.subList[kv.first]);
-		}
+		}*/
 	}
 
 	// match
@@ -1957,9 +1957,9 @@ void run_PSTREE(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 		//	deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
 		//}
 		//cout << "PS-Tree Deletion Finishes.\n";
-		//for (auto kv : deleteNo) {
-		//	psTree.insert(gen.subList[kv.first]);
-		//}
+		////for (auto kv : deleteNo) {
+		////	psTree.insert(gen.subList[kv.first]);
+		////}
 	}
 
 	// match

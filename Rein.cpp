@@ -211,9 +211,15 @@ void Rein::calBucketSize() {
 
 int Rein::calMemory() {
 	long long  size = 0; // Byte
-	_for(i, 0, numDimension)
-		_for(j, 0, numBucket)
-		size += sizeof(Combo) * (data[0][i][j].size() + data[1][i][j].size());
+	_for(i, 0, numDimension) {
+		//cout <<i<<": "<< sizeof(data[0][i]) << ": ";
+		size += sizeof(data[0][i]);
+		_for(j, 0, numBucket) {
+			size += sizeof(Combo) * (data[0][i][j].size() + data[1][i][j].size());
+			//cout << sizeof(data[0][i][j]) << " ";
+		}
+		//cout << "\n";
+	}
 	size = size / 1024 / 1024; // MB
 	return (int)size;
 }

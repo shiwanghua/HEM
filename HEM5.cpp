@@ -585,20 +585,36 @@ void HEM5::match(const Pub& pub, int& matchSubs)
 
 int HEM5::calMemory() {
 	long long size = 0; // Byte
+	size += sizeof(bits)+sizeof(bits[0]) * 2+sizeof(data)+sizeof(data[0])+sizeof(data[1]);
+	//cout << sizeof(bits[0]) << " " << sizeof(bits[1]) <<" " << sizeof(data) << " " << sizeof(data[0]) << " " << sizeof(data[1]) << "\n";
 	_for(i, 0, numDimension) {
 		// 若每个维度上bits数组个数一样就是 2*sizeof(bitset<subs>)*numDimension*numBits
 		size += sizeof(bitset<subs>) * (bits[0][i].size() + bits[1][i].size());
-		_for(j, 0, numBucket) size += sizeof(Combo) * (data[0][i][j].size() + data[1][i][j].size());
+		size += (sizeof(bits[0][i]) + sizeof(data[0][i]))*2;
+		//cout << i << ": " << sizeof(bits[0][i]) << " " << sizeof(data[0][i]) << " ";
+		_for(j, 0, numBucket) {
+			//cout << sizeof(data[0][i][j]) << " " << sizeof(data[1][i][j]) << " ";
+			size += sizeof(data[0][i][j]) + sizeof(data[1][i][j]);
+			size += sizeof(Combo) * (data[0][i][j].size() + data[1][i][j].size());
+		}
+		//cout << "\n";
 	}
 
 	// fullBits
-	if (numBits > 1)
+	if (numBits > 1) {
 		size += sizeof(bitset<subs>) * fullBits.size(); // fullBits.size()即numDimension
+		size += sizeof(fullBits); // 24
+		//cout << "fullBits: " << sizeof(fullBits) << " " << sizeof(fullBits[0]) << "\n";
+	}
 
 	// 两个fix
-	size += sizeof(int) * numDimension * (numBucket + 1);
+	//cout << "fix: " << sizeof(fix) << " " << sizeof(fix[0]) << " " << sizeof(fix[0][10]) << sizeof(fix[1][7][20]) << "\n";
+	size+= sizeof(fix)+ sizeof(fix[0])*2+ sizeof(fix[0][0])* numDimension+ sizeof(fix[0][0][0])* numDimension * (numBucket+1)*2;
+
 	// 两个endBucket、两个bitsID、两个doubleReverse
 	size += (4 * sizeof(int) + 2 * sizeof(bool)) * numDimension * numBucket;
+	size += sizeof(endBucket[0]) * 4 + sizeof(endBucket[0][0]) * numDimension * 4;
+	//cout << sizeof(endBucket) << " " << sizeof(endBucket[0]) << " " << sizeof(endBucket[0][0]) << " " << sizeof(endBucket[0][0][0]) << "\n";
 	size = size / 1024 / 1024; // MB
 	return (int)size;
 }

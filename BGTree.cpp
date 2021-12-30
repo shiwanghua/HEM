@@ -738,8 +738,56 @@ void BGTree::backward_match_rgreenNode_C_BOMP(rgreennode*& r, const int& att, co
 }
 
 int BGTree::calMemory() {
+	double size = 0.0; // Byte
+	size += sizeof(roots)+sizeof(bluenode*) * atts;
+	for (int i = 0; i < atts;i++) {
+		size+=calBlueNodeMemory(roots[i]);
+	}
+	size += sizeof(int) * subs * 2; // subPredicate counter
+	size += sizeof(nB) + sizeof(nB[0]) * atts; // nB or nnB
+	size = size / 1024 / 1024; // MB
+	return (int)size;
+}
+double BGTree::calBlueNodeMemory(bluenode*& r) {
+	double size = sizeof(bitset<subs>*) + (sizeof(vector<int>) + sizeof(lgreennode*) + sizeof(bluenode*)) * 2+sizeof(int)*6;
+	//cout << sizeof(bitset<subs>*) << " " << sizeof(vector<int>) << " " << sizeof(lgreennode*) << " " << sizeof(bluenode*)<<sizeof(bitset<subs>) << "\n";
+	if (r->bst != nullptr)
+		size += sizeof(bitset<subs>);
+	else size += sizeof(int) * r->subids.size();
 
-	return 0;
+	size += sizeof(int)*r->midEqual.size();
+
+	if (r->leftBlueChild)
+		size += calBlueNodeMemory(r->leftBlueChild);
+	if (r->rightBlueChild)
+		size += calBlueNodeMemory(r->rightBlueChild);
+	if (r->leftGreenChild)
+		size += calLGreenNodeMemory(r->leftGreenChild);
+	if (r->rightGreenChild)
+		size += calRGreenNodeMemory(r->rightGreenChild);
+	return size;
+}
+double BGTree::calLGreenNodeMemory(lgreennode*& r) {
+	double size = sizeof(bitset<subs>*) +sizeof(vector<int>) + sizeof(lgreennode*) * 2 + sizeof(int) * 6;
+	if (r->bst != nullptr)
+		size += sizeof(bitset<subs>);
+	else size += sizeof(int) * r->subids.size();
+	if (r->leftChild)
+		size += calLGreenNodeMemory(r->leftChild);
+	if (r->rightChild)
+		size += calLGreenNodeMemory(r->rightChild);
+	return size;
+}
+double BGTree::calRGreenNodeMemory(rgreennode*& r) {
+	double size = sizeof(bitset<subs>*) + sizeof(vector<int>) + sizeof(rgreennode*) * 2 + sizeof(int) * 6;
+	if (r->bst != nullptr)
+		size += sizeof(bitset<subs>);
+	else size += sizeof(int) * r->subids.size();
+	if (r->leftChild)
+		size += calRGreenNodeMemory(r->leftChild);
+	if (r->rightChild)
+		size += calRGreenNodeMemory(r->rightChild);
+	return size;
 }
 
 void BGTree::printBGTree() {

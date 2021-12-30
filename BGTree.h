@@ -15,7 +15,7 @@ struct lgreennode {
 	int l, h, mid, nodeid, levelid, numNodeSub = 0;
 	bitset<subs>* bst;
 	vector<int> subids; // Either bst is nullptr or subids.size()==0
-	vector<int> midequal; // Record subID with predicate including mid
+	//vector<int> midequal; // Record subID with predicate including mid
 	lgreennode* leftChild, * rightChild; // 2个节点指针要么都是空的, 要么都是非空
 
 	lgreennode(int low, int high, int nid, int lid, vector<int> subIDs, bitset<subs>* bits, lgreennode* lc,
@@ -29,7 +29,7 @@ struct rgreennode {
 	int l, h, mid, nodeid, levelid, numNodeSub = 0;
 	bitset<subs>* bst;
 	vector<int> subids;
-	vector<int> midEqual; // Record subID with predicate including mid
+	//vector<int> midEqual; // Record subID with predicate including mid
 	rgreennode* leftChild, * rightChild;
 
 	rgreennode(int low, int high, int nid, int lid, vector<int> subIDs, bitset<subs>* bits, rgreennode* lc,
@@ -67,8 +67,6 @@ private:
 	int subPredicate[subs];
 	int counter[subs];
 	vector<bluenode*> roots;
-	vector<vector< Combo>> data[2];
-
 	vector<bitset<subs>> nB; // null bitset for C-BOMP
 	vector<bitset<subs>> nnB; // non-null bitset for backward matching, same as HEM
 
@@ -103,6 +101,10 @@ private:
 	void backward_match_lgreenNode_C_BOMP(lgreennode*& l, const int& att, const int& value, const vector<IntervalSub>& subList, bitset<subs>& mB);
 	void backward_match_rgreenNode_C_BOMP(rgreennode*& r, const int& att, const int& value, const vector<IntervalSub>& subList, bitset<subs>& mB);
 
+	double calBlueNodeMemory(bluenode*& r);
+	double calLGreenNodeMemory(lgreennode*& r);
+	double calRGreenNodeMemory(rgreennode*& r);
+
 public:
 	int hit = 0; // mid 命中次数
 
@@ -129,5 +131,6 @@ public:
 	int getHeight() { return height; }
 	int getBoundaryNumSub() { return boundaryNumSub; }
 	int getNumNode() { return numNode; }
+
 };
 
