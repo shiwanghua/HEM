@@ -1,7 +1,7 @@
 #include "run_models.h"
 
 void run_rein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
-	Rein rein;
+	Rein rein(1);
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -21,7 +21,7 @@ void run_rein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	
 	// 验证插入删除正确性
 	if (verifyID) {
-		for (auto kv: deleteNo) {
+		for (auto&& kv: deleteNo) {
 			Timer deleteStart;
 			if (!rein.deleteSubscription(gen.subList[kv.first]))
 				cout << "Rein: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
@@ -93,6 +93,190 @@ void run_rein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	//Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "tmpData/Rein.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
+}
+
+void run_rein_forward_native(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) {
+	Rein fRein(2);
+
+	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchSubList;
+
+	// insert
+	for (int i = 0; i < subs; i++) {
+		Timer insertStart;
+
+		fRein.insert_forward_native(gen.subList[i]); // Insert sub[i] into data structure.
+
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double)insertTime / 1000000);
+	}
+	cout << "fRein Insertion Finishes.\n";
+
+	// 验证插入删除正确性
+	if (verifyID) {
+		for (auto kv : deleteNo) {
+			Timer deleteStart;
+			if (!fRein.deleteSubscription_forward_native(gen.subList[kv.first]))
+				cout << "fRein: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+		}
+		cout << "fRein Deletion Finishes.\n";
+		/*for (auto kv: deleteNo) {
+			rein.insert(gen.subList[kv.first]);
+		}*/
+	}
+
+	// match
+	for (int i = 0; i < pubs; i++) {
+		int matchSubs = 0; // Record the number of matched subscriptions.
+
+		Timer matchStart;
+
+		fRein.match_forward_native(gen.pubList[i], matchSubs);
+
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double)eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "fRein Event " << i << " is matched.\n";
+	}
+	cout << endl;
+
+	// output
+	string outputFileName = "fRein.txt";
+	string content = expID
+		+ " memory= " + Util::Int2String(fRein.calMemory_forward_native())
+		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+		+ " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+		+ " ms AvgCmpTime= " + to_string(fRein.compareTime / pubs / 1000000)
+		+ " ms AvgMarkTime= " + to_string(fRein.markTime / pubs / 1000000)
+		+ " ms AvgBitTime= " + to_string(fRein.bitTime / pubs / 1000000)
+		+ " ms numBuk= " + Util::Int2String(fRein.numBucket)
+		+ " numSub= " + Util::Int2String(subs)
+		+ " subSize= " + Util::Int2String(cons)
+		+ " numPub= " + Util::Int2String(pubs)
+		+ " pubSize= " + Util::Int2String(m)
+		+ " attTypes= " + Util::Int2String(atts)
+		+ " attDis= " + Util::Int2String(attDis)
+		+ " valDis= " + Util::Int2String(valDis)
+		+ " width= " + Util::Double2String(width)
+		+ " alpha= " + Util::Double2String(alpha)
+		+ " subp= " + Util::Double2String(subp)
+		+ " mean= " + Util::Double2String(mean)
+		+ " stddev= " + Util::Double2String(stddev)
+		+ " valDom= " + Util::Double2String(valDom);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	//	outputFileName = "ComprehensiveExpTime.txt";
+	//	content = "Rein= [";
+	//	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	//	content[content.length() - 2] = ']';
+	//	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+		//outputFileName = "ReinBucketSize.txt";
+		//rein.calBucketSize();
+		//content = expID + " numBucket= " + Util::Int2String(rein.numBucket)
+		//	//+ " sumBukSetSize= " + to_string(accumulate(rein.bucketSub.begin(), rein.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
+		//	+ " maxBukSetSize= " + to_string((*max_element(rein.bucketSub.begin(), rein.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
+		//	+ " minBukSetSize= " + to_string(min_element(rein.bucketSub.begin(), rein.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
+		//_for(i, 0, fRein.numBucket)
+		//	content += " " + to_string(rein.bucketSub[i].size());
+		//Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	outputFileName = "tmpData/fRein.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
+}
+
+void run_rein_forward_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) {
+	Rein fRein(2);
+
+	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchSubList;
+
+	// insert
+	for (int i = 0; i < subs; i++) {
+		Timer insertStart;
+
+		fRein.insert_forward_native(gen.subList[i]); // Insert sub[i] into data structure.
+
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double)insertTime / 1000000);
+	}
+	cout << "fRein CBOMP Insertion Finishes.\n";
+
+	// 验证插入删除正确性
+	if (verifyID) {
+		for (auto kv : deleteNo) {
+			Timer deleteStart;
+			if (!fRein.deleteSubscription_forward_native(gen.subList[kv.first]))
+				cout << "fRein CBOMP: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+		}
+		cout << "fRein CBOMP Deletion Finishes.\n";
+		/*for (auto kv: deleteNo) {
+			rein.insert(gen.subList[kv.first]);
+		}*/
+	}
+
+	// match
+	for (int i = 0; i < pubs; i++) {
+		int matchSubs = 0; // Record the number of matched subscriptions.
+
+		Timer matchStart;
+
+		fRein.match_forward_CBOMP(gen.pubList[i], matchSubs);
+
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double)eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "forward Rein CBOMP Event " << i << " is matched.\n";
+	}
+	cout << endl;
+
+	// output
+	string outputFileName = "fRein1.txt";
+	string content = expID
+		+ " memory= " + Util::Int2String(fRein.calMemory_forward_native())
+		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+		+ " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+		+ " ms AvgCmpTime= " + to_string(fRein.compareTime / pubs / 1000000)
+		+ " ms AvgMarkTime= " + to_string(fRein.markTime / pubs / 1000000)
+		+ " ms AvgBitTime= " + to_string(fRein.bitTime / pubs / 1000000)
+		+ " ms numBuk= " + Util::Int2String(fRein.numBucket)
+		+ " numSub= " + Util::Int2String(subs)
+		+ " subSize= " + Util::Int2String(cons)
+		+ " numPub= " + Util::Int2String(pubs)
+		+ " pubSize= " + Util::Int2String(m)
+		+ " attTypes= " + Util::Int2String(atts)
+		+ " attDis= " + Util::Int2String(attDis)
+		+ " valDis= " + Util::Int2String(valDis)
+		+ " width= " + Util::Double2String(width)
+		+ " alpha= " + Util::Double2String(alpha)
+		+ " subp= " + Util::Double2String(subp)
+		+ " mean= " + Util::Double2String(mean)
+		+ " stddev= " + Util::Double2String(stddev)
+		+ " valDom= " + Util::Double2String(valDom);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	//	outputFileName = "ComprehensiveExpTime.txt";
+	//	content = "Rein= [";
+	//	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	//	content[content.length() - 2] = ']';
+	//	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	outputFileName = "tmpData/fRein1.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
@@ -2015,7 +2199,7 @@ void run_PSTREE(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 }
 
 void measure_numMark(const intervalGenerator &gen) {
-	Rein rein;
+	Rein rein(1);
 	HEM5 hem5;
 
 	for (int i = 0; i < subs; i++) {

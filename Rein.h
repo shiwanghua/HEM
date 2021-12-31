@@ -19,6 +19,11 @@
 class Rein {
 	int numSub, numDimension, buckStep;
 	vector<vector<vector<Combo>>> data[2];    // 0:left parenthesis, 1:right parenthesis
+	vector<vector<vector<IntervalCombo>>> fData; // forward Rein
+	int subPredicate[subs]; // forward Rein
+	int counter[subs]; // forward Rein
+	vector<bitset<subs>> nB; // null bitset for forward Rein with C-BOMP
+	//vector<bitset<subs>> nnB; // non-null bitset for backward matching, same as HEM
 
 public:
 	int numBucket;
@@ -27,14 +32,22 @@ public:
 	double bitTime = 0.0;     // 遍历bits数组得到结果所需的时间
 	vector<unordered_set<int>> bucketSub;   // id相同的桶存储的不同订阅个数的和
 
-	Rein();
+	Rein(int);
 	//void insert(Sub sub);
 	void insert(IntervalSub sub);
 	//void match(const Pub& pub, int& matchSubs, const vector<Sub>& subList);
 	void match(const Pub& pub, int& matchSubs);
 	bool deleteSubscription(IntervalSub sub);
-	void calBucketSize(); // 计算bucketSize
 	int calMemory();     // 计算占用内存大小, 返回MB
+
+	void insert_forward_native(IntervalSub sub);
+	void match_forward_native(const Pub& pub, int& matchSubs);
+	bool deleteSubscription_forward_native(IntervalSub sub);
+	int calMemory_forward_native();
+
+	void match_forward_CBOMP(const Pub& pub, int& matchSubs);
+
+	void calBucketSize(); // 计算bucketSize
 	vector<int> calMarkNumForBuckets(); // 计算事件落到每个桶里时需要标记和比较的谓词个数
 };
 

@@ -32,6 +32,8 @@
  // The subscription No to be deleted.
 
 void run_rein(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
+void run_rein_forward_native(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
+void run_rein_forward_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 void run_pRein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 void run_adarein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 
