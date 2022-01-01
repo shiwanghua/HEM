@@ -10,7 +10,7 @@ Rein::Rein(int type) :numSub(0), numDimension(atts) {
 		data[1].resize(numDimension, vector<vector<Combo>>(numBucket));
 	}
 	else if (type == 2) { // forward or forward with CBOMP
-		cout << "ExpID = " << expID << ". Forward Rein: bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
+		cout << "ExpID = " << expID << ". Forward Rein (fRein): bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
 		fData.resize(numDimension, vector<vector<IntervalCombo>>(numBucket));
 		nB.resize(atts);
 		//nnB.resize(atts);
@@ -319,13 +319,13 @@ void Rein::match_forward_CBOMP(const Pub& pub, int& matchSubs) {
 	int att, buck;
 	IntervalCombo pubPredicateTmp;
 	pubPredicateTmp.lowValue = 0; // No sense.
-
+//	cout<<pub.id<<"\n";
 	for (auto&& pair : pub.pairs)
 	{
 		mB = nB[pair.att];
 		attExist[pair.att] = true;
 		pubPredicateTmp.highValue = pair.value, att = pair.att, buck = pair.value / buckStep;
-
+//		cout<<pair.att<<" ";
 		const auto&& lowerBoundIterator = lower_bound(fData[att][buck].begin(), fData[att][buck].end(), pubPredicateTmp, [&](const IntervalCombo& c1, const IntervalCombo& c2) {return c1.highValue < c2.highValue; });
 		for_each(lowerBoundIterator, fData[att][buck].end(), [&](const IntervalCombo& c) {
 			if (c.lowValue <= pair.value) mB[c.subID]=1; });
@@ -336,6 +336,7 @@ void Rein::match_forward_CBOMP(const Pub& pub, int& matchSubs) {
 			});
 		gB = gB & mB;
 	}
+//	cout<<"1\n";
 	_for(i, 0, atts)
 		if (!attExist[i])
 			gB = gB & nB[i];

@@ -16,6 +16,8 @@ BGTree::BGTree() {
 
 	nB.resize(atts);
 	nnB.resize(atts);
+
+	cout << "ExpID = " << expID << ". BGTree: height = " << height << "\n";
 }
 
 BGTree::~BGTree() {

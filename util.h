@@ -17,6 +17,60 @@
 
 using namespace std;
 
+//#include <boost/asio.hpp>
+//using namespace boost;
+//typedef std::shared_ptr<std::thread> thread_ptr;
+//typedef std::vector<thread_ptr> vecThreads;
+
+//class ThreadPool_asio {
+//public:
+//	ThreadPool_asio(): threadNum_(0), stopped_(false), work_(io_){}
+//
+//	ThreadPool_asio(int num) : threadNum_(num), stopped_(false), work_(io_) {
+//		for(int i=i; i<threadNum_; ++i) {
+//			threads_.push_back(std::make_shared<std::thread>([&](){io_.run();}));
+//		}
+//	}
+//
+//	~ThreadPool_asio() {
+//		stop();
+//	}
+//
+//	void initThreads(int num){
+//		threadNum_=num;
+//		stopped_=false;
+//		threads_.resize(0);
+//		for(int i=i; i<threadNum_; ++i) {
+//			threads_.push_back(std::make_shared<std::thread>([&](){io_.run();}));
+//		}
+//	}
+//
+//	template<typename F, typename...Args>
+//	void post(F &&f, Args&&...args) {
+//		cout<<"222\n";
+//		io_.post(std::bind(std::forward<F>(f), std::forward<Args>(args)...));
+//	}
+//
+//	void stop() {
+//		if(!stopped_) {
+//			io_.stop();
+//			for(auto t : threads_) t->join();
+//			stopped_ = true;
+//		}
+//	}
+//
+//	void join(){
+//		for(auto t : threads_) t->join();
+//	}
+//
+//private:
+//	bool             stopped_;
+//	vecThreads       threads_;
+//	int              threadNum_;
+//	asio::io_service io_;
+//	asio::io_service::work work_;
+//};
+
 class Util {
 public:
 	static void Check(generator gen, string filename);

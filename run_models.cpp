@@ -1652,7 +1652,7 @@ void run_adarein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo
 }
 
 void run_OpIndex(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
-	OpIndex2 opindex;
+	OpIndex2 opindex2;
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -1662,26 +1662,26 @@ void run_OpIndex(const intervalGenerator &gen, unordered_map<int, bool> deleteNo
 	// Note: for OpIndex, it needs to calculate frequency first!
 	double initTime;
 	Timer initStart;
-	opindex.calcFrequency(gen.subList);
+	opindex2.calcFrequency(gen.subList);
 	initTime = (double) initStart.elapsed_nano() / 1000000.0;
-	cout << "OpIndex CalcFrequency Task Finishes.\n";
+	cout << "OpIndex2 CalcFrequency Task Finishes.\n";
 
 	// insert
 	for (int i = 0; i < subs; i++) {
 		Timer insertStart;
 
-		opindex.insert(gen.subList[i]); // Insert sub[i] into data structure.
+		opindex2.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
-	cout << "OpIndex Insertion Finishes.\n";
+	cout << "OpIndex2 Insertion Finishes.\n";
 
-	if (!display) {// show pivot attribute
+	if (display) {// show pivot attribute
 		int counter = 0;
 		for (int i = 0; i < atts; i++) {
-			cout << "Att " << i << ": " << opindex.isPivot[i] << ", ";
-			if (opindex.isPivot[i])counter++;
+			cout << "Att " << i << ": " << opindex2.isPivot[i] << ", ";
+			if (opindex2.isPivot[i])counter++;
 			if (i > 0 && i % 5 == 0) cout << endl;
 		}
 		cout << "\nTotal pivot attribute: " << counter << endl;
@@ -1691,13 +1691,13 @@ void run_OpIndex(const intervalGenerator &gen, unordered_map<int, bool> deleteNo
 	if (verifyID) {
 		for (auto kv: deleteNo) {
 			Timer deleteStart;
-			if (!opindex.deleteSubscription(gen.subList[kv.first]))
-				cout << "OpIndex: sub " << gen.subList[kv.first].id << " is failled to be deleted.\n";
+			if (!opindex2.deleteSubscription(gen.subList[kv.first]))
+				cout << "OpIndex2: sub " << gen.subList[kv.first].id << " is failled to be deleted.\n";
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
-		cout << "OpIndex Deletion Finishes.\n";
+		cout << "OpIndex2 Deletion Finishes.\n";
 		/*for (auto kv: deleteNo) {
-			opindex.insert(gen.subList[kv.first]);
+			opindex2.insert(gen.subList[kv.first]);
 		}*/
 	}
 
@@ -1706,20 +1706,20 @@ void run_OpIndex(const intervalGenerator &gen, unordered_map<int, bool> deleteNo
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
-		opindex.match(gen.pubList[i], matchSubs, gen.subList);
+		opindex2.match(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "OpIndex Event " << i << " is matched.\n";
+			cout << "OpIndex2 Event " << i << " is matched.\n";
 	}
 	cout << endl;
 
 	// output
-	string outputFileName = "OpIndex.txt";
+	string outputFileName = "OpIndex2.txt";
 	string content = expID
-					 + " memory= " + Util::Int2String(opindex.calMemory())
+					 + " memory= " + Util::Int2String(opindex2.calMemory())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 					 + " ms InitTime= " + Util::Double2String(initTime)
@@ -1741,7 +1741,102 @@ void run_OpIndex(const intervalGenerator &gen, unordered_map<int, bool> deleteNo
 	content[content.length() - 2] = ']';
 	Util::WriteData2Begin(outputFileName.c_str(), content);*/
 
-	outputFileName = "tmpData/OpIndex.txt";
+	outputFileName = "tmpData/OpIndex2.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
+}
+
+void run_bOpIndex2(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
+	bOpIndex2 bOpindex2; // Opindex2 with CBOMP
+
+	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchSubList;
+
+	// Note: for OpIndex, it needs to calculate frequency first!
+	double initTime;
+	Timer initStart;
+	bOpindex2.calcFrequency(gen.subList);
+	initTime = (double) initStart.elapsed_nano() / 1000000.0;
+	cout << "bOpIndex2 (C-BOMP) CalcFrequency Task Finishes.\n";
+
+	// insert
+	for (int i = 0; i < subs; i++) {
+		Timer insertStart;
+
+		bOpindex2.insert(gen.subList[i]); // Insert sub[i] into data structure.
+
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double) insertTime / 1000000);
+	}
+	cout << "bOpIndex2 (C-BOMP) Insertion Finishes.\n";
+
+	if (display) {// show pivot attribute
+		int counter = 0;
+		for (int i = 0; i < atts; i++) {
+			cout << "Att " << i << ": " << bOpindex2.isPivot[i] << ", ";
+			if (bOpindex2.isPivot[i])counter++;
+			if (i > 0 && i % 5 == 0) cout << endl;
+		}
+		cout << "\nTotal pivot attribute: " << counter << endl;
+	}
+
+	// 验证插入删除正确性
+	if (verifyID) {
+		for (auto kv: deleteNo) {
+			Timer deleteStart;
+			if (!bOpindex2.deleteSubscription(gen.subList[kv.first]))
+				cout << "bOpIndex2 (C-BOMP): sub " << gen.subList[kv.first].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
+		}
+		cout << "bOpIndex2 (C-BOMP) Deletion Finishes.\n";
+		/*for (auto kv: deleteNo) {
+			bOpindex2.insert(gen.subList[kv.first]);
+		}*/
+	}
+
+	// match
+	for (int i = 0; i < pubs; i++) {
+		int matchSubs = 0; // Record the number of matched subscriptions.
+		Timer matchStart;
+
+		bOpindex2.match(gen.pubList[i], matchSubs, gen.subList);
+
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double) eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "bOpIndex2 (C-BOMP) Event " << i << " is matched.\n";
+	}
+	cout << endl;
+
+	// output
+	string outputFileName = "bOpIndex2.txt";
+	string content = expID
+					 + " memory= " + Util::Int2String(bOpindex2.calMemory())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms InitTime= " + Util::Double2String(initTime)
+					 + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts)
+					 + " valDom= " + Util::Double2String(valDom);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	/*outputFileName = "ComprehensiveExpTime.txt";
+	content = "OpIndex= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData2Begin(outputFileName.c_str(), content);*/
+
+	outputFileName = "tmpData/bOpIndex2.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }

@@ -57,6 +57,7 @@ void run_btama_backward2_CBOMP(const intervalGenerator& gen, unordered_map<int, 
 
 
 void run_OpIndex(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
+void run_bOpIndex2(const intervalGenerator &gen, unordered_map<int, bool> deleteNo);
 
 void run_BGTREE_forward(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 void run_BGTREE_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);

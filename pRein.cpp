@@ -4,17 +4,19 @@
 
 #include "pRein.h"
 
-pRein::pRein() : numSub(0), numDimension(atts), pD(parallelDegree) {
+pRein::pRein(): numSub(0), numDimension(atts), pD(parallelDegree) {
 	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
 	cout << "ExpID = " << expID << ". pRein: bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
 	bucketSub.resize(numBucket);
 	data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
 	data[1].resize(numDimension, vector<vector<Combo>>(numBucket));
-	_for(i,0,parallelDegree){
-		boost::thread t;
-		threadPool.add_thread(&t);
-	}
+//	_for(i,0,parallelDegree){
+//		boost::thread t;
+//		vecThreads.add_thread(&t);
+//	}
+//	threadPoolAsio.initThreads(parallelDegree);
+
 }
 
 void pRein::insert(IntervalSub sub) {
@@ -112,27 +114,27 @@ bool pRein::deleteSubscription(IntervalSub sub) {
 void pRein::match(const Pub &pub, int &matchSubs) {
 	vector<bool> bits(numSub, false);
 	vector<bool> attExist(numDimension, false);
-		for (int i = 0; i < pub.size; i++) {
-			/*printf("rank %d of %d: %.4f\n", omp_get_thread_num(), omp_get_num_threads(), (double)logStart.elapsed_nano());
-			fflush(stdout);*/
-			int value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
-			// cout<<"pubid= "<<pub.id<<" att= "<<att<<" value= "<<value<<endl;
-			attExist[att] = true;
-			// 把下面两个for循环注释了就是模糊匹配, 类似Tama
-			for (int k = 0; k < data[0][att][buck].size(); k++)
-				if (data[0][att][buck][k].val > value)
-					bits[data[0][att][buck][k].subID] = true;
-			for (int k = 0; k < data[1][att][buck].size(); k++)
-				if (data[1][att][buck][k].val < value)
-					bits[data[1][att][buck][k].subID] = true;
+	for (int i = 0; i < pub.size; i++) {
+		/*printf("rank %d of %d: %.4f\n", omp_get_thread_num(), omp_get_num_threads(), (double)logStart.elapsed_nano());
+		fflush(stdout);*/
+		int value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
+		// cout<<"pubid= "<<pub.id<<" att= "<<att<<" value= "<<value<<endl;
+		attExist[att] = true;
+		// 把下面两个for循环注释了就是模糊匹配, 类似Tama
+		for (int k = 0; k < data[0][att][buck].size(); k++)
+			if (data[0][att][buck][k].val > value)
+				bits[data[0][att][buck][k].subID] = true;
+		for (int k = 0; k < data[1][att][buck].size(); k++)
+			if (data[1][att][buck][k].val < value)
+				bits[data[1][att][buck][k].subID] = true;
 
-			for (int j = buck + 1; j < numBucket; j++)
-				for (int k = 0; k < data[0][att][j].size(); k++)
-					bits[data[0][att][j][k].subID] = true;
-			for (int j = buck - 1; j >= 0; j--)
-				for (int k = 0; k < data[1][att][j].size(); k++)
-					bits[data[1][att][j][k].subID] = true;
-		}
+		for (int j = buck + 1; j < numBucket; j++)
+			for (int k = 0; k < data[0][att][j].size(); k++)
+				bits[data[0][att][j][k].subID] = true;
+		for (int j = buck - 1; j >= 0; j--)
+			for (int k = 0; k < data[1][att][j].size(); k++)
+				bits[data[1][att][j][k].subID] = true;
+	}
 	for (int i = 0; i < numDimension; i++)
 		if (!attExist[i])
 			for (int j = 0; j < numBucket; j++)
@@ -169,7 +171,6 @@ void pRein::parallelMatch(const Pub &pub, int &matchSubs) {
 	bool *attExist = new bool[numDimension];
 	memset(attExist, 0, sizeof(bool) * numDimension);
 	int seg = (pub.size + pD - 1) / pD;
-	thread *threads = new thread[pD];
 	for (int i = 0; i < pD; i++) {
 //		parallelData pdata;
 //		pdata.bits = bits;
@@ -181,12 +182,11 @@ void pRein::parallelMatch(const Pub &pub, int &matchSubs) {
 //		pdata.end = min(pub.size, seg * (i + 1));
 //		threads[i] = thread(pReinThreadFunction, &pdata);
 //		threads[i] = thread(pReinThreadFunction, ref(bits),ref(attExist),ref(data),ref(pub),seg * i,min(pub.size, seg * (i + 1)),buckStep);
-		threads[i] = thread(pReinThreadFunction, bits, attExist, data, pub, seg * i, min(pub.size, seg * (i + 1)),
-							buckStep);
+//		threads[i] = thread(pReinThreadFunction, bits, attExist, data, pub, seg * i, min(pub.size, seg * (i + 1)),
+//							buckStep);
+		cout<<"i= "<<i<<"\n";
 	}
-	_for(i, 0, pD) {
-		threads[i].join();
-	}
+
 	for (int i = 0; i < numDimension; i++)
 		if (!attExist[i]) {
 //			cout << "Null attribute: " << i << endl;
@@ -199,6 +199,7 @@ void pRein::parallelMatch(const Pub &pub, int &matchSubs) {
 			++matchSubs;
 			//cout << "rein matches sub: " << i << endl;
 		}
+	delete bits,attExist;
 }
 
 //void pReinThreadFunction(void *pd1) {
@@ -227,6 +228,7 @@ void pRein::parallelMatch(const Pub &pub, int &matchSubs) {
 
 void pReinThreadFunction(bool bits[], bool attExist[], vector<vector<vector<Combo>>> data[], const Pub &pub, int begin,
 						 int end, int buckStep) {
+	printf("pub%d, begin=%d, end=%d", pub.id,begin,end);
 	for (int i = begin; i < end; i++) {
 		int value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 		attExist[att] = true;

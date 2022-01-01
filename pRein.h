@@ -9,7 +9,7 @@
 #include "util.h"
 #include "constant.h"
 #include "omp.h"
-//#include <boost/thread/thread_pool.hpp>
+#include <boost/thread/thread_pool.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/bind.hpp>
 #include <algorithm>
@@ -38,9 +38,9 @@ void pReinThreadFunction(bool bits[],bool attExist[],vector<vector<vector<Combo>
 class pRein {
 	int numSub, numDimension, buckStep,pD;    // parallelDegree
 	vector<vector<vector<Combo>>> data[2];    // 0:left parenthesis, 1:right parenthesis
-	boost::thread_group threadPool;
-	boost::asio::thread_pool pool;
-
+//	boost::thread_group vecThreads;
+//	boost::asio::thread_pool threadPool;
+//	ThreadPool_asio threadPoolAsio;
 public:
 	int numBucket;
 	double compareTime = 0.0; // 所有维度上事件值落入的那个cell里逐个精确比较的时间
