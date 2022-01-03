@@ -11,7 +11,7 @@ extern const bool display; // 是否打印映射关系
 extern const bool verifyID;// whether to verify Insertion and Deletion function
 extern const int interval; // 每匹配这么多个事件输出一条日志信息
 extern const double subp;  // subp比例的订阅和事件的谓词定义在前cons个维度上
-const int subs = 1000000;  // Number of subscriptions.
+const int subs = 1000;  // Number of subscriptions.
 extern const int pubs;     // Number of publications.
 extern int atts;           // Total number of attributes, i.e. dimensions.
 extern int cons;           // Number of constraints(predicates) in one sub.
@@ -59,5 +59,10 @@ extern const int initH;           // Initial height
 
 // PS-Tree
 extern const int PSTree_level;
+
+//AWBTree
+extern const float Ppoint;//partition point
+extern const unsigned short WCsize; //width cell size
+extern const int awbTree_branch;
 #endif
 

@@ -107,4 +107,11 @@ typedef struct InnerNode
     InnerNode* p[PSTREE_MAX_LENGTH];
 }InnerNode, * InnerNodeLink;
 
+
+// AWB+Tree
+struct lowTreeValue {
+    int subId;
+    int high;
+};
+
 #endif //_DATA_STRUCTURE_H

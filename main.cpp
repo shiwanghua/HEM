@@ -1,6 +1,6 @@
 #include "run_models.h"
 
-int msain(int argc, char **argv) {
+int main(int argc, char **argv) {
 	//freopen("paras.txt", "r", stdin);
 	//cin >> subs >> pubs >> atts >> cons>> buks >> m >> attDis >> valDis >> valDom >> alpha >> width;
 	//m = atts; // Note that Rein requires m == atts.
@@ -34,10 +34,10 @@ int msain(int argc, char **argv) {
 		}
 	}
 
-//	run_rein(gen,deleteNo);
-//	run_rein_forward_native(gen, deleteNo);
-//	run_rein_forward_CBOMP(gen, deleteNo);
-	run_pRein(gen,deleteNo);
+	/*run_rein(gen,deleteNo);
+	run_rein_forward_native(gen, deleteNo);
+	run_rein_forward_CBOMP(gen, deleteNo);*/
+//  run_pRein(gen,deleteNo);
 //	run_adarein(gen, deleteNo);
 
 	//	run_HEM(gen);
@@ -45,8 +45,8 @@ int msain(int argc, char **argv) {
 //	run_HEM2(gen);
 //	run_HEM3(gen);
 //	run_HEM4(gen);
-//	run_HEM5(gen,deleteNo);
-//	run_HEM5_avxOR(gen, deleteNo);
+	/*run_HEM5(gen,deleteNo);
+	run_HEM5_avxOR(gen, deleteNo);*/
 //	run_HEMSC(gen);
 //	run_HEMSR(gen);
 
@@ -65,7 +65,7 @@ int msain(int argc, char **argv) {
 //	run_OpIndex(gen, deleteNo);
 //	run_bOpIndex2(gen,deleteNo);
 //	run_PSTREE(gen, deleteNo);
-
+	run_AWBTREE(gen, deleteNo);
 	//measure_numMark(gen);
 
 	cout << "Done.\n";
