@@ -35,7 +35,7 @@
 void run_rein(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 void run_rein_forward_native(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 void run_rein_forward_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
-//void run_pRein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
+void run_pRein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 void run_adarein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 
 void run_HEM(const intervalGenerator& gen);
@@ -65,7 +65,7 @@ void run_BGTREE_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, 
 void run_BGTREE_backward_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 
 void run_PSTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
-void run_AWBTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
+//void run_AWBTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 
 void measure_numMark(const intervalGenerator& gen);
 #endif

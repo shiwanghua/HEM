@@ -9,6 +9,7 @@
 #include "data_structure.h"
 #include "constant.h"
 #include <bitset>
+#include <queue>
 
 struct lgreennode {
 	// low/high boundary
@@ -92,6 +93,10 @@ private:
 	void forward_match_blueNode(bluenode*& r, const int& att, const int& value, const vector<IntervalSub>& subList);
 	void forward_match_lgreenNode(lgreennode*& l, const int& att, const int& value, const vector<IntervalSub>& subList);
 	void forward_match_rgreenNode(rgreennode*& r, const int& att, const int& value, const vector<IntervalSub>& subList);
+
+	void backward_match_blueNode(bluenode*& r, const int& att, const int& value, const vector<IntervalSub>& subList);
+	void backward_match_lgreenNode(lgreennode*& l, const int& att, const int& value, const vector<IntervalSub>& subList);
+	void backward_match_rgreenNode(rgreennode*& r, const int& att, const int& value, const vector<IntervalSub>& subList);
 
 	void forward_match_blueNode_C_BOMP(bluenode*& r, const int& att, const int& value, const vector<IntervalSub>& subList,bitset<subs>& mB);
 	void forward_match_lgreenNode_C_BOMP(lgreennode*& l, const int& att, const int& value, const vector<IntervalSub>& subList,bitset<subs>& mB);
