@@ -1979,7 +1979,7 @@ void run_BGTREE_forward(const intervalGenerator &gen, unordered_map<int, bool> d
 	}
 	cout << endl;
 
-	if (display)
+	if (!display)
 		bgTree.printBGTree();
 	// output
 	string outputFileName = "BGTree.txt";

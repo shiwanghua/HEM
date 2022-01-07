@@ -77,8 +77,8 @@ rebuild_cache/fast: rebuild_cache
 
 # Special rule for the target edit_cache
 edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/snap/clion/178/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
+	/snap/clion/178/bin/cmake/linux/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -128,6 +128,30 @@ run: cmake_check_build_system
 run/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/build
 .PHONY : run/fast
+
+AWBTree.o: AWBTree.cpp.o
+.PHONY : AWBTree.o
+
+# target to build an object file
+AWBTree.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/AWBTree.cpp.o
+.PHONY : AWBTree.cpp.o
+
+AWBTree.i: AWBTree.cpp.i
+.PHONY : AWBTree.i
+
+# target to preprocess a source file
+AWBTree.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/AWBTree.cpp.i
+.PHONY : AWBTree.cpp.i
+
+AWBTree.s: AWBTree.cpp.s
+.PHONY : AWBTree.s
+
+# target to generate assembly for a file
+AWBTree.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/AWBTree.cpp.s
+.PHONY : AWBTree.cpp.s
 
 AdaRein.o: AdaRein.cpp.o
 .PHONY : AdaRein.o
@@ -762,6 +786,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... run"
+	@echo "... AWBTree.o"
+	@echo "... AWBTree.i"
+	@echo "... AWBTree.s"
 	@echo "... AdaRein.o"
 	@echo "... AdaRein.i"
 	@echo "... AdaRein.s"

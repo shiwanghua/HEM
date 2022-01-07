@@ -34,9 +34,9 @@ int main(int argc, char **argv) {
 		}
 	}
 
-//	run_rein(gen,deleteNo);
-//	run_rein_forward_native(gen, deleteNo);
-//	run_rein_forward_CBOMP(gen, deleteNo);
+	run_rein(gen,deleteNo);
+	run_rein_forward_native(gen, deleteNo);
+	run_rein_forward_CBOMP(gen, deleteNo);
 //  run_pRein(gen,deleteNo);
 //	run_adarein(gen, deleteNo);
 
@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
 //	run_HEM2(gen);
 //	run_HEM3(gen);
 //	run_HEM4(gen);
-//    run_HEM5(gen,deleteNo);
+    run_HEM5(gen,deleteNo);
 //	run_HEM5_avxOR(gen, deleteNo);
 //	run_HEMSC(gen);
 //	run_HEMSR(gen);
@@ -53,8 +53,8 @@ int main(int argc, char **argv) {
 //	run_Simple(gen,deleteNo);
 //	run_Simple2(gen,deleteNo);
 //
-//	run_tama(gen,deleteNo);
-//	run_btama_forward_C_BOMP(gen, deleteNo); // bTAMA6
+	run_tama(gen,deleteNo);
+	run_btama_forward_C_BOMP(gen, deleteNo); // bTAMA6
 //	run_btama_backward1_C_BOMP(gen, deleteNo);// bTAMA7
 //	run_btama_backward2_CBOMP(gen, deleteNo); // bTAMA8
 //

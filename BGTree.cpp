@@ -3,13 +3,13 @@
 BGTree::BGTree() {
 	numSub = 0;
 	boundaryNumSub = subs;// 32;
-	numNode = 1;
+	numNode = 0;
 	initHeight = initH;
 	memset(subPredicate, 0, sizeof(subPredicate));
 	roots.resize(atts);
 
 	_for(i, 0, atts) {
-		roots[i] = new bluenode(0, valDom - 1, 1, 1, {}, nullptr, nullptr, nullptr, nullptr, nullptr);
+		roots[i] = new bluenode(0, valDom - 1, ++numNode, 1, {}, nullptr, nullptr, nullptr, nullptr, nullptr);
 		initBlueNode(roots[i]);
 	}
 	height = initHeight;
@@ -288,6 +288,9 @@ void BGTree::forward_match(const Pub &pub, int &matchSubs, const vector<Interval
 		forward_match_blueNode(roots[pi.att], pi.att, pi.value, subList);
 	for (int i = 0; i < subs; i++)
 		if (counter[i] == 0) {
+#ifdef DEBUG
+			numEffectivePredicate += subPredicate[i];
+#endif
 			++matchSubs;
 			//cout << "BG-Tree matches sub: " << i << endl;
 		}
@@ -297,11 +300,19 @@ void
 BGTree::forward_match_blueNode(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList) {
 	if (r->mid == value) { // 1.等于中点, 直接得到匹配结果
 		hit++;
+#ifdef DEBUG
+		numProcessExactNode++;
+		numProcessExactPredicate += r->midEqual.size();
+#endif
 		for (auto &&i: r->midEqual) {
 			counter[i]--;
 		}
 	} else if (r->leftBlueChild == nullptr) { // 2.叶节点, 暴力匹配
 		if (r->bst == nullptr) {
+#ifdef DEBUG
+			numProcessTwoCmpNode++;
+			numProcessTwoCmpPredicate += r->subids.size();
+#endif
 			for (auto &&i: r->subids) {
 				for (auto &&pi: subList[i].constraints)
 					if (att == pi.att) {
@@ -310,7 +321,7 @@ BGTree::forward_match_blueNode(bluenode *&r, const int &att, const int &value, c
 						break;
 					}
 			}
-		} else {
+		} else { // give up
 			_for(i, 0, subs) if ((*(r->bst))[i] == 1)
 					for (auto &&pi: subList[i].constraints)
 						if (att == pi.att) {
@@ -332,6 +343,10 @@ void
 BGTree::forward_match_lgreenNode(lgreennode *&l, const int &att, const int &value, const vector<IntervalSub> &subList) {
 	if (l->leftChild == nullptr) { // 1.叶子节点, 暴力匹配
 		if (l->bst == nullptr) {
+#ifdef DEBUG
+			numProcessOneCmpNode++;
+			numProcessOneCmpPredicate += l->subids.size();
+#endif
 			for (auto &&i: l->subids) {
 				for (auto &&pi: subList[i].constraints)
 					if (att == pi.att) {
@@ -351,10 +366,15 @@ BGTree::forward_match_lgreenNode(lgreennode *&l, const int &att, const int &valu
 		}
 	} else if (value == l->mid) { // 2.等于中点且有左绿左子节点, 左绿左子节点即为匹配结果
 		hit++;
-		if (l->leftChild->bst == nullptr)
+		if (l->leftChild->bst == nullptr) {
+#ifdef DEBUG
+			numProcessExactNode++;
+			numProcessExactPredicate += l->leftChild->subids.size();
+#endif
 			for (auto &&i: l->leftChild->subids) {
 				counter[i]--;
 			}
+		}
 		else {
 			_for(i, 0, subs) if ((*(l->leftChild->bst))[i] == 1)
 					counter[i]--;
@@ -364,6 +384,10 @@ BGTree::forward_match_lgreenNode(lgreennode *&l, const int &att, const int &valu
 	} else { // value > l->mid  4. 检索左绿右子节点, 左子节点全部匹配
 		forward_match_lgreenNode(l->rightChild, att, value, subList);
 		if (l->leftChild->bst == nullptr) {
+#ifdef DEBUG
+			numProcessExactNode++;
+			numProcessExactPredicate += l->leftChild->subids.size();
+#endif
 			for (auto &&i: l->leftChild->subids) {
 				counter[i]--;
 			}
@@ -378,6 +402,10 @@ void
 BGTree::forward_match_rgreenNode(rgreennode *&r, const int &att, const int &value, const vector<IntervalSub> &subList) {
 	if (r->leftChild == nullptr) { // 1.叶子节点, 暴力匹配
 		if (r->bst == nullptr) {
+#ifdef DEBUG
+			numProcessOneCmpNode++;
+			numProcessOneCmpPredicate += r->subids.size();
+#endif
 			for (auto &&i: r->subids) {
 				for (auto &&pi: subList[i].constraints)
 					if (att == pi.att) {
@@ -397,10 +425,15 @@ BGTree::forward_match_rgreenNode(rgreennode *&r, const int &att, const int &valu
 		}
 	} else if (value == r->mid) { // 2.等于中点且有右绿右子节点, 右绿右子节点即为匹配结果
 		hit++;
-		if (r->rightChild->bst == nullptr)
+		if (r->rightChild->bst == nullptr) {
+#ifdef DEBUG
+			numProcessExactNode++;
+			numProcessExactPredicate += r->rightChild->subids.size();
+#endif
 			for (auto &&i: r->rightChild->subids) {
 				counter[i]--;
 			}
+		}
 		else {
 			_for(i, 0, subs) if ((*(r->rightChild->bst))[i] == 1)
 					counter[i]--;
@@ -410,6 +443,10 @@ BGTree::forward_match_rgreenNode(rgreennode *&r, const int &att, const int &valu
 	} else { // value < r->mid  4. 检索右绿左子节点, 右绿右子节点全部匹配
 		forward_match_rgreenNode(r->leftChild, att, value, subList);
 		if (r->rightChild->bst == nullptr) {
+#ifdef DEBUG
+			numProcessExactNode++;
+			numProcessExactPredicate += r->rightChild->subids.size();
+#endif
 			for (auto &&i: r->rightChild->subids) {
 				counter[i]--;
 			}
@@ -803,11 +840,15 @@ void BGTree::printBGTree() {
 		_for(j, 0, nodeInfo[i].size()) {
 			cout << "a" << i << ", h" << j << ", nodeNum= " << nodeInfo[i][j].size() << "\n";
 			int nodeId = -1, lv = -1, hv = -1, maxNumNodeSub = -1;
-			sort(nodeInfo[i][j].begin(),nodeInfo[i][j].end(),[](const tuple<int, int, int, int>& a,const tuple<int, int, int, int>& b){return get<0>(a)==get<0>(b)?get<3>(a)>get<3>(b):get<0>(a)<get<0>(b);});
+			sort(nodeInfo[i][j].begin(), nodeInfo[i][j].end(),
+				 [](const tuple<int, int, int, int> &a, const tuple<int, int, int, int> &b) {
+					 return get<0>(a) == get<0>(b) ? get<3>(a) > get<3>(b) : get<0>(a) < get<0>(b);
+				 });
 			_for(k, 0, nodeInfo[i][j].size()) {
-				cout<<"("<< get<0>(nodeInfo[i][j][k])<<","<< get<1>(nodeInfo[i][j][k])<<","<<get<2>(nodeInfo[i][j][k])<<", "<<get<3>(nodeInfo[i][j][k])<<"), ";
-				if(k<nodeInfo[i][j].size()-1&&(get<0>(nodeInfo[i][j][k])!=get<0>(nodeInfo[i][j][k+1])))
-					cout<<"\n";
+				cout << "(" << get<0>(nodeInfo[i][j][k]) << "," << get<1>(nodeInfo[i][j][k]) << ","
+					 << get<2>(nodeInfo[i][j][k]) << ", " << get<3>(nodeInfo[i][j][k]) << "), ";
+				if (k < nodeInfo[i][j].size() - 1 && (get<0>(nodeInfo[i][j][k]) != get<0>(nodeInfo[i][j][k + 1])))
+					cout << "\n";
 				if (maxNumNodeSub < get<3>(nodeInfo[i][j][k])) {
 					nodeId = get<0>(nodeInfo[i][j][k]);
 					lv = get<1>(nodeInfo[i][j][k]);
@@ -819,4 +860,13 @@ void BGTree::printBGTree() {
 		}
 		cout << "\n";
 	}
+	cout << "ExactNode: " << numProcessExactNode << ", oneCmpNode: " << numProcessOneCmpNode << ", twoCmpNode"
+		 << numProcessTwoCmpNode \
+ << "\nExactPredicate: " << numProcessExactPredicate << ", oneCmpPredicate: " << numProcessOneCmpPredicate
+		 << ", twoCmpPredicate: " << numProcessTwoCmpPredicate \
+ << "\nEffectivePredicate: " << numEffectivePredicate << ", effectiveRate: " << (double) numEffectivePredicate /
+																				 (double) (numProcessExactPredicate +
+																						   numProcessOneCmpPredicate +
+																						   numProcessTwoCmpPredicate+1)
+		 << ".\n\n";
 }

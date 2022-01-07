@@ -66,6 +66,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/AWBTree.cpp">
+			<Option target="run"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/AWBTree.h">
+			<Option target="run"/>
+		</Unit>
 		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/AdaRein.cpp">
 			<Option target="run"/>
 		</Unit>
