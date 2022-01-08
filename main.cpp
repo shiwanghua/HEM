@@ -37,6 +37,8 @@ int main(int argc, char **argv) {
 	run_rein(gen,deleteNo);
 	run_rein_forward_native(gen, deleteNo);
 	run_rein_forward_CBOMP(gen, deleteNo);
+	run_rein_hybrid(gen,deleteNo);
+//	run_rein_hybrid_CBOMP(gen,deleteNo);
 //  run_pRein(gen,deleteNo);
 //	run_adarein(gen, deleteNo);
 
@@ -45,7 +47,7 @@ int main(int argc, char **argv) {
 //	run_HEM2(gen);
 //	run_HEM3(gen);
 //	run_HEM4(gen);
-    run_HEM5(gen,deleteNo);
+//    run_HEM5(gen,deleteNo);
 //	run_HEM5_avxOR(gen, deleteNo);
 //	run_HEMSC(gen);
 //	run_HEMSR(gen);
@@ -59,13 +61,13 @@ int main(int argc, char **argv) {
 //	run_btama_backward2_CBOMP(gen, deleteNo); // bTAMA8
 //
 	run_BGTREE_forward(gen, deleteNo);
-//	run_BGTREE_forward_C_BOMP(gen,deleteNo);
+	run_BGTREE_forward_C_BOMP(gen,deleteNo);
 //	run_BGTREE_backward_C_BOMP(gen, deleteNo);
 
 //	run_OpIndex(gen, deleteNo);
 //	run_bOpIndex2(gen,deleteNo);
-	run_PSTREE(gen, deleteNo);
-//	run_AWBTREE(gen, deleteNo);
+//	run_PSTREE(gen, deleteNo);
+	run_AWBTREE(gen, deleteNo);
 	//measure_numMark(gen);
 
 	cout << "Done.\n";
