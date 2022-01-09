@@ -1,5 +1,5 @@
 #include "constant.h"
-string expID = "846";       // Record the experiment ID number
+string expID = "863";       // Record the experiment ID number
 const bool display = false; // whether to print the mapping relation
 const bool verifyID = false; // whether to verify Insertion and Deletion function
 const int interval = 100;   // after a interval of events is matched, print a log
@@ -18,8 +18,8 @@ double mean = 0.2;          // Mean of Normal Distribution. For events it's ( 1 
 double stddev = 1;          // Standard deviation: The square root of variance, representing the dispersion of values from the distribution mean. >0
 
 // Rein
-const int buks = 80;       // Number of buckets.
-const double awRein_Ppoint=0.3*valDom; // HybridRein
+const int buks = 1000;       // Number of buckets.
+const int awRein_Ppoint=0.25*valDom; // HybridRein
 //const int awRein_level=4; // The levels of the forward counting matching of HybridRein
 
 // HEM
@@ -43,7 +43,7 @@ const double falsePositiveRate = 0.05;
 int parallelDegree = 4;
 
 // BG-Tree
-const int initH = 9;           // Initial height
+const int initH = 11;           // Initial height
 
 // PS-Tree
 const int PSTree_level = 4;

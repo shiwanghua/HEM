@@ -96,12 +96,6 @@ private:
 	void forward_match_lgreenNode(lgreennode *&l, const int &att, const int &value, const vector<IntervalSub> &subList);
 	void forward_match_rgreenNode(rgreennode *&r, const int &att, const int &value, const vector<IntervalSub> &subList);
 
-	void backward_match_blueNode(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList);
-	void
-	backward_match_lgreenNode(lgreennode *&l, const int &att, const int &value, const vector<IntervalSub> &subList);
-	void
-	backward_match_rgreenNode(rgreennode *&r, const int &att, const int &value, const vector<IntervalSub> &subList);
-
 	void
 	forward_match_blueNode_C_BOMP(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList,
 								  bitset<subs> &mB);
@@ -117,6 +111,12 @@ private:
 										  const vector<IntervalSub> &subList, bitset<subs> &mB);
 	void backward_match_rgreenNode_C_BOMP(rgreennode *&r, const int &att, const int &value,
 										  const vector<IntervalSub> &subList, bitset<subs> &mB);
+
+	void backward_match_blueNode_native(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
+	void
+	backward_match_lgreenNode_native(lgreennode *&l, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
+	void
+	backward_match_rgreenNode_native(rgreennode *&r, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
 
 	double calBlueNodeMemory(bluenode *&r);
 	double calLGreenNodeMemory(lgreennode *&r);
@@ -136,13 +136,13 @@ public:
 
 	bool deleteSubscription(IntervalSub sub);
 
-	void forward_match(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList);
-
+	void forward_match_native(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList);
 	// Similar to bTama6
 	void forward_match_C_BOMP(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList);
-
 	// Similar to bTama8
 	void backward_match_C_BOMP(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList);
+
+	void backward_match_native(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList);
 
 	int calMemory();      // 计算占用内存大小
 

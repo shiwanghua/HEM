@@ -24,7 +24,7 @@ class Rein {
 	int subPredicate[subs]; // forward Rein; for AWRein, it means the number of predicates inserted to fData for forward matching
 	int counter[subs]; // forward Rein
 	vector<bitset<subs>> nB; // null bitset for forward Rein with C-BOMP
-	//vector<bitset<subs>> nnB; // non-null bitset for backward matching, same as HEM
+	vector<bitset<subs>> nnB; // non-null bitset for backward matching, same as HEM
 
 public:
 	int numBucket;
@@ -53,16 +53,19 @@ public:
 	void insert_forward_CBOMP(IntervalSub sub);
 	void match_forward_CBOMP(const Pub& pub, int& matchSubs);
 	bool deleteSubscription_forward_CBOMP(IntervalSub sub);
+	int calMemory_forward_CBOMP();
 
 	// HybridRein (AWRein)
 	void insert_hybrid_native(IntervalSub sub);
 	void match_hybrid_native(const Pub& pub, int& matchSubs);
 	bool deleteSubscription_hybrid_native(IntervalSub sub);
+	int calMemory_hybrid_native();
 
 	// HybridRein (AWRein) with C-BOMP
 	void insert_hybrid_CBOMP(IntervalSub sub);
 	void match_hybrid_CBOMP(const Pub& pub, int& matchSubs);
 	bool deleteSubscription_hybrid_CBOMP(IntervalSub sub);
+	int calMemory_hybrid_CBOMP();
 
 	void calBucketSize(); // 计算bucketSize
 	vector<int> calMarkNumForBuckets(); // 计算事件落到每个桶里时需要标记和比较的谓词个数

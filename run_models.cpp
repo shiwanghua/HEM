@@ -19,10 +19,10 @@ void run_rein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "Rein Insertion Finishes.\n";
-	
+
 	// 验证插入删除正确性
 	if (verifyID) {
-		for (auto&& kv: deleteNo) {
+		for (auto &&kv: deleteNo) {
 			Timer deleteStart;
 			if (!rein.deleteSubscription_backward_original(gen.subList[kv.first]))
 				cout << "Rein: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
@@ -97,8 +97,9 @@ void run_rein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
+
 // 正向计数fRein
-void run_rein_forward_native(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) {
+void run_rein_forward_native(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	Rein fRein(ForwardRein);
 
 	vector<double> insertTimeList;
@@ -113,17 +114,17 @@ void run_rein_forward_native(const intervalGenerator& gen, unordered_map<int, bo
 		fRein.insert_forward_native(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
-		insertTimeList.push_back((double)insertTime / 1000000);
+		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "fRein Insertion Finishes.\n";
 
 	// 验证插入删除正确性
 	if (verifyID) {
-		for (auto kv : deleteNo) {
+		for (auto kv: deleteNo) {
 			Timer deleteStart;
 			if (!fRein.deleteSubscription_forward_native(gen.subList[kv.first]))
 				cout << "fRein: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
-			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "fRein Deletion Finishes.\n";
 		/*for (auto kv: deleteNo) {
@@ -140,38 +141,38 @@ void run_rein_forward_native(const intervalGenerator& gen, unordered_map<int, bo
 		fRein.match_forward_native(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-		matchTimeList.push_back((double)eventTime / 1000000);
+		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "fRein Event " << i << " is matched.\n";
+			cout << "fRein: Event " << i << " is matched.\n";
 	}
 	cout << endl;
 
 	// output
 	string outputFileName = "fRein.txt";
 	string content = expID
-		+ " memory= " + Util::Int2String(fRein.calMemory_forward_native())
-		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-		+ " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-		+ " ms AvgCmpTime= " + to_string(fRein.compareTime / pubs / 1000000)
-		+ " ms AvgMarkTime= " + to_string(fRein.markTime / pubs / 1000000)
-		+ " ms AvgBitTime= " + to_string(fRein.bitTime / pubs / 1000000)
-		+ " ms numBuk= " + Util::Int2String(fRein.numBucket)
-		+ " numSub= " + Util::Int2String(subs)
-		+ " subSize= " + Util::Int2String(cons)
-		+ " numPub= " + Util::Int2String(pubs)
-		+ " pubSize= " + Util::Int2String(m)
-		+ " attTypes= " + Util::Int2String(atts)
-		+ " attDis= " + Util::Int2String(attDis)
-		+ " valDis= " + Util::Int2String(valDis)
-		+ " width= " + Util::Double2String(width)
-		+ " alpha= " + Util::Double2String(alpha)
-		+ " subp= " + Util::Double2String(subp)
-		+ " mean= " + Util::Double2String(mean)
-		+ " stddev= " + Util::Double2String(stddev)
-		+ " valDom= " + Util::Double2String(valDom);
+					 + " memory= " + Util::Int2String(fRein.calMemory_forward_native())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms AvgCmpTime= " + to_string(fRein.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(fRein.markTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(fRein.bitTime / pubs / 1000000)
+					 + " ms numBuk= " + Util::Int2String(fRein.numBucket)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts)
+					 + " attDis= " + Util::Int2String(attDis)
+					 + " valDis= " + Util::Int2String(valDis)
+					 + " width= " + Util::Double2String(width)
+					 + " alpha= " + Util::Double2String(alpha)
+					 + " subp= " + Util::Double2String(subp)
+					 + " mean= " + Util::Double2String(mean)
+					 + " stddev= " + Util::Double2String(stddev)
+					 + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	//	outputFileName = "ComprehensiveExpTime.txt";
@@ -180,22 +181,23 @@ void run_rein_forward_native(const intervalGenerator& gen, unordered_map<int, bo
 	//	content[content.length() - 2] = ']';
 	//	Util::WriteData2Begin(outputFileName.c_str(), content);
 
-		//outputFileName = "ReinBucketSize.txt";
-		//rein.calBucketSize();
-		//content = expID + " numBucket= " + Util::Int2String(rein.numBucket)
-		//	//+ " sumBukSetSize= " + to_string(accumulate(rein.bucketSub.begin(), rein.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
-		//	+ " maxBukSetSize= " + to_string((*max_element(rein.bucketSub.begin(), rein.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
-		//	+ " minBukSetSize= " + to_string(min_element(rein.bucketSub.begin(), rein.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
-		//_for(i, 0, fRein.numBucket)
-		//	content += " " + to_string(rein.bucketSub[i].size());
-		//Util::WriteData2Begin(outputFileName.c_str(), content);
+	//outputFileName = "ReinBucketSize.txt";
+	//rein.calBucketSize();
+	//content = expID + " numBucket= " + Util::Int2String(rein.numBucket)
+	//	//+ " sumBukSetSize= " + to_string(accumulate(rein.bucketSub.begin(), rein.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
+	//	+ " maxBukSetSize= " + to_string((*max_element(rein.bucketSub.begin(), rein.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
+	//	+ " minBukSetSize= " + to_string(min_element(rein.bucketSub.begin(), rein.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
+	//_for(i, 0, fRein.numBucket)
+	//	content += " " + to_string(rein.bucketSub[i].size());
+	//Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "tmpData/fRein.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
+
 // 正向位集fRein
-void run_rein_forward_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) {
+void run_rein_forward_CBOMP(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	Rein fRein_c(ForwardRein_CBOMP);
 
 	vector<double> insertTimeList;
@@ -210,17 +212,17 @@ void run_rein_forward_CBOMP(const intervalGenerator& gen, unordered_map<int, boo
 		fRein_c.insert_forward_CBOMP(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
-		insertTimeList.push_back((double)insertTime / 1000000);
+		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "fRein_c CBOMP Insertion Finishes.\n";
 
 	// 验证插入删除正确性
 	if (verifyID) {
-		for (auto kv : deleteNo) {
+		for (auto kv: deleteNo) {
 			Timer deleteStart;
 			if (!fRein_c.deleteSubscription_forward_CBOMP(gen.subList[kv.first]))
 				cout << "fRein_c CBOMP: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
-			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "fRein_c CBOMP Deletion Finishes.\n";
 		/*for (auto kv: deleteNo) {
@@ -237,7 +239,7 @@ void run_rein_forward_CBOMP(const intervalGenerator& gen, unordered_map<int, boo
 		fRein_c.match_forward_CBOMP(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-		matchTimeList.push_back((double)eventTime / 1000000);
+		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
 			cout << "forward Rein CBOMP Event " << i << " is matched.\n";
@@ -245,30 +247,30 @@ void run_rein_forward_CBOMP(const intervalGenerator& gen, unordered_map<int, boo
 	cout << endl;
 
 	// output
-	string outputFileName = "fRein1.txt";
+	string outputFileName = "fRein_c.txt";
 	string content = expID
-		+ " memory= " + Util::Int2String(fRein_c.calMemory_forward_native())
-		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-		+ " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-		+ " ms AvgCmpTime= " + to_string(fRein_c.compareTime / pubs / 1000000)
-		+ " ms AvgMarkTime= " + to_string(fRein_c.markTime / pubs / 1000000)
-		+ " ms AvgBitTime= " + to_string(fRein_c.bitTime / pubs / 1000000)
-		+ " ms numBuk= " + Util::Int2String(fRein_c.numBucket)
-		+ " numSub= " + Util::Int2String(subs)
-		+ " subSize= " + Util::Int2String(cons)
-		+ " numPub= " + Util::Int2String(pubs)
-		+ " pubSize= " + Util::Int2String(m)
-		+ " attTypes= " + Util::Int2String(atts)
-		+ " attDis= " + Util::Int2String(attDis)
-		+ " valDis= " + Util::Int2String(valDis)
-		+ " width= " + Util::Double2String(width)
-		+ " alpha= " + Util::Double2String(alpha)
-		+ " subp= " + Util::Double2String(subp)
-		+ " mean= " + Util::Double2String(mean)
-		+ " stddev= " + Util::Double2String(stddev)
-		+ " valDom= " + Util::Double2String(valDom);
+					 + " memory= " + Util::Int2String(fRein_c.calMemory_forward_CBOMP())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms AvgCmpTime= " + to_string(fRein_c.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(fRein_c.markTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(fRein_c.bitTime / pubs / 1000000)
+					 + " ms numBuk= " + Util::Int2String(fRein_c.numBucket)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts)
+					 + " attDis= " + Util::Int2String(attDis)
+					 + " valDis= " + Util::Int2String(valDis)
+					 + " width= " + Util::Double2String(width)
+					 + " alpha= " + Util::Double2String(alpha)
+					 + " subp= " + Util::Double2String(subp)
+					 + " mean= " + Util::Double2String(mean)
+					 + " stddev= " + Util::Double2String(stddev)
+					 + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	//	outputFileName = "ComprehensiveExpTime.txt";
@@ -277,11 +279,12 @@ void run_rein_forward_CBOMP(const intervalGenerator& gen, unordered_map<int, boo
 	//	content[content.length() - 2] = ']';
 	//	Util::WriteData2Begin(outputFileName.c_str(), content);
 
-	outputFileName = "tmpData/fRein1.txt";
+	outputFileName = "tmpData/fRein_c.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
-void run_rein_hybrid(const intervalGenerator& gen, unordered_map<int, bool> deleteNo){
+
+void run_rein_hybrid(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	Rein hRein(HybridRein);
 
 	vector<double> insertTimeList;
@@ -296,17 +299,17 @@ void run_rein_hybrid(const intervalGenerator& gen, unordered_map<int, bool> dele
 		hRein.insert_hybrid_native(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
-		insertTimeList.push_back((double)insertTime / 1000000);
+		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "HybridRein (hRein) Insertion Finishes.\n";
 
 	// 验证插入删除正确性
 	if (verifyID) {
-		for (auto kv : deleteNo) {
+		for (auto kv: deleteNo) {
 			Timer deleteStart;
 			if (!hRein.deleteSubscription_hybrid_native(gen.subList[kv.first]))
 				cout << "HybridRein (hRein): sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
-			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "HybridRein (hRein) Deletion Finishes.\n";
 		/*for (auto kv: deleteNo) {
@@ -323,7 +326,7 @@ void run_rein_hybrid(const intervalGenerator& gen, unordered_map<int, bool> dele
 		hRein.match_hybrid_native(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-		matchTimeList.push_back((double)eventTime / 1000000);
+		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
 			cout << "HybridRein (hRein): Event " << i << " is matched.\n";
@@ -333,7 +336,7 @@ void run_rein_hybrid(const intervalGenerator& gen, unordered_map<int, bool> dele
 	// output
 	string outputFileName = "hRein.txt";
 	string content = expID
-					 + " memory= " + Util::Int2String(hRein.calMemory_forward_native())
+					 + " memory= " + Util::Int2String(hRein.calMemory_hybrid_native())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
@@ -341,7 +344,8 @@ void run_rein_hybrid(const intervalGenerator& gen, unordered_map<int, bool> dele
 					 + " ms AvgCmpTime= " + to_string(hRein.compareTime / pubs / 1000000)
 					 + " ms AvgMarkTime= " + to_string(hRein.markTime / pubs / 1000000)
 					 + " ms AvgBitTime= " + to_string(hRein.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(hRein.numBucket)
+					 + " ms Ppoint= " + to_string(awRein_Ppoint)
+					 + " numBuk= " + Util::Int2String(hRein.numBucket)
 					 + " numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
 					 + " numPub= " + Util::Int2String(pubs)
@@ -367,7 +371,8 @@ void run_rein_hybrid(const intervalGenerator& gen, unordered_map<int, bool> dele
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
-void run_rein_hybrid_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo){
+
+void run_rein_hybrid_CBOMP(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	Rein hRein_c(HybridRein_CBOMP);
 
 	vector<double> insertTimeList;
@@ -382,17 +387,18 @@ void run_rein_hybrid_CBOMP(const intervalGenerator& gen, unordered_map<int, bool
 		hRein_c.insert_hybrid_CBOMP(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
-		insertTimeList.push_back((double)insertTime / 1000000);
+		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "HybridRein (HRein) with CBOMP Insertion Finishes.\n";
 
 	// 验证插入删除正确性
 	if (verifyID) {
-		for (auto kv : deleteNo) {
+		for (auto kv: deleteNo) {
 			Timer deleteStart;
 			if (!hRein_c.deleteSubscription_hybrid_CBOMP(gen.subList[kv.first]))
-				cout << "HybridRein (HRein) with CBOMP: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
-			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+				cout << "HybridRein (HRein) with CBOMP: sub" << gen.subList[kv.first].id
+					 << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "HybridRein (HRein) with CBOMP Deletion Finishes.\n";
 		/*for (auto kv: deleteNo) {
@@ -409,7 +415,7 @@ void run_rein_hybrid_CBOMP(const intervalGenerator& gen, unordered_map<int, bool
 		hRein_c.match_hybrid_CBOMP(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-		matchTimeList.push_back((double)eventTime / 1000000);
+		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
 			cout << "HybridRein (HRein) with CBOMP: Event " << i << " is matched.\n";
@@ -419,7 +425,7 @@ void run_rein_hybrid_CBOMP(const intervalGenerator& gen, unordered_map<int, bool
 	// output
 	string outputFileName = "hRein_c.txt";
 	string content = expID
-					 + " memory= " + Util::Int2String(hRein_c.calMemory_forward_native())
+					 + " memory= " + Util::Int2String(hRein_c.calMemory_hybrid_CBOMP())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
@@ -427,7 +433,8 @@ void run_rein_hybrid_CBOMP(const intervalGenerator& gen, unordered_map<int, bool
 					 + " ms AvgCmpTime= " + to_string(hRein_c.compareTime / pubs / 1000000)
 					 + " ms AvgMarkTime= " + to_string(hRein_c.markTime / pubs / 1000000)
 					 + " ms AvgBitTime= " + to_string(hRein_c.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(hRein_c.numBucket)
+					 + " ms Ppoint= " + to_string(awRein_Ppoint)
+					 + " numBuk= " + Util::Int2String(hRein_c.numBucket)
 					 + " numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
 					 + " numPub= " + Util::Int2String(pubs)
@@ -453,6 +460,7 @@ void run_rein_hybrid_CBOMP(const intervalGenerator& gen, unordered_map<int, bool
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
+
 // 并行Rein
 void run_pRein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	pRein prein;
@@ -543,6 +551,7 @@ void run_pRein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) 
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
+
 // 自适应Rein
 void run_adarein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	AdaRein adarein;
@@ -629,6 +638,7 @@ void run_adarein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
+
 // 纯静模式
 void run_HEM(const intervalGenerator &gen) {
 	HEM rb;
@@ -714,6 +724,7 @@ void run_HEM(const intervalGenerator &gen) {
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
+
 // 静静模式
 void run_HEM1(const intervalGenerator &gen) {
 	HEM1 rb1;
@@ -800,6 +811,7 @@ void run_HEM1(const intervalGenerator &gen) {
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
+
 // 静动模式
 void run_HEM2(const intervalGenerator &gen) {
 	HEM2 rb2;
@@ -886,6 +898,7 @@ void run_HEM2(const intervalGenerator &gen) {
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
+
 // 纯动模式
 void run_HEM3(const intervalGenerator &gen) {
 	HEM3 hem3;
@@ -972,6 +985,7 @@ void run_HEM3(const intervalGenerator &gen) {
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
+
 // 动静模式
 void run_HEM4(const intervalGenerator &gen) {
 	HEM4 hem4;
@@ -1058,6 +1072,7 @@ void run_HEM4(const intervalGenerator &gen) {
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
+
 // 动动模式
 void run_HEM5(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	HEM5 hem5;
@@ -1160,8 +1175,9 @@ void run_HEM5(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
+
 // 动动模式 + avx指令
-void run_HEM5_avxOR(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) {
+void run_HEM5_avxOR(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	HEM5_avxOR hem5_avxor;
 
 	vector<double> insertTimeList;
@@ -1176,22 +1192,22 @@ void run_HEM5_avxOR(const intervalGenerator& gen, unordered_map<int, bool> delet
 		hem5_avxor.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
-		insertTimeList.push_back((double)insertTime / 1000000);
+		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "HEM5DD_avxOR Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
 	hem5_avxor.initBits();
-	initTime = (double)initStart.elapsed_nano() / 1000000.0;
+	initTime = (double) initStart.elapsed_nano() / 1000000.0;
 
 	// 验证插入删除正确性
 	if (verifyID) {
-		for (auto kv : deleteNo) {
+		for (auto kv: deleteNo) {
 			Timer deleteStart;
 			if (!hem5_avxor.deleteSubscription(gen.subList[kv.first]))
 				cout << "HEM5DD_avxOR: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
-			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "HEM5DD_avxOR Deletion Finishes.\n";
 		//for (auto kv : deleteNo) {
@@ -1207,7 +1223,7 @@ void run_HEM5_avxOR(const intervalGenerator& gen, unordered_map<int, bool> delet
 		hem5_avxor.match(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-		matchTimeList.push_back((double)eventTime / 1000000);
+		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
 			cout << "HEM5DD_avxOR Event " << i << " is matched.\n";
@@ -1220,26 +1236,26 @@ void run_HEM5_avxOR(const intervalGenerator& gen, unordered_map<int, bool> delet
 	// output
 	string outputFileName = "HEM5_avxOR.txt";
 	string content = expID
-		+ " bits= " + Util::Int2String(be)
-		+ " memory= " + Util::Int2String(hem5_avxor.calMemory())
-		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-		+ " ms InitTime= " + Util::Double2String(initTime)
-		+ " ms AvgConstructionTime= " +
-		Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-		+ " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-		+ " ms AvgCmpTime= " + to_string(hem5_avxor.compareTime / pubs / 1000000)
-		+ " ms AvgMarkTime= " + to_string(hem5_avxor.markTime / pubs / 1000000)
-		+ " ms OrTime= " + to_string(hem5_avxor.orTime / pubs / 1000000)
-		+ " ms AvgBitTime= " + to_string(hem5_avxor.bitTime / pubs / 1000000)
-		+ " ms numBuk= " + Util::Int2String(hem5_avxor.numBucket)
-		+ " numSub= " + Util::Int2String(subs)
-		+ " subSize= " + Util::Int2String(cons)
-		+ " numPub= " + Util::Int2String(pubs)
-		+ " pubSize= " + Util::Int2String(m)
-		+ " attTypes= " + Util::Int2String(atts)
-		+ " valDom= " + Util::Double2String(valDom);
+					 + " bits= " + Util::Int2String(be)
+					 + " memory= " + Util::Int2String(hem5_avxor.calMemory())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms InitTime= " + Util::Double2String(initTime)
+					 + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms AvgCmpTime= " + to_string(hem5_avxor.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(hem5_avxor.markTime / pubs / 1000000)
+					 + " ms OrTime= " + to_string(hem5_avxor.orTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(hem5_avxor.bitTime / pubs / 1000000)
+					 + " ms numBuk= " + Util::Int2String(hem5_avxor.numBucket)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts)
+					 + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	/*outputFileName = "ComprehensiveExpTime.txt";
@@ -1262,6 +1278,7 @@ void run_HEM5_avxOR(const intervalGenerator& gen, unordered_map<int, bool> delet
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
+
 // HEM 动动模式 + 根据宽度分层
 void run_HEMSC(const intervalGenerator &gen) {
 	HEMSC HEMsc;
@@ -1349,6 +1366,7 @@ void run_HEMSC(const intervalGenerator &gen) {
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
+
 // 状态压缩
 void run_HEMSR(const intervalGenerator &gen) {
 	HEMSR hemSR;
@@ -1426,6 +1444,7 @@ void run_HEMSR(const intervalGenerator &gen) {
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
+
 // 暴力判断
 void run_Simple(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	Simple simple;
@@ -1504,6 +1523,7 @@ void run_Simple(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
+
 // 按谓词宽度增序排列+暴力判断
 void run_Simple2(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	Simple2 simple2;
@@ -2120,7 +2140,7 @@ void run_BGTREE_forward(const intervalGenerator &gen, unordered_map<int, bool> d
 		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "BG-Tree Forward Insertion Finishes.\n";
-	
+
 	// 验证插入删除正确性
 	if (verifyID) {
 		for (auto kv: deleteNo) {
@@ -2141,7 +2161,7 @@ void run_BGTREE_forward(const intervalGenerator &gen, unordered_map<int, bool> d
 
 		Timer matchStart;
 
-		bgTree.forward_match(gen.pubList[i], matchSubs, gen.subList);
+		bgTree.forward_match_native(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double) eventTime / 1000000);
@@ -2191,7 +2211,7 @@ void run_BGTREE_forward(const intervalGenerator &gen, unordered_map<int, bool> d
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_BGTREE_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo){
+void run_BGTREE_forward_C_BOMP(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	BGTree bgTree;
 
 	vector<double> insertTimeList;
@@ -2277,7 +2297,8 @@ void run_BGTREE_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, 
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
-void run_BGTREE_backward_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo){
+
+void run_BGTREE_backward_C_BOMP(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	BGTree bgTree;
 
 	vector<double> insertTimeList;
@@ -2286,7 +2307,7 @@ void run_BGTREE_backward_C_BOMP(const intervalGenerator& gen, unordered_map<int,
 	vector<double> matchSubList;
 
 	// insert
-	for (auto&& sub : gen.subList) {
+	for (auto &&sub: gen.subList) {
 		Timer insertStart;
 
 		bgTree.insert(sub); // Insert sub[i] into data structure.
@@ -2466,7 +2487,7 @@ void run_PSTREE(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_AWBTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) {
+void run_AWBTREE(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	AWBTree awbTree;
 
 	vector<double> insertTimeList;
@@ -2475,23 +2496,23 @@ void run_AWBTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo
 	vector<double> matchSubList;
 
 	// insert
-	for (auto&& sub : gen.subList) {
+	for (auto &&sub: gen.subList) {
 		Timer insertStart;
 
 		awbTree.insert(sub); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
-		insertTimeList.push_back((double)insertTime / 1000000);
+		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "AWB+Tree Hybrid_opt Insertion Finishes.\n";
 
 	// 验证插入删除正确性
 	if (verifyID) {
-		for (auto kv : deleteNo) {
+		for (auto kv: deleteNo) {
 			Timer deleteStart;
 			if (!awbTree.deleteSubscription(gen.subList[kv.first]))
 				cout << "AWB+Tree Hybrid_opt: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
-			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "AWB+Tree Hybrid_opt Deletion Finishes.\n";
 		//for (auto kv : deleteNo) {
@@ -2509,7 +2530,7 @@ void run_AWBTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo
 		awbTree.hybrid_opt(gen.pubList[i], matchSubs, gen.subList, awbTree_Ppoint);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-		matchTimeList.push_back((double)eventTime / 1000000);
+		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
 			cout << "AWB+Tree Event " << i << " is matched.\n";
@@ -2519,27 +2540,27 @@ void run_AWBTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo
 	// output
 	string outputFileName = "AWBTree.txt";
 	string content = expID
-		+ " memory= " + Util::Int2String(awbTree.calMemory())
-		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-		+ " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-		+ " ms awbTree_Ppoint = " + Util::Double2String(awbTree_Ppoint)
-		+ " WCsize = "+ Util::Int2String(WCsize)
-		+ " branch = "+Util::Int2String(awbTree_branch)
-		+ " numSub= " + Util::Int2String(subs)
-		+ " subSize= " + Util::Int2String(cons)
-		+ " numPub= " + Util::Int2String(pubs)
-		+ " pubSize= " + Util::Int2String(m)
-		+ " attTypes= " + Util::Int2String(atts)
-		+ " attDis= " + Util::Int2String(attDis)
-		+ " valDis= " + Util::Int2String(valDis)
-		+ " width= " + Util::Double2String(width)
-		+ " alpha= " + Util::Double2String(alpha)
-		+ " subp= " + Util::Double2String(subp)
-		+ " mean= " + Util::Double2String(mean)
-		+ " stddev= " + Util::Double2String(stddev)
-		+ " valDom= " + Util::Double2String(valDom);
+					 + " memory= " + Util::Int2String(awbTree.calMemory())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms awbTree_Ppoint = " + Util::Double2String(awbTree_Ppoint)
+					 + " WCsize = " + Util::Int2String(WCsize)
+					 + " branch = " + Util::Int2String(awbTree_branch)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts)
+					 + " attDis= " + Util::Int2String(attDis)
+					 + " valDis= " + Util::Int2String(valDis)
+					 + " width= " + Util::Double2String(width)
+					 + " alpha= " + Util::Double2String(alpha)
+					 + " subp= " + Util::Double2String(subp)
+					 + " mean= " + Util::Double2String(mean)
+					 + " stddev= " + Util::Double2String(stddev)
+					 + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	//	outputFileName = "ComprehensiveExpTime.txt";
@@ -2558,7 +2579,7 @@ void measure_numMark(const intervalGenerator &gen) {
 	HEM5 hem5;
 
 	for (int i = 0; i < subs; i++) {
-		rein.insert(gen.subList[i]);
+		rein.insert_backward_original(gen.subList[i]);
 		hem5.insert(gen.subList[i]);
 	}
 

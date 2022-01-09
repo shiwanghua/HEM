@@ -11,7 +11,7 @@ extern const bool display; // 是否打印映射关系
 extern const bool verifyID;// whether to verify Insertion and Deletion function
 extern const int interval; // 每匹配这么多个事件输出一条日志信息
 extern const double subp;  // subp比例的订阅和事件的谓词定义在前cons个维度上
-const int subs = 1000000;  // Number of subscriptions.
+const int subs = 10000000;  // Number of subscriptions.
 extern const int pubs;     // Number of publications.
 extern int atts;           // Total number of attributes, i.e. dimensions.
 extern int cons;           // Number of constraints(predicates) in one sub.
@@ -26,7 +26,7 @@ extern double stddev;      // Standard deviation: The square root of variance, r
 
 // Rein
 extern const int buks;     // Number of buckets.
-extern const double awRein_Ppoint; // HybridRein
+extern const int awRein_Ppoint; // HybridRein
 extern const int awRein_level; // The levels of the forward counting matching of HybridRein
 
 // AdaRein
@@ -38,7 +38,7 @@ extern const double falsePositiveRate;
 // pRein
 extern int parallelDegree;
 
-// HEM
+// HEM bRein
 extern int be;             // 每个维度上 2 * 2^bits个bits数组
 extern int be2;            // be=-1时每个维度上 2 * be2 个bits数组
 extern const int lvls;     // HEMSC 层数
@@ -69,11 +69,13 @@ extern const int awbTree_branch;
 
 // Model Type
 enum{
-	OriginalRein,
-	ForwardRein,
-	ForwardRein_CBOMP,
-	HybridRein, // AWRein
-	HybridRein_CBOMP  // AWRein with C-BOMP
+	OriginalRein, // Rein
+	ForwardRein, // FRein
+	ForwardRein_CBOMP, // FRein_c
+	HybridRein, // HRein, AWRein
+	HybridRein_CBOMP,  // AWRein with C-BOMP
+	SharedHybridRein,  // SHRein
+	SharedHybridRein_CBOMP // SHRein_c
 };
 #endif
 

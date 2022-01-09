@@ -42,7 +42,6 @@ void BGTree::initBlueNode(bluenode *&r) {
 									 nullptr);
 	initBlueNode(r->rightBlueChild);
 }
-
 void BGTree::initGreenNode(lgreennode *&r) {
 	if (r->levelid == initHeight) {
 		return;
@@ -53,7 +52,6 @@ void BGTree::initGreenNode(lgreennode *&r) {
 	r->rightChild = new lgreennode(r->mid + 1, r->h, ++numNode, nextLevelID, {}, nullptr, nullptr, nullptr);
 	initGreenNode(r->rightChild);
 }
-
 void BGTree::initGreenNode(rgreennode *&r) {
 	if (r->levelid == initHeight) {
 		return;
@@ -74,14 +72,12 @@ void BGTree::releaseBlueNode(bluenode *&r) {
 	if (r->bst != nullptr) delete r->bst;
 	delete r;
 }
-
 void BGTree::releaseGreenNode(lgreennode *&r) {
 	if (r->leftChild) releaseGreenNode(r->leftChild);
 	if (r->rightChild) releaseGreenNode(r->rightChild);
 	if (r->bst != nullptr) delete r->bst;
 	delete r;
 }
-
 void BGTree::releaseGreenNode(rgreennode *&r) {
 	if (r->leftChild) releaseGreenNode(r->leftChild);
 	if (r->rightChild) releaseGreenNode(r->rightChild);
@@ -102,7 +98,6 @@ void BGTree::insert(IntervalSub sub) {
 			nB[i][sub.id] = 1;
 	numSub++;
 }
-
 void BGTree::insertIntoBlueNode(bluenode *&r, const int &subID, const int &l, const int &h) {
 	r->numNodeSub++;
 	if (r->bst == nullptr) {
@@ -128,7 +123,6 @@ void BGTree::insertIntoBlueNode(bluenode *&r, const int &subID, const int &l, co
 		}
 	}
 }
-
 void BGTree::insertIntoGreenNode(lgreennode *&r, const int &subID, const int &l) {
 	r->numNodeSub++;
 	if (r->bst == nullptr) {
@@ -145,7 +139,6 @@ void BGTree::insertIntoGreenNode(lgreennode *&r, const int &subID, const int &l)
 		else insertIntoGreenNode(r->rightChild, subID, l);
 	}
 }
-
 void BGTree::insertIntoGreenNode(rgreennode *&r, const int &subID, const int &h) {
 	r->numNodeSub++;
 	if (r->bst == nullptr) {
@@ -171,7 +164,6 @@ bool BGTree::deleteSubscription(IntervalSub sub) {
 								   c.highValue);
 	return find;
 }
-
 bool BGTree::deleteFromBlueNode(bluenode *&r, const int &subID, const int &l, const int &h) {
 	bool find = false;
 	r->numNodeSub--;
@@ -216,7 +208,6 @@ bool BGTree::deleteFromBlueNode(bluenode *&r, const int &subID, const int &l, co
 
 	return find;
 }
-
 bool BGTree::deleteFromGreenNode(lgreennode *&r, const int &subID, const int &l) {
 	bool find = false;
 	r->numNodeSub--;
@@ -242,7 +233,6 @@ bool BGTree::deleteFromGreenNode(lgreennode *&r, const int &subID, const int &l)
 	}
 	return find;
 }
-
 bool BGTree::deleteFromGreenNode(rgreennode *&r, const int &subID, const int &h) {
 	bool find = false;
 	r->numNodeSub--;
@@ -275,14 +265,13 @@ void BGTree::vectorToBitset(vector<int> &v, bitset<subs> *&b) {
 		(*b)[v[i]] = 1;
 	v.resize(0);
 }
-
 void BGTree::bitsetToVector(bitset<subs> *&b, vector<int> &v) {
 	_for(i, 0, subs) if ((*b)[i] == 1)
 			v.push_back(i);
 	delete b;
 }
 
-void BGTree::forward_match(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
+void BGTree::forward_match_native(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
 	memcpy(counter, subPredicate, sizeof(subPredicate));
 	for (auto &&pi: pub.pairs)
 		forward_match_blueNode(roots[pi.att], pi.att, pi.value, subList);
@@ -295,7 +284,6 @@ void BGTree::forward_match(const Pub &pub, int &matchSubs, const vector<Interval
 			//cout << "BG-Tree matches sub: " << i << endl;
 		}
 }
-
 void
 BGTree::forward_match_blueNode(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList) {
 	if (r->mid == value) { // 1.等于中点, 直接得到匹配结果
@@ -338,7 +326,6 @@ BGTree::forward_match_blueNode(bluenode *&r, const int &att, const int &value, c
 		forward_match_rgreenNode(r->rightGreenChild, att, value, subList);
 	}
 }
-
 void
 BGTree::forward_match_lgreenNode(lgreennode *&l, const int &att, const int &value, const vector<IntervalSub> &subList) {
 	if (l->leftChild == nullptr) { // 1.叶子节点, 暴力匹配
@@ -397,7 +384,6 @@ BGTree::forward_match_lgreenNode(lgreennode *&l, const int &att, const int &valu
 		}
 	}
 }
-
 void
 BGTree::forward_match_rgreenNode(rgreennode *&r, const int &att, const int &value, const vector<IntervalSub> &subList) {
 	if (r->leftChild == nullptr) { // 1.叶子节点, 暴力匹配
@@ -471,7 +457,6 @@ void BGTree::forward_match_C_BOMP(const Pub &pub, int &matchSubs, const vector<I
 			gB = gB & nB[i];
 	matchSubs = gB.count();
 }
-
 void BGTree::forward_match_blueNode_C_BOMP(bluenode *&r, const int &att, const int &value,
 										   const vector<IntervalSub> &subList, bitset<subs> &mB) {
 	if (r->mid == value) { // 1.等于中点, 直接得到匹配结果
@@ -506,7 +491,6 @@ void BGTree::forward_match_blueNode_C_BOMP(bluenode *&r, const int &att, const i
 		forward_match_rgreenNode_C_BOMP(r->rightGreenChild, att, value, subList, mB);
 	}
 }
-
 void BGTree::forward_match_lgreenNode_C_BOMP(lgreennode *&l, const int &att, const int &value,
 											 const vector<IntervalSub> &subList, bitset<subs> &mB) {
 	if (l->leftChild == nullptr) { // 1.叶子节点, 暴力匹配
@@ -552,7 +536,6 @@ void BGTree::forward_match_lgreenNode_C_BOMP(lgreennode *&l, const int &att, con
 		}
 	}
 }
-
 void BGTree::forward_match_rgreenNode_C_BOMP(rgreennode *&r, const int &att, const int &value,
 											 const vector<IntervalSub> &subList, bitset<subs> &mB) {
 	if (r->leftChild == nullptr) { // 1.叶子节点, 暴力匹配
@@ -599,7 +582,6 @@ void BGTree::forward_match_rgreenNode_C_BOMP(rgreennode *&r, const int &att, con
 	}
 }
 
-
 void BGTree::backward_match_C_BOMP(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
 	bitset<subs> gB, mB; // global bitset
 	vector<bool> attExist(atts, false);
@@ -613,7 +595,6 @@ void BGTree::backward_match_C_BOMP(const Pub &pub, int &matchSubs, const vector<
 			gB = gB | nnB[i];
 	matchSubs = numSub - gB.count();
 }
-
 void BGTree::backward_match_blueNode_C_BOMP(bluenode *&r, const int &att, const int &value,
 											const vector<IntervalSub> &subList, bitset<subs> &mB) {
 	if (r->mid == value) { // 1.等于中点, 直接得到匹配结果
@@ -648,7 +629,6 @@ void BGTree::backward_match_blueNode_C_BOMP(bluenode *&r, const int &att, const 
 		backward_match_rgreenNode_C_BOMP(r->rightGreenChild, att, value, subList, mB);
 	}
 }
-
 void BGTree::backward_match_lgreenNode_C_BOMP(lgreennode *&l, const int &att, const int &value,
 											  const vector<IntervalSub> &subList, bitset<subs> &mB) {
 	if (l->leftChild == nullptr) { // 1.叶子节点, 暴力匹配
@@ -694,7 +674,6 @@ void BGTree::backward_match_lgreenNode_C_BOMP(lgreennode *&l, const int &att, co
 		}
 	}
 }
-
 void BGTree::backward_match_rgreenNode_C_BOMP(rgreennode *&r, const int &att, const int &value,
 											  const vector<IntervalSub> &subList, bitset<subs> &mB) {
 	if (r->leftChild == nullptr) { // 1.叶子节点, 暴力匹配
@@ -740,6 +719,30 @@ void BGTree::backward_match_rgreenNode_C_BOMP(rgreennode *&r, const int &att, co
 		}
 	}
 }
+
+void BGTree::backward_match_native(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
+	bitset<subs> gB; // global bitset
+	vector<bool> attExist(atts, false);
+	for (auto &&pi: pub.pairs) {
+		attExist[pi.att] = true;
+		backward_match_blueNode_native(roots[pi.att], pi.att, pi.value, subList, gB);
+	}
+	_for(i, 0, atts) if (!attExist[i])
+		gB = gB | nnB[i];
+	matchSubs = numSub - gB.count();
+}
+void BGTree::backward_match_blueNode_native(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList, bitset<subs> &mB){
+	
+}
+void
+BGTree::backward_match_lgreenNode_native(lgreennode *&l, const int &att, const int &value, const vector<IntervalSub> &subList, bitset<subs> &mB){
+
+}
+void
+BGTree::backward_match_rgreenNode_native(rgreennode *&r, const int &att, const int &value, const vector<IntervalSub> &subList, bitset<subs> &mB){
+
+}
+
 
 int BGTree::calMemory() {
 	double size = 0.0; // Byte
