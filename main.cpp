@@ -1,6 +1,6 @@
 #include "run_models.h"
 
-int main(int argc, char **argv) {
+int maisn(int argc, char **argv) {
 	//freopen("paras.txt", "r", stdin);
 	//cin >> subs >> pubs >> atts >> cons>> buks >> m >> attDis >> valDis >> valDom >> alpha >> width;
 	//m = atts; // Note that Rein requires m == atts.

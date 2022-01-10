@@ -32,14 +32,14 @@ void BGTree::initBlueNode(bluenode *&r) {
 	}
 	int nextLevelID = r->levelid + 1;
 	r->leftGreenChild = new lgreennode(r->l, r->mid - 1, ++numNode, nextLevelID, {}, nullptr, nullptr, nullptr);
-	initGreenNode(r->leftGreenChild);
+	initGreenNode(r->leftGreenChild); // l<mid<h
 	r->rightGreenChild = new rgreennode(r->mid + 1, r->h, ++numNode, nextLevelID, {}, nullptr, nullptr, nullptr);
 	initGreenNode(r->rightGreenChild);
 	r->leftBlueChild = new bluenode(r->l, r->mid, ++numNode, nextLevelID, {}, nullptr, nullptr, nullptr, nullptr,
-									nullptr);
+									nullptr); // h<=mid
 	initBlueNode(r->leftBlueChild);
-	r->rightBlueChild = new bluenode(r->mid + 1, r->h, ++numNode, nextLevelID, {}, nullptr, nullptr, nullptr, nullptr,
-									 nullptr);
+	r->rightBlueChild = new bluenode(r->mid, r->h, ++numNode, nextLevelID, {}, nullptr, nullptr, nullptr, nullptr,
+									 nullptr); // l>=mid,h>mid
 	initBlueNode(r->rightBlueChild);
 }
 void BGTree::initGreenNode(lgreennode *&r) {
@@ -287,8 +287,8 @@ void BGTree::forward_match_native(const Pub &pub, int &matchSubs, const vector<I
 void
 BGTree::forward_match_blueNode(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList) {
 	if (r->mid == value) { // 1.等于中点, 直接得到匹配结果
-		hit++;
 #ifdef DEBUG
+		hit++;
 		numProcessExactNode++;
 		numProcessExactPredicate += r->midEqual.size();
 #endif
@@ -352,7 +352,9 @@ BGTree::forward_match_lgreenNode(lgreennode *&l, const int &att, const int &valu
 						}
 		}
 	} else if (value == l->mid) { // 2.等于中点且有左绿左子节点, 左绿左子节点即为匹配结果
+#ifdef DEBUG
 		hit++;
+#endif
 		if (l->leftChild->bst == nullptr) {
 #ifdef DEBUG
 			numProcessExactNode++;
@@ -410,7 +412,9 @@ BGTree::forward_match_rgreenNode(rgreennode *&r, const int &att, const int &valu
 						}
 		}
 	} else if (value == r->mid) { // 2.等于中点且有右绿右子节点, 右绿右子节点即为匹配结果
+#ifdef DEBUG
 		hit++;
+#endif
 		if (r->rightChild->bst == nullptr) {
 #ifdef DEBUG
 			numProcessExactNode++;
@@ -460,7 +464,9 @@ void BGTree::forward_match_C_BOMP(const Pub &pub, int &matchSubs, const vector<I
 void BGTree::forward_match_blueNode_C_BOMP(bluenode *&r, const int &att, const int &value,
 										   const vector<IntervalSub> &subList, bitset<subs> &mB) {
 	if (r->mid == value) { // 1.等于中点, 直接得到匹配结果
+#ifdef DEBUG
 		hit++;
+#endif
 		for (auto &&i: r->midEqual) {
 			mB[i] = 1;
 		}
@@ -513,7 +519,9 @@ void BGTree::forward_match_lgreenNode_C_BOMP(lgreennode *&l, const int &att, con
 						}
 		}
 	} else if (value == l->mid) { // 2.等于中点且有左绿左子节点, 左绿左子节点即为匹配结果
+#ifdef DEBUG
 		hit++;
+#endif
 		if (l->leftChild->bst == nullptr)
 			for (auto &&i: l->leftChild->subids) {
 				mB[i] = 1;
@@ -558,7 +566,9 @@ void BGTree::forward_match_rgreenNode_C_BOMP(rgreennode *&r, const int &att, con
 						}
 		}
 	} else if (value == r->mid) { // 2.等于中点且有右绿右子节点, 右绿右子节点即为匹配结果
+#ifdef DEBUG
 		hit++;
+#endif
 		if (r->rightChild->bst == nullptr)
 			for (auto &&i: r->rightChild->subids) {
 				mB[i] = 1;
@@ -598,7 +608,9 @@ void BGTree::backward_match_C_BOMP(const Pub &pub, int &matchSubs, const vector<
 void BGTree::backward_match_blueNode_C_BOMP(bluenode *&r, const int &att, const int &value,
 											const vector<IntervalSub> &subList, bitset<subs> &mB) {
 	if (r->mid == value) { // 1.等于中点, 直接得到匹配结果
+#ifdef DEBUG
 		hit++;
+#endif
 		for (auto &&i: r->midEqual) {
 			mB[i] = 0;
 		}
@@ -651,7 +663,9 @@ void BGTree::backward_match_lgreenNode_C_BOMP(lgreennode *&l, const int &att, co
 						}
 		}
 	} else if (value == l->mid) { // 2.等于中点且有左绿左子节点, 左绿左子节点即为匹配结果
+#ifdef DEBUG
 		hit++;
+#endif
 		if (l->leftChild->bst == nullptr)
 			for (auto &&i: l->leftChild->subids) {
 				mB[i] = 0;
@@ -696,7 +710,9 @@ void BGTree::backward_match_rgreenNode_C_BOMP(rgreennode *&r, const int &att, co
 						}
 		}
 	} else if (value == r->mid) { // 2.等于中点且有右绿右子节点, 右绿右子节点即为匹配结果
+#ifdef DEBUG
 		hit++;
+#endif
 		if (r->rightChild->bst == nullptr)
 			for (auto &&i: r->rightChild->subids) {
 				mB[i] = 0;
@@ -732,7 +748,7 @@ void BGTree::backward_match_native(const Pub &pub, int &matchSubs, const vector<
 	matchSubs = numSub - gB.count();
 }
 void BGTree::backward_match_blueNode_native(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList, bitset<subs> &mB){
-	
+//	if(r->)
 }
 void
 BGTree::backward_match_lgreenNode_native(lgreennode *&l, const int &att, const int &value, const vector<IntervalSub> &subList, bitset<subs> &mB){
