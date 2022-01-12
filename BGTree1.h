@@ -1,4 +1,9 @@
-#pragma once
+//
+// Created by swh on 2022/1/12.
+//
+
+#ifndef MAC_BGTREE1_H
+#define MAC_BGTREE1_H
 
 #include<vector>
 #include <cstring>
@@ -11,62 +16,55 @@
 #include <bitset>
 #include <queue>
 
-#define DEBUG
-
 struct lgreennode {
-	// low/high boundary
-	int l, h, mid, nodeid, levelid, numNodeSub = 0;
-	bitset<subs> *bst;
-	vector<int> subids; // Either bst is nullptr or subids.size()==0
-	//vector<int> midequal; // Record subID with predicate including mid
-	lgreennode *leftChild, *rightChild; // 2个节点指针要么都是空的, 要么都是非空
-
-	lgreennode(int low, int high, int nid, int lid, vector<int> subIDs, bitset<subs> *bits, lgreennode *lc,
-			   lgreennode *rc)
-		: l(low), h(high), nodeid(nid), levelid(lid), subids(subIDs), bst(bits), leftChild(lc), rightChild(rc) {
-		mid = (l + h) >> 1;
-	}
-};
-
-struct rgreennode {
-	int l, h, mid, nodeid, levelid, numNodeSub = 0;
-	bitset<subs> *bst;
+	int l, h, mid, nodeid, levelid;// numNodeSub = 0;
+	bitset<subs> bst;
 	vector<int> subids;
-	//vector<int> midEqual; // Record subID with predicate including mid
-	rgreennode *leftChild, *rightChild;
-
-	rgreennode(int low, int high, int nid, int lid, vector<int> subIDs, bitset<subs> *bits, rgreennode *lc,
-			   rgreennode *rc)
-		: l(low), h(high), nodeid(nid), levelid(lid), subids(subIDs), bst(bits), leftChild(lc), rightChild(rc) {
+	vector<int> midv;
+	lgreennode *leftChild, *rightChild;
+	lgreennode(int low, int high, int nid, int lid, lgreennode *lc,
+			   lgreennode *rc)
+		: l(low), h(high), nodeid(nid), levelid(lid), leftChild(lc), rightChild(rc) {
 		mid = (l + h) >> 1;
 	}
 };
 
+struct hgreennode {
+	int l, h, mid, nodeid, levelid; //numNodeSub = 0;
+	bitset<subs> bst;
+	vector<int> subids;
+	vector<int> midv;
+	hgreennode *leftChild, *rightChild;
+	hgreennode(int low, int high, int nid, int lid, hgreennode *lc,
+			   hgreennode *rc)
+		: l(low), h(high), nodeid(nid), levelid(lid), leftChild(lc), rightChild(rc) {
+		mid = (l + h) >> 1;
+	}
+};
 struct bluenode {
 	int l, h, mid, nodeid, levelid, numNodeSub = 0;
-	bitset<subs> *bst;
-	vector<int> subids;         // 对于内部节点, 只能用于反向标记
-	vector<int> midEqual;       // Record subID with predicate including mid
-	lgreennode *leftGreenChild; // 4个节点指针要么都是空的, 要么都是非空
-	rgreennode *rightGreenChild;
+	bitset<subs> bst;
+	vector<int> subids; // 对于内部节点, 只能用于反向标记
+	vector<int> lMidv;
+	vector<int> rMidv;
+	lgreennode *lowGreenChild;
+	hgreennode *highGreenChild;
 	bluenode *leftBlueChild, *rightBlueChild;
-
-	bluenode(int low, int high, int nid, int lid, vector<int> subIDs, bitset<subs> *bits, lgreennode *lc,
-			 rgreennode *rc, bluenode *lbc, bluenode *rbc)
-		: l(low), h(high), nodeid(nid), levelid(lid), subids(subIDs), bst(bits), leftGreenChild(lc),
-		  rightGreenChild(rc), leftBlueChild(lbc), rightBlueChild(rbc) {
+	bluenode(int low, int high, int nid, int lid, lgreennode *lc,
+			 hgreennode *rc, bluenode *lbc, bluenode *rbc)
+		: l(low), h(high), nodeid(nid), levelid(lid), lowGreenChild(lc),
+		  highGreenChild(rc), leftBlueChild(lbc), rightBlueChild(rbc) {
 		mid = (l + h) >> 1;
 	}
 };
 
-// Version1: can't expand node, height is fixed, only native forward and CBOMP(to backward), no bitset in nodes.
-class BGTree {
+// Version2: expand node, forward&backward, vector&bitset
+class BGTree1 {
 private:
 	int numSub;         // Number of inserted subscriptions
-	int boundaryNumSub; // When the value of numSub in a node > boundaryNumSub, the memory of bitset is smaller than storing $numSub subscriptions directly
 	int numNode;        // Number of all nodes
 	int height;         // The height of BGTree with only one node is 1
-	int initHeight;     // Initial height constructing the BGTree, >=1
+	int maxNodeSize;
 	int subPredicate[subs];
 	int counter[subs];
 	vector<bluenode *> roots;
@@ -75,33 +73,33 @@ private:
 
 	void initBlueNode(bluenode *&r);
 	void initGreenNode(lgreennode *&r);
-	void initGreenNode(rgreennode *&r);
+	void initGreenNode(hgreennode *&r);
 
 	void releaseBlueNode(bluenode *&r);
 	void releaseGreenNode(lgreennode *&r);
-	void releaseGreenNode(rgreennode *&r);
+	void releaseGreenNode(hgreennode *&r);
 
-	void insertIntoBlueNode(bluenode *&r, const int &subID, const int &l, const int &h);
-	void insertIntoGreenNode(lgreennode *&r, const int &subID, const int &l);
-	void insertIntoGreenNode(rgreennode *&r, const int &subID, const int &h);
+	void insertIntoBlueNode(bluenode *&r, const int &subID, const int &l, const int &h,const int& attrId, const vector<IntervalSub> &subList);
+	void insertIntoGreenNode(lgreennode *&r, const int &subID, const int &l,const int& attrId, const vector<IntervalSub> &subList);
+	void insertIntoGreenNode(hgreennode *&r, const int &subID, const int &h,const int& attrId, const vector<IntervalSub> &subList);
 
 	bool deleteFromBlueNode(bluenode *&r, const int &subID, const int &l, const int &h);
 	bool deleteFromGreenNode(lgreennode *&r, const int &subID, const int &l);
-	bool deleteFromGreenNode(rgreennode *&r, const int &subID, const int &h);
+	bool deleteFromGreenNode(hgreennode *&r, const int &subID, const int &h);
 
 	void vectorToBitset(vector<int> &v, bitset<subs> *&);
 	void bitsetToVector(bitset<subs> *&b, vector<int> &);
 
 	void forward_match_blueNode(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList);
 	void forward_match_lgreenNode(lgreennode *&l, const int &att, const int &value, const vector<IntervalSub> &subList);
-	void forward_match_rgreenNode(rgreennode *&r, const int &att, const int &value, const vector<IntervalSub> &subList);
+	void forward_match_rgreenNode(hgreennode *&r, const int &att, const int &value, const vector<IntervalSub> &subList);
 
 	void
 	forward_match_blueNode_C_BOMP(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList,
 								  bitset<subs> &mB);
 	void forward_match_lgreenNode_C_BOMP(lgreennode *&l, const int &att, const int &value,
 										 const vector<IntervalSub> &subList, bitset<subs> &mB);
-	void forward_match_rgreenNode_C_BOMP(rgreennode *&r, const int &att, const int &value,
+	void forward_match_rgreenNode_C_BOMP(hgreennode *&r, const int &att, const int &value,
 										 const vector<IntervalSub> &subList, bitset<subs> &mB);
 
 	void
@@ -109,18 +107,18 @@ private:
 								   bitset<subs> &mB);
 	void backward_match_lgreenNode_C_BOMP(lgreennode *&l, const int &att, const int &value,
 										  const vector<IntervalSub> &subList, bitset<subs> &mB);
-	void backward_match_rgreenNode_C_BOMP(rgreennode *&r, const int &att, const int &value,
+	void backward_match_rgreenNode_C_BOMP(hgreennode *&r, const int &att, const int &value,
 										  const vector<IntervalSub> &subList, bitset<subs> &mB);
 
 	void backward_match_blueNode_native(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
 	void
 	backward_match_lgreenNode_native(lgreennode *&l, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
 	void
-	backward_match_rgreenNode_native(rgreennode *&r, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
+	backward_match_rgreenNode_native(hgreennode *&r, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
 
 	double calBlueNodeMemory(bluenode *&r);
 	double calLGreenNodeMemory(lgreennode *&r);
-	double calRGreenNodeMemory(rgreennode *&r);
+	double calRGreenNodeMemory(hgreennode *&r);
 
 public:
 	int hit = 0; // mid 命中次数
@@ -128,9 +126,9 @@ public:
 	int numProcessExactPredicate = 0, numProcessOneCmpPredicate = 0, numProcessTwoCmpPredicate = 0;
 	int numEffectivePredicate=0;
 
-	BGTree();
+	BGTree1();
 
-	~BGTree();
+	~BGTree1();
 
 	void insert(IntervalSub sub);
 
@@ -146,13 +144,13 @@ public:
 
 	int calMemory();      // 计算占用内存大小
 
-	void printBGTree();   // 找每一层的存储订阅数最大的节点 
+	void printBGTree();   // 找每一层的存储订阅数最大的节点
 
 	int getHeight() { return height; }
-
-	int getBoundaryNumSub() { return boundaryNumSub; }
 
 	int getNumNode() { return numNode; }
 
 };
 
+
+#endif //MAC_BGTREE1_H

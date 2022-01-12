@@ -77,8 +77,8 @@ rebuild_cache/fast: rebuild_cache
 
 # Special rule for the target edit_cache
 edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
-	/snap/clion/178/bin/cmake/linux/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/snap/clion/178/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -200,6 +200,30 @@ BGTree.s: BGTree.cpp.s
 BGTree.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/BGTree.cpp.s
 .PHONY : BGTree.cpp.s
+
+BGTree1.o: BGTree1.cpp.o
+.PHONY : BGTree1.o
+
+# target to build an object file
+BGTree1.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/BGTree1.cpp.o
+.PHONY : BGTree1.cpp.o
+
+BGTree1.i: BGTree1.cpp.i
+.PHONY : BGTree1.i
+
+# target to preprocess a source file
+BGTree1.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/BGTree1.cpp.i
+.PHONY : BGTree1.cpp.i
+
+BGTree1.s: BGTree1.cpp.s
+.PHONY : BGTree1.s
+
+# target to generate assembly for a file
+BGTree1.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/BGTree1.cpp.s
+.PHONY : BGTree1.cpp.s
 
 HEM.o: HEM.cpp.o
 .PHONY : HEM.o
@@ -795,6 +819,9 @@ help:
 	@echo "... BGTree.o"
 	@echo "... BGTree.i"
 	@echo "... BGTree.s"
+	@echo "... BGTree1.o"
+	@echo "... BGTree1.i"
+	@echo "... BGTree1.s"
 	@echo "... HEM.o"
 	@echo "... HEM.i"
 	@echo "... HEM.s"

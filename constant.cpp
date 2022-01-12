@@ -44,6 +44,7 @@ int parallelDegree = 4;
 
 // BG-Tree
 const int initH = 11;           // Initial height
+const int MAXNodeSIZE=500;
 
 // PS-Tree
 const int PSTree_level = 4;

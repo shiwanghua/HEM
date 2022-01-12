@@ -58,6 +58,7 @@ const int MAX_SIGNATURE = 61;
 
 // BGTree
 extern const int initH;           // Initial height
+extern const int MAXNodeSIZE;
 
 // PS-Tree
 extern const int PSTree_level;
