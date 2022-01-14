@@ -181,5 +181,19 @@ void BGTree1::insertIntoGreenNode(hgreennode *&r, const int &subID, const int &h
 }
 
 bool BGTree1::deleteSubscription(IntervalSub sub){
+	bool find=true;
+	subPredicate[sub.id] = 0;
+	for (auto &&c: sub.constraints) {
+		find&=deleteFromBlueNode(roots[c.att], sub.id, c.lowValue,
+						   c.highValue);
+	}
+	numSub--;
+	return find;
+}
 
+bool BGTree1::deleteFromBlueNode(bluenode *&r, const int &subID, const int &l, const int &h) {
+	bool find=false;
+	r->bst[subID]=0;
+	
+	return find;
 }
