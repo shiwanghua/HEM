@@ -2171,7 +2171,7 @@ void run_BGTREE_forward(const intervalGenerator &gen, unordered_map<int, bool> d
 	}
 	cout << endl;
 
-	if (display)
+	if (!display)
 		bgTree.printBGTree();
 	// output
 	string outputFileName = "BGTree.txt";
@@ -2381,6 +2381,95 @@ void run_BGTREE_backward_C_BOMP(const intervalGenerator &gen, unordered_map<int,
 	//	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "tmpData/BGTree2.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
+}
+
+void run_BGTREE_d_forward(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) {
+	BGTree_d bgTree_d;
+
+	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchSubList;
+
+	// insert
+	for (int i = 0; i < subs; i++) {
+		Timer insertStart;
+
+		bgTree_d.insert(gen.subList[i],gen.subList); // Insert sub[i] into data structure.
+
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double)insertTime / 1000000);
+	}
+	cout << "BG-Tree_d Forward Insertion Finishes.\n";
+
+	// 验证插入删除正确性
+	if (verifyID) {
+		for (auto kv : deleteNo) {
+			Timer deleteStart;
+			if (!bgTree_d.deleteSubscription(gen.subList[kv.first]))
+				cout << "BG-Tree_d Forward: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+		}
+		cout << "BG-Tree_d Forward Deletion Finishes.\n";
+		/*for (auto kv: deleteNo) {
+			bgTree_d.insert(gen.subList[kv.first]);
+		}*/
+	}
+
+	// match
+	for (int i = 0; i < pubs; i++) {
+		int matchSubs = 0; // Record the number of matched subscriptions.
+
+		Timer matchStart;
+
+		bgTree_d.forward_match_native(gen.pubList[i], matchSubs, gen.subList);
+
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double)eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "BG-Tree_d Event " << i << " is matched forwardly.\n";
+	}
+	cout << endl;
+
+	if (!display)
+		bgTree_d.printBGTree();
+	// output
+	string outputFileName = "BGTree_d.txt";
+	string content = expID
+		+ " memory= " + Util::Int2String(bgTree_d.calMemory())
+		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+		+ " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+		+ " ms height = " + Util::Int2String(bgTree_d.getHeight())
+		+ " numNode = " + Util::Int2String(bgTree_d.getNumNode())
+		+ "  maxNodeSize = "+Util::Int2String(MAXNodeSIZE)
+		+ " AvgHit = " + Util::Int2String(bgTree_d.hit / pubs)
+		+ " numSub= " + Util::Int2String(subs)
+		+ " subSize= " + Util::Int2String(cons)
+		+ " numPub= " + Util::Int2String(pubs)
+		+ " pubSize= " + Util::Int2String(m)
+		+ " attTypes= " + Util::Int2String(atts)
+		+ " attDis= " + Util::Int2String(attDis)
+		+ " valDis= " + Util::Int2String(valDis)
+		+ " width= " + Util::Double2String(width)
+		+ " alpha= " + Util::Double2String(alpha)
+		+ " subp= " + Util::Double2String(subp)
+		+ " mean= " + Util::Double2String(mean)
+		+ " stddev= " + Util::Double2String(stddev)
+		+ " valDom= " + Util::Double2String(valDom);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	//	outputFileName = "ComprehensiveExpTime.txt";
+	//	content = "BG-Tree_d= [";
+	//	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	//	content[content.length() - 2] = ']';
+	//	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	outputFileName = "tmpData/BGTree_d.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
