@@ -1,0 +1,336 @@
+
+
+body {
+  margin: 0;
+  margin-left: 10%;
+  margin-right:10%;
+  height: auto;
+  /*width: 100%;*/
+  min-width: 980px;
+  border: 4px solid #c2c2d6;
+}
+
+.banner img{
+  width: 100%;
+  /*max-height:400px; */
+  /*margin-left: 5%;*/
+  /*margin-right: 5%;*/
+  border: 1px solid #c2c2d6;
+}
+.content{
+  margin-top:10px;
+  display: flex;
+}
+
+.main-div{
+  width: 65%;
+  /*margin-left: 5%;*/
+  /*margin-right:5%;*/
+  /*border: 6px solid black;*/
+}
+.aboutdiv {
+  /*padding-top: 5px;*/
+  margin-top: 5px;
+  margin-left: 10px;
+  /*padding: 5px;*/
+  text-align: center;
+  /*width: 65%;*/
+  color: #0e0f0a;
+  /*border: 1px solid black;*/
+  /*background-color: #A9A9A9;*/
+}
+.notice{
+  /*padding: 5px;*/
+  /*margin-top: 5px;*/
+  margin-left: 10px;
+  /*text-align: center;*/
+  /*width: 65%;*/
+  color: #0e0f0a;
+  /*border: 1px solid black;*/
+  /*background-color: #A9A9A9;*/
+}
+
+.sponImg1{
+  width:190px;
+  height: 160px;
+  /*margin-top: 5px;*/
+  /*float: left;*/
+  /*max-width: 30%;*/
+  
+  /*height: auto;*/
+  /*border: 1px solid black;*/
+  /*float: left;*/
+  /*display: inline-block;*/
+}
+.sponImg2{
+  /*width:205px;*/
+  height: 160px;
+}
+.sponImg{
+  width:190px;
+  height: 150px;
+}
+.imgSpo{
+  margin-top: 5px;
+  max-width: 25%;
+}
+.stee-comm{
+  /*margin-left:5%;*/
+  width: 60%;
+  padding: 5px;
+  font-size:18px;
+  color: #0e0f0a;
+  margin-bottom: 80px;
+}
+
+
+.dates{
+  /*float: left;*/
+  /*margin-top: 5px;*/
+  /*margin-left: 10px;*/
+  /*text-align: center;*/
+  /*width: 65%;*/
+  /*border: 1px solid black;*/
+  
+}
+.home-table{
+  font-size:16px;
+  margin-left: 10px;
+  border-collapse: separate;
+  border-spacing: 40px 7px;
+  /*font-weight: bold;*/
+  color: #0e0f0a;
+  /*border-right-color: */
+}
+.news{
+  /*float: left;*/
+  /*margin-top: 5px;*/
+  /*margin-left: 10px;*/
+  /*text-align: center;*/
+  /*width: 65%;*/
+  color: #0e0f0a;
+  font-size: 16px;
+  /*border: 30px solid black;*/
+  /*margin-bottom: 80px;*/
+  /*display: none;*/
+}
+.impdates{
+  margin-left: 10px;
+  font-size: 16px;
+  color: #0e0f0a;
+}
+.jumbotron {
+margin-top: 2em;
+}
+.calls, .div{
+  /*margin-top: 30px;*/
+  margin-bottom: 100px;
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 16px;
+  color: #0e0f0a;
+}
+
+.workshop, .div{
+  /*margin-top: 30px;*/
+  margin-bottom: 100px;
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 16px;
+  color: #0e0f0a; 
+}
+
+.tutorial, .div {
+  /*margin-top: 30px;*/
+  margin-bottom: 100px;
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 16px;
+  color: #0e0f0a;
+}
+.workshop, .ol{
+  list-style-type: disc;
+}
+..footer-blurb {
+    padding: 30px 0;
+    margin-top: 20px;
+    background-color: #eee;
+    color: black;
+}
+    
+.footer-blurb-item {
+    padding: 20px;
+    }
+ 
+.small-print {
+  background-color: #fff;
+  padding: 30px 0;
+}
+
+.small-print {
+  text-align: center;
+  }
+.keynote-containerb {
+  background-color: #FFFFFF;
+  box-shadow: 0 4px 3px -3px #d2c30e;
+  padding: 40px;
+  margin: 5px;
+  float: left; 
+  width: 45%;
+   }
+  
+.keynote-container {
+  background-color: #eeeeee;
+  box-shadow: 0 4px 3px -3px #d2c30e;
+  padding: 10px;
+  margin: 10px; }
+  .keynote-container a {
+    color: #B2243B; }
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+.round-corners {
+  border-radius: 0px 15px; }
+.footer {
+  /* position: absolute; */
+  bottom: 0;
+  width: 100%;
+  height: 70px;
+  padding-top: 10px;
+  background-color: #eeeeee;
+  color: #212121; }
+.container {
+  padding-left: 15px;
+   }
+  .container:before, .container:after {
+    content: " ";
+    display: table; }
+  .container:after {
+    clear: both; }
+  @media (min-width: 768px) {
+    .container {
+      width: 100%; } }
+  @media (min-width: 992px) {
+    .container {
+      width: 100%; } }
+  @media (min-width: 1200px) {
+    .container {
+     width: 100%; } }
+.calls,.tutorial,.workshop{
+  /*width: 65%;*/
+  padding: 5px;
+}
+
+.minimumWidth {
+  width: 65%;
+}
+
+.leftDiv{
+  width: 65%;
+  float: left;
+}
+
+.rightDiv{
+  width: 34%;
+  float: right;
+}
+.rd{
+  width: 34%;
+  float: right;
+}
+footer {
+  /*padding-top: 20px;*/
+  /*position: absolute; */
+  bottom: 0;
+  /*margin-top: 200px;*/
+  width: 100%;
+  /*min-width: 980px;*/
+  /*border: 1px solid black;*/
+  /*height: 76px;*/
+  overflow: auto;
+  /*padding-top: 10px;*/
+  background-color: #c2c2d6;
+  color: #666666; }
+
+.strong{
+  width: 60%;
+  /*height: 80px;*/
+  /*border: 1px solid black;*/
+  margin-left: 5%;
+  padding-top: 3px;
+  /*margin-top: 20px;*/
+  font: 25px;
+  /*margin-top: 100px;*/
+}
+.sponsors{
+  /*float: right;*/
+  /*border: 1px solid black;*/
+  width: 35%;
+  margin-right: 10px;
+  text-align: center;
+  top:60px;
+}
+
+.fa {
+  /*padding: 10px;*/
+  /*float: right;*/
+  line-height: 0.1;
+  padding: 10px;
+  font-size: 25px;
+  /*width: 50px;*/
+  /*text-align: center;*/
+  text-decoration: none;
+}
+.social{
+  float: right;
+  margin-right:3%;
+  margin-top: 15px;
+  display: inline-block;
+  /*border: 1px solid black;*/
+  /*width:25%;*/
+}
+.social div{
+  display: inline-block;
+  vertical-align: top;
+}
+/* Add a hover effect if you want */
+.fa:hover {
+  opacity: 0.7;
+}
+
+/* Set a specific color for each brand */
+
+/* Facebook */
+.fa-facebook {
+  /*background: #3B5998;*/
+  /*border: 1px solid black;*/
+  color: #3B5998;
+}
+.strong p{
+  /*font-size:16px;*/
+  /*color: black;*/
+  margin-top: 15px;
+}
+/* Twitter */
+.fa-twitter {
+  /*background: #55ACEE;*/
+  color: #55ACEE;
+}
+
+.navigation span{
+  color: black;
+  font-weight: bold;
+}
+
+.navigation {
+  border-color: rgb(171, 171, 164);
+  /*background-color: rgb(0, 0, 255);*/
+  border-width: medium;
+  border-style: solid;
+  z-index: 100;
+  top:0;
+  position: sticky;
+}
