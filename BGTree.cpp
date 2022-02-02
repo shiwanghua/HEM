@@ -855,7 +855,7 @@ void BGTree::printBGTree() {
 			height++;
 		}
 	}
-	_for(i, 0, atts) {
+	_for(i, 0, 1) {
 		_for(j, 0, nodeInfo[i].size()) {
 			cout << "a" << i << ", h" << j << ", nodeNum= " << nodeInfo[i][j].size() << "\n";
 			int nodeId = -1, lv = -1, hv = -1, maxNumNodeSub = -1;
@@ -879,7 +879,7 @@ void BGTree::printBGTree() {
 		}
 		cout << "\n";
 	}
-	cout << "ExactNode: " << numProcessExactNode << ", oneCmpNode: " << numProcessOneCmpNode << ", twoCmpNode"
+	cout << "ExactNode: " << numProcessExactNode << ", oneCmpNode: " << numProcessOneCmpNode << ", twoCmpNode: "
 		 << numProcessTwoCmpNode \
  << "\nExactPredicate: " << numProcessExactPredicate << ", oneCmpPredicate: " << numProcessOneCmpPredicate
 		 << ", twoCmpPredicate: " << numProcessTwoCmpPredicate \

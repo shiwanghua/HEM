@@ -22,6 +22,36 @@
 //using namespace boost;
 //using namespace boost::placeholders;
 
+int main() {
+	double percent[14] = {0.001,0.0025,0.005,0.0075,0.01,0.0125,0.015,0.0175,0.02,0.0225,0.025,0.0275,0.03,0.0325};
+	const int n = 500000;
+	int ones, t;
+	bitset<n> b1,b2;
+	cout << "n = " << n << "\n\n";
+	_for(i, 0, 14) {
+		ones = percent[i] * n;
+		unordered_set<int> s;
+		while (s.size() < ones) {
+			t = rand() % n;
+			if (s.count(t) == 0)
+				s.insert(t);
+		}
+
+		Timer start1;
+		for (auto&& id : s)
+			b1[id] = 1;
+		int64_t t1 = start1.elapsed_nano();
+
+		Timer start2;
+		b2 = b2 | b1;
+		int64_t t2 = start2.elapsed_nano();
+
+		cout <<"p"<<percent[i]<< " ones: " << ones << " mark: " << t1 << " or: " << t2 << "\n\n";
+	}
+
+	system("pause");
+	return 0;
+}
 //typedef boost::function<void(void)> MyTask;
 //
 ////任务队列--noncopyable

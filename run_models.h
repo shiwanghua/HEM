@@ -24,6 +24,7 @@
 #include "OpIndex.h"
 #include "bTama.h"
 #include "BGTree.h"
+#include "BGTree_d.h"
 #include "PSTree.h"
 #include "AWBTree.h"
 
@@ -63,6 +64,7 @@ void run_bOpIndex2(const intervalGenerator &gen, unordered_map<int, bool> delete
 void run_BGTREE_forward(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 void run_BGTREE_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 void run_BGTREE_backward_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
+void run_BGTREE_d_forward(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 
 void run_PSTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 void run_AWBTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
