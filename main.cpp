@@ -1,6 +1,6 @@
 #include "run_models.h"
 
-int m2ain(int argc, char **argv) {
+int main(int argc, char **argv) {
 	//freopen("paras.txt", "r", stdin);
 	//cin >> subs >> pubs >> atts >> cons>> buks >> m >> attDis >> valDis >> valDom >> alpha >> width;
 	//m = atts; // Note that Rein requires m == atts.
@@ -20,7 +20,7 @@ int m2ain(int argc, char **argv) {
 
 	intervalGenerator gen(subs, pubs, atts, cons, m, attDis, valDis, valDom, alpha, subp, width);
 	gen.GenSubList();
-	gen.GenPubList();
+	gen.GenPubList2();
 	
 	unordered_map<int,bool> deleteNo;
 	if (verifyID) {
@@ -34,20 +34,20 @@ int m2ain(int argc, char **argv) {
 		}
 	}
 
-	//run_rein(gen,deleteNo);
+	run_rein(gen,deleteNo);
 //	run_rein_forward_native(gen, deleteNo);
 //	run_rein_forward_CBOMP(gen, deleteNo);
 //	run_rein_hybrid(gen,deleteNo);
 //	run_rein_hybrid_CBOMP(gen,deleteNo);
 //  run_pRein(gen,deleteNo);
-//	run_adarein(gen, deleteNo);
+	run_adarein(gen, deleteNo);
 
-//		run_HEM(gen);
+	run_HEM(gen);
 //	run_HEM1(gen);
 //	run_HEM2(gen);
 //	run_HEM3(gen);
 //	run_HEM4(gen);
-   // run_HEM5(gen,deleteNo);
+    run_HEM5(gen,deleteNo);
 	//run_HEM5_avxOR(gen, deleteNo);
 //	run_HEMSC(gen);
 //	run_HEMSR(gen);
@@ -55,7 +55,7 @@ int m2ain(int argc, char **argv) {
 //	run_Simple(gen,deleteNo);
 //	run_Simple2(gen,deleteNo);
 //
-//	run_tama(gen,deleteNo);
+	run_tama(gen,deleteNo);
 //	run_btama_forward_C_BOMP(gen, deleteNo); // bTAMA6
 //	run_btama_backward1_C_BOMP(gen, deleteNo);// bTAMA7
 //	run_btama_backward2_CBOMP(gen, deleteNo); // bTAMA8
@@ -63,10 +63,10 @@ int m2ain(int argc, char **argv) {
 	//run_BGTREE_forward(gen, deleteNo);
 //	run_BGTREE_forward_C_BOMP(gen,deleteNo);
 //	run_BGTREE_backward_C_BOMP(gen, deleteNo);
-	run_BGTREE_d_forward(gen, deleteNo);
+//	run_BGTREE_d_forward(gen, deleteNo);
 
 //	run_OpIndex(gen, deleteNo);
-//	run_bOpIndex2(gen,deleteNo);
+	run_bOpIndex2(gen,deleteNo);
 	//run_PSTREE(gen, deleteNo);
 //	run_AWBTREE(gen, deleteNo);
 	//measure_numMark(gen);

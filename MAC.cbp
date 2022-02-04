@@ -84,10 +84,10 @@
 		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/BGTree.h">
 			<Option target="run"/>
 		</Unit>
-		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/BGTree1.cpp">
+		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/BGTree_d.cpp">
 			<Option target="run"/>
 		</Unit>
-		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/BGTree1.h">
+		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/BGTree_d.h">
 			<Option target="run"/>
 		</Unit>
 		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/HEM.cpp">

@@ -22,7 +22,7 @@
 //using namespace boost;
 //using namespace boost::placeholders;
 
-int main() {
+int masin() {
 	double percent[14] = {0.001,0.0025,0.005,0.0075,0.01,0.0125,0.015,0.0175,0.02,0.0225,0.025,0.0275,0.03,0.0325};
 	const int n = 500000;
 	int ones, t;

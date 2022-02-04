@@ -1,5 +1,5 @@
 #include "constant.h"
-string expID = "866";       // Record the experiment ID number
+string expID = "868";       // Record the experiment ID number
 const bool display = false; // whether to print the mapping relation
 const bool verifyID = false; // whether to verify Insertion and Deletion function
 const int interval = 100;   // after a interval of events is matched, print a log
@@ -23,8 +23,8 @@ const int awRein_Ppoint=0.25*valDom; // HybridRein
 //const int awRein_level=4; // The levels of the forward counting matching of HybridRein
 
 // HEM
-int be = 4;                 // bit exponent. In each dimension, there are 2 * 2^{be} bitsets.
-int be2 = 10;                // When be=-1, be2 is adopted. In each dimension, there are 2 * be2 bitsets.
+int be = -1;                 // bit exponent. In each dimension, there are 2 * 2^{be} bitsets.
+int be2 = 20;                // When be=-1, be2 is adopted. In each dimension, there are 2 * be2 bitsets.
 const int lvls = 2;         // HEMSC number of levels
 int gs = 5;                 // HEMSR Group Size 一组有多少个维度
 const int blockSize = 256;  // 每次对256位做逻辑运算

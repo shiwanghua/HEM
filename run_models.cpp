@@ -684,7 +684,7 @@ void run_HEM(const intervalGenerator &gen) {
 	// output
 	string outputFileName = "HEM.txt";
 	string content = expID
-					 + " bits= " + Util::Int2String(be)
+					 + " bits= " + Util::Int2String(be==-1?be2:be)
 					 + " memory= " + Util::Int2String(rb.calMemory())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
