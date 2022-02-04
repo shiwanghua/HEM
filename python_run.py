@@ -5,6 +5,8 @@ import os
 import sys
 os.system('ulimit -s unlimited;sudo chmod 777 run')
 os.system('sudo chmod 777 *.txt')
+os.system("rm tmpData/*.txt")
+
 expID=int(sys.argv[1])
 
 # # Exp 1 2
@@ -14,7 +16,7 @@ expID=int(sys.argv[1])
 #     expID+=1
 
 # Exp 1 2 Camera Ready Version
-be2=[1,10,20,30,40,50,60,70,80,90]
+be2=[1,3,6,9,12,15,18,21,24,27]
 for be in be2:
     os.system('taskset -c 5 ./run '+str(expID)+' 20 '+str(be)+' 0.3')
     print('Experiment',str(expID),' atts=m=',str(20),' be= ',str(be),' w=0.3 done.\n\n')
@@ -52,7 +54,6 @@ for be in be2:
 #    print('Experiment',str(expID),': alpha=',str(alpha), ', atts=50, m=20, cons=10, be=5, w=0.3 done.\n\n')
 #    expID+=1
 
-os.system("rm tmpData/*.txt")
 path="tmpData"
 content=""
 for fileName in os.listdir(path):
@@ -60,4 +61,3 @@ for fileName in os.listdir(path):
     f=open(file_path,'r')
     content+=fileName[:-4]+" = ["+f.read()[:-2]+"]\n"
 print(content)
-os.system("rm tmpData/*.txt")

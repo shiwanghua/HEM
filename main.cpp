@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
 		m = atoi(argv[2]);
 //		atts=atoi(argv[2]);
 //		alpha=atof(argv[2]);
-		be = atoi(argv[3]); // 输入一个bits指数
+		be2 = atoi(argv[3]); // 输入一个bits指数
 		width = atof(argv[4]);
 		cout << "argc=" << argc << endl;
 		cout << argv[0] << "  " << argv[1] << "  " << argv[2] << "  " << argv[3] << "  " << argv[4] << "  n=" << subs
@@ -40,14 +40,14 @@ int main(int argc, char **argv) {
 //	run_rein_hybrid(gen,deleteNo);
 //	run_rein_hybrid_CBOMP(gen,deleteNo);
 //  run_pRein(gen,deleteNo);
-	run_adarein(gen, deleteNo);
+//	run_adarein(gen, deleteNo);
 
 	run_HEM(gen);
 //	run_HEM1(gen);
 //	run_HEM2(gen);
 //	run_HEM3(gen);
 //	run_HEM4(gen);
-    run_HEM5(gen,deleteNo);
+//    run_HEM5(gen,deleteNo);
 	//run_HEM5_avxOR(gen, deleteNo);
 //	run_HEMSC(gen);
 //	run_HEMSR(gen);
@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
 //	run_Simple(gen,deleteNo);
 //	run_Simple2(gen,deleteNo);
 //
-	run_tama(gen,deleteNo);
+//	run_tama(gen,deleteNo);
 //	run_btama_forward_C_BOMP(gen, deleteNo); // bTAMA6
 //	run_btama_backward1_C_BOMP(gen, deleteNo);// bTAMA7
 //	run_btama_backward2_CBOMP(gen, deleteNo); // bTAMA8
@@ -66,7 +66,7 @@ int main(int argc, char **argv) {
 //	run_BGTREE_d_forward(gen, deleteNo);
 
 //	run_OpIndex(gen, deleteNo);
-	run_bOpIndex2(gen,deleteNo);
+//	run_bOpIndex2(gen,deleteNo);
 	//run_PSTREE(gen, deleteNo);
 //	run_AWBTREE(gen, deleteNo);
 	//measure_numMark(gen);
