@@ -2122,7 +2122,7 @@ void run_bOpIndex2(const intervalGenerator &gen, unordered_map<int, bool> delete
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_BGTREE_forward(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
+void run_BGTREE_forward_native(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	BGTree bgTree;
 
 	vector<double> insertTimeList;

@@ -89,14 +89,14 @@ private:
 
 	void forward_match_blueNode(bluenode_d *&r, const int &att, const int &value, const vector<IntervalSub> &subList);
 	void forward_match_lgreenNode(lgreennode_d *&l, const int &att, const int &value, const vector<IntervalSub> &subList);
-	void forward_match_rgreenNode(hgreennode_d *&r, const int &att, const int &value, const vector<IntervalSub> &subList);
+	void forward_match_hgreenNode(hgreennode_d *&r, const int &att, const int &value, const vector<IntervalSub> &subList);
 
 	void
 	forward_match_blueNode_C_BOMP(bluenode_d *&r, const int &att, const int &value, const vector<IntervalSub> &subList,
 								  bitset<subs> &mB);
 	void forward_match_lgreenNode_C_BOMP(lgreennode_d *&l, const int &att, const int &value,
 										 const vector<IntervalSub> &subList, bitset<subs> &mB);
-	void forward_match_rgreenNode_C_BOMP(hgreennode_d *&r, const int &att, const int &value,
+	void forward_match_hgreenNode_C_BOMP(hgreennode_d *&r, const int &att, const int &value,
 										 const vector<IntervalSub> &subList, bitset<subs> &mB);
 
 	void
@@ -104,14 +104,14 @@ private:
 								   bitset<subs> &mB);
 	void backward_match_lgreenNode_C_BOMP(lgreennode_d *&l, const int &att, const int &value,
 										  const vector<IntervalSub> &subList, bitset<subs> &mB);
-	void backward_match_rgreenNode_C_BOMP(hgreennode_d *&r, const int &att, const int &value,
+	void backward_match_hgreenNode_C_BOMP(hgreennode_d *&r, const int &att, const int &value,
 										  const vector<IntervalSub> &subList, bitset<subs> &mB);
 
 	void backward_match_blueNode_native(bluenode_d *&r, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
 	void
 	backward_match_lgreenNode_native(lgreennode_d *&l, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
 	void
-	backward_match_rgreenNode_native(hgreennode_d *&r, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
+	backward_match_hgreenNode_native(hgreennode_d *&r, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
 
 	double calBlueNodeMemory(bluenode_d *&r);
 	double calLGreenNodeMemory(lgreennode_d *&r);
