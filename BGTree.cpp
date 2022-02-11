@@ -304,7 +304,7 @@ BGTree::forward_match_blueNode(bluenode *&r, const int &att, const int &value, c
 			for (auto &&i: r->subids) {
 				for (auto &&pi: subList[i].constraints)
 					if (att == pi.att) {
-						if (pi.lowValue <= value <= pi.highValue)
+						if (pi.lowValue <= value && value <= pi.highValue)
 							counter[i]--;
 						break;
 					}
@@ -475,7 +475,7 @@ void BGTree::forward_match_blueNode_C_BOMP(bluenode *&r, const int &att, const i
 			for (auto &&i: r->subids) {
 				for (auto &&pi: subList[i].constraints)
 					if (att == pi.att) {
-						if (pi.lowValue <= value <= pi.highValue)
+						if (pi.lowValue <= value && value <= pi.highValue)
 							mB[i] = 1;
 						break;
 					}
@@ -619,7 +619,7 @@ void BGTree::backward_match_blueNode_C_BOMP(bluenode *&r, const int &att, const 
 			for (auto &&i: r->subids) {
 				for (auto &&pi: subList[i].constraints)
 					if (att == pi.att) {
-						if (pi.lowValue <= value <= pi.highValue)
+						if (pi.lowValue <= value&&value <= pi.highValue)
 							mB[i] = 0;
 						break;
 					}
@@ -628,7 +628,7 @@ void BGTree::backward_match_blueNode_C_BOMP(bluenode *&r, const int &att, const 
 			_for(i, 0, subs) if ((*(r->bst))[i] == 1)
 					for (auto &&pi: subList[i].constraints)
 						if (att == pi.att) {
-							if (pi.lowValue <= value <= pi.highValue)
+							if (pi.lowValue <= value&&value <= pi.highValue)
 								mB[i] = 0;
 							break;
 						}

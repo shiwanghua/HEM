@@ -121,7 +121,7 @@ public:
 	int hit = 0; // mid ÃüÖÐ´ÎÊý
 	int numProcessExactNode = 0, numProcessOneCmpNode = 0, numProcessTwoCmpNode = 0;
 	int numProcessExactPredicate = 0, numProcessOneCmpPredicate = 0, numProcessTwoCmpPredicate = 0;
-	int numEffectivePredicate=0;
+	int numEffectivePredicate=0,numOROperation;
 
 	BGTree_d();
 
