@@ -122,6 +122,8 @@ public:
 	static void Pub2dPub(Pub pub, dPub &dpub);
 
 	static void bitsetOr(bitset<subs>& b1, bitset<subs>& b2); // b1=b1|b2;
+
+//	static uint64_t GetCPUCycle();
 };
 
 #include <stdexcept>

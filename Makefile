@@ -77,8 +77,8 @@ rebuild_cache/fast: rebuild_cache
 
 # Special rule for the target edit_cache
 edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
-	/snap/clion/180/bin/cmake/linux/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/snap/clion/180/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -224,6 +224,30 @@ BGTree_d.s: BGTree_d.cpp.s
 BGTree_d.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/BGTree_d.cpp.s
 .PHONY : BGTree_d.cpp.s
+
+BGTree_d_vrs.o: BGTree_d_vrs.cpp.o
+.PHONY : BGTree_d_vrs.o
+
+# target to build an object file
+BGTree_d_vrs.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/BGTree_d_vrs.cpp.o
+.PHONY : BGTree_d_vrs.cpp.o
+
+BGTree_d_vrs.i: BGTree_d_vrs.cpp.i
+.PHONY : BGTree_d_vrs.i
+
+# target to preprocess a source file
+BGTree_d_vrs.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/BGTree_d_vrs.cpp.i
+.PHONY : BGTree_d_vrs.cpp.i
+
+BGTree_d_vrs.s: BGTree_d_vrs.cpp.s
+.PHONY : BGTree_d_vrs.s
+
+# target to generate assembly for a file
+BGTree_d_vrs.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/BGTree_d_vrs.cpp.s
+.PHONY : BGTree_d_vrs.cpp.s
 
 HEM.o: HEM.cpp.o
 .PHONY : HEM.o
@@ -822,6 +846,9 @@ help:
 	@echo "... BGTree_d.o"
 	@echo "... BGTree_d.i"
 	@echo "... BGTree_d.s"
+	@echo "... BGTree_d_vrs.o"
+	@echo "... BGTree_d_vrs.i"
+	@echo "... BGTree_d_vrs.s"
 	@echo "... HEM.o"
 	@echo "... HEM.i"
 	@echo "... HEM.s"

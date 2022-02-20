@@ -31,18 +31,21 @@ void BGTree_d::releaseBlueNode(bluenode_d *&r) {
 	if (r->highGreenChild) releaseGreenNode(r->highGreenChild);
 	if (r->leftBlueChild) releaseBlueNode(r->leftBlueChild);
 	if (r->rightBlueChild) releaseBlueNode(r->rightBlueChild);
+	if(r->bst) delete r->bst;
 	delete r;
 }
 
 void BGTree_d::releaseGreenNode(lgreennode_d *&r) {
 	if (r->leftChild) releaseGreenNode(r->leftChild);
 	if (r->rightChild) releaseGreenNode(r->rightChild);
+	if(r->bst) delete r->bst;
 	delete r;
 }
 
 void BGTree_d::releaseGreenNode(hgreennode_d *&r) {
 	if (r->leftChild) releaseGreenNode(r->leftChild);
 	if (r->rightChild) releaseGreenNode(r->rightChild);
+	if(r->bst) delete r->bst;
 	delete r;
 }
 
@@ -511,6 +514,11 @@ void BGTree_d::backward_match_native(const Pub &pub, int &matchSubs, const vecto
 	_for(i, 0, atts) if (!attExist[i])
 			gB = gB | nnB[i];
 	matchSubs = numSub - gB.count();
+#ifdef DEBUG
+	for (int i = 0; i < subs; i++)
+		if (gB[i] == 0)
+			numEffectivePredicate += subPredicate[i];
+#endif
 }
 
 void BGTree_d::backward_match_blueNode_native(bluenode_d *&r, const int &att, const int &value,
@@ -520,24 +528,23 @@ void BGTree_d::backward_match_blueNode_native(bluenode_d *&r, const int &att, co
 		numProcessTwoCmpNode++;
 		numProcessTwoCmpPredicate += r->subids.size();
 #endif
-			for (auto &&i: r->subids) {
-				for (auto &&pi: subList[i].constraints)
-					if (att == pi.att) {
-						if (value < pi.lowValue || pi.highValue < value)
-							gB[i] = 1;
-						break;
-					}
-			}
+		for (auto &&i: r->subids) {
+			for (auto &&pi: subList[i].constraints)
+				if (att == pi.att) {
+					if (value < pi.lowValue || pi.highValue < value)
+						gB[i] = 1;
+					break;
+				}
+		}
 	} else if (value <= r->mid) {
 		if (r->rightBlueChild->bst == nullptr) {
 #ifdef DEBUG
 			numProcessExactNode++;
 			numProcessExactPredicate += r->rightBlueChild->subids.size();
 #endif
-			for (auto&& id : r->rightBlueChild->subids)
+			for (auto &&id: r->rightBlueChild->subids)
 				gB[id] = 1;
-		}
-		else {
+		} else {
 #ifdef DEBUG
 			numProcessExactNode++;
 			numProcessExactPredicate += r->rightBlueChild->subids.size();
@@ -545,50 +552,49 @@ void BGTree_d::backward_match_blueNode_native(bluenode_d *&r, const int &att, co
 #endif
 			gB = gB | *r->rightBlueChild->bst;
 		}
-		if(value==r->mid&&r->leftBlueChild->bst!= nullptr){
+		if (value == r->mid && r->leftBlueChild->bst != nullptr) {
 #ifdef DEBUG
 			numProcessExactNode++;
 			numProcessExactPredicate += r->leftBlueChild->subids.size() - r->lMidv.size();
 			numOROperation++;
 			hit++;
 #endif
-			bitset<subs> bst_c=*r->leftBlueChild->bst;
-			for(auto&& id:r->lMidv)
-				bst_c[id]=0;
-			gB=gB|bst_c;
-		}else{
+			bitset<subs> bst_c = *r->leftBlueChild->bst;
+			for (auto &&id: r->lMidv)
+				bst_c[id] = 0;
+			gB = gB | bst_c;
+		} else {
 			backward_match_blueNode_native(r->leftBlueChild, att, value, subList, gB);
 			backward_match_lgreenNode_native(r->lowGreenChild, att, value, subList, gB);
 		}
-	}else {
+	} else {
 		if (r->leftBlueChild->bst == nullptr) {
 #ifdef DEBUG
 			numProcessExactNode++;
 			numProcessExactPredicate += r->leftBlueChild->subids.size();
 #endif
-			for (auto&& id : r->leftBlueChild->subids)
+			for (auto &&id: r->leftBlueChild->subids)
 				gB[id] = 1;
-		}
-		else {
+		} else {
 #ifdef DEBUG
 			numProcessExactNode++;
 			numProcessExactPredicate += r->leftBlueChild->subids.size();
 			numOROperation++;
 #endif
 			gB = gB | *r->leftBlueChild->bst;
-		} 
-		if(value==r->mid+1 && r->rightBlueChild->bst != nullptr){
+		}
+		if (value == r->mid + 1 && r->rightBlueChild->bst != nullptr) {
 #ifdef DEBUG
 			numProcessExactNode++;
-			numProcessExactPredicate += r->rightBlueChild->subids.size()-r->rMidv.size();
+			numProcessExactPredicate += r->rightBlueChild->subids.size() - r->rMidv.size();
 			numOROperation++;
 			hit++;
 #endif
-			bitset<subs> bst_c=*r->rightBlueChild->bst;
-			for(auto&& id:r->rMidv)
-				bst_c[id]=0;
-			gB=gB|bst_c;
-		}else{
+			bitset<subs> bst_c = *r->rightBlueChild->bst;
+			for (auto &&id: r->rMidv)
+				bst_c[id] = 0;
+			gB = gB | bst_c;
+		} else {
 			backward_match_blueNode_native(r->rightBlueChild, att, value, subList, gB);
 			backward_match_hgreenNode_native(r->highGreenChild, att, value, subList, gB);
 		}
@@ -601,88 +607,26 @@ BGTree_d::backward_match_lgreenNode_native(lgreennode_d *&l, const int &att, con
 	// 把最有可能出现的放前面
 	if (l->leftChild == nullptr) { // 1. 叶子节点暴力处理
 #ifdef DEBUG
-			numProcessOneCmpNode++;
-			numProcessOneCmpPredicate += l->subids.size();
+		numProcessOneCmpNode++;
+		numProcessOneCmpPredicate += l->subids.size();
 #endif
-			for (auto&& id : l->subids) {
-				for (auto&& pi : subList[id].constraints)
-					if (att == pi.att) {
-						if (pi.lowValue > value)
-							gB[id]=1;
-						break;
-					}
-			}
-	}
-	else if (value <= l->mid) {
+		for (auto &&id: l->subids) {
+			for (auto &&pi: subList[id].constraints)
+				if (att == pi.att) {
+					if (pi.lowValue > value)
+						gB[id] = 1;
+					break;
+				}
+		}
+	} else if (value <= l->mid) {
 		if (l->rightChild->bst == nullptr) {
 #ifdef DEBUG
 			numProcessExactNode++;
 			numProcessExactPredicate += l->rightChild->subids.size();
 #endif
-			for (auto&& id : l->rightChild->subids)
+			for (auto &&id: l->rightChild->subids)
 				gB[id] = 1;
-		}
-		else {
-#ifdef DEBUG
-			numProcessExactNode++;
-			numProcessExactPredicate += l->rightChild->subids.size();
-			numOROperation++;
-#endif
-			gB = gB | *l->rightChild->bst;
-		}
-		if(value<l->mid)
-			backward_match_lgreenNode_native(l->leftChild, att, value, subList, gB);
-#ifdef DEBUG
-		if(value==l->mid)
-			hit++;
-#endif
-	}
-	else { // l->mid < value
-		if (l->mid + 1 == value&&l->rightChild->bst!=nullptr) {
-#ifdef DEBUG
-			numProcessExactNode++;
-			numProcessExactPredicate += l->rightChild->subids.size() - l->midv.size();
-			numOROperation++;
-			hit++;
-#endif
-			bitset<subs> bst_c = *l->rightChild->bst;
-			for (auto&& id : l->midv)
-				bst_c[id] = 0;
-			gB = gB | bst_c;
-		}
-		else {
-			backward_match_lgreenNode_native(l->rightChild, att, value, subList, gB);
-		}
-	}
-}
-
-void
-BGTree_d::backward_match_hgreenNode_native(hgreennode_d *&r, const int &att, const int &value,
-										   const vector<IntervalSub> &subList, bitset<subs> &gB) {
-	if (r->leftChild == nullptr) { // 1. 叶子节点暴力处理
-#ifdef DEBUG
-		numProcessOneCmpNode++;
-		numProcessOneCmpPredicate += r->subids.size();
-#endif
-		for (auto&& id : r->subids) {
-			for (auto&& pi : subList[id].constraints)
-				if (att == pi.att) {
-					if (pi.highValue < value)
-						gB[id] = 1;
-					break;
-				}
-		}
-	}
-	else if (value >= r->mid) {
-		if (r->leftChild->bst == nullptr) {
-#ifdef DEBUG
-			numProcessExactNode++;
-			numProcessExactPredicate += l->rightChild->subids.size();
-#endif
-			for (auto&& id : l->rightChild->subids)
-				gB[id] = 1;
-		}
-		else {
+		} else {
 #ifdef DEBUG
 			numProcessExactNode++;
 			numProcessExactPredicate += l->rightChild->subids.size();
@@ -696,8 +640,7 @@ BGTree_d::backward_match_hgreenNode_native(hgreennode_d *&r, const int &att, con
 		if (value == l->mid)
 			hit++;
 #endif
-	}
-	else { // l->mid < value
+	} else { // l->mid < value
 		if (l->mid + 1 == value && l->rightChild->bst != nullptr) {
 #ifdef DEBUG
 			numProcessExactNode++;
@@ -706,12 +649,67 @@ BGTree_d::backward_match_hgreenNode_native(hgreennode_d *&r, const int &att, con
 			hit++;
 #endif
 			bitset<subs> bst_c = *l->rightChild->bst;
-			for (auto&& id : l->midv)
+			for (auto &&id: l->midv)
 				bst_c[id] = 0;
 			gB = gB | bst_c;
-		}
-		else {
+		} else {
 			backward_match_lgreenNode_native(l->rightChild, att, value, subList, gB);
+		}
+	}
+}
+
+void
+BGTree_d::backward_match_hgreenNode_native(hgreennode_d *&r, const int &att, const int &value,
+										   const vector<IntervalSub> &subList, bitset<subs> &gB) {
+	if (r->leftChild == nullptr) { // 1. 叶子节点暴力处理
+#ifdef DEBUG
+		numProcessOneCmpNode++;
+		numProcessOneCmpPredicate += r->subids.size();
+#endif
+		for (auto &&id: r->subids) {
+			for (auto &&pi: subList[id].constraints)
+				if (att == pi.att) {
+					if (pi.highValue < value)
+						gB[id] = 1;
+					break;
+				}
+		}
+	} else if (value >= r->mid) { // 2. fall into right subInterval
+		if (r->leftChild->bst == nullptr) { // leftChild must be all-unmatch
+#ifdef DEBUG
+			numProcessExactNode++;
+			numProcessExactPredicate += r->leftChild->subids.size();
+#endif
+			for (auto &&id: r->leftChild->subids)
+				gB[id] = 1;
+		} else {
+#ifdef DEBUG
+			numProcessExactNode++;
+			numProcessExactPredicate += r->leftChild->subids.size();
+			numOROperation++;
+#endif
+			gB = gB | *r->leftChild->bst;
+		}
+		if (value > r->mid)
+			backward_match_hgreenNode_native(r->rightChild, att, value, subList, gB);
+#ifdef DEBUG
+		if (value == r->mid)
+			hit++;
+#endif
+	} else { // value < r->mid
+		if (r->mid == value + 1 && r->leftChild->bst != nullptr) {
+#ifdef DEBUG
+			numProcessExactNode++;
+			numProcessExactPredicate += r->leftChild->subids.size() - r->midv.size();
+			numOROperation++;
+			hit++;
+#endif
+			bitset<subs> bst_c = *r->leftChild->bst;
+			for (auto &&id: r->midv)
+				bst_c[id] = 0;
+			gB = gB | bst_c;
+		} else {
+			backward_match_hgreenNode_native(r->leftChild, att, value, subList, gB);
 		}
 	}
 }
@@ -841,11 +839,10 @@ void BGTree_d::printBGTree() {
 		 << numProcessTwoCmpNode \
  << "\nExactPredicate: " << numProcessExactPredicate << ", oneCmpPredicate: " << numProcessOneCmpPredicate
 		 << ", twoCmpPredicate: " << numProcessTwoCmpPredicate \
- << "\nEffectivePredicate: " << numEffectivePredicate << ", effectiveRate: " << (double) numEffectivePredicate /
-																				(double) (numProcessExactPredicate +
-																						  numProcessOneCmpPredicate +
-																						  numProcessTwoCmpPredicate + 1)
-		 << ".\n\n";
+ << "\nEffectivePredicate: " << numEffectivePredicate << ", effectiveRate: "
+		 << (double) numEffectivePredicate /
+			(double) (numProcessExactPredicate + numProcessOneCmpPredicate + numProcessTwoCmpPredicate + 1)
+		 << "\nOR: " << numOROperation <<", AvgHit: "<<hit<< ".\n\n";
 
 }
 

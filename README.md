@@ -37,7 +37,7 @@
 3. Run command "sudo cpufreq-set -c 20 -g performance" (调整第20号核为性能模式下运行)
 4. sudo cpufreq-set -c 20 -d 3.6G
 5. sudo cpufreq-set -c 20 -u 4.9G
-6. Run command "sudo taskset -c 20 ./cmakeRB" (20指指定第20号核单独运行程序)
+6. Run command "ulimit -s unlimited; sudo taskset -c 20 ./run" (20指指定第20号核单独运行程序)
 
 #### 注意事项
 1. "constant.h" 里 MAX_SUBS、MAX_ATTS、MAX_BUCKS 必须大于等于 subs、atts、buks (Now it's obsoleted.)

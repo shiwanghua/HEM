@@ -27,7 +27,7 @@ SET(CMAKE_CXX_COMPILER "g++")
 #SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++0x")
 #set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3" )
 #LINK_LIBRARIES(m)
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++2a -march=native -O3 -mavx2 -static -lboost_system -lboost_thread -lpthread -pthread -L /usr/local/lib/" ) # -DDEBUG -mavx512bw -mavx512vl -mavx512f -mavx512cd -mavx512dq -msse -lboost_thread -lboost_system
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++2a -march=native -O3 -g -mavx2 -static -lboost_system -lboost_thread -lpthread -pthread -L /usr/local/lib/" ) # -DDEBUG -mavx512bw -mavx512vl -mavx512f -mavx512cd -mavx512dq -msse -lboost_thread -lboost_system
 #set(CMAKE_C_STANDARD 17)
 #set(CMAKE_CXX_FLAGS_DEBUG “${CMAKE_CXX_FLAGS_DEBUG} -O0”)
 #set(CMAKE_C_FLAGS_DEBUG “${CMAKE_C_FLAGS_DEBUG} -O0”)
@@ -41,7 +41,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++2a -march=native -O3 -mavx2 -st
 # add_executable(main ${SOURCE_FILES})
 
 aux_source_directory(. SRC_LIST)
-add_executable(run ${SRC_LIST}) # pRein.cpp pRein.h
+add_executable(run ${SRC_LIST} BGTree_d_vrs.cpp BGTree_d_vrs.h) # pRein.cpp pRein.h
 # target_link_libraries(hello ${MPI_LIBRARIES})
 
 

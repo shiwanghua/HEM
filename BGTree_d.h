@@ -2,8 +2,8 @@
 // Created by swh on 2022/1/12.
 //
 
-#ifndef MAC_BGTREE1_H
-#define MAC_BGTREE1_H
+#ifndef MAC_BGTREE_d_H
+#define MAC_BGTREE_d_H
 
 #include<vector>
 #include <cstring>
@@ -16,7 +16,7 @@
 #include <bitset>
 #include <queue>
 
-#define DEBUG
+//#define DEBUG
 
 struct lgreennode_d {
 	int l, h, mid, nodeid, levelid;// numNodeSub = 0;
@@ -150,4 +150,4 @@ public:
 };
 
 
-#endif //MAC_BGTREE1_H
+#endif //MAC_BGTREE_d_H

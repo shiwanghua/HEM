@@ -11,7 +11,7 @@
 #include <bitset>
 #include <queue>
 
-#define DEBUG
+//#define DEBUG
 
 struct lgreennode {
 	// low/high boundary

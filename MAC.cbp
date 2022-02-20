@@ -90,6 +90,12 @@
 		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/BGTree_d.h">
 			<Option target="run"/>
 		</Unit>
+		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/BGTree_d_vrs.cpp">
+			<Option target="run"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/BGTree_d_vrs.h">
+			<Option target="run"/>
+		</Unit>
 		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/HEM.cpp">
 			<Option target="run"/>
 		</Unit>

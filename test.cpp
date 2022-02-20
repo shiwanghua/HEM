@@ -22,15 +22,35 @@
 //using namespace boost;
 //using namespace boost::placeholders;
 
-int maisn() {
-	const int it=18;
-	double percent[it] = {0.00005,0.0001,0.0005,0.001,0.0025,0.005,0.0075,0.01,0.0125,0.015,0.0175,0.02,0.0225,0.025,0.0275,0.03,0.0325,0.8};
-	const int n = 1000;
+inline uint64_t GetCPUCycle()
+{
+#ifdef __x86_64__
+	unsigned int lo, hi;
+	__asm__ __volatile__("lfence" : : : "memory");
+	__asm__ __volatile__("rdtsc" : "=a" (lo), "=d" (hi));
+	return ((uint64_t)hi << 32) | lo;
+#elif __aarch64__
+	uint64_t v = 0;
+	asm volatile("isb" : : : "memory");
+	asm volatile("mrs %0, cntvct_el0" : "=r"(v));
+	return v;
+#else
+	printf("unknown arch\n");
+	return 0;
+#endif
+}
+
+int ma2in() {
+	const int it = 18;
+	double percent[it] = {0.00005, 0.0001, 0.0005, 0.001, 0.0025, 0.005, 0.0075, 0.01, 0.0125, 0.015, 0.0175, 0.02,
+						  0.0225, 0.025, 0.0275, 0.03, 0.0325, 0.8};
+	const int n = 1000000;
 	int ones, t;
+	Util u;
 
 	cout << "n = " << n << "\n\n";
 	_for(i, 0, it) {
-		bitset<n> b1,b2,b3;
+		bitset<n> b1, b2, b3;
 		ones = percent[i] * n;
 		unordered_set<int> s;
 		while (s.size() < ones) {
@@ -40,20 +60,24 @@ int maisn() {
 		}
 
 //		Timer start1;
-		for (auto&& id : s)
+		for (auto &&id: s)
 			b1[id] = 1;
 //		int64_t t1 = start1.elapsed_nano();
 
 		Timer start2;
+		uint64_t ut2 = GetCPUCycle();
 		b2 = b2 | b1;
 		int64_t t2 = start2.elapsed_nano();
+		ut2 = GetCPUCycle() - ut2;
 
 		Timer start1;
-		for (auto&& id : s)
+		uint64_t ut1 = GetCPUCycle();
+		for (auto &&id: s)
 			b3[id] = 1;
+		ut1 = GetCPUCycle() - ut1;
 		int64_t t1 = start1.elapsed_nano();
 
-		cout <<"p"<<percent[i]<< " ones: " << ones << " mark: " << t1 << " or: " << t2 << "\n\n";
+		cout << "p" << percent[i] << " ones: " << ones << " mark: " << t1 << "ns/" << ut1 << " or: " << t2 <<"ns/"<<ut2<< "\n\n";
 	}
 
 	system("pause");
@@ -236,14 +260,14 @@ int maisn() {
 //cout << "After:\n";
 //printBitset(b1, "b1");
 //printBitset(b2, "b2");
- 
+
 
 //float* a = new float;
-	//*a = 11;
-	//__m512 m;
-	//m = _mm512_load_ps(a);
-	//for (int i = 0; i < 16; i++)
-	//    cout << m.m512_f32[i] << "\n";
+//*a = 11;
+//__m512 m;
+//m = _mm512_load_ps(a);
+//for (int i = 0; i < 16; i++)
+//    cout << m.m512_f32[i] << "\n";
 
 
 /*boost::dynamic_bitset<unsigned long long> mb(n),b2(n);
@@ -253,75 +277,75 @@ int maisn() {
 	mb = mb | b2;
 	std::cout << "my bitset: " << mb.size() << "λ, " << mb << std::endl;*/
 
-	//void hello(int& a) {
-	//	int my_rank = omp_get_thread_num();
-	//	int thread_count = omp_get_num_threads();
-	//
-	//	a = my_rank;
-	//	//usleep(1000000);
-	//	printf("hello from rank %d of %d, a= %d\n", my_rank, thread_count, a);
-	//	fflush(stdout);
-	//}
-	//
-	//void vectorToBitset(vector<int>& v, bitset<subs>*& bt) {
-	//	cout << "btf1: " << bt << " " << &bt << "\n";
-	//	for (int i = 0; i < v.size(); i++)
-	//		(*bt)[v[i]] = 1;
-	//	v.resize(0);
-	//}
+//void hello(int& a) {
+//	int my_rank = omp_get_thread_num();
+//	int thread_count = omp_get_num_threads();
+//
+//	a = my_rank;
+//	//usleep(1000000);
+//	printf("hello from rank %d of %d, a= %d\n", my_rank, thread_count, a);
+//	fflush(stdout);
+//}
+//
+//void vectorToBitset(vector<int>& v, bitset<subs>*& bt) {
+//	cout << "btf1: " << bt << " " << &bt << "\n";
+//	for (int i = 0; i < v.size(); i++)
+//		(*bt)[v[i]] = 1;
+//	v.resize(0);
+//}
 
-	//bitset<subs>*& vectorToBitset(vector<int>& v) {
-	//	bitset<subs>* bs = new bitset<subs>;
-	//	cout << "btf2: " << bs << " " << &bs << "\n";
-	//	for (auto a : v)
-	//		(*bs)[a] = 1;
-	//	v.resize(0);
-	//	return bs;
-	//}
+//bitset<subs>*& vectorToBitset(vector<int>& v) {
+//	bitset<subs>* bs = new bitset<subs>;
+//	cout << "btf2: " << bs << " " << &bs << "\n";
+//	for (auto a : v)
+//		(*bs)[a] = 1;
+//	v.resize(0);
+//	return bs;
+//}
 
-	//int& t(double d) {
-	//	int ans = d;
-	//	cout << "ans= " << &ans << "\n";
-	//	return ans;
-	//}
+//int& t(double d) {
+//	int ans = d;
+//	cout << "ans= " << &ans << "\n";
+//	return ans;
+//}
 
-	//	int thread_count = 4;
-	//	int a=5;
-	//#pragma omp parallel num_threads(thread_count) default(none) shared(a)
-	//	hello(a);
-	//bitset<subs>* bs = new bitset<subs>;
-	//vector<int> v{ 5 };
-	//cout << "bs1: " << bs << " " << &bs << "\n";
-	//cout << v.size() << " " << (*bs)[5] << "\n";
-	//vectorToBitset(v, bs);
-	//cout << v.size() << " " << (*bs)[5] << "\n";
-	//v.push_back(999999);
-	//cout << "bs2: " << bs << " " << &bs << "\n";
-	//delete bs;
-	//cout << "bs3: " << bs << " " << &bs << "\n";
-	//bs = vectorToBitset(v);
-	//cout << "bs4: " << bs << " " << &bs << "\n";
-	//cout << v.size() << (*bs)[999999] << " " << (*bs)[5];
+//	int thread_count = 4;
+//	int a=5;
+//#pragma omp parallel num_threads(thread_count) default(none) shared(a)
+//	hello(a);
+//bitset<subs>* bs = new bitset<subs>;
+//vector<int> v{ 5 };
+//cout << "bs1: " << bs << " " << &bs << "\n";
+//cout << v.size() << " " << (*bs)[5] << "\n";
+//vectorToBitset(v, bs);
+//cout << v.size() << " " << (*bs)[5] << "\n";
+//v.push_back(999999);
+//cout << "bs2: " << bs << " " << &bs << "\n";
+//delete bs;
+//cout << "bs3: " << bs << " " << &bs << "\n";
+//bs = vectorToBitset(v);
+//cout << "bs4: " << bs << " " << &bs << "\n";
+//cout << v.size() << (*bs)[999999] << " " << (*bs)[5];
 
-	//int a = 1;
-	//cout << "a: " << &a << "\n";
-	//t(a);
-	//cout << "a: " << &a << "\n";
-	//	bitset<1000000> b;
-	//	b.set();
-	//	b[999999] = 0;
-	//	b[12345] = 0;
-	//	cout << b.count();
+//int a = 1;
+//cout << "a: " << &a << "\n";
+//t(a);
+//cout << "a: " << &a << "\n";
+//	bitset<1000000> b;
+//	b.set();
+//	b[999999] = 0;
+//	b[12345] = 0;
+//	cout << b.count();
 
 
-	//int myid, numprocs, namelen;
-	//	cout<<MPI_MAX_PROCESSOR_NAME<<"---\n";
-	//	char processor_name[MPI_MAX_PROCESSOR_NAME];
-	//	MPI_Init(&argc, &argv);        // starts MPI
-	//	MPI_Comm_rank(MPI_COMM_WORLD, &myid);  // get current process id
-	//	MPI_Comm_size(MPI_COMM_WORLD, &numprocs);      // get number of processes
-	//	MPI_Get_processor_name(processor_name, &namelen);
-	//	if (myid == 0) printf("number of processes: %d\n...", numprocs);
-	//	printf("%s: Hello world from process %d \n", processor_name, myid);
-	//	MPI_Finalize();
+//int myid, numprocs, namelen;
+//	cout<<MPI_MAX_PROCESSOR_NAME<<"---\n";
+//	char processor_name[MPI_MAX_PROCESSOR_NAME];
+//	MPI_Init(&argc, &argv);        // starts MPI
+//	MPI_Comm_rank(MPI_COMM_WORLD, &myid);  // get current process id
+//	MPI_Comm_size(MPI_COMM_WORLD, &numprocs);      // get number of processes
+//	MPI_Get_processor_name(processor_name, &namelen);
+//	if (myid == 0) printf("number of processes: %d\n...", numprocs);
+//	printf("%s: Hello world from process %d \n", processor_name, myid);
+//	MPI_Finalize();
 
