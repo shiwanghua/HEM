@@ -17,7 +17,7 @@ struct lgreennode {
 	// low/high boundary
 	int l, h, mid, nodeid, levelid, numNodeSub = 0;
 	bitset<subs> *bst;
-	vector<int> subids; // Either bst is nullptr or subids.size()==0
+	vector<int> subids; // Either realBstPtr is nullptr or subids.size()==0
 	//vector<int> midequal; // Record subID with predicate including mid
 	lgreennode *leftChild, *rightChild; // 2个节点指针要么都是空的, 要么都是非空
 

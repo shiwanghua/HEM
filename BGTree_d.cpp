@@ -98,21 +98,21 @@ void BGTree_d::insertIntoBlueNode(bluenode_d *&r, const int &subID, const int &l
 				if (c.att == attrId) {
 					if (c.highValue <= r->mid) {
 						r->leftBlueChild->subids.push_back(id);
-						// r->leftBlueChild->bst[id] = 1; // boundary>>maxNodeSize, so 节点需分裂时子节点不可能需要bitset存储
-						if (r->leftBlueChild->mid == c.highValue) r->leftBlueChild->lMidv.push_back(subID);
-						else if (r->leftBlueChild->mid + 1 == c.lowValue) r->leftBlueChild->rMidv.push_back(subID);
+						// r->leftBlueChild->realBstPtr[id] = 1; // boundary>>maxNodeSize, so 节点需分裂时子节点不可能需要bitset存储
+						if (r->leftBlueChild->mid == c.highValue) r->leftBlueChild->lMidv.push_back(id);
+						else if (r->leftBlueChild->mid + 1 == c.lowValue) r->leftBlueChild->rMidv.push_back(id);
 					} else if (c.lowValue > r->mid) {
 						r->rightBlueChild->subids.push_back(id);
-						// r->rightBlueChild->bst[id] = 1;
-						if (r->rightBlueChild->mid == c.highValue) r->rightBlueChild->lMidv.push_back(subID);
-						else if (r->rightBlueChild->mid + 1 == c.lowValue) r->rightBlueChild->rMidv.push_back(subID);
+						// r->rightBlueChild->realBstPtr[id] = 1;
+						if (r->rightBlueChild->mid == c.highValue) r->rightBlueChild->lMidv.push_back(id);
+						else if (r->rightBlueChild->mid + 1 == c.lowValue) r->rightBlueChild->rMidv.push_back(id);
 					} else { // l<=mid<mid+1<=h
 						r->lowGreenChild->subids.push_back(id);
-						// r->lowGreenChild->bst[id] = 1;
+						// r->lowGreenChild->realBstPtr[id] = 1;
 						if (r->lowGreenChild->mid + 1 == c.lowValue)
 							r->lowGreenChild->midv.push_back(id);
 						r->highGreenChild->subids.push_back(id);
-						// r->highGreenChild->bst[id] = 1;
+						// r->highGreenChild->realBstPtr[id] = 1;
 						if (r->highGreenChild->mid - 1 == c.highValue)
 							r->highGreenChild->midv.push_back(id);
 					}
@@ -149,12 +149,12 @@ void BGTree_d::insertIntoGreenNode(lgreennode_d *&r, const int &subID, const int
 				if (c.att == attrId) {
 					if (c.lowValue <= r->mid) {
 						r->leftChild->subids.push_back(id);
-						// r->leftChild->bst[id] = 1;  // boundary>>maxNodeSize, so 节点需分裂时子节点不可能需要bitset存储
+						// r->leftChild->realBstPtr[id] = 1;  // boundary>>maxNodeSize, so 节点需分裂时子节点不可能需要bitset存储
 						if (r->leftChild->mid + 1 == c.lowValue)
 							r->leftChild->midv.push_back(id);
 					} else {
 						r->rightChild->subids.push_back(id);
-						// r->rightChild->bst[id] = 1;
+						// r->rightChild->realBstPtr[id] = 1;
 						if (r->rightChild->mid + 1 == c.lowValue)
 							r->rightChild->midv.push_back(id);
 					}
@@ -191,12 +191,12 @@ void BGTree_d::insertIntoGreenNode(hgreennode_d *&r, const int &subID, const int
 				if (c.att == attrId) {
 					if (c.highValue < r->mid) {
 						r->leftChild->subids.push_back(id);
-						// r->leftChild->bst[id] = 1;
+						// r->leftChild->realBstPtr[id] = 1;
 						if (r->leftChild->mid - 1 == c.highValue)
 							r->leftChild->midv.push_back(id);
 					} else {
 						r->rightChild->subids.push_back(id);
-						// r->rightChild->bst[id] = 1;
+						// r->rightChild->realBstPtr[id] = 1;
 						if (r->rightChild->mid - 1 == c.highValue)
 							r->rightChild->midv.push_back(id);
 					}

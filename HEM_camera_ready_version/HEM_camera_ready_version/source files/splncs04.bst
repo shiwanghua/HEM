@@ -13,16 +13,16 @@
 %% Dipartimento di Informatica e Automazione Universita' Roma Tre
 %%
 %% ================================================================================================
-%% This was file `titto-lncs-02.bst' produced on Wed Apr 1, 2009
-%% Edited by hand by titto based on `titto-lncs-01.bst' (see below)
+%% This was file `titto-lncs-02.realBstPtr' produced on Wed Apr 1, 2009
+%% Edited by hand by titto based on `titto-lncs-01.realBstPtr' (see below)
 %%
-%% CHANGES (with respect to titto-lncs-01.bst):
+%% CHANGES (with respect to titto-lncs-01.realBstPtr):
 %% - Removed the call to \urlprefix (thus no "URL" string is added to the output)
 %% ================================================================================================
-%% This was file `titto-lncs-01.bst' produced on Fri Aug 22, 2008
-%% Edited by hand by titto based on `titto.bst' (see below)
+%% This was file `titto-lncs-01.realBstPtr' produced on Fri Aug 22, 2008
+%% Edited by hand by titto based on `titto.realBstPtr' (see below)
 %%
-%% CHANGES (with respect to titto.bst):
+%% CHANGES (with respect to titto.realBstPtr):
 %% - Removed the "capitalize" command for editors string "(eds.)" and "(ed.)"
 %% - Introduced the functions titto.bbl.pages and titto.bbl.page for journal pages (without "pp.")
 %% - Added a new.sentence command to separate with a dot booktitle and series in the inproceedings
@@ -33,19 +33,19 @@
 %% - Added function titto.space.prefix to add a space instead of "~" after the (removed) "vol." label
 %% - Added doi
 %% ================================================================================================
-%% This was file `titto.bst',
+%% This was file `titto.realBstPtr',
 %% generated with the docstrip utility.
 %%
 %% The original source files were:
 %%
 %% merlin.mbs  (with options: `vonx,nm-rvvc,yr-par,jttl-rm,volp-com,jwdpg,jwdvol,numser,ser-vol,jnm-x,btit-rm,bt-rm,edparxc,bkedcap,au-col,in-col,fin-bare,pp,ed,abr,mth-bare,xedn,jabr,and-com,and-com-ed,xand,url,url-blk,em-x,nfss,')
 %% ----------------------------------------
-%% *** Tentative .bst file for Springer LNCS ***
+%% *** Tentative .realBstPtr file for Springer LNCS ***
 %%
 %% Copyright 1994-2007 Patrick W Daly
  % ===============================================================
  % IMPORTANT NOTICE:
- % This bibliographic style (bst) file has been generated from one or
+ % This bibliographic style (realBstPtr) file has been generated from one or
  % more master bibliographic style (mbs) files, listed above.
  %
  % This generated file can be redistributed and/or modified under the terms
@@ -441,11 +441,11 @@ FUNCTION {format.url}
 { url empty$
     { "" }
 %    { "\urlprefix\url{" url * "}" * }
-    { "\url{" url * "}" * }  % changed in titto-lncs-02.bst
+    { "\url{" url * "}" * }  % changed in titto-lncs-02.realBstPtr
   if$
 }
 
-FUNCTION {format.doi} % added in splncs04.bst
+FUNCTION {format.doi} % added in splncs04.realBstPtr
 { doi empty$
      { "" }
      { after.block 'output.state :=
@@ -1543,6 +1543,6 @@ FUNCTION {end.bib}
   "\end{thebibliography}" write$ newline$
 }
 EXECUTE {end.bib}
-%% End of customized bst file
+%% End of customized realBstPtr file
 %%
-%% End of file `titto.bst'.
+%% End of file `titto.realBstPtr'.
