@@ -375,8 +375,8 @@ void BGTree_d_vrs::insertRAttrIntoGreenNode(hgreennode_d_vrs *&r, const int &sub
 bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 	bool find = true;
 	for (auto &&c: sub.constraints) {
-		find &= deleteFromBlueNode(roots[c.att], sub.id, c.lowValue,
-								   c.highValue);
+		/*find &= deleteFromBlueNode(roots[c.att], sub.id, c.lowValue,
+								   c.highValue);*/
 	}
 	numSub--;
 	return find;

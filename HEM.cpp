@@ -108,8 +108,8 @@ void HEM::initBits() {
 			endBucket[0][i] = numBucket;
 			endBucket[1][i] = 0;
 		}
-		_for(i, 0, numDimension) {                // 每个维度
-			_for(j, 0, numBucket)            // 每个左半部分的桶
+		_for(i, 0, numDimension) {              // 每个维度
+			_for(j, 0, numBucket)           
 				for (auto &&cb: data[1][i][j])  // 桶里每个订阅
 					fullBits[i][cb.subID] = 1;  // Bug: high不是low, i维, 0号bits, subID
 		}

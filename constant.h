@@ -14,8 +14,10 @@ extern const double subp;  // subp比例的订阅和事件的谓词定义在前cons个维度上
 const int subs = 1000000;  // Number of subscriptions.
 extern const int pubs;     // Number of publications.
 extern int atts;           // Total number of attributes, i.e. dimensions.
+extern int attrGroup;          // The number of attribute group in #atts attributes.
 extern int cons;           // Number of constraints(predicates) in one sub.
 extern int m;              // Number of constraints in one pub.
+extern const int attNumType;  // 0: Fixed size of sub and pub. 1: Random size of sub and pub <= $cons and $m
 extern const int attDis;   // The distribution of attributes in subs and pubs. 0:uniform distribution | 1:Zipf distribution
 extern const int valDis;   // The distribution of values in subs and pubs. 0:uniform + fixed width | 1: Uniform + random width >= $width | 2: Zipf + fixed width | 3: Normal Distribution + random width both value ends
 extern const int valDom;   // Cardinality of values.

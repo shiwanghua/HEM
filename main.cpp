@@ -18,9 +18,9 @@ int main(int argc, char **argv) {
 			 << endl;
 	}
 
-	intervalGenerator gen(subs, pubs, atts, cons, m, attDis, valDis, valDom, alpha, subp, width);
-	gen.GenSubList();
-	gen.GenPubList();
+	intervalGenerator gen(subs, pubs, atts,attrGroup, cons, m, attNumType, attDis, valDis, valDom, alpha, subp, width);
+	gen.GenSubList_g();
+	gen.GenPubList_g();
 	
 	unordered_map<int,bool> deleteNo;
 	if (verifyID) {
@@ -34,7 +34,7 @@ int main(int argc, char **argv) {
 		}
 	}
 
-//	run_rein(gen,deleteNo);
+	run_rein(gen,deleteNo);
 //	run_rein_forward_native(gen, deleteNo);
 //	run_rein_forward_CBOMP(gen, deleteNo);
 //	run_rein_hybrid(gen,deleteNo);
@@ -55,16 +55,17 @@ int main(int argc, char **argv) {
 //	run_Simple(gen,deleteNo);
 //	run_Simple2(gen,deleteNo);
 //
-//	run_tama(gen,deleteNo);
-//	run_btama_forward_C_BOMP(gen, deleteNo); // bTAMA6
-//	run_btama_backward1_C_BOMP(gen, deleteNo);// bTAMA7
-//	run_btama_backward2_CBOMP(gen, deleteNo); // bTAMA8
+	run_tama(gen,deleteNo);
+	run_btama_forward_C_BOMP(gen, deleteNo); // bTAMA6
+	run_btama_backward1_C_BOMP(gen, deleteNo);// bTAMA7
+	run_btama_backward2_CBOMP(gen, deleteNo); // bTAMA8
 //
 //	run_BGTREE_forward_native(gen, deleteNo);
 //	run_BGTREE_forward_C_BOMP(gen,deleteNo);
 //	run_BGTREE_backward_C_BOMP(gen, deleteNo);
-//	run_BGTREE_d_forward_native(gen, deleteNo);
+	run_BGTREE_d_forward_native(gen, deleteNo);
 	run_BGTREE_d_backward_native(gen, deleteNo);
+//	run_BGTREE_d_vrs_backward_native(gen, deleteNo);
 
 //	run_OpIndex(gen, deleteNo);
 //	run_bOpIndex2(gen,deleteNo);
