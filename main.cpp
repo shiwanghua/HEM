@@ -18,9 +18,9 @@ int main(int argc, char **argv) {
 			 << endl;
 	}
 
-	intervalGenerator gen(subs, pubs, atts, cons, m, attDis, valDis, valDom, alpha, subp, width);
-	gen.GenSubList();
-	gen.GenPubList();
+	intervalGenerator gen(subs, pubs, atts,attrGroup, cons, m, attNumType, attDis, valDis, valDom, alpha, subp, width);
+	gen.GenSubList_g();
+	gen.GenPubList_g();
 	
 	unordered_map<int,bool> deleteNo;
 	if (verifyID) {
