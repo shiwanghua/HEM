@@ -21,7 +21,7 @@ double stddev = 1;          // Standard deviation: The square root of variance, 
 
 // Rein
 const int buks = 1000;       // Number of buckets.
-const int awRein_Ppoint=0.25*valDom; // HybridRein
+const int awRein_Ppoint = 0.25 * valDom; // HybridRein
 //const int awRein_level=4; // The levels of the forward counting matching of HybridRein
 
 // HEM
@@ -46,7 +46,7 @@ int parallelDegree = 4;
 
 // BG-Tree
 const int initH = 10;           // Initial height
-const int MAXNodeSIZE=2000;
+const int MAXNodeSIZE = 2000;
 const int boundary = subs * 0.01; // BoundaryNumSub BNS
 // boundary>>MAXNodeSIZE
 
