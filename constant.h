@@ -30,6 +30,16 @@ extern double stddev;      // Standard deviation: The square root of variance, r
 extern const int buks;     // Number of buckets.
 extern const int awRein_Ppoint; // HybridRein
 extern const int awRein_level; // The levels of the forward counting matching of HybridRein
+// Rein Model Type
+enum {
+	OriginalRein, // Rein
+	ForwardRein, // FRein
+	ForwardRein_CBOMP, // FRein_c
+	HybridRein, // HRein, AWRein
+	HybridRein_CBOMP,  // AWRein with C-BOMP
+	SharedHybridRein,  // SHRein
+	SharedHybridRein_CBOMP // SHRein_c
+};
 
 // AdaRein
 //const int MAX_SUBS = 1000000;
@@ -50,6 +60,10 @@ extern const int ptrSize;
 extern const int blockNum; // 或运算次数
 extern const int ptrIncrement;
 extern const __m256i mask;
+//enum {
+//	HEM5_DD_VAG,
+//	HEM5_DD_RAG
+//};
 
 // Tama
 extern const int level;
@@ -71,15 +85,6 @@ extern const float awbTree_Ppoint;//partition point HybridRein(AWRein)
 extern const unsigned short WCsize; //width cell size
 extern const int awbTree_branch;
 
-// Model Type
-enum{
-	OriginalRein, // Rein
-	ForwardRein, // FRein
-	ForwardRein_CBOMP, // FRein_c
-	HybridRein, // HRein, AWRein
-	HybridRein_CBOMP,  // AWRein with C-BOMP
-	SharedHybridRein,  // SHRein
-	SharedHybridRein_CBOMP // SHRein_c
-};
+
 #endif
 

@@ -32,12 +32,19 @@ public:
 	~HEM5_AG();
 
 	void insert(IntervalSub sub); // 没有bitset时的插入算法
-	void insert_online(IntervalSub sub); // 构建好订阅集后的在线插入订阅算法
-	bool deleteSubscription(IntervalSub sub);
-	//void match(const Pub& pub, int& matchSubs, const vector<Sub>& subList);
-	void match(const Pub& pub, int& matchSubs);
 
-	void initBits();      // 插入完后初始化bits数组
+	void initBits_VAG();      // 插入完后初始化bits数组
+	void initBits_RAG();
+
+	void insert_online_VAG(IntervalSub sub); // 构建好订阅集后的在线插入订阅算法, 虚拟属性组版本
+	void insert_online_RAG(IntervalSub sub); // 构建好订阅集后的在线插入订阅算法, 实际属性组版本
+
+	bool deleteSubscription_VAG(IntervalSub sub);
+	bool deleteSubscription_RAG(IntervalSub sub);
+
+	void match_VAG(const Pub& pub, int& matchSubs);
+	void match_RAG(const Pub& pub, int& matchSubs);
+
 	//void calBucketSize(); // 计算bucketSize
 	int calMemory();      // 计算占用内存大小
 	void printRelation(int dimension_i); // 打印映射关系

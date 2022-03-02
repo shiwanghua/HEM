@@ -1204,6 +1204,200 @@ void run_HEM5(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) {
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
+// 动动模式 + 虚属性组(事件订阅属性分布无限制)版本
+void run_HEM5_VAG(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) {
+	HEM5_AG hem5_vag;
+
+	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchInstructionList;
+	vector<double> matchSubList;
+
+	// insert
+	for (int i = 0; i < subs; i++) {
+		Timer insertStart;
+
+		hem5_vag.insert(gen.subList[i]); // Insert sub[i] into data structure.
+
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double)insertTime / 1000000);
+	}
+	cout << "HEM5DD_VAG Insertion Finishes.\n";
+
+	double initTime;
+	Timer initStart;
+	hem5_vag.initBits_VAG();
+	initTime = (double)initStart.elapsed_nano() / 1000000.0;
+
+	// 验证插入删除正确性
+	if (verifyID) {
+		for (auto kv : deleteNo) {
+			Timer deleteStart;
+			if (!hem5_vag.deleteSubscription_VAG(gen.subList[kv.first]))
+				cout << "HEM5DD_VAG: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+		}
+		cout << "HEM5DD_VAG Deletion Finishes.\n";
+		for (auto kv: deleteNo) {
+			hem5_vag.insert_online_VAG(gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
+		}
+	}
+
+	// match
+	for (int i = 0; i < pubs; i++) {
+		int matchSubs = 0; // Record the number of matched subscriptions.
+		Timer matchStart;
+		int64_t begin = GetCPUCycle();
+		hem5_vag.match_VAG(gen.pubList[i], matchSubs);
+		matchInstructionList.push_back(GetCPUCycle() - begin);
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double)eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "HEM5DD_VAG Event " << i << " is matched.\n";
+	}
+
+	if (display)
+		hem5_vag.printRelation(1);
+	cout << endl;
+
+	// output
+	string outputFileName = "HEM5_VAG.txt";
+	string content = expID
+		+ " bits= " + Util::Int2String(be)
+		+ " memory= " + Util::Int2String(hem5_vag.calMemory())
+		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+		+ " ms InitTime= " + Util::Double2String(initTime)
+		+ " ms AvgConstructionTime= " +
+		Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+		+ " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+		+ " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList))
+		+ " AvgCmpTime= " + to_string(hem5_vag.compareTime / pubs / 1000000)
+		+ " ms AvgMarkTime= " + to_string(hem5_vag.markTime / pubs / 1000000)
+		+ " ms OrTime= " + to_string(hem5_vag.orTime / pubs / 1000000)
+		+ " ms AvgBitTime= " + to_string(hem5_vag.bitTime / pubs / 1000000)
+		+ " ms numBuk= " + Util::Int2String(hem5_vag.numBucket)
+		+ " numSub= " + Util::Int2String(subs)
+		+ " subSize= " + Util::Int2String(cons)
+		+ " numPub= " + Util::Int2String(pubs)
+		+ " pubSize= " + Util::Int2String(m)
+		+ " attTypes= " + Util::Int2String(atts)
+		+ " attGroup= " + Util::Int2String(attrGroup)
+		+ " attNumType= " + Util::Int2String(attNumType)
+		+ " valDom= " + Util::Double2String(valDom);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	/*outputFileName = "ComprehensiveExpTime.txt";
+	content = "HEM5DD_VAG= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData2Begin(outputFileName.c_str(), content);*/
+
+	outputFileName = "tmpData/HEM5_VAG.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
+}
+
+// 动动模式 + 实属性组(单个事件、订阅的属性限制在某个属性组中)版本
+void run_HEM5_RAG(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) {
+	HEM5_AG hem5_rag;
+
+	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchInstructionList;
+	vector<double> matchSubList;
+
+	// insert
+	for (int i = 0; i < subs; i++) {
+		Timer insertStart;
+
+		hem5_rag.insert(gen.subList[i]); // Insert sub[i] into data structure.
+
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double)insertTime / 1000000);
+	}
+	cout << "HEM5DD_RAG Insertion Finishes.\n";
+
+	double initTime;
+	Timer initStart;
+	hem5_rag.initBits_RAG();
+	initTime = (double)initStart.elapsed_nano() / 1000000.0;
+
+	// 验证插入删除正确性
+	if (verifyID) {
+		for (auto kv : deleteNo) {
+			Timer deleteStart;
+			if (!hem5_rag.deleteSubscription_RAG(gen.subList[kv.first]))
+				cout << "HEM5DD_RAG: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+		}
+		cout << "HEM5DD_RAG Deletion Finishes.\n";
+		for (auto kv : deleteNo) {
+			hem5_rag.insert_online_RAG(gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
+		}
+	}
+
+	// match
+	for (int i = 0; i < pubs; i++) {
+		int matchSubs = 0; // Record the number of matched subscriptions.
+		Timer matchStart;
+		int64_t begin = GetCPUCycle();
+		hem5_rag.match_VAG(gen.pubList[i], matchSubs);
+		matchInstructionList.push_back(GetCPUCycle() - begin);
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double)eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "HEM5DD_RAG Event " << i << " is matched.\n";
+	}
+
+	if (display)
+		hem5_rag.printRelation(1);
+	cout << endl;
+
+	// output
+	string outputFileName = "HEM5_RAG.txt";
+	string content = expID
+		+ " bits= " + Util::Int2String(be)
+		+ " memory= " + Util::Int2String(hem5_rag.calMemory())
+		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+		+ " ms InitTime= " + Util::Double2String(initTime)
+		+ " ms AvgConstructionTime= " +
+		Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+		+ " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+		+ " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList))
+		+ " AvgCmpTime= " + to_string(hem5_rag.compareTime / pubs / 1000000)
+		+ " ms AvgMarkTime= " + to_string(hem5_rag.markTime / pubs / 1000000)
+		+ " ms OrTime= " + to_string(hem5_rag.orTime / pubs / 1000000)
+		+ " ms AvgBitTime= " + to_string(hem5_rag.bitTime / pubs / 1000000)
+		+ " ms numBuk= " + Util::Int2String(hem5_rag.numBucket)
+		+ " numSub= " + Util::Int2String(subs)
+		+ " subSize= " + Util::Int2String(cons)
+		+ " numPub= " + Util::Int2String(pubs)
+		+ " pubSize= " + Util::Int2String(m)
+		+ " attTypes= " + Util::Int2String(atts)
+		+ " attGroup= " + Util::Int2String(attrGroup)
+		+ " attNumType= " + Util::Int2String(attNumType)
+		+ " valDom= " + Util::Double2String(valDom);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	/*outputFileName = "ComprehensiveExpTime.txt";
+	content = "HEM5DD_RAG= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData2Begin(outputFileName.c_str(), content);*/
+
+	outputFileName = "tmpData/HEM5_RAG.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
+}
+
 // 动动模式 + avx指令
 void run_HEM5_avxOR(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) {
 	HEM5_avxOR hem5_avxor;
