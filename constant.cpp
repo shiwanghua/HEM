@@ -20,7 +20,7 @@ double mean = 0.2;          // Mean of Normal Distribution. For events it's ( 1 
 double stddev = 1;          // Standard deviation: The square root of variance, representing the dispersion of values from the distribution mean. >0
 
 // Rein
-const int buks = 300;       // Number of buckets.
+const int buks = 1000;       // Number of buckets.
 const int awRein_Ppoint = 0.25 * valDom; // HybridRein
 //const int awRein_level=4; // The levels of the forward counting matching of HybridRein
 
