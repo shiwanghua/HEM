@@ -80,43 +80,43 @@ void HEM::initBits() {
 		}
 	}*/
 
-	if (numBits == 1) {                           // 只有一个bits时特判，only 用fullBits
-
-//		_for(i, 0, numBucket >> 1) {
-//			bitsID[0][i] = 0;                     // 此时的0号代表0.5~1, 不是0~1
-//			bitsID[1][i] = -1;                    // 此时用不到bits数组, -1表示非法
-//			endBucket[0][i] = numBucket >> 1;     // 标记时遍历到小于这个值
-//			endBucket[1][i] = 0;                  // 标记时遍历到大于等于这个值
-//		}
-//		_for(i, numBucket >> 1, numBucket) {
-//			bitsID[0][i] = -1;
-//			bitsID[1][i] = 0;
+//	if (numBits == 1) {                           // 只有一个bits时特判，only 用fullBits
+//
+////		_for(i, 0, numBucket >> 1) {
+////			bitsID[0][i] = 0;                     // 此时的0号代表0.5~1, 不是0~1
+////			bitsID[1][i] = -1;                    // 此时用不到bits数组, -1表示非法
+////			endBucket[0][i] = numBucket >> 1;     // 标记时遍历到小于这个值
+////			endBucket[1][i] = 0;                  // 标记时遍历到大于等于这个值
+////		}
+////		_for(i, numBucket >> 1, numBucket) {
+////			bitsID[0][i] = -1;
+////			bitsID[1][i] = 0;
+////			endBucket[0][i] = numBucket;
+////			endBucket[1][i] = numBucket >> 1;
+////		}
+////		_for(i, 0, numDimension) {                // 每个维度
+////			_for(j, 0, numBucket >> 1)            // 每个左半部分的桶
+////				_for(k, 0, data[1][i][j].size())  // 桶里每个订阅
+////				bits[1][i][0][data[1][i][j][k].subID] = 1;  // Bug: high不是low, i维, 0号bits, subID
+////			_for(j, numBucket >> 1, numBucket)    // 每个右半部分的桶
+////				_for(k, 0, data[0][i][j].size())  // 桶里每个订阅
+////				bits[0][i][0][data[0][i][j][k].subID] = 1;  // high, i维, 0号bits, subID
+////		}
+//
+//		_for(i, 0, numBucket) {
+//			bitsID[0][i] = bitsID[1][i] = -1;
 //			endBucket[0][i] = numBucket;
-//			endBucket[1][i] = numBucket >> 1;
+//			endBucket[1][i] = 0;
 //		}
-//		_for(i, 0, numDimension) {                // 每个维度
-//			_for(j, 0, numBucket >> 1)            // 每个左半部分的桶
-//				_for(k, 0, data[1][i][j].size())  // 桶里每个订阅
-//				bits[1][i][0][data[1][i][j][k].subID] = 1;  // Bug: high不是low, i维, 0号bits, subID
-//			_for(j, numBucket >> 1, numBucket)    // 每个右半部分的桶
-//				_for(k, 0, data[0][i][j].size())  // 桶里每个订阅
-//				bits[0][i][0][data[0][i][j][k].subID] = 1;  // high, i维, 0号bits, subID
+//		_for(i, 0, numDimension) {              // 每个维度
+//			_for(j, 0, numBucket)           
+//				for (auto &&cb: data[1][i][j])  // 桶里每个订阅
+//					fullBits[i][cb.subID] = 1;  // Bug: high不是low, i维, 0号bits, subID
 //		}
-
-		_for(i, 0, numBucket) {
-			bitsID[0][i] = bitsID[1][i] = -1;
-			endBucket[0][i] = numBucket;
-			endBucket[1][i] = 0;
-		}
-		_for(i, 0, numDimension) {              // 每个维度
-			_for(j, 0, numBucket)           
-				for (auto &&cb: data[1][i][j])  // 桶里每个订阅
-					fullBits[i][cb.subID] = 1;  // Bug: high不是low, i维, 0号bits, subID
-		}
-
-		//cout << "Stop.\n";
-		return;
-	}
+//
+//		//cout << "Stop.\n";
+//		return;
+//	}
 
 	_for(i, 0, numBucket) {
 		//bitsID[0][i] = (numBucket - i - 1) / bitStep - 1; // (1000-499-1)/500=1, (1000-749-1)/250=1, (1000-936-1)/63=1, (1000-873-1)/63=2, (1000-54-1)/63=15 // 这个映射关系可以兼容numBits为1的情况，numBits为1时bitStep为500
@@ -144,7 +144,8 @@ void HEM::initBits() {
 			_for(k, 0, data[1][i][j].size()) {     // 桶里每个订阅
 				subID = data[1][i][j][k].subID;
 				//bits[1][i][0][subID] = 1;        // 0号bits每次必须标记
-				_for(q, b, numBits - 1) bits[1][i][q][subID] = 1;
+				_for(q, b, numBits - 1) 
+					bits[1][i][q][subID] = 1;
 			}
 		}
 	}

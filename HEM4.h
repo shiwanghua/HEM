@@ -14,7 +14,7 @@
 #define mfor(i,a,b) for(int i=(a);i>(b);--i)
 #define mmfor(i,a,b) for(int i=(a);i>=(b);--i)
 
-// 动静模式
+// 动静模式: 动态分组, 静态选bitset
 class HEM4
 {
 private:

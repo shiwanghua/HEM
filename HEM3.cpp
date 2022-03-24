@@ -15,7 +15,7 @@ HEM3::HEM3() {
 		numBits = be2;
 	else
 		numBits = pow(2, be);  // 每个维度上lowValue对应的bits数组个数
-	if (numBits > 1)
+	//if (numBits > 1)
 		fullBits.resize(numDimension);  // 维度总数永远不变，所以只需要resize一次
 
 	//else bitStep = numBucket >> 1;
@@ -90,43 +90,43 @@ void HEM3::initBits() {
 		fix[1][i][numBucket] = fix[1][i][numBucket-1] + data[1][i][numBucket - 1].size(); // Bug: 少了-1!!!
 	}
 
-	if (numBits == 1) { // 只有一个bits时特判，不用fullBits
-		_for(i, 0, numDimension) {
-			int halfWorkLoad = fix[0][i][numBucket] >> 1; // subWordLoadStep  fix[1][i][numBucket]
-			// 第一个后/前缀和包含一半订阅的桶ID，bit数组最远正好覆盖到lowCriticalPoint和highCriticalPoint-1
-			int lowCriticalPoint = -1, highCriticalPoint = -1;
-			_for(j, 0, numBucket) {
-				if (fix[0][i][numBucket - 1 - j] >= halfWorkLoad && lowCriticalPoint == -1)
-					lowCriticalPoint = numBucket - 1 - j;
-				if (fix[1][i][j] >= halfWorkLoad && highCriticalPoint == -1)
-					highCriticalPoint = j;
-			}
-			_for(j, 0, numBucket) {
-				if (j < lowCriticalPoint) {                 // 可以用上bitset
-					bitsID[0][i][j] = 0;
-					endBucket[0][i][j] = lowCriticalPoint;  // 遍历到小于 lowCriticalPoint
-				}
-				else {
-					bitsID[0][i][j] = -1;
-					endBucket[0][i][j] = numBucket;
-					_for(k, 0, data[0][i][j].size())        // 桶里每个订阅
-						bits[0][i][0][data[0][i][j][k].subID] = 1;
-				}
-				if (j < highCriticalPoint) {                // 不可以用bitset
-					bitsID[1][i][j] = -1;
-					endBucket[1][i][j] = 0;
-					_for(k, 0, data[1][i][j].size())        // 桶里每个订阅
-						bits[1][i][0][data[1][i][j][k].subID] = 1;
-				}
-				else {
-					bitsID[1][i][j] = 0;
-					endBucket[1][i][j] = highCriticalPoint; // 遍历到大于等于 highCriticalPoint, 和以前保持一致
-				}
-			}
-		}
-		//cout << "Stop.\n";
-		return;
-	}
+	//if (numBits == 1) { // 只有一个bits时特判，不用fullBits
+	//	_for(i, 0, numDimension) {
+	//		int halfWorkLoad = fix[0][i][numBucket] >> 1; // subWordLoadStep  fix[1][i][numBucket]
+	//		// 第一个后/前缀和包含一半订阅的桶ID，bit数组最远正好覆盖到lowCriticalPoint和highCriticalPoint-1
+	//		int lowCriticalPoint = -1, highCriticalPoint = -1;
+	//		_for(j, 0, numBucket) {
+	//			if (fix[0][i][numBucket - 1 - j] >= halfWorkLoad && lowCriticalPoint == -1)
+	//				lowCriticalPoint = numBucket - 1 - j;
+	//			if (fix[1][i][j] >= halfWorkLoad && highCriticalPoint == -1)
+	//				highCriticalPoint = j;
+	//		}
+	//		_for(j, 0, numBucket) {
+	//			if (j < lowCriticalPoint) {                 // 可以用上bitset
+	//				bitsID[0][i][j] = 0;
+	//				endBucket[0][i][j] = lowCriticalPoint;  // 遍历到小于 lowCriticalPoint
+	//			}
+	//			else {
+	//				bitsID[0][i][j] = -1;
+	//				endBucket[0][i][j] = numBucket;
+	//				_for(k, 0, data[0][i][j].size())        // 桶里每个订阅
+	//					bits[0][i][0][data[0][i][j][k].subID] = 1;
+	//			}
+	//			if (j < highCriticalPoint) {                // 不可以用bitset
+	//				bitsID[1][i][j] = -1;
+	//				endBucket[1][i][j] = 0;
+	//				_for(k, 0, data[1][i][j].size())        // 桶里每个订阅
+	//					bits[1][i][0][data[1][i][j][k].subID] = 1;
+	//			}
+	//			else {
+	//				bitsID[1][i][j] = 0;
+	//				endBucket[1][i][j] = highCriticalPoint; // 遍历到大于等于 highCriticalPoint, 和以前保持一致
+	//			}
+	//		}
+	//	}
+	//	//cout << "Stop.\n";
+	//	return;
+	//}
 
 	// 当前应该映射到的bitId, 桶id, 下一个临界负载点
 	int lowBid, highBid, lowBktId, highBktId, lowSubWorkLoad, highSubWorkLoad;
@@ -238,28 +238,28 @@ void HEM3::initBits() {
 //		orTime += (double)orStart.elapsed_nano();
 //	}
 //
-//	if (numBits > 1) {
+////	if (numBits > 1) {
 //		Timer orStart;
 //		_for(i, 0, numDimension)
 //			if (!attExist[i])
 //				b = b | fullBits[i];
 //		orTime += (double)orStart.elapsed_nano();
-//	}
-//	else {
-//		Timer markStart;
-//		_for(i, 0, numDimension)
-//			if (!attExist[i])
-//				_for(j, 0, endBucket[0][i][0])  // 到临界点为止
-//				_for(k, 0, data[0][i][j].size())
-//				b[data[0][i][j][k].subID] = 1;
-//		markTime += (double)markStart.elapsed_nano();
-//
-//		Timer orStart;
-//		_for(i, 0, numDimension)
-//			if (!attExist[i])
-//				b = b | bits[0][i][0];
-//		orTime += (double)orStart.elapsed_nano();
-//	}
+////	}
+////	else {
+////		Timer markStart;
+////		_for(i, 0, numDimension)
+////			if (!attExist[i])
+////				_for(j, 0, endBucket[0][i][0])  // 到临界点为止
+////				_for(k, 0, data[0][i][j].size())
+////				b[data[0][i][j][k].subID] = 1;
+////		markTime += (double)markStart.elapsed_nano();
+////
+////		Timer orStart;
+////		_for(i, 0, numDimension)
+////			if (!attExist[i])
+////				b = b | bits[0][i][0];
+////		orTime += (double)orStart.elapsed_nano();
+////	}
 //
 //	Timer bitStart;
 //	_for(i, 0, subs)
@@ -301,22 +301,22 @@ void HEM3::initBits() {
  			b = b | bits[1][att][bitsID[1][att][buck]];
  	}
 
- 	if (numBits > 1) {
+ 	//if (numBits > 1) {
  		_for(i, 0, numDimension)
  			if (!attExist[i])
  				b = b | fullBits[i];
- 	}
- 	else {
- 		_for(i, 0, numDimension)
- 			if (!attExist[i])
- 				_for(j, 0, endBucket[0][i][0])  // 到临界点为止
- 				_for(k, 0, data[0][i][j].size())
- 				b[data[0][i][j][k].subID] = 1;
+ 	//}
+ 	//else {
+ 	//	_for(i, 0, numDimension)
+ 	//		if (!attExist[i])
+ 	//			_for(j, 0, endBucket[0][i][0])  // 到临界点为止
+ 	//			_for(k, 0, data[0][i][j].size())
+ 	//			b[data[0][i][j][k].subID] = 1;
 
- 		_for(i, 0, numDimension)
- 			if (!attExist[i])
- 				b = b | bits[0][i][0];
- 	}
+ 	//	_for(i, 0, numDimension)
+ 	//		if (!attExist[i])
+ 	//			b = b | bits[0][i][0];
+ 	//}
 
  	//_for(i, 0, subs)
  	//	if (!b[i])

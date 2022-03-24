@@ -16,12 +16,12 @@ HEM2::HEM2(){
 		numBits = be2;
 	else
 		numBits = pow(2, be);  // 每个维度上lowValue对应的bits数组个数
-	if (numBits > 1) {
+	//if (numBits > 1) {
 		fullBits.resize(numDimension);  // 维度总数永远不变，所以只需要resize一次
 		bitStep = (numBucket + numBits - 1) / numBits;  // 每过这么远新设一个bits
 		// 等价写法：bitStep = numBucket % numBits == 0 ? numBucket / numBits : numBucket / numBits + 1;
-	}
-	else bitStep = numBucket >> 1;
+	/*}
+	else bitStep = numBucket >> 1;*/
 
 	doubleReverse[0] = new bool* [numDimension];
 	doubleReverse[1] = new bool* [numDimension];
@@ -112,62 +112,62 @@ void HEM2::initBits() {
 	//	fix[1][i][numBucket] = fix[1][i][numBucket - 1] + data[1][i][numBucket - 1].size(); // Bug: 少了-1!!!
 	//}
 
-	if (numBits == 1) {                           // 只有一个bits时特判，不用fullBits
+	//if (numBits == 1) {                           // 只有一个bits时特判，不用fullBits
 
-		_for(i, 0, numDimension) {
-			_for(j, 0, numBucket >> 1) {
-				// 此时low这一端一定用到也只能用到0号bits数组
-				bitsID[0][i][j] = 0;                     // 此时的0号代表0.5~1
-				endBucket[0][i][j] = numBucket >> 1;     // 标记时遍历到小于这个值
-				doubleReverse[0][i][j] = false;          // Bug：这个也要赋值（没初始化），找了一个多小时
-				int bid1 = -1, bid2 = 0;
-				int bktid1 = 0, bktid2 = bitStep;
-				int workload1 = fix[1][i][j], workload2 = fix[1][i][bktid2] - fix[1][i][j]; // 第j个桶也需要把1变成0，后进行比较
-				if (workload1 <= workload2) {
-					bitsID[1][i][j] = bid1;              // 为-1时表示确实用不到bits数组
-					endBucket[1][i][j] = bktid1;         // 往左标记1时从 j-1 遍历到 bktid1 号桶
-					doubleReverse[1][i][j] = false;
-				}
-				else {
-					bitsID[1][i][j] = bid2;
-					endBucket[1][i][j] = bktid2;         // 二重反向标记0时从 j 遍历到 bktid2 - 1 号桶
-					doubleReverse[1][i][j] = true;
-				}
-			}
-			_for(j, numBucket >> 1, numBucket) {
-				// 此时high这一端一定用到也只能用到0号bits数组
-				bitsID[1][i][j] = 0;
-				endBucket[1][i][j] = bitStep;            // 标记时遍历到等于这个值
-				doubleReverse[1][i][j] = false;          
+	//	_for(i, 0, numDimension) {
+	//		_for(j, 0, numBucket >> 1) {
+	//			// 此时low这一端一定用到也只能用到0号bits数组
+	//			bitsID[0][i][j] = 0;                     // 此时的0号代表0.5~1
+	//			endBucket[0][i][j] = numBucket >> 1;     // 标记时遍历到小于这个值
+	//			doubleReverse[0][i][j] = false;          // Bug：这个也要赋值（没初始化），找了一个多小时
+	//			int bid1 = -1, bid2 = 0;
+	//			int bktid1 = 0, bktid2 = bitStep;
+	//			int workload1 = fix[1][i][j], workload2 = fix[1][i][bktid2] - fix[1][i][j]; // 第j个桶也需要把1变成0，后进行比较
+	//			if (workload1 <= workload2) {
+	//				bitsID[1][i][j] = bid1;              // 为-1时表示确实用不到bits数组
+	//				endBucket[1][i][j] = bktid1;         // 往左标记1时从 j-1 遍历到 bktid1 号桶
+	//				doubleReverse[1][i][j] = false;
+	//			}
+	//			else {
+	//				bitsID[1][i][j] = bid2;
+	//				endBucket[1][i][j] = bktid2;         // 二重反向标记0时从 j 遍历到 bktid2 - 1 号桶
+	//				doubleReverse[1][i][j] = true;
+	//			}
+	//		}
+	//		_for(j, numBucket >> 1, numBucket) {
+	//			// 此时high这一端一定用到也只能用到0号bits数组
+	//			bitsID[1][i][j] = 0;
+	//			endBucket[1][i][j] = bitStep;            // 标记时遍历到等于这个值
+	//			doubleReverse[1][i][j] = false;          
 
-				int bid1 = -1, bid2 = 0;
-				int bktid1 = numBucket, bktid2 = numBucket - bitStep;// 1000-500
-				int workload1 = fix[0][i][j], workload2 = fix[0][i][bktid2 - 1] - fix[0][i][j];
-				if (workload1 <= workload2) {
-					bitsID[0][i][j] = bid1;              // 为-1时表示确实用不到bits数组
-					endBucket[0][i][j] = bktid1;         // 往右标记1时从 j+1 遍历到 bktid1-1 号桶
-					doubleReverse[0][i][j] = false;
-				}
-				else {
-					bitsID[0][i][j] = bid2;
-					endBucket[0][i][j] = bktid2;         // 二重反向标记0时从 bktid2 遍历到 j 号桶
-					doubleReverse[0][i][j] = true;
-				}
-			}
-		}
+	//			int bid1 = -1, bid2 = 0;
+	//			int bktid1 = numBucket, bktid2 = numBucket - bitStep;// 1000-500
+	//			int workload1 = fix[0][i][j], workload2 = fix[0][i][bktid2 - 1] - fix[0][i][j];
+	//			if (workload1 <= workload2) {
+	//				bitsID[0][i][j] = bid1;              // 为-1时表示确实用不到bits数组
+	//				endBucket[0][i][j] = bktid1;         // 往右标记1时从 j+1 遍历到 bktid1-1 号桶
+	//				doubleReverse[0][i][j] = false;
+	//			}
+	//			else {
+	//				bitsID[0][i][j] = bid2;
+	//				endBucket[0][i][j] = bktid2;         // 二重反向标记0时从 bktid2 遍历到 j 号桶
+	//				doubleReverse[0][i][j] = true;
+	//			}
+	//		}
+	//	}
 
-		// 这段标记与上面的映射分离出来了，可不分先后执行
-		_for(i, 0, numDimension) {                // 每个维度
-			_for(j, 0, numBucket >> 1)            // 每个左半部分的桶
-				_for(k, 0, data[1][i][j].size())  // 桶里每个订阅
-				bits[1][i][0][data[1][i][j][k].subID] = 1;  // Bug: high不是low, i维, 0号bits, subID
-			_for(j, numBucket >> 1, numBucket)    // 每个右半部分的桶
-				_for(k, 0, data[0][i][j].size())  // 桶里每个订阅
-				bits[0][i][0][data[0][i][j][k].subID] = 1;  // low, i维, 0号bits, subID
-		}
-		//cout << "Stop.\n";
-		return;
-	}
+	//	// 这段标记与上面的映射分离出来了，可不分先后执行
+	//	_for(i, 0, numDimension) {                // 每个维度
+	//		_for(j, 0, numBucket >> 1)            // 每个左半部分的桶
+	//			_for(k, 0, data[1][i][j].size())  // 桶里每个订阅
+	//			bits[1][i][0][data[1][i][j][k].subID] = 1;  // Bug: high不是low, i维, 0号bits, subID
+	//		_for(j, numBucket >> 1, numBucket)    // 每个右半部分的桶
+	//			_for(k, 0, data[0][i][j].size())  // 桶里每个订阅
+	//			bits[0][i][0][data[0][i][j][k].subID] = 1;  // low, i维, 0号bits, subID
+	//	}
+	//	//cout << "Stop.\n";
+	//	return;
+	//}
 
 	_for(i, 0, numDimension)
 		_for(j, 0, numBucket) {
@@ -255,7 +255,7 @@ void HEM2::initBits() {
 //
 //		if (doubleReverse[0][att][buck]) {
 //			Timer markStart;
-//			if (bitsID[0][att][buck] == numBits - 1 && numBits > 1)
+//			if (bitsID[0][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
 //				bLocal = fullBits[att];
 //			else
 //				bLocal = bits[0][att][bitsID[0][att][buck]];
@@ -297,7 +297,7 @@ void HEM2::initBits() {
 //
 //		if (doubleReverse[1][att][buck]) {
 //			Timer markStart;
-//			if (bitsID[1][att][buck] == numBits - 1 && numBits > 1)
+//			if (bitsID[1][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
 //				bLocal = fullBits[att];
 //			else
 //				bLocal = bits[1][att][bitsID[1][att][buck]];
@@ -376,7 +376,7 @@ void HEM2::initBits() {
 //
 //		if (doubleReverse[0][att][buck]) {
 //			Timer markStart;
-//			if (bitsID[0][att][buck] == numBits - 1 && numBits > 1)
+//			if (bitsID[0][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
 //				bLocal = fullBits[att];
 //			else
 //				bLocal = bits[0][att][bitsID[0][att][buck]];
@@ -403,7 +403,7 @@ void HEM2::initBits() {
 //
 //		if (doubleReverse[1][att][buck]) {
 //			Timer markStart;
-//			if (bitsID[1][att][buck] == numBits - 1 && numBits > 1)
+//			if (bitsID[1][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
 //				bLocal = fullBits[att];
 //			else
 //				bLocal = bits[1][att][bitsID[1][att][buck]];
@@ -428,28 +428,28 @@ void HEM2::initBits() {
 //		}
 //	}
 //
-//	if (numBits > 1) {
+////	if (numBits > 1) {
 //		Timer orStart;
 //		_for(i, 0, numDimension)
 //			if (!attExist[i])
 //				b = b | fullBits[i];
 //		orTime += (double)orStart.elapsed_nano();
-//	}
-//	else {
-//		Timer markStart;
-//		_for(i, 0, numDimension)
-//			if (!attExist[i])
-//				_for(j, 0, bitStep)
-//				_for(k, 0, data[0][i][j].size())
-//				b[data[0][i][j][k].subID] = 1;
-//		markTime += (double)markStart.elapsed_nano();
-//
-//		Timer orStart;
-//		_for(i, 0, numDimension)
-//			if (!attExist[i])
-//				b = b | bits[0][i][0];
-//		orTime += (double)orStart.elapsed_nano();
-//	}
+////	}
+////	else {
+////		Timer markStart;
+////		_for(i, 0, numDimension)
+////			if (!attExist[i])
+////				_for(j, 0, bitStep)
+////				_for(k, 0, data[0][i][j].size())
+////				b[data[0][i][j][k].subID] = 1;
+////		markTime += (double)markStart.elapsed_nano();
+////
+////		Timer orStart;
+////		_for(i, 0, numDimension)
+////			if (!attExist[i])
+////				b = b | bits[0][i][0];
+////		orTime += (double)orStart.elapsed_nano();
+////	}
 //
 //	Timer bitStart;
 //	_for(i, 0, subs)
@@ -480,7 +480,7 @@ void HEM2::initBits() {
  				b[data[1][att][buck][k].subID] = 1;
 
  		if (doubleReverse[0][att][buck]) {
- 			if (bitsID[0][att][buck] == numBits - 1 && numBits > 1)
+ 			if (bitsID[0][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
  				bLocal = fullBits[att];
  			else
  				bLocal = bits[0][att][bitsID[0][att][buck]];
@@ -500,7 +500,7 @@ void HEM2::initBits() {
  		}
 
  		if (doubleReverse[1][att][buck]) {
- 			if (bitsID[1][att][buck] == numBits - 1 && numBits > 1)
+ 			if (bitsID[1][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
  				bLocal = fullBits[att];
  			else
  				bLocal = bits[1][att][bitsID[1][att][buck]];
@@ -521,11 +521,11 @@ void HEM2::initBits() {
  		}
  	}
 
- 	if (numBits > 1) {
+ 	//if (numBits > 1) {
  		_for(i, 0, numDimension)
  			if (!attExist[i])
  				b = b | fullBits[i];
- 	}
+ 	/*}
  	else {
  		_for(i, 0, numDimension)
  			if (!attExist[i])
@@ -536,7 +536,7 @@ void HEM2::initBits() {
  		_for(i, 0, numDimension)
  			if (!attExist[i])
  				b = b | bits[0][i][0];
- 	}
+ 	}*/
 
 // 	_for(i, 0, subs)
 // 		if (!b[i])

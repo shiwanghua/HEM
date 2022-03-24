@@ -1,5 +1,5 @@
 #include "constant.h"
-string expID = "901";       // Record the experiment ID number
+string expID = "902";       // Record the experiment ID number
 const bool display = false; // whether to print the mapping relation
 const bool verifyID = false; // whether to verify Insertion and Deletion function
 const int interval = 100;   // after a interval of events is matched, print a log
@@ -7,7 +7,7 @@ const double subp = 0;      // subp比例的订阅的谓词定义在前cons个�
 //const int subs = 1000000; // Number of subscriptions.
 const int pubs = 500;       // Number of publications.
 int atts = 20;            // Total number of attributes, i.e. dimensions.
-int attrGroup = 10;          // The number of attribute group in #atts attributes.
+int attrGroup = 1;          // The number of attribute group in #atts attributes.
 int cons = 5;              // Number of constraints(predicates) in one sub.
 int m = 20;                 // Number of attributes in one pub.
 const int attNumType = 0;   // 0: Fixed size of sub and pub. 1: Random size of sub and pub, <= $cons and $m.

@@ -44,13 +44,13 @@ int main(int argc, char **argv) {
 //  run_pRein(gen,deleteNo);
 //	run_adarein(gen, deleteNo);
 
-//	run_HEM(gen);
-//	run_HEM1(gen);
-//	run_HEM2(gen);
-//	run_HEM3(gen);
-//	run_HEM4(gen);
-    run_HEM5(gen,deleteNo);
-    run_HEM5_VAG(gen,deleteNo);
+	//run_HEM(gen);
+	//run_HEM1(gen);
+	//run_HEM2(gen);
+	//run_HEM3(gen);
+	//run_HEM4(gen);
+ //   run_HEM5(gen,deleteNo);
+ //   run_HEM5_VAG(gen,deleteNo);
     //run_HEM5_RAG(gen,deleteNo);
 //	run_HEM5_avxOR(gen, deleteNo);
 //	run_HEMSC(gen);
