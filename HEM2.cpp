@@ -86,8 +86,8 @@ void HEM2::initBits() {
 		bitsID[1][i] = new int[numBucket];
 	}
 	bits[0].clear(), bits[1].clear();
-	bits[0].resize(numDimension, vector<bitset<subs>>(numBits > 1 ? numBits - 1 : 1));
-	bits[1].resize(numDimension, vector<bitset<subs>>(max(numBits - 1, 1)));
+	bits[0].resize(numDimension, vector<bitset<subs>>(numBits - 1));
+	bits[1].resize(numDimension, vector<bitset<subs>>(numBits - 1));
 
 	// 前缀和、后缀和数组, 不包括本身
 	_for(i, 0, numDimension) {

@@ -1,6 +1,6 @@
 #include "HEM5_AG.h"
 
-HEM5_AG::HEM5_AG() {
+HEM5_AG::HEM5_AG(int type) {
 	numSub = 0;
 	numDimension = atts;
 	buckStep = (valDom - 1) / buks + 1;
@@ -37,8 +37,10 @@ HEM5_AG::HEM5_AG() {
 
 	fix[0].resize(numDimension, vector<int>(numBucket + 1));
 	fix[1].resize(numDimension, vector<int>(numBucket + 1));
-
-	cout << "ExpID = " << expID << ". HEM5_DD_AG: bitset number = " << numBits << ", bucketStep = " << buckStep
+	string TYPE;
+	if (type == HEM5_DD_VAG)TYPE = "HEM5_DD_VAG";
+	else TYPE = "HEM5_DD_RAG";
+	cout << "ExpID = " << expID << ". " + TYPE + ": bitset number = " << numBits << ", bucketStep = " << buckStep
 		<< ", numBucket = " << numBucket << ", attrGroup = " << numAttrGroup << ", attGroupSize = " << attrGroupSize << endl;
 }
 
@@ -48,7 +50,24 @@ HEM5_AG::~HEM5_AG() {
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1], doubleReverse[0], doubleReverse[1];
 }
 
-void HEM5_AG::insert(IntervalSub sub) {
+void HEM5_AG::insert_VAG(IntervalSub sub) {
+	Combo c;
+	c.subID = sub.id;
+	for (auto&& iCnt : sub.constraints) {
+		attrGroupBits[iCnt.att / attrGroupSize][sub.id] = 1;
+		c.val = iCnt.lowValue;
+		data[0][iCnt.att][iCnt.lowValue / buckStep].emplace_back(c);
+		c.val = iCnt.highValue;
+		data[1][iCnt.att][iCnt.highValue / buckStep].emplace_back(c);
+	}
+	numSub++;
+}
+
+void HEM5_AG::insert_RAG(IntervalSub sub) {
+	for (int attGroupNo = sub.constraints[0].att / attrGroupSize, i = 0; i < numAttrGroup; i++) {
+		if (i != attGroupNo)
+			attrGroupBits[i][sub.id] = 1;
+	}
 	Combo c;
 	c.subID = sub.id;
 	for (auto&& iCnt : sub.constraints) {
@@ -91,11 +110,11 @@ void HEM5_AG::insert_online_VAG(IntervalSub sub) {
 }
 
 void HEM5_AG::insert_online_RAG(IntervalSub sub) {
-	int b, bucketID, attGroupNo = sub.constraints[0].att / attrGroupSize;
+	int b, bucketID;
 	Combo c;
 	c.subID = sub.id;
 
-	_for(i, 0, numAttrGroup) {
+	for (int attGroupNo = sub.constraints[0].att / attrGroupSize, i = 0; i < numAttrGroup; i++) {
 		if (i != attGroupNo)
 			attrGroupBits[i][sub.id] = 1;
 	}
@@ -166,8 +185,9 @@ bool HEM5_AG::deleteSubscription_VAG(IntervalSub sub) {
 }
 
 bool HEM5_AG::deleteSubscription_RAG(IntervalSub sub) {
-	int find = 0, b, bucketID, id = sub.id, attGroupNo = sub.constraints[0].att / attrGroupSize;
+	int find = 0, b, bucketID, id = sub.id;
 
+	// int attGroupNo = sub.constraints[0].att / attrGroupSize;
 	_for(i, 0, numAttrGroup) {
 		//if (i != attGroupNo)
 		attrGroupBits[i][sub.id] = 0;
@@ -210,7 +230,7 @@ bool HEM5_AG::deleteSubscription_RAG(IntervalSub sub) {
 	return find == sub.size << 1;
 }
 
-void HEM5_AG::initBits_VAG() {
+void HEM5_AG::initBits() {
 	// 如果有多次初始化
 	_for(i, 0,
 		numDimension) delete[] doubleReverse[0][i], doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
@@ -461,10 +481,6 @@ void HEM5_AG::initBits_VAG() {
 	//cout << "HEM5_AGDD Stop.\n";
 }
 
-void HEM5_AG::initBits_RAG() {
-
-}
-
 // 计算时间组成
 //void HEM5_AG::match_VAG(const Pub &pub, int &matchSubs) {
 //	bitset<subs> b, bLocal;
@@ -560,12 +576,14 @@ void HEM5_AG::match_VAG(const Pub& pub, int& matchSubs)
 	bitset<subs> b; // register
 	bitset<subs> bLocal;
 	vector<bool> attExist(numDimension, false);
+	vector<bool> attGroupExist(numAttrGroup, false);
 	int value, att, buck;
 
 	_for(i, 0, pub.size)
 	{
 		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 		attExist[att] = true;
+		attGroupExist[att / attrGroupSize] = true;
 		_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
 			b[data[0][att][buck][k].subID] = 1;
 		_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
@@ -573,7 +591,7 @@ void HEM5_AG::match_VAG(const Pub& pub, int& matchSubs)
 
 		if (doubleReverse[0][att][buck])
 		{
-			if (bitsID[0][att][buck] == numBits - 1 ) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
+			if (bitsID[0][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
 				bLocal = fullBits[att];
 			else
 				bLocal = bits[0][att][bitsID[0][att][buck]];
@@ -617,21 +635,34 @@ void HEM5_AG::match_VAG(const Pub& pub, int& matchSubs)
 		}
 	}
 
-	/*if (numBits > 1)
+	// 处理空维度情况
+	/*if (numBits > 1) // 如果只有一个bitset时bitset是设置为负责一半的桶而不是全部桶就要用if区分
 	{*/
-		_for(i, 0, numDimension) if (!attExist[i])
-			b = b | fullBits[i];
-	/*}
-	else
-	{
-		_for(i, 0, numDimension) if (!attExist[i])
-			_for(j, 0, endBucket[0][i][0])
-			_for(k, 0, data[0][i][j].size())
-			b[data[0][i][j][k].subID] = 1;
+	/*_for(i, 0, numDimension) if (!attExist[i])
+		b = b | fullBits[i];*/
+		/*}
+		else
+		{
+			_for(i, 0, numDimension) if (!attExist[i])
+				_for(j, 0, endBucket[0][i][0])
+				_for(k, 0, data[0][i][j].size())
+				b[data[0][i][j][k].subID] = 1;
 
-		_for(i, 0, numDimension) if (!attExist[i])
-			b = b | bits[0][i][0];
-	}*/
+			_for(i, 0, numDimension) if (!attExist[i])
+				b = b | bits[0][i][0];
+		}*/
+	for (int AGi = 0, base; AGi < numAttrGroup; AGi++) {
+		if (attGroupExist[AGi]) {
+			base = AGi * attrGroupSize;
+			_for(aj, base, base + attrGroupSize) {
+				if (!attExist[aj])
+					b = b | fullBits[aj];
+			}
+		}
+		else {
+			b = b | attrGroupBits[AGi];
+		}
+	}
 
 	//_for(i, 0, subs) if (!b[i])
 	//{
@@ -640,8 +671,98 @@ void HEM5_AG::match_VAG(const Pub& pub, int& matchSubs)
 	//}
 	matchSubs = numSub - b.count();
 }
-void HEM5_AG::match_RAG(const Pub& pub, int& matchSubs) {
 
+void HEM5_AG::match_RAG(const Pub& pub, int& matchSubs) {
+	bitset<subs> b; // register
+	bitset<subs> bLocal;
+	vector<bool> attExist(numDimension, false);
+	int value, att, buck;
+
+	_for(i, 0, pub.size)
+	{
+		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
+		attExist[att] = true;
+		_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
+			b[data[0][att][buck][k].subID] = 1;
+		_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
+			b[data[1][att][buck][k].subID] = 1;
+
+		if (doubleReverse[0][att][buck])
+		{
+			if (bitsID[0][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
+				bLocal = fullBits[att];
+			else
+				bLocal = bits[0][att][bitsID[0][att][buck]];
+			_for(j, endBucket[0][att][buck], buck + 1)
+				_for(k, 0, data[0][att][j].size())
+				bLocal[data[0][att][j][k].subID] = 0;
+
+			b = b | bLocal;
+		}
+		else
+		{
+			_for(j, buck + 1, endBucket[0][att][buck])
+				_for(k, 0, data[0][att][j].size())
+				b[data[0][att][j][k].subID] = 1;
+
+			if (bitsID[0][att][buck] != -1)
+				b = b | bits[0][att][bitsID[0][att][buck]];
+		}
+
+		if (doubleReverse[1][att][buck])
+		{
+			if (bitsID[1][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
+				bLocal = fullBits[att];
+			else
+				bLocal = bits[1][att][bitsID[1][att][buck]];
+
+			_for(j, buck, endBucket[1][att][buck])
+				_for(k, 0, data[1][att][j].size())
+				bLocal[data[1][att][j][k].subID] = 0;
+
+			b = b | bLocal;
+		}
+		else
+		{
+			_for(j, endBucket[1][att][buck], buck)
+				_for(k, 0, data[1][att][j].size())
+				b[data[1][att][j][k].subID] = 1;
+
+			if (bitsID[1][att][buck] != -1)
+				b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
+		}
+	}
+
+	// 处理空维度情况
+	/*if (numBits > 1) // 如果只有一个bitset时bitset是设置为负责一半的桶而不是全部桶就要用if区分
+	{*/
+	/*_for(i, 0, numDimension) if (!attExist[i])
+		b = b | fullBits[i];*/
+		/*}
+		else
+		{
+			_for(i, 0, numDimension) if (!attExist[i])
+				_for(j, 0, endBucket[0][i][0])
+				_for(k, 0, data[0][i][j].size())
+				b[data[0][i][j][k].subID] = 1;
+
+			_for(i, 0, numDimension) if (!attExist[i])
+				b = b | bits[0][i][0];
+		}*/
+	int attGroupNo = att / attrGroupSize;
+	b = b | attrGroupBits[attGroupNo];
+	int base = attGroupNo * attrGroupSize;
+	_for(ai, base, base + attrGroupSize) {
+		if (!attExist[ai])
+			b = b | fullBits[ai];
+	}
+
+	//_for(i, 0, subs) if (!b[i])
+	//{
+	//	++matchSubs;
+	//	//cout << "HEM5_AG matches sub: " << i << endl;
+	//}
+	matchSubs = numSub - b.count();
 }
 
 //void HEM5_AG::calBucketSize() {

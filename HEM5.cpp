@@ -17,9 +17,9 @@ HEM5::HEM5() {
 	else
 		numBits = pow(2, be); // 每个维度上lowValue对应的bits数组个数
 	//if (numBits > 1)
-		fullBits.resize(numDimension); // 维度总数永远不变，所以只需要resize一次
+	fullBits.resize(numDimension); // 维度总数永远不变，所以只需要resize一次
 
-	//else bitStep = numBucket >> 1;
+//else bitStep = numBucket >> 1;
 
 	doubleReverse[0] = new bool* [numDimension];
 	doubleReverse[1] = new bool* [numDimension];
@@ -163,8 +163,8 @@ void HEM5::initBits() {
 		bitsID[1][i] = new int[numBucket];
 	}
 	bits[0].clear(), bits[1].clear();
-	bits[0].resize(numDimension, vector<bitset<subs>>(numBits > 1 ? numBits - 1 : 1));
-	bits[1].resize(numDimension, vector<bitset<subs>>(max(numBits - 1, 1)));
+	bits[0].resize(numDimension, vector<bitset<subs>>(numBits - 1));
+	bits[1].resize(numDimension, vector<bitset<subs>>(numBits - 1));
 
 	//// 前缀和、后缀和数组, 不包括本身
 	//_for(i, 0, numDimension) {
@@ -489,7 +489,7 @@ void HEM5::match(const Pub& pub, int& matchSubs)
 	bitset<subs> b; // register
 	bitset<subs> bLocal;
 	vector<bool> attExist(numDimension, false);
-    int value, att, buck;
+	int value, att, buck;
 
 	_for(i, 0, pub.size)
 	{
@@ -524,7 +524,7 @@ void HEM5::match(const Pub& pub, int& matchSubs)
 
 		if (doubleReverse[1][att][buck])
 		{
-			if (bitsID[1][att][buck] == numBits - 1 ) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
+			if (bitsID[1][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
 				bLocal = fullBits[att];
 			else
 				bLocal = bits[1][att][bitsID[1][att][buck]];
@@ -548,8 +548,8 @@ void HEM5::match(const Pub& pub, int& matchSubs)
 
 	/*if (numBits > 1)
 	{*/
-		_for(i, 0, numDimension) if (!attExist[i])
-			b = b | fullBits[i];
+	_for(i, 0, numDimension) if (!attExist[i])
+		b = b | fullBits[i];
 	/*}
 	else
 	{
@@ -585,12 +585,12 @@ void HEM5::match(const Pub& pub, int& matchSubs)
 
 int HEM5::calMemory() {
 	long long size = 0; // Byte
-	size += sizeof(bits)+sizeof(bits[0]) * 2+sizeof(data)+sizeof(data[0])+sizeof(data[1]);
+	size += sizeof(bits) + sizeof(bits[0]) * 2 + sizeof(data) + sizeof(data[0]) + sizeof(data[1]);
 	//cout << sizeof(bits[0]) << " " << sizeof(bits[1]) <<" " << sizeof(data) << " " << sizeof(data[0]) << " " << sizeof(data[1]) << "\n";
 	_for(i, 0, numDimension) {
 		// 若每个维度上bits数组个数一样就是 2*sizeof(bitset<subs>)*numDimension*numBits
 		size += sizeof(bitset<subs>) * (bits[0][i].size() + bits[1][i].size());
-		size += (sizeof(bits[0][i]) + sizeof(data[0][i]))*2;
+		size += (sizeof(bits[0][i]) + sizeof(data[0][i])) * 2;
 		//cout << i << ": " << sizeof(bits[0][i]) << " " << sizeof(data[0][i]) << " ";
 		_for(j, 0, numBucket) {
 			//cout << sizeof(data[0][i][j]) << " " << sizeof(data[1][i][j]) << " ";
@@ -609,7 +609,7 @@ int HEM5::calMemory() {
 
 	// 两个fix
 	//cout << "fix: " << sizeof(fix) << " " << sizeof(fix[0]) << " " << sizeof(fix[0][10]) << sizeof(fix[1][7][20]) << "\n";
-	size+= sizeof(fix)+ sizeof(fix[0])*2+ sizeof(fix[0][0])* numDimension+ sizeof(fix[0][0][0])* numDimension * (numBucket+1)*2;
+	size += sizeof(fix) + sizeof(fix[0]) * 2 + sizeof(fix[0][0]) * numDimension + sizeof(fix[0][0][0]) * numDimension * (numBucket + 1) * 2;
 
 	// 两个endBucket、两个bitsID、两个doubleReverse
 	size += (4 * sizeof(int) + 2 * sizeof(bool)) * numDimension * numBucket;

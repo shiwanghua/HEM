@@ -28,13 +28,13 @@ public:
 	double bitTime = 0.0;                   // 遍历bits数组得到结果所需的时间
 	//vector<unordered_set<int>> bucketSub;   // id相同的桶存储的不同订阅个数的和
 
-	HEM5_AG();
+	HEM5_AG(int);
 	~HEM5_AG();
 
-	void insert(IntervalSub sub); // 没有bitset时的插入算法
+	void insert_VAG(IntervalSub sub); // 没有bitset时的插入算法
+	void insert_RAG(IntervalSub sub); // 没有bitset时的插入算法
 
-	void initBits_VAG();      // 插入完后初始化bits数组
-	void initBits_RAG();
+	void initBits();      // 插入完后初始化bits数组
 
 	void insert_online_VAG(IntervalSub sub); // 构建好订阅集后的在线插入订阅算法, 虚拟属性组版本
 	void insert_online_RAG(IntervalSub sub); // 构建好订阅集后的在线插入订阅算法, 实际属性组版本

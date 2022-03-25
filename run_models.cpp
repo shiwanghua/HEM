@@ -1206,7 +1206,7 @@ void run_HEM5(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) {
 
 // 动动模式 + 虚属性组(事件订阅属性分布无限制)版本
 void run_HEM5_VAG(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) {
-	HEM5_AG hem5_vag;
+	HEM5_AG hem5_vag(HEM5_DD_VAG);
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -1218,7 +1218,7 @@ void run_HEM5_VAG(const intervalGenerator& gen, unordered_map<int, bool> deleteN
 	for (int i = 0; i < subs; i++) {
 		Timer insertStart;
 
-		hem5_vag.insert(gen.subList[i]); // Insert sub[i] into data structure.
+		hem5_vag.insert_VAG(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
@@ -1227,7 +1227,7 @@ void run_HEM5_VAG(const intervalGenerator& gen, unordered_map<int, bool> deleteN
 
 	double initTime;
 	Timer initStart;
-	hem5_vag.initBits_VAG();
+	hem5_vag.initBits();
 	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 
 	// 验证插入删除正确性
@@ -1303,7 +1303,7 @@ void run_HEM5_VAG(const intervalGenerator& gen, unordered_map<int, bool> deleteN
 
 // 动动模式 + 实属性组(单个事件、订阅的属性限制在某个属性组中)版本
 void run_HEM5_RAG(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) {
-	HEM5_AG hem5_rag;
+	HEM5_AG hem5_rag(HEM5_DD_RAG);
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -1315,7 +1315,7 @@ void run_HEM5_RAG(const intervalGenerator& gen, unordered_map<int, bool> deleteN
 	for (int i = 0; i < subs; i++) {
 		Timer insertStart;
 
-		hem5_rag.insert(gen.subList[i]); // Insert sub[i] into data structure.
+		hem5_rag.insert_RAG(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
@@ -1324,7 +1324,7 @@ void run_HEM5_RAG(const intervalGenerator& gen, unordered_map<int, bool> deleteN
 
 	double initTime;
 	Timer initStart;
-	hem5_rag.initBits_RAG();
+	hem5_rag.initBits();
 	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 
 	// 验证插入删除正确性

@@ -6,7 +6,7 @@ HEM::HEM() {
 	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
 	cout << "ExpID = " << expID << ". HEMPS: bit exponent = " << be << ", bucketStep = " << buckStep << ", numBucket = "
-		 << numBucket << endl;
+		<< numBucket << endl;
 
 	//bucketSub.resize(numBucket);
 	data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
@@ -61,10 +61,8 @@ void HEM::initBits() {
 	bitsID[0] = new int[numBucket];
 	bitsID[1] = new int[numBucket];
 	bits[0].clear(), bits[1].clear();
-	if (numBits > 1) {
-		bits[0].resize(numDimension, vector<bitset<subs>>(numBits > 1 ? numBits - 1 : 1));
-		bits[1].resize(numDimension, vector<bitset<subs>>(max(numBits - 1, 1)));
-	}
+	bits[0].resize(numDimension, vector<bitset<subs>>(numBits - 1));
+	bits[1].resize(numDimension, vector<bitset<subs>>(numBits - 1));
 
 	// 用于old initBits(fullBits在0号数组中存了两次的版本）
 	//bits[0].resize(numDimension, vector<bitset<subs>>(numBits));
@@ -80,43 +78,43 @@ void HEM::initBits() {
 		}
 	}*/
 
-//	if (numBits == 1) {                           // 只有一个bits时特判，only 用fullBits
-//
-////		_for(i, 0, numBucket >> 1) {
-////			bitsID[0][i] = 0;                     // 此时的0号代表0.5~1, 不是0~1
-////			bitsID[1][i] = -1;                    // 此时用不到bits数组, -1表示非法
-////			endBucket[0][i] = numBucket >> 1;     // 标记时遍历到小于这个值
-////			endBucket[1][i] = 0;                  // 标记时遍历到大于等于这个值
-////		}
-////		_for(i, numBucket >> 1, numBucket) {
-////			bitsID[0][i] = -1;
-////			bitsID[1][i] = 0;
-////			endBucket[0][i] = numBucket;
-////			endBucket[1][i] = numBucket >> 1;
-////		}
-////		_for(i, 0, numDimension) {                // 每个维度
-////			_for(j, 0, numBucket >> 1)            // 每个左半部分的桶
-////				_for(k, 0, data[1][i][j].size())  // 桶里每个订阅
-////				bits[1][i][0][data[1][i][j][k].subID] = 1;  // Bug: high不是low, i维, 0号bits, subID
-////			_for(j, numBucket >> 1, numBucket)    // 每个右半部分的桶
-////				_for(k, 0, data[0][i][j].size())  // 桶里每个订阅
-////				bits[0][i][0][data[0][i][j][k].subID] = 1;  // high, i维, 0号bits, subID
-////		}
-//
-//		_for(i, 0, numBucket) {
-//			bitsID[0][i] = bitsID[1][i] = -1;
-//			endBucket[0][i] = numBucket;
-//			endBucket[1][i] = 0;
-//		}
-//		_for(i, 0, numDimension) {              // 每个维度
-//			_for(j, 0, numBucket)           
-//				for (auto &&cb: data[1][i][j])  // 桶里每个订阅
-//					fullBits[i][cb.subID] = 1;  // Bug: high不是low, i维, 0号bits, subID
-//		}
-//
-//		//cout << "Stop.\n";
-//		return;
-//	}
+	//	if (numBits == 1) {                           // 只有一个bits时特判，only 用fullBits
+	//
+	////		_for(i, 0, numBucket >> 1) {
+	////			bitsID[0][i] = 0;                     // 此时的0号代表0.5~1, 不是0~1
+	////			bitsID[1][i] = -1;                    // 此时用不到bits数组, -1表示非法
+	////			endBucket[0][i] = numBucket >> 1;     // 标记时遍历到小于这个值
+	////			endBucket[1][i] = 0;                  // 标记时遍历到大于等于这个值
+	////		}
+	////		_for(i, numBucket >> 1, numBucket) {
+	////			bitsID[0][i] = -1;
+	////			bitsID[1][i] = 0;
+	////			endBucket[0][i] = numBucket;
+	////			endBucket[1][i] = numBucket >> 1;
+	////		}
+	////		_for(i, 0, numDimension) {                // 每个维度
+	////			_for(j, 0, numBucket >> 1)            // 每个左半部分的桶
+	////				_for(k, 0, data[1][i][j].size())  // 桶里每个订阅
+	////				bits[1][i][0][data[1][i][j][k].subID] = 1;  // Bug: high不是low, i维, 0号bits, subID
+	////			_for(j, numBucket >> 1, numBucket)    // 每个右半部分的桶
+	////				_for(k, 0, data[0][i][j].size())  // 桶里每个订阅
+	////				bits[0][i][0][data[0][i][j][k].subID] = 1;  // high, i维, 0号bits, subID
+	////		}
+	//
+	//		_for(i, 0, numBucket) {
+	//			bitsID[0][i] = bitsID[1][i] = -1;
+	//			endBucket[0][i] = numBucket;
+	//			endBucket[1][i] = 0;
+	//		}
+	//		_for(i, 0, numDimension) {              // 每个维度
+	//			_for(j, 0, numBucket)           
+	//				for (auto &&cb: data[1][i][j])  // 桶里每个订阅
+	//					fullBits[i][cb.subID] = 1;  // Bug: high不是low, i维, 0号bits, subID
+	//		}
+	//
+	//		//cout << "Stop.\n";
+	//		return;
+	//	}
 
 	_for(i, 0, numBucket) {
 		//bitsID[0][i] = (numBucket - i - 1) / bitStep - 1; // (1000-499-1)/500=1, (1000-749-1)/250=1, (1000-936-1)/63=1, (1000-873-1)/63=2, (1000-54-1)/63=15 // 这个映射关系可以兼容numBits为1的情况，numBits为1时bitStep为500
@@ -144,7 +142,7 @@ void HEM::initBits() {
 			_for(k, 0, data[1][i][j].size()) {     // 桶里每个订阅
 				subID = data[1][i][j][k].subID;
 				//bits[1][i][0][subID] = 1;        // 0号bits每次必须标记
-				_for(q, b, numBits - 1) 
+				_for(q, b, numBits - 1)
 					bits[1][i][q][subID] = 1;
 			}
 		}
@@ -306,36 +304,36 @@ void HEM::match(const Pub& pub, int& matchSubs)
 		orTime += (double)orStart.elapsed_nano();
 	}
 
-//	if (numBits > 1) {
-		Timer orStart;
-		_for(i, 0, numDimension)
-			if (!attExist[i])
-				b = b | fullBits[i];
-		orTime += (double)orStart.elapsed_nano();
-//	}
-//	else {
-//		Timer markStart;
-//		_for(i, 0, numDimension)
-//			if (!attExist[i])
-//				_for(j, 0, bitStep)
-//				_for(k, 0, data[0][i][j].size())
-//				b[data[0][i][j][k].subID] = 1;
-//		markTime += (double)markStart.elapsed_nano();
-//
-//		Timer orStart;
-//		_for(i, 0, numDimension)
-//			if (!attExist[i])
-//				b = b | bits[0][i][0];
-//		orTime += (double)orStart.elapsed_nano();
-//	}
+	//	if (numBits > 1) {
+	Timer orStart;
+	_for(i, 0, numDimension)
+		if (!attExist[i])
+			b = b | fullBits[i];
+	orTime += (double)orStart.elapsed_nano();
+	//	}
+	//	else {
+	//		Timer markStart;
+	//		_for(i, 0, numDimension)
+	//			if (!attExist[i])
+	//				_for(j, 0, bitStep)
+	//				_for(k, 0, data[0][i][j].size())
+	//				b[data[0][i][j][k].subID] = 1;
+	//		markTime += (double)markStart.elapsed_nano();
+	//
+	//		Timer orStart;
+	//		_for(i, 0, numDimension)
+	//			if (!attExist[i])
+	//				b = b | bits[0][i][0];
+	//		orTime += (double)orStart.elapsed_nano();
+	//	}
 
 	Timer bitStart;
-//	_for(i, 0, subs)
-//		if (!b[i])
-//		{
-//			++matchSubs;
-//			//cout << "HEM matches sub: : " << i << endl;
-//		}
+	//	_for(i, 0, subs)
+	//		if (!b[i])
+	//		{
+	//			++matchSubs;
+	//			//cout << "HEM matches sub: : " << i << endl;
+	//		}
 	matchSubs = subs - b.count();
 	bitTime += (double)bitStart.elapsed_nano();
 }
@@ -399,8 +397,8 @@ int HEM::calMemory() {
 	long long size = 0; // Byte
 	_for(i, 0, numDimension) {
 		// 若每个维度上bits数组个数一样就是 2*numDimension*numBits*sizeof(bitset<subs>)
-		if (numBits > 1)
-			size += sizeof(bitset<subs>) * (bits[0][i].size() + bits[1][i].size());
+		//if (numBits > 1)
+		size += sizeof(bitset<subs>) * (bits[0][i].size() + bits[1][i].size());
 		_for(j, 0, numBucket) size += sizeof(Combo) * (data[0][i][j].size() + data[1][i][j].size());
 	}
 
@@ -410,7 +408,7 @@ int HEM::calMemory() {
 	// 两个endBucket和两个bitsID
 	size += 4 * numBucket * sizeof(int);
 	size = size / 1024 / 1024; // MB
-	return (int) size;
+	return (int)size;
 }
 
 void HEM::printRelation() {
