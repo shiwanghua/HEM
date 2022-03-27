@@ -11,7 +11,7 @@ extern const bool display; // 是否打印映射关系
 extern const bool verifyID;// whether to verify Insertion and Deletion function
 extern const int interval; // 每匹配这么多个事件输出一条日志信息
 extern const double subp;  // subp比例的订阅和事件的谓词定义在前cons个维度上
-const int subs = 100000;  // Number of subscriptions.
+const int subs = 10;  // Number of subscriptions.
 extern const int pubs;     // Number of publications.
 extern int atts;           // Total number of attributes, i.e. dimensions.
 extern int attrGroup;          // The number of attribute group in #atts attributes.
@@ -46,7 +46,15 @@ enum {
 //const int MAX_ATTS = 20; // Tama
 //const int MAX_BUCKS = 1000;
 extern const double falsePositiveRate;
-
+enum {
+	AdaRein_ORI,
+	AdaRein_SSS, // Static Succession Selection
+	AdaRein_SDS, // Static Discretization Selection
+	AdaRein_DSS, // Dynamic Succession Selection
+	AdaRein_DDS, // Dynamic Discretization Selection
+	AdaRein_IBU, // Independent Bucket Unit (Static)
+	AdaRein_PPH  // PeePHole
+};
 // pRein
 extern int parallelDegree;
 

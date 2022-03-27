@@ -3,6 +3,7 @@
 #include<vector>
 #include <cstring>
 #include <algorithm>
+#include <queue>
 #include "generator.h"
 #include "chrono_time.h"
 #include "util.h"
@@ -21,26 +22,24 @@ class AdaRein {
 //    attAndCount attsCounts[MAX_ATTS];
 	vector<vector<vector<Combo>>> data[2];
 	vector<bool> skipped;
-	vector<attAndCount> attsCounts;
+	vector<attAndCount> attsCounts; // 用于原始版本
+	vector<int> attrFre; // 其他版本使用的属性频率数据结构
+    vector<int> endBucket[2]; // i号属性上所应遍历到的终点桶 low(0)上表示遍历到小于这个桶, high(1)上表示遍历到大于等于这个桶
 
 public:
     int numBucket;
-    AdaRein():numSub(0) {
-        buckStep = (valDom - 1) / buks + 1;
-        numBucket = (valDom - 1) / buckStep + 1;
-		data[0].resize(atts, vector<vector<Combo>>(numBucket));
-		data[1].resize(atts, vector<vector<Combo>>(numBucket));
-		skipped.resize(atts, false);
-		attsCounts.resize(atts);
-        cout << "ExpID = " << expID << ". AdaRein: falsePositiveRate = " << falsePositiveRate << ", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
-    }
+    AdaRein(int);
 
     void insert(IntervalSub sub);
     bool deleteSubscription(IntervalSub sub);
 
     void exact_match(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
-    void select_skipped_atts(double falsePositive, const vector<IntervalSub>& subList);
-    void approx_match(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
+
+    void original_selection(double falsePositive, const vector<IntervalSub>& subList);
+
+    void static_succession_selection(double falsePositive, const vector<IntervalSub>& subList);
+
+    void approx_match_ori(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
 
     int calMemory();      // 计算占用内存大小, 返回MB
 };

@@ -51,7 +51,7 @@ cls test() {
 	return c;
 }
 
-int maisn() {
+int main() {
 	cls qq;
 	vector<cls> a;
 	a.emplace_back(qq);

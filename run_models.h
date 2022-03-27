@@ -39,7 +39,7 @@ void run_rein_forward_CBOMP(const intervalGenerator& gen, unordered_map<int, boo
 void run_rein_hybrid(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 void run_rein_hybrid_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 void run_pRein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
-void run_adarein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
+void run_AdaRein_ORI(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 
 void run_HEM(const intervalGenerator& gen);
 void run_HEM1(const intervalGenerator& gen);

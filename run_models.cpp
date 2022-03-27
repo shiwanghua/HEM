@@ -565,8 +565,8 @@ void run_pRein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) 
 }
 
 // ◊‘  ”¶Rein
-void run_adarein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) {
-	AdaRein adarein;
+void run_AdaRein_ORI(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) {
+	AdaRein adarein(AdaRein_ORI);
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -586,7 +586,7 @@ void run_adarein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo
 
 	double initTime;
 	Timer initStart;
-	adarein.select_skipped_atts(falsePositiveRate, gen.subList);
+	adarein.original_selection(falsePositiveRate, gen.subList);
 	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 	cout << "AdaRein Skipping Task Finishes.\n";
 
@@ -610,7 +610,7 @@ void run_adarein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo
 		Timer matchStart;
 
 		//adarein.exact_match(gen.pubList[i], matchSubs,gen.subList);
-		adarein.approx_match(gen.pubList[i], matchSubs, gen.subList);
+		adarein.approx_match_ori(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
@@ -1346,7 +1346,7 @@ void run_HEM5_RAG(const intervalGenerator& gen, unordered_map<int, bool> deleteN
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 		int64_t begin = GetCPUCycle();
-		hem5_rag.match_VAG(gen.pubList[i], matchSubs);
+		hem5_rag.match_RAG(gen.pubList[i], matchSubs);
 		matchInstructionList.push_back(GetCPUCycle() - begin);
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);

@@ -1,5 +1,37 @@
 #include "AdaRein.h"
 
+AdaRein::AdaRein(int type) :numSub(0) {
+	buckStep = (valDom - 1) / buks + 1;
+	numBucket = (valDom - 1) / buckStep + 1;
+	data[0].resize(atts, vector<vector<Combo>>(numBucket));
+	data[1].resize(atts, vector<vector<Combo>>(numBucket));
+	skipped.resize(atts, false);
+	string TYPE;
+	switch (type)
+	{
+	case AdaRein_ORI:
+		TYPE = "AdaRein_ORI";
+		attsCounts.resize(atts);
+	case AdaRein_SSS:
+		TYPE = "AdaRein_SSS";
+		attrFre.resize(atts);
+		endBucket[0].resize(atts, vector<int>(buks));
+		endBucket[1].resize(atts, vector<int>(buks));
+	case AdaRein_SDS:
+		TYPE = "AdaRein_SDS";
+	case AdaRein_DSS:
+		TYPE = "AdaRein_DSS";
+	case AdaRein_DDS:
+		TYPE = "AdaRein_DDS";
+	case AdaRein_IBU:
+		TYPE = "AdaRein_IBU";
+	case AdaRein_PPH:
+		TYPE = "AdaRein_PPH";
+	default:
+		break;
+	}
+	cout << "ExpID = " << expID << ". " + TYPE + ": falsePositiveRate = " << falsePositiveRate << ", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
+}
 
 void AdaRein::insert(IntervalSub sub) {
 	for (int i = 0; i < sub.size; i++) {
@@ -43,7 +75,7 @@ bool AdaRein::deleteSubscription(IntervalSub sub) {
 	return find == 2 * sub.size;
 }
 
-void AdaRein::select_skipped_atts(double falsePositive, const vector<IntervalSub> &subList) {
+void AdaRein::original_selection(double falsePositive, const vector<IntervalSub>& subList) {
 	for (int i = 0; i < atts; i++) {
 		attsCounts[i].att = i;
 		attsCounts[i].count = 0;
@@ -63,10 +95,10 @@ void AdaRein::select_skipped_atts(double falsePositive, const vector<IntervalSub
 	avgWidth /= countSum;
 
 	// faster version, need to be verified.
-	/*_for(i, 0, atts) {
+	/*_for(skipIndex, 0, atts) {
 		_for(j, 0, bucks)
-			attsCounts[i].count += data[0][i][j].size();
-		countSum += attsCounts[i].count;
+			attsCounts[skipIndex].count += data[0][skipIndex][j].size();
+		countSum += attsCounts[skipIndex].count;
 	}*/
 
 	sort(attsCounts.begin(), attsCounts.end());
@@ -74,12 +106,13 @@ void AdaRein::select_skipped_atts(double falsePositive, const vector<IntervalSub
 	for (int i = 0; i < atts; i++) {
 		currentSum += attsCounts[i].count;
 		// µÈÐ§°æ±¾:
-		if ((double) (countSum - currentSum) / (double) subs >
+		if ((double)(countSum - currentSum) / (double)subs >
 			avgSubSize + log(falsePositive + 1) / log(avgWidth / valDom)) {
-//		if ((double)(countSum - currentSum) / (double)subList.size() > subList[0].constraints.size() + log(falsePositive + 1) / log((subList[0].constraints[0].highValue - subList[0].constraints[0].lowValue) / (double)valDom)) {
+			//		if ((double)(countSum - currentSum) / (double)subList.size() > subList[0].constraints.size() + log(falsePositive + 1) / log((subList[0].constraints[0].highValue - subList[0].constraints[0].lowValue) / (double)valDom)) {
 			skipped[attsCounts[i].att] = true;
-			//cout << " " << attsCounts[i].att; // could output in finding order.
-		} else {
+			//cout << " " << attsCounts[skipIndex].att; // could output in finding order.
+		}
+		else {
 			currentSum -= attsCounts[i].count; // back
 			break;
 		}
@@ -88,7 +121,7 @@ void AdaRein::select_skipped_atts(double falsePositive, const vector<IntervalSub
 	if (!display) {
 		int counter = 0;
 		cout << "avgSubSize= " << avgSubSize << ", " << "avgWidth= " << avgWidth << ", countSum= " << countSum << ", "
-			 << "currentSum= " << currentSum << ".\n";
+			<< "currentSum= " << currentSum << ".\n";
 		cout << "Skip attribute:";
 		_for(i, 0, atts) {
 			if (skipped[i]) {
@@ -100,7 +133,69 @@ void AdaRein::select_skipped_atts(double falsePositive, const vector<IntervalSub
 	}
 }
 
-void AdaRein::exact_match(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
+void AdaRein::static_succession_selection(double falsePositive, const vector<IntervalSub>& subList) {
+	for (int i = 0; i < atts; i++) {
+		attsCounts[i].att = i;
+		attsCounts[i].count = 0;
+	}
+
+	int countSum = 0, currentSum = 0;
+	double avgSubSize = 0, avgWidth = 0;
+
+	//for (int skipIndex = 0; skipIndex < subList.size(); skipIndex++) {
+	//	countSum += subList[skipIndex].size;
+	//	for (int j = 0; j < subList[skipIndex].size; j++) {
+	//		++attsCounts[subList[skipIndex].constraints[j].att].count;
+	//		avgWidth += subList[skipIndex].constraints[j].highValue - subList[skipIndex].constraints[j].lowValue;
+	//	}
+	//}
+	_for(i, 0, atts) {
+		_for(j, 0, buks)
+			attsCounts[i].count += data[0][i][j].size();
+		countSum += attsCounts[i].count;
+	}
+	avgSubSize = countSum / subList.size();
+	avgWidth /= countSum;
+
+	sort(attsCounts.begin(), attsCounts.end());
+
+	double minK = log(pow(avgWidth / valDom, avgSubSize) + falsePositive) / log(avgWidth / valDom);
+	int skipIndex = 0;
+	for (skipIndex = 0; skipIndex < atts; skipIndex++) {
+		currentSum += attsCounts[skipIndex].count;
+		if ((double)(countSum - currentSum) / (double)subs > minK) {
+			skipped[attsCounts[skipIndex].att] = true;
+			//cout << " " << attsCounts[skipIndex].att; // could output in finding order.
+		}
+		else {
+			currentSum -= attsCounts[skipIndex].count; // back
+			break;
+		}
+	}
+
+	// <AttributeId, low0/high1, bucketId, sizeOfBucket>
+	priority_queue<tuple<int, int, int, int>> minHeap;
+	while (skipIndex < atts) {
+		//minHeap.push(make_tuple(attsCounts[skipIndex].att,0,));
+
+	}
+
+	if (!display) {
+		int counter = 0;
+		cout << "avgSubSize= " << avgSubSize << ", " << "avgWidth= " << avgWidth << ", countSum= " << countSum << ", "
+			<< "currentSum= " << currentSum << ".\n";
+		cout << "Skip attribute:";
+		_for(i, 0, atts) {
+			if (skipped[i]) {
+				counter++;
+				cout << " " << i;
+			}
+		}
+		cout << endl << "Total skipped attribute: " << counter << "\n";
+	}
+}
+
+void AdaRein::exact_match(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList) {
 	vector<bool> bits(subs, false);
 	vector<bool> attExist(atts, false);
 
@@ -133,7 +228,7 @@ void AdaRein::exact_match(const Pub &pub, int &matchSubs, const vector<IntervalS
 			++matchSubs;
 }
 
-void AdaRein::approx_match(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
+void AdaRein::approx_match_ori(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList) {
 	vector<bool> bits(subs, false);
 	vector<bool> attExist(atts, false);
 	for (int i = 0; i < pub.size; i++) {
@@ -174,5 +269,5 @@ int AdaRein::calMemory() {
 	size += sizeof(bool) * atts + sizeof(attAndCount) * atts;
 	//cout << "attAndCount size = " << sizeof(attAndCount) << endl; // 8
 	size = size / 1024 / 1024; // MB
-	return (int) size;
+	return (int)size;
 }

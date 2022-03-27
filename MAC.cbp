@@ -132,6 +132,12 @@
 		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/HEM5.h">
 			<Option target="run"/>
 		</Unit>
+		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/HEM5_AG.cpp">
+			<Option target="run"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/HEM5_AG.h">
+			<Option target="run"/>
+		</Unit>
 		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/HEM5_avxOR.cpp">
 			<Option target="run"/>
 		</Unit>
