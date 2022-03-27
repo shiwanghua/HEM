@@ -1346,7 +1346,7 @@ void run_HEM5_RAG(const intervalGenerator& gen, unordered_map<int, bool> deleteN
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 		int64_t begin = GetCPUCycle();
-		hem5_rag.match_VAG(gen.pubList[i], matchSubs);
+		hem5_rag.match_RAG(gen.pubList[i], matchSubs);
 		matchInstructionList.push_back(GetCPUCycle() - begin);
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
