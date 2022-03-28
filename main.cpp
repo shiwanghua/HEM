@@ -19,10 +19,10 @@ int main(int argc, char **argv) {
 	}
 
 	intervalGenerator gen(subs, pubs, atts,attrGroup, cons, m, attNumType, attDis, valDis, valDom, alpha, subp, width);
-//	gen.GenSubList();
-//	gen.GenPubList();
-	gen.GenSubList_g();
-	gen.GenPubList_g();
+	gen.GenSubList();
+	gen.GenPubList();
+//	gen.GenSubList_g();
+//	gen.GenPubList_g();
 	
 	unordered_map<int,bool> deleteNo;
 	if (verifyID) {
@@ -36,7 +36,7 @@ int main(int argc, char **argv) {
 		}
 	}
 
-//	run_rein(gen,deleteNo);
+	run_rein(gen,deleteNo);
 //	run_rein_forward_native(gen, deleteNo);
 //	run_rein_forward_CBOMP(gen, deleteNo);
 //	run_rein_hybrid(gen,deleteNo);

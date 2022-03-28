@@ -23,7 +23,6 @@ class AdaRein {
 	vector<vector<vector<Combo>>> data[2];
 	vector<bool> skipped;
 	vector<attAndCount> attsCounts; // 用于原始版本
-	vector<int> attrFre; // 其他版本使用的属性频率数据结构
     vector<int> endBucket[2]; // i号属性上所应遍历到的终点桶 low(0)上表示遍历到小于这个桶, high(1)上表示遍历到大于等于这个桶
 
 public:
