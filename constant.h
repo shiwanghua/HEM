@@ -4,6 +4,8 @@
 #include<iostream>
 #include <immintrin.h> //AVX(include wmmintrin.h)
 
+#define DEBUG
+
 using namespace std;
 
 extern string expID;       // ¼ÇÂ¼ÊµÑéid

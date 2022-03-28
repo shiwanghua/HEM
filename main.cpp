@@ -1,6 +1,6 @@
 #include "run_models.h"
 
-int masin(int argc, char **argv) {
+int main(int argc, char **argv) {
 	//freopen("paras.txt", "r", stdin);
 	//cin >> subs >> pubs >> atts >> cons>> buks >> m >> attDis >> valDis >> valDom >> alpha >> width;
 	//m = atts; // Note that Rein requires m == atts.
@@ -36,22 +36,23 @@ int masin(int argc, char **argv) {
 		}
 	}
 
-	run_rein(gen,deleteNo);
+//	run_rein(gen,deleteNo);
 //	run_rein_forward_native(gen, deleteNo);
 //	run_rein_forward_CBOMP(gen, deleteNo);
 //	run_rein_hybrid(gen,deleteNo);
 //	run_rein_hybrid_CBOMP(gen,deleteNo);
 //  run_pRein(gen,deleteNo);
-//	run_AdaRein_ORI(gen, deleteNo);
+	run_AdaRein_ORI(gen, deleteNo);
+	run_AdaRein_SSS(gen, deleteNo);
 
-	run_HEM(gen);
+	//run_HEM(gen);
 	//run_HEM1(gen);
 	//run_HEM2(gen);
 	//run_HEM3(gen);
 	//run_HEM4(gen);
-    run_HEM5(gen,deleteNo);
-    run_HEM5_VAG(gen,deleteNo);
-    run_HEM5_RAG(gen,deleteNo);
+    //run_HEM5(gen,deleteNo);
+    //run_HEM5_VAG(gen,deleteNo);
+    //run_HEM5_RAG(gen,deleteNo);
 //	run_HEM5_avxOR(gen, deleteNo);
 //	run_HEMSC(gen);
 //	run_HEMSR(gen);
@@ -64,11 +65,11 @@ int masin(int argc, char **argv) {
 	//run_btama_backward1_C_BOMP(gen, deleteNo);// bTAMA7
 	//run_btama_backward2_CBOMP(gen, deleteNo); // bTAMA8
 //
-	run_BGTREE_forward_native(gen, deleteNo);
+	//run_BGTREE_forward_native(gen, deleteNo);
 //	run_BGTREE_forward_C_BOMP(gen,deleteNo);
 //	run_BGTREE_backward_C_BOMP(gen, deleteNo);
-	run_BGTREE_d_forward_native(gen, deleteNo);
-	run_BGTREE_d_backward_native(gen, deleteNo);
+	//run_BGTREE_d_forward_native(gen, deleteNo);
+	//run_BGTREE_d_backward_native(gen, deleteNo);
 //	run_BGTREE_d_vrs_backward_native(gen, deleteNo);
 
 //	run_OpIndex(gen, deleteNo);

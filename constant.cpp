@@ -1,6 +1,6 @@
 #include "constant.h"
-string expID = "915";       // Record the experiment ID number
-const bool display = false; // whether to print the mapping relation
+string expID = "916";       // Record the experiment ID number
+const bool display = true; // whether to print the mapping relation, 有待逐步改成DEBUG宏定义判断
 const bool verifyID = false; // whether to verify Insertion and Deletion function
 const int interval = 100;   // after a interval of events is matched, print a log
 const double subp = 0;      // subp比例的订阅的谓词定义在前cons个维度上 in order to make the number of matching subscriptions > 0

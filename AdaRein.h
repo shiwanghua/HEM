@@ -32,14 +32,13 @@ public:
 
     void insert(IntervalSub sub);
     bool deleteSubscription(IntervalSub sub);
-
     void exact_match(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
 
     void original_selection(double falsePositive, const vector<IntervalSub>& subList);
+    void approx_match_ori(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
 
     void static_succession_selection(double falsePositive, const vector<IntervalSub>& subList);
-
-    void approx_match_ori(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
+    void approx_match_sss(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
 
     int calMemory();      // 计算占用内存大小, 返回MB
 };

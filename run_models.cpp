@@ -600,7 +600,7 @@ void run_AdaRein_ORI(const intervalGenerator& gen, unordered_map<int, bool> dele
 		}
 		cout << "AdaRein Deletion Finishes.\n";
 		/*for (auto kv: deleteNo) {
-			adarein.insert(gen.subList[kv.first]);
+			adarein_sss.insert(gen.subList[kv.first]);
 		}*/
 	}
 
@@ -609,7 +609,7 @@ void run_AdaRein_ORI(const intervalGenerator& gen, unordered_map<int, bool> dele
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
-		//adarein.exact_match(gen.pubList[i], matchSubs,gen.subList);
+		//adarein_sss.exact_match(gen.pubList[i], matchSubs,gen.subList);
 		adarein.approx_match_ori(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
@@ -621,7 +621,7 @@ void run_AdaRein_ORI(const intervalGenerator& gen, unordered_map<int, bool> dele
 	cout << endl;
 
 	// output
-	string outputFileName = "AdaRein.txt";
+	string outputFileName = "AdaRein_ORI.txt";
 	string content = expID
 		+ " memory= " + Util::Int2String(adarein.calMemory())
 		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
@@ -648,7 +648,94 @@ void run_AdaRein_ORI(const intervalGenerator& gen, unordered_map<int, bool> dele
 	//	content[content.length() - 2] = ']';
 	//	Util::WriteData2Begin(outputFileName.c_str(), content);
 
-	outputFileName = "tmpData/bTama8.txt";
+	outputFileName = "tmpData/AdaRein_ORI.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
+}
+
+void run_AdaRein_SSS(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) {
+	AdaRein adarein_sss(AdaRein_SSS);
+
+	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchSubList;
+
+	// insert
+	for (int i = 0; i < subs; i++) {
+		Timer insertStart;
+
+		adarein_sss.insert(gen.subList[i]); // Insert sub[i] into data structure.
+
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double)insertTime / 1000000);
+	}
+	cout << "AdaRein_SSS Insertion Finishes.\n";
+
+	double initTime;
+	Timer initStart;
+	adarein_sss.static_succession_selection(falsePositiveRate, gen.subList);
+	initTime = (double)initStart.elapsed_nano() / 1000000.0;
+	cout << "AdaRein_SSS Skipping Task Finishes.\n";
+
+	// 验证插入删除正确性
+	if (verifyID) {
+		for (auto kv : deleteNo) {
+			Timer deleteStart;
+			if (!adarein_sss.deleteSubscription(gen.subList[kv.first]))
+				cout << "AdaRein_SSS: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+		}
+		cout << "AdaRein_SSS Deletion Finishes.\n";
+		for (auto kv: deleteNo) {
+			adarein_sss.insert(gen.subList[kv.first]);
+		}
+	}
+
+	// match
+	for (int i = 0; i < pubs; i++) {
+		int matchSubs = 0; // Record the number of matched subscriptions.
+		Timer matchStart;
+
+		adarein_sss.approx_match_sss(gen.pubList[i], matchSubs, gen.subList);
+
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double)eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "AdaRein_SSS Event " << i << " is matched.\n";
+	}
+	cout << endl;
+
+	// output
+	string outputFileName = "AdaRein_SSS.txt";
+	string content = expID
+		+ " memory= " + Util::Int2String(adarein_sss.calMemory())
+		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+		+ " ms InitTime= " + Util::Double2String(initTime)
+		+ " ms AvgConstructionTime= " +
+		Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+		+ " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+		+ " ms fPR= " + Util::Double2String(falsePositiveRate)
+		+ " numSub= " + Util::Int2String(subs)
+		+ " subSize= " + Util::Int2String(cons)
+		+ " numPub= " + Util::Int2String(pubs)
+		+ " pubSize= " + Util::Int2String(m)
+		+ " attTypes= " + Util::Int2String(atts)
+		+ " attGroup= " + Util::Int2String(attrGroup)
+		+ " attNumType= " + Util::Int2String(attNumType)
+		+ " valDom= " + Util::Double2String(valDom);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	//	outputFileName = "ComprehensiveExpTime.txt";
+	//	content = "AdaRein= [";
+	//	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	//	content[content.length() - 2] = ']';
+	//	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	outputFileName = "tmpData/AdaRein_SSS.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
