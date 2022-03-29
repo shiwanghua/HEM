@@ -16,9 +16,8 @@ HEM5_avxOR::HEM5_avxOR() {
 		numBits = be2;
 	else
 		numBits = pow(2, be); // 每个维度上lowValue对应的bits数组个数
-	if (numBits > 1)
-		fullBits.resize(numDimension); // 维度总数永远不变，所以只需要resize一次
-
+	//if (numBits > 1)
+	fullBits.resize(numDimension); // 维度总数永远不变，所以只需要resize一次
 	//else bitStep = numBucket >> 1;
 
 	doubleReverse[0] = new bool* [numDimension];
@@ -65,11 +64,11 @@ void HEM5_avxOR::insert_online(IntervalSub sub) {
 	Combo c;
 	int b, bucketID;
 	c.subID = sub.id;
-	if (numBits > 1) { // 懒得在下面for循环里每次都判断一次
-		_for(i, 0, sub.size) {
-			fullBits[sub.constraints[i].att][sub.id] = 1;
-		}
+	//if (numBits > 1) { // 懒得在下面for循环里每次都判断一次
+	_for(i, 0, sub.size) {
+		fullBits[sub.constraints[i].att][sub.id] = 1;
 	}
+	//}
 	_for(i, 0, sub.size) {
 		cnt = sub.constraints[i];
 		bucketID = cnt.lowValue / buckStep;
@@ -98,11 +97,11 @@ bool HEM5_avxOR::deleteSubscription(IntervalSub sub) {
 	IntervalCnt cnt;
 	int b, bucketID, id = sub.id;
 
-	if (numBits > 1) { // 懒得在下面for循环里每次都判断一次
-		_for(i, 0, sub.size) {
-			fullBits[sub.constraints[i].att][id] = 0;
-		}
+	//if (numBits > 1) { // 懒得在下面for循环里每次都判断一次
+	_for(i, 0, sub.size) {
+		fullBits[sub.constraints[i].att][id] = 0;
 	}
+	//}
 
 	_for(i, 0, sub.size) {
 		cnt = sub.constraints[i];
@@ -163,8 +162,8 @@ void HEM5_avxOR::initBits() {
 		bitsID[1][i] = new int[numBucket];
 	}
 	bits[0].clear(), bits[1].clear();
-	bits[0].resize(numDimension, vector<bitset<subs>>(numBits > 1 ? numBits - 1 : 1));
-	bits[1].resize(numDimension, vector<bitset<subs>>(max(numBits - 1, 1)));
+	bits[0].resize(numDimension, vector<bitset<subs>>(numBits - 1));
+	bits[1].resize(numDimension, vector<bitset<subs>>(numBits - 1));
 
 	//// 前缀和、后缀和数组, 不包括本身
 	//_for(i, 0, numDimension) {
@@ -189,68 +188,68 @@ void HEM5_avxOR::initBits() {
 		fix[1][i][numBucket] = fix[1][i][numBucket - 1] + data[1][i][numBucket - 1].size(); // Bug: 少了-1!!!
 	}
 
-	if (numBits == 1) { // 只有一个bits时特判，不用fullBits
-		_for(i, 0, numDimension) {
-			int halfWorkLoad = fix[0][i][0] >> 1; // subWorkLoadStep  fix[1][i][numBucket]
-			int quarterWorkLoad = halfWorkLoad >> 1;
-			// 第一个后/前缀和包含一半订阅的桶ID，bit数组最远正好覆盖到lowHalfPoint和highHalfPoint-1
-			int lowHalfPoint = -1, lowQuarterPoint = -1, highHalfPoint = -1, highQuarterPoint = -1;
-			_for(j, 0, numBucket) {
-				if (lowQuarterPoint == -1 && fix[0][i][numBucket - 1 - j] >= quarterWorkLoad)
-					lowQuarterPoint = numBucket - 1 - j;
-				else if (lowHalfPoint == -1 && fix[0][i][numBucket - 1 - j] >= halfWorkLoad)
-					lowHalfPoint = numBucket - 1 - j;
+	//if (numBits == 1) { // 只有一个bits时特判，不用fullBits
+	//	_for(i, 0, numDimension) {
+	//		int halfWorkLoad = fix[0][i][0] >> 1; // subWorkLoadStep  fix[1][i][numBucket]
+	//		int quarterWorkLoad = halfWorkLoad >> 1;
+	//		// 第一个后/前缀和包含一半订阅的桶ID，bit数组最远正好覆盖到lowHalfPoint和highHalfPoint-1
+	//		int lowHalfPoint = -1, lowQuarterPoint = -1, highHalfPoint = -1, highQuarterPoint = -1;
+	//		_for(j, 0, numBucket) {
+	//			if (lowQuarterPoint == -1 && fix[0][i][numBucket - 1 - j] >= quarterWorkLoad)
+	//				lowQuarterPoint = numBucket - 1 - j;
+	//			else if (lowHalfPoint == -1 && fix[0][i][numBucket - 1 - j] >= halfWorkLoad)
+	//				lowHalfPoint = numBucket - 1 - j;
 
-				if (highQuarterPoint == -1 && fix[1][i][j] >= quarterWorkLoad)
-					highQuarterPoint = j;
-				else if (highHalfPoint == -1 && fix[1][i][j] >= halfWorkLoad)
-					highHalfPoint = j;
-			}
+	//			if (highQuarterPoint == -1 && fix[1][i][j] >= quarterWorkLoad)
+	//				highQuarterPoint = j;
+	//			else if (highHalfPoint == -1 && fix[1][i][j] >= halfWorkLoad)
+	//				highHalfPoint = j;
+	//		}
 
-			_for(j, 0, numBucket) {
-				if (j < lowHalfPoint) { // 可以用上bitset
-					bitsID[0][i][j] = 0;
-					endBucket[0][i][j] = lowHalfPoint; // 遍历到小于 lowCriticalPoint
-					doubleReverse[0][i][j] = false;
-				}
-				else if (j < lowQuarterPoint) {
-					bitsID[0][i][j] = 0;
-					endBucket[0][i][j] = lowHalfPoint; // 从 j 二重反向遍历到等于 lowCriticalPoint(都包含)
-					doubleReverse[0][i][j] = true;
-					_for(k, 0, data[0][i][j].size()) // 桶里每个订阅
-						bits[0][i][0][data[0][i][j][k].subID] = 1;
-				}
-				else {
-					bitsID[0][i][j] = -1;
-					endBucket[0][i][j] = numBucket;
-					doubleReverse[0][i][j] = false;
-					_for(k, 0, data[0][i][j].size()) // 桶里每个订阅
-						bits[0][i][0][data[0][i][j][k].subID] = 1;
-				}
-				if (j < highQuarterPoint) { // 不可以用bitset
-					bitsID[1][i][j] = -1;
-					endBucket[1][i][j] = 0; // 遍历到等于0
-					doubleReverse[1][i][j] = false;
-					_for(k, 0, data[1][i][j].size()) // 桶里每个订阅
-						bits[1][i][0][data[1][i][j][k].subID] = 1;
-				}
-				else if (j < highHalfPoint) {
-					bitsID[1][i][j] = 0;
-					endBucket[1][i][j] = highHalfPoint; // 从 j 二重反向遍历到大于等于 highCriticalPoint
-					doubleReverse[1][i][j] = true;
-					_for(k, 0, data[1][i][j].size()) // 桶里每个订阅
-						bits[1][i][0][data[1][i][j][k].subID] = 1;
-				}
-				else {
-					bitsID[1][i][j] = 0;
-					endBucket[1][i][j] = highHalfPoint; // 从 j-1 遍历到大于等于 highHalfPoint, 和以前保持一致
-					doubleReverse[1][i][j] = false;
-				}
-			}
-		}
-		//cout << "HEM5_256ORDD Stop.\n";
-		return;
-	}
+	//		_for(j, 0, numBucket) {
+	//			if (j < lowHalfPoint) { // 可以用上bitset
+	//				bitsID[0][i][j] = 0;
+	//				endBucket[0][i][j] = lowHalfPoint; // 遍历到小于 lowCriticalPoint
+	//				doubleReverse[0][i][j] = false;
+	//			}
+	//			else if (j < lowQuarterPoint) {
+	//				bitsID[0][i][j] = 0;
+	//				endBucket[0][i][j] = lowHalfPoint; // 从 j 二重反向遍历到等于 lowCriticalPoint(都包含)
+	//				doubleReverse[0][i][j] = true;
+	//				_for(k, 0, data[0][i][j].size()) // 桶里每个订阅
+	//					bits[0][i][0][data[0][i][j][k].subID] = 1;
+	//			}
+	//			else {
+	//				bitsID[0][i][j] = -1;
+	//				endBucket[0][i][j] = numBucket;
+	//				doubleReverse[0][i][j] = false;
+	//				_for(k, 0, data[0][i][j].size()) // 桶里每个订阅
+	//					bits[0][i][0][data[0][i][j][k].subID] = 1;
+	//			}
+	//			if (j < highQuarterPoint) { // 不可以用bitset
+	//				bitsID[1][i][j] = -1;
+	//				endBucket[1][i][j] = 0; // 遍历到等于0
+	//				doubleReverse[1][i][j] = false;
+	//				_for(k, 0, data[1][i][j].size()) // 桶里每个订阅
+	//					bits[1][i][0][data[1][i][j][k].subID] = 1;
+	//			}
+	//			else if (j < highHalfPoint) {
+	//				bitsID[1][i][j] = 0;
+	//				endBucket[1][i][j] = highHalfPoint; // 从 j 二重反向遍历到大于等于 highCriticalPoint
+	//				doubleReverse[1][i][j] = true;
+	//				_for(k, 0, data[1][i][j].size()) // 桶里每个订阅
+	//					bits[1][i][0][data[1][i][j][k].subID] = 1;
+	//			}
+	//			else {
+	//				bitsID[1][i][j] = 0;
+	//				endBucket[1][i][j] = highHalfPoint; // 从 j-1 遍历到大于等于 highHalfPoint, 和以前保持一致
+	//				doubleReverse[1][i][j] = false;
+	//			}
+	//		}
+	//	}
+	//	//cout << "HEM5_256ORDD Stop.\n";
+	//	return;
+	//}
 
 	// 当前应该映射到的bitId, 桶id, 下一个临界负载点
 	int lowBid, highBid, lowBktId, highBktId, lowSubWorkLoad, highSubWorkLoad;
@@ -394,98 +393,6 @@ void HEM5_avxOR::initBits() {
 	//cout << "HEM5_256ORDD Stop.\n";
 }
 
-// 计算时间组成
-//void HEM5_avxOR::match(const Pub& pub, int& matchSubs) {
-//	bitset<subs> b, bLocal;
-//	vector<bool> attExist(numDimension, false);
-//	int value, att, buck;
-//
-//	_for(i, 0, pub.size) {
-//		Timer compareStart;
-//		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
-//		attExist[att] = true;
-//		_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
-//			b[data[0][att][buck][k].subID] = 1;
-//		_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
-//			b[data[1][att][buck][k].subID] = 1;
-//		compareTime += (double)compareStart.elapsed_nano();
-//
-//		if (doubleReverse[0][att][buck]) {
-//			Timer markStart;
-//			if (bitsID[0][att][buck] == numBits - 1 && numBits > 1)
-//				bLocal = fullBits[att];
-//			else
-//				bLocal = bits[0][att][bitsID[0][att][buck]];
-//			_for(j, endBucket[0][att][buck], buck + 1) _for(k, 0,
-//				data[0][att][j].size()) bLocal[data[0][att][j][k].subID] = 0;
-//			markTime += (double)markStart.elapsed_nano();
-//
-//			Timer orStart;
-//			Util::bitsetOr(b, bLocal);
-//			orTime += (double)orStart.elapsed_nano();
-//		}
-//		else {
-//			Timer markStart;
-//			_for(j, buck + 1, endBucket[0][att][buck]) _for(k, 0,
-//				data[0][att][j].size()) b[data[0][att][j][k].subID] = 1;
-//			markTime += (double)markStart.elapsed_nano();
-//			Timer orStart;
-//			if (bitsID[0][att][buck] != -1)
-//				Util::bitsetOr(b, bits[0][att][bitsID[0][att][buck]]);
-//			orTime += (double)orStart.elapsed_nano();
-//		}
-//
-//		if (doubleReverse[1][att][buck]) {
-//			Timer markStart;
-//			if (bitsID[1][att][buck] == numBits - 1 && numBits > 1)
-//				bLocal = fullBits[att];
-//			else
-//				bLocal = bits[1][att][bitsID[1][att][buck]];
-//			_for(j, buck, endBucket[1][att][buck]) _for(k, 0,
-//				data[1][att][j].size()) bLocal[data[1][att][j][k].subID] = 0;
-//			markTime += (double)markStart.elapsed_nano();
-//			Timer orStart;
-//			Util::bitsetOr(b, bLocal);
-//			orTime += (double)orStart.elapsed_nano();
-//		}
-//		else {
-//			Timer markStart;
-//			_for(j, endBucket[1][att][buck], buck) _for(k, 0, data[1][att][j].size()) b[data[1][att][j][k].subID] = 1;
-//			markTime += (double)markStart.elapsed_nano();
-//			Timer orStart;
-//			if (bitsID[1][att][buck] != -1)
-//				Util::bitsetOr(b, bits[1][att][bitsID[1][att][buck]]);
-//			orTime += (double)orStart.elapsed_nano();
-//		}
-//	}
-//
-//	if (numBits > 1) {
-//		Timer orStart;
-//		_for(i, 0, numDimension) if (!attExist[i])
-//			Util::bitsetOr(b, fullBits[i]);
-//		orTime += (double)orStart.elapsed_nano();
-//	}
-//	else {
-//		Timer markStart;
-//		_for(i, 0, numDimension) if (!attExist[i])
-//			_for(j, 0, endBucket[0][i][0]) _for(k, 0, data[0][i][j].size()) b[data[0][i][j][k].subID] = 1;
-//		markTime += (double)markStart.elapsed_nano();
-//
-//		Timer orStart;
-//		_for(i, 0, numDimension) if (!attExist[i])
-//			Util::bitsetOr(b, bits[0][i][0]);
-//		orTime += (double)orStart.elapsed_nano();
-//	}
-//
-//	Timer bitStart;
-//	//	_for(i, 0, subs) if (!b[i]) {
-//	//			++matchSubs;
-//	//			//cout << "HEM5_avxOR matches sub: " << i << endl;
-//	//		}
-//	matchSubs = subs - b.count();
-//	bitTime += (double)bitStart.elapsed_nano();
-//}
-
 // 不计算时间组成
 void HEM5_avxOR::match(const Pub& pub, int& matchSubs)
 {
@@ -505,7 +412,7 @@ void HEM5_avxOR::match(const Pub& pub, int& matchSubs)
 
 		if (doubleReverse[0][att][buck])
 		{
-			if (bitsID[0][att][buck] == numBits - 1 && numBits > 1)
+			if (bitsID[0][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉了: && numBits > 1
 				bLocal = fullBits[att];
 			else
 				bLocal = bits[0][att][bitsID[0][att][buck]];
@@ -527,7 +434,7 @@ void HEM5_avxOR::match(const Pub& pub, int& matchSubs)
 
 		if (doubleReverse[1][att][buck])
 		{
-			if (bitsID[1][att][buck] == numBits - 1 && numBits > 1)
+			if (bitsID[1][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉了: && numBits > 1
 				bLocal = fullBits[att];
 			else
 				bLocal = bits[1][att][bitsID[1][att][buck]];
@@ -549,21 +456,20 @@ void HEM5_avxOR::match(const Pub& pub, int& matchSubs)
 		}
 	}
 
-	if (numBits > 1)
-	{
-		_for(i, 0, numDimension) if (!attExist[i])
-			Util::bitsetOr(b,fullBits[i]);
-	}
-	else // 只有一半用了bitset覆盖
-	{
-		_for(i, 0, numDimension) if (!attExist[i])
-			_for(j, 0, endBucket[0][i][0])
-			for(auto&& kId:data[0][i][j])
-				b[kId.subID] = 1;
-
-		_for(i, 0, numDimension) if (!attExist[i])
-			Util::bitsetOr(b, bits[0][i][0]);
-	}
+	/*if (numBits > 1)
+	{*/
+	_for(i, 0, numDimension) if (!attExist[i])
+		Util::bitsetOr(b, fullBits[i]);
+	//}
+	//else // 只有一半用了bitset覆盖
+	//{
+	//	_for(i, 0, numDimension) if (!attExist[i])
+	//		_for(j, 0, endBucket[0][i][0])
+	//		for (auto&& kId : data[0][i][j])
+	//			b[kId.subID] = 1;
+	//	_for(i, 0, numDimension) if (!attExist[i])
+	//		Util::bitsetOr(b, bits[0][i][0]);
+	//}
 
 	//_for(i, 0, subs) if (!b[i])
 	//{
@@ -571,6 +477,98 @@ void HEM5_avxOR::match(const Pub& pub, int& matchSubs)
 	//	//cout << "HEM5_avxOR matches sub: " << i << endl;
 	//}
 	matchSubs = numSub - b.count();
+}
+
+// 计算时间组成
+void HEM5_avxOR::match_debug(const Pub& pub, int& matchSubs) {
+	bitset<subs> b, bLocal;
+	vector<bool> attExist(numDimension, false);
+	int value, att, buck;
+
+	_for(i, 0, pub.size) {
+		Timer compareStart;
+		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
+		attExist[att] = true;
+		_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
+			b[data[0][att][buck][k].subID] = 1;
+		_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
+			b[data[1][att][buck][k].subID] = 1;
+		compareTime += (double)compareStart.elapsed_nano();
+
+		if (doubleReverse[0][att][buck]) {
+			Timer markStart;
+			if (bitsID[0][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉了: && numBits > 1
+				bLocal = fullBits[att];
+			else
+				bLocal = bits[0][att][bitsID[0][att][buck]];
+			_for(j, endBucket[0][att][buck], buck + 1) _for(k, 0,
+				data[0][att][j].size()) bLocal[data[0][att][j][k].subID] = 0;
+			markTime += (double)markStart.elapsed_nano();
+
+			Timer orStart;
+			Util::bitsetOr(b, bLocal);
+			orTime += (double)orStart.elapsed_nano();
+		}
+		else {
+			Timer markStart;
+			_for(j, buck + 1, endBucket[0][att][buck]) _for(k, 0,
+				data[0][att][j].size()) b[data[0][att][j][k].subID] = 1;
+			markTime += (double)markStart.elapsed_nano();
+			Timer orStart;
+			if (bitsID[0][att][buck] != -1)
+				Util::bitsetOr(b, bits[0][att][bitsID[0][att][buck]]);
+			orTime += (double)orStart.elapsed_nano();
+		}
+
+		if (doubleReverse[1][att][buck]) {
+			Timer markStart;
+			if (bitsID[1][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉了: && numBits > 1
+				bLocal = fullBits[att];
+			else
+				bLocal = bits[1][att][bitsID[1][att][buck]];
+			_for(j, buck, endBucket[1][att][buck]) _for(k, 0,
+				data[1][att][j].size()) bLocal[data[1][att][j][k].subID] = 0;
+			markTime += (double)markStart.elapsed_nano();
+			Timer orStart;
+			Util::bitsetOr(b, bLocal);
+			orTime += (double)orStart.elapsed_nano();
+		}
+		else {
+			Timer markStart;
+			_for(j, endBucket[1][att][buck], buck) _for(k, 0, data[1][att][j].size()) b[data[1][att][j][k].subID] = 1;
+			markTime += (double)markStart.elapsed_nano();
+			Timer orStart;
+			if (bitsID[1][att][buck] != -1)
+				Util::bitsetOr(b, bits[1][att][bitsID[1][att][buck]]);
+			orTime += (double)orStart.elapsed_nano();
+		}
+	}
+
+	//if (numBits > 1) {
+	Timer orStart;
+	_for(i, 0, numDimension) if (!attExist[i])
+		Util::bitsetOr(b, fullBits[i]);
+	orTime += (double)orStart.elapsed_nano();
+	/*}
+	else {
+		Timer markStart;
+		_for(i, 0, numDimension) if (!attExist[i])
+			_for(j, 0, endBucket[0][i][0]) _for(k, 0, data[0][i][j].size()) b[data[0][i][j][k].subID] = 1;
+		markTime += (double)markStart.elapsed_nano();
+
+		Timer orStart;
+		_for(i, 0, numDimension) if (!attExist[i])
+			Util::bitsetOr(b, bits[0][i][0]);
+		orTime += (double)orStart.elapsed_nano();
+	}*/
+
+	Timer bitStart;
+	//	_for(i, 0, subs) if (!b[i]) {
+	//			++matchSubs;
+	//			//cout << "HEM5_avxOR matches sub: " << i << endl;
+	//		}
+	matchSubs = subs - b.count();
+	bitTime += (double)bitStart.elapsed_nano();
 }
 
 //void HEM5_avxOR::calBucketSize() {

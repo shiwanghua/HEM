@@ -42,6 +42,7 @@
 #### 注意事项
 1. "constant.h" 里 MAX_SUBS、MAX_ATTS、MAX_BUCKS 必须大于等于 subs、atts、buks (Now it's obsoleted.)
 2. In "constant.h", the constant `subs` can't be adjusted by input, means you have to run relative experiments one by one.
+3. be=1的bitset是覆盖的全部桶, 即只有fullBits有效, bits数组不存数据, 若想切换成覆盖一半桶, 需在构造函数里修改数组初始化代码, 在initBits函数里修改初始化bits代码, 开启“if (numBits == 1)”特判代码, 有双重反向优化的还需在match函数里取bitset时增加两处“&& numBits > 1”判断, 还有多事件类型时对空属性的处理需特判, 以及插入和删除逻辑特判
 
 ## 实验记录
 * 真实数据预处理：https://www.aconvert.com/cn/document/xlsx-to-txt/

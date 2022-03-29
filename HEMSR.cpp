@@ -107,86 +107,7 @@ void HEMSR::initBits() {
 	return;
 }
 
-// 计算时间组成
-//void HEMSR::match(const Pub& pub, int& matchSubs)
-//{
-//	bitset<subs> globalBitset;
-//	vector<int> attExist(numDimension, -1);
-//	int value, att, buck;
-//	_for(i, 0, pub.size)
-//	{
-//		Timer compareStart;
-//		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
-//		attExist[att] = bitsID[1][buck] + 1; // 用low上的就是0, 用high上的就是1
-//		_for(k, 0, data[0][att][buck].size())
-//			if (data[0][att][buck][k].val > value)
-//				globalBitset[data[0][att][buck][k].subID] = 1;
-//		_for(k, 0, data[1][att][buck].size())
-//			if (data[1][att][buck][k].val < value)
-//				globalBitset[data[1][att][buck][k].subID] = 1;
-//		compareTime += (double)compareStart.elapsed_nano();
-//
-//		Timer markStart;
-//		_for(j, buck + 1, endBucket[0][buck])
-//			_for(k, 0, data[0][att][j].size())
-//			globalBitset[data[0][att][j][k].subID] = 1;
-//		mmfor(j, buck - 1, endBucket[1][buck])
-//			_for(k, 0, data[1][att][j].size())
-//			globalBitset[data[1][att][j][k].subID] = 1;
-//		markTime += (double)markStart.elapsed_nano();
-//
-//		//Timer orStart;
-//		//if (bitsID[0][buck] != -1)
-//		//	globalBitset = globalBitset | bits[0][att];
-//		//else //if (bitsID[1][buck] != -1)  // 每个维度上只有两种状态
-//		//	globalBitset = globalBitset | bits[1][att]; // Bug: 是att不是i
-//		//orTime += (double)orStart.elapsed_nano();
-//	}
-//
-//	Timer markStart2;
-//	_for(i, 0, numDimension)
-//		if (attExist[i] == -1) {           // 空维度
-//			if (fix[0][i] >= fix[1][i]) {  // low右边的谓词多, 用0号bitset
-//				attExist[i] = 0;
-//				_for(j, 0, bitStep)
-//					_for(k, 0, data[0][i][j].size())
-//					globalBitset[data[0][i][j][k].subID] = 1;
-//			}
-//			else {
-//				attExist[i] = 1;
-//				_for(j, bitStep, numBucket)
-//					_for(k, 0, data[1][i][j].size())
-//					globalBitset[data[1][i][j][k].subID] = 1;
-//			}
-//		}
-//	markTime += (double)markStart2.elapsed_nano();
-//
-//	Timer orStart;
-//	int i = 0, j, state, end; // i 遍历每个维度, j 遍历组内部的每一位, 每个组最后一个元素的下一个位置是end,
-//	_for(g, 0, numGroup) {
-//		state = 0, j = 1;
-//		end = min(numDimension, i + gs);
-//		while (i < end) {
-//			if (attExist[i])
-//				state |= j;
-//			j = j << 1;
-//			i++;
-//		}
-//		globalBitset = globalBitset | bitsSR[g][state];
-//	}
-//	orTime += (double)orStart.elapsed_nano();
-//
-//	Timer bitStart;
-//	_for(i, 0, subs)
-//		if (!globalBitset[i])
-//		{
-//			++matchSubs;
-//			//cout << "HEMSR matches sub: : " << i << endl;
-//		}
-//	bitTime += (double)bitStart.elapsed_nano();
-//}
-
-//// 不计算时间组成
+// 不计算时间组成
 void HEMSR::match(const Pub& pub, int& matchSubs)
 {
 	bitset<subs> globalBitset;
@@ -254,6 +175,86 @@ void HEMSR::match(const Pub& pub, int& matchSubs)
 //			//cout << "HEMSR matches sub: : " << i << endl;
 //		}
 	matchSubs = subs - globalBitset.count();
+}
+
+// 计算时间组成
+void HEMSR::match_debug(const Pub& pub, int& matchSubs)
+{
+	bitset<subs> globalBitset;
+	vector<int> attExist(numDimension, -1);
+	int value, att, buck;
+	_for(i, 0, pub.size)
+	{
+		Timer compareStart;
+		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
+		attExist[att] = bitsID[1][buck] + 1; // 用low上的就是0, 用high上的就是1
+		_for(k, 0, data[0][att][buck].size())
+			if (data[0][att][buck][k].val > value)
+				globalBitset[data[0][att][buck][k].subID] = 1;
+		_for(k, 0, data[1][att][buck].size())
+			if (data[1][att][buck][k].val < value)
+				globalBitset[data[1][att][buck][k].subID] = 1;
+		compareTime += (double)compareStart.elapsed_nano();
+
+		Timer markStart;
+		_for(j, buck + 1, endBucket[0][buck])
+			_for(k, 0, data[0][att][j].size())
+			globalBitset[data[0][att][j][k].subID] = 1;
+		mmfor(j, buck - 1, endBucket[1][buck])
+			_for(k, 0, data[1][att][j].size())
+			globalBitset[data[1][att][j][k].subID] = 1;
+		markTime += (double)markStart.elapsed_nano();
+
+		//Timer orStart;
+		//if (bitsID[0][buck] != -1)
+		//	globalBitset = globalBitset | bits[0][att];
+		//else //if (bitsID[1][buck] != -1)  // 每个维度上只有两种状态
+		//	globalBitset = globalBitset | bits[1][att]; // Bug: 是att不是i
+		//orTime += (double)orStart.elapsed_nano();
+	}
+
+	Timer markStart2;
+	_for(i, 0, numDimension)
+		if (attExist[i] == -1) {           // 空维度
+			if (fix[0][i] >= fix[1][i]) {  // low右边的谓词多, 用0号bitset
+				attExist[i] = 0;
+				_for(j, 0, bitStep)
+					_for(k, 0, data[0][i][j].size())
+					globalBitset[data[0][i][j][k].subID] = 1;
+			}
+			else {
+				attExist[i] = 1;
+				_for(j, bitStep, numBucket)
+					_for(k, 0, data[1][i][j].size())
+					globalBitset[data[1][i][j][k].subID] = 1;
+			}
+		}
+	markTime += (double)markStart2.elapsed_nano();
+
+	Timer orStart;
+	int i = 0, j, state, end; // i 遍历每个维度, j 遍历组内部的每一位, 每个组最后一个元素的下一个位置是end,
+	_for(g, 0, numGroup) {
+		state = 0, j = 1;
+		end = min(numDimension, i + gs);
+		while (i < end) {
+			if (attExist[i])
+				state |= j;
+			j = j << 1;
+			i++;
+		}
+		globalBitset = globalBitset | bitsSR[g][state];
+	}
+	orTime += (double)orStart.elapsed_nano();
+
+	Timer bitStart;
+	//_for(i, 0, subs)
+	//	if (!globalBitset[i])
+	//	{
+	//		++matchSubs;
+	//		//cout << "HEMSR matches sub: : " << i << endl;
+	//	}
+	matchSubs = subs - globalBitset.count();
+	bitTime += (double)bitStart.elapsed_nano();
 }
 
 //void HEMSR::calBucketSize() {

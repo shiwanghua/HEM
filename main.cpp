@@ -42,20 +42,20 @@ int main(int argc, char **argv) {
 //	run_rein_hybrid(gen,deleteNo);
 //	run_rein_hybrid_CBOMP(gen,deleteNo);
 //  run_pRein(gen,deleteNo);
-	run_AdaRein_ORI(gen, deleteNo);
-	run_AdaRein_SSS(gen, deleteNo);
+	/*run_AdaRein_ORI(gen, deleteNo);
+	run_AdaRein_SSS(gen, deleteNo);*/
 
-	//run_HEM(gen);
-	//run_HEM1(gen);
-	//run_HEM2(gen);
-	//run_HEM3(gen);
-	//run_HEM4(gen);
-    //run_HEM5(gen,deleteNo);
-    //run_HEM5_VAG(gen,deleteNo);
-    //run_HEM5_RAG(gen,deleteNo);
-//	run_HEM5_avxOR(gen, deleteNo);
-//	run_HEMSC(gen);
-//	run_HEMSR(gen);
+	run_HEM(gen);
+	run_HEM1(gen);
+	run_HEM2(gen);
+	run_HEM3(gen);
+	run_HEM4(gen);
+    run_HEM5(gen,deleteNo);
+    run_HEM5_VAG(gen,deleteNo);
+    run_HEM5_RAG(gen,deleteNo);
+	run_HEM5_avxOR(gen, deleteNo);
+	run_HEMSC(gen);
+	run_HEMSR(gen);
 
 //	run_Simple(gen,deleteNo);
 //	run_Simple2(gen,deleteNo);

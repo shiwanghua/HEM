@@ -1,11 +1,11 @@
 #include "HEM1.h"
 
-HEM1::HEM1(){
+HEM1::HEM1() {
 	numSub = 0;
 	numDimension = atts;
 	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
-    cout <<"ExpID = "<<expID<< ". HEM1SS: bit exponent = "<< be<<", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
+	cout << "ExpID = " << expID << ". HEM1SS: bit exponent = " << be << ", bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
 	// 如果桶数会变化，以下代码也要放入init函数里
 	//bucketSub.resize(numBucket);
 	data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
@@ -16,11 +16,11 @@ HEM1::HEM1(){
 	else
 		numBits = pow(2, be);  // 每个维度上lowValue对应的bits数组个数
 	//if (numBits > 1) {
-		fullBits.resize(numDimension);  // 维度总数永远不变，所以只需要resize一次
-		bitStep = (numBucket + numBits - 1) / numBits;  // 每过这么远新设一个bits
-		// 等价写法：bitStep = numBucket % numBits == 0 ? numBucket / numBits : numBucket / numBits + 1;
-	//}
-	//else bitStep = numBucket >> 1;
+	fullBits.resize(numDimension);  // 维度总数永远不变，所以只需要resize一次
+	bitStep = (numBucket + numBits - 1) / numBits;  // 每过这么远新设一个bits
+	// 等价写法：bitStep = numBucket % numBits == 0 ? numBucket / numBits : numBucket / numBits + 1;
+//}
+//else bitStep = numBucket >> 1;
 
 	doubleReverse[0] = new bool[numBucket];
 	doubleReverse[1] = new bool[numBucket];
@@ -168,7 +168,7 @@ void HEM1::initBits() {
 			endBucket[0][j] = bktid2;
 			doubleReverse[0][j] = true;
 		}
-		}
+	}
 
 	int subID, b;   // 起始标记数组的下标
 	_for(i, 0, numDimension) {          // 每个维度
@@ -196,199 +196,200 @@ void HEM1::initBits() {
 	//cout << "Stop.\n";
 }
 
-//// 计算时间组成
-//void HEM1::match(const Pub& pub, int& matchSubs)
-//{
-//	bitset<subs> b, bLocal;
-//	vector<bool> attExist(numDimension, false);
-//	int value, att, buck;
-//
-//	_for(i, 0, pub.size)
-//	{
-//		Timer compareStart;
-//		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
-//		attExist[att] = true;
-//		_for(k, 0, data[0][att][buck].size())
-//			if (data[0][att][buck][k].val > value)
-//				b[data[0][att][buck][k].subID] = 1;
-//		_for(k, 0, data[1][att][buck].size())
-//			if (data[1][att][buck][k].val < value)
-//				b[data[1][att][buck][k].subID] = 1;
-//		compareTime += (double)compareStart.elapsed_nano();
-//
-//		if (doubleReverse[0][buck]) {
-//			Timer markStart;
-//			if (bitsID[0][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
-//				bLocal = fullBits[att];
-//			else
-//				bLocal = bits[0][att][bitsID[0][buck]];
-//			_for(j, endBucket[0][buck], buck + 1)
-//				_for(k, 0, data[0][att][j].size())
-//				bLocal[data[0][att][j][k].subID] = 0;
-//			markTime += (double)markStart.elapsed_nano();
-//
-//			Timer orStart;
-//			b = b | bLocal;
-//			orTime += (double)orStart.elapsed_nano();
-//		}
-//		else {
-//			Timer markStart;
-//			_for(j, buck + 1, endBucket[0][buck])
-//				_for(k, 0, data[0][att][j].size())
-//				b[data[0][att][j][k].subID] = 1;
-//			markTime += (double)markStart.elapsed_nano();
-//			Timer orStart;
-//			if (bitsID[0][buck] != -1)
-//				b = b | bits[0][att][bitsID[0][buck]];
-//			orTime += (double)orStart.elapsed_nano();
-//		}
-//
-//		if (doubleReverse[1][buck]) {
-//			Timer markStart;
-//			if (bitsID[1][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
-//				bLocal = fullBits[att];
-//			else
-//				bLocal = bits[1][att][bitsID[1][buck]];
-//			_for(j, buck, endBucket[1][buck])
-//				_for(k, 0, data[1][att][j].size())
-//				bLocal[data[1][att][j][k].subID] = 0;
-//			markTime += (double)markStart.elapsed_nano();
-//			Timer orStart;
-//			b = b | bLocal;
-//			orTime += (double)orStart.elapsed_nano();
-//		}
-//		else {
-//			Timer markStart;
-//			_for(j, endBucket[1][buck], buck)
-//				_for(k, 0, data[1][att][j].size())
-//				b[data[1][att][j][k].subID] = 1;
-//			markTime += (double)markStart.elapsed_nano();
-//			Timer orStart;
-//			if (bitsID[1][buck] != -1)
-//				b = b | bits[1][att][bitsID[1][buck]]; // Bug: 是att不是i
-//			orTime += (double)orStart.elapsed_nano();
-//		}
-//	}
-//
-////	if (numBits > 1) {
-//		Timer orStart;
-//		_for(i, 0, numDimension)
-//			if (!attExist[i])
-//				b = b | fullBits[i];
-//		orTime += (double)orStart.elapsed_nano();
-////	}
-////	else {
-////		Timer markStart;
-////		_for(i, 0, numDimension)
-////			if (!attExist[i])
-////				_for(j, 0, bitStep)
-////				_for(k, 0, data[0][i][j].size())
-////				b[data[0][i][j][k].subID] = 1;
-////		markTime += (double)markStart.elapsed_nano();
-////
-////		Timer orStart;
-////		_for(i, 0, numDimension)
-////			if (!attExist[i])
-////				b = b | bits[0][i][0];
-////		orTime += (double)orStart.elapsed_nano();
-////	}
-//
-//	Timer bitStart;
-//	_for(i, 0, subs)
-//		if (!b[i])
-//		{
-//			++matchSubs;
-//			//cout << "HEM1 matches sub: " << i << endl;
-//		}
-//	bitTime += (double)bitStart.elapsed_nano();
-//}
-
 // 不计算时间组成
- void HEM1::match(const Pub& pub, int& matchSubs)
- {
- 	bitset<subs> b, bLocal;
- 	vector<bool> attExist(numDimension, false);
- 	int value, att, buck;
+void HEM1::match(const Pub& pub, int& matchSubs)
+{
+	bitset<subs> b, bLocal;
+	vector<bool> attExist(numDimension, false);
+	int value, att, buck;
 
- 	_for(i, 0, pub.size)
- 	{
- 		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
- 		attExist[att] = true;
- 		_for(k, 0, data[0][att][buck].size())
- 			if (data[0][att][buck][k].val > value)
- 				b[data[0][att][buck][k].subID] = 1;
- 		_for(k, 0, data[1][att][buck].size())
- 			if (data[1][att][buck][k].val < value)
- 				b[data[1][att][buck][k].subID] = 1;
+	_for(i, 0, pub.size)
+	{
+		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
+		attExist[att] = true;
+		_for(k, 0, data[0][att][buck].size())
+			if (data[0][att][buck][k].val > value)
+				b[data[0][att][buck][k].subID] = 1;
+		_for(k, 0, data[1][att][buck].size())
+			if (data[1][att][buck][k].val < value)
+				b[data[1][att][buck][k].subID] = 1;
 
- 		if (doubleReverse[0][buck]) {
- 			if (bitsID[0][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
- 				bLocal = fullBits[att];
- 			else
- 				bLocal = bits[0][att][bitsID[0][buck]];
+		if (doubleReverse[0][buck]) {
+			if (bitsID[0][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
+				bLocal = fullBits[att];
+			else
+				bLocal = bits[0][att][bitsID[0][buck]];
 
- 			_for(j, endBucket[0][buck], buck + 1)
- 				_for(k, 0, data[0][att][j].size())
- 				bLocal[data[0][att][j][k].subID] = 0;
+			_for(j, endBucket[0][buck], buck + 1)
+				_for(k, 0, data[0][att][j].size())
+				bLocal[data[0][att][j][k].subID] = 0;
 
- 			b = b | bLocal;
- 		}
- 		else {
- 			_for(j, buck + 1, endBucket[0][buck])
- 				_for(k, 0, data[0][att][j].size())
- 				b[data[0][att][j][k].subID] = 1;
+			b = b | bLocal;
+		}
+		else {
+			_for(j, buck + 1, endBucket[0][buck])
+				_for(k, 0, data[0][att][j].size())
+				b[data[0][att][j][k].subID] = 1;
 
- 			if (bitsID[0][buck] != -1)
- 				b = b | bits[0][att][bitsID[0][buck]];
- 		}
+			if (bitsID[0][buck] != -1)
+				b = b | bits[0][att][bitsID[0][buck]];
+		}
 
- 		if (doubleReverse[1][buck]) {
- 			if (bitsID[1][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
- 				bLocal = fullBits[att];
- 			else
- 				bLocal = bits[1][att][bitsID[1][buck]];
+		if (doubleReverse[1][buck]) {
+			if (bitsID[1][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
+				bLocal = fullBits[att];
+			else
+				bLocal = bits[1][att][bitsID[1][buck]];
 
- 			_for(j, buck, endBucket[1][buck])
- 				_for(k, 0, data[1][att][j].size())
- 				bLocal[data[1][att][j][k].subID] = 0;
+			_for(j, buck, endBucket[1][buck])
+				_for(k, 0, data[1][att][j].size())
+				bLocal[data[1][att][j][k].subID] = 0;
 
- 			b = b | bLocal;
- 		}
- 		else {
- 			_for(j, endBucket[1][buck], buck)
- 				_for(k, 0, data[1][att][j].size())
- 				b[data[1][att][j][k].subID] = 1;
+			b = b | bLocal;
+		}
+		else {
+			_for(j, endBucket[1][buck], buck)
+				_for(k, 0, data[1][att][j].size())
+				b[data[1][att][j][k].subID] = 1;
 
- 			if (bitsID[1][buck] != -1)
- 				b = b | bits[1][att][bitsID[1][buck]]; // Bug: 是att不是i
- 		}
- 	}
+			if (bitsID[1][buck] != -1)
+				b = b | bits[1][att][bitsID[1][buck]]; // Bug: 是att不是i
+		}
+	}
 
- 	//if (numBits > 1) {
- 		_for(i, 0, numDimension)
- 			if (!attExist[i])
- 				b = b | fullBits[i];
- 	/*}
- 	else {
- 		_for(i, 0, numDimension)
- 			if (!attExist[i])
- 				_for(j, 0, bitStep)
- 				_for(k, 0, data[0][i][j].size())
- 				b[data[0][i][j][k].subID] = 1;
+	//if (numBits > 1) {
+	_for(i, 0, numDimension)
+		if (!attExist[i])
+			b = b | fullBits[i];
+	/*}
+	else {
+		_for(i, 0, numDimension)
+			if (!attExist[i])
+				_for(j, 0, bitStep)
+				_for(k, 0, data[0][i][j].size())
+				b[data[0][i][j][k].subID] = 1;
 
- 		_for(i, 0, numDimension)
- 			if (!attExist[i])
- 				b = b | bits[0][i][0];
- 	}*/
+		_for(i, 0, numDimension)
+			if (!attExist[i])
+				b = b | bits[0][i][0];
+	}*/
 
-// 	_for(i, 0, subs)
-// 		if (!b[i])
-// 		{
-// 			++matchSubs;
-// 			//cout << "HEM1 matches sub: " << i << endl;
-// 		}
+	// 	_for(i, 0, subs)
+	// 		if (!b[i])
+	// 		{
+	// 			++matchSubs;
+	// 			//cout << "HEM1 matches sub: " << i << endl;
+	// 		}
 	matchSubs = subs - b.count();
- }
+}
+
+// 计算时间组成
+void HEM1::match_debug(const Pub& pub, int& matchSubs)
+{
+	bitset<subs>* b = new bitset<subs>, * bLocal = new bitset<subs>;
+	vector<bool> attExist(numDimension, false);
+	int value, att, buck;
+
+	_for(i, 0, pub.size)
+	{
+		Timer compareStart;
+		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
+		attExist[att] = true;
+		_for(k, 0, data[0][att][buck].size())
+			if (data[0][att][buck][k].val > value)
+				(*b)[data[0][att][buck][k].subID] = 1;
+		_for(k, 0, data[1][att][buck].size())
+			if (data[1][att][buck][k].val < value)
+				(*b)[data[1][att][buck][k].subID] = 1;
+		compareTime += (double)compareStart.elapsed_nano();
+
+		if (doubleReverse[0][buck]) {
+			Timer markStart;
+			if (bitsID[0][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
+				*bLocal = fullBits[att];
+			else
+				*bLocal = bits[0][att][bitsID[0][buck]];
+			_for(j, endBucket[0][buck], buck + 1)
+				_for(k, 0, data[0][att][j].size())
+				(*bLocal)[data[0][att][j][k].subID] = 0;
+			markTime += (double)markStart.elapsed_nano();
+
+			Timer orStart;
+			*b = *b | *bLocal;
+			orTime += (double)orStart.elapsed_nano();
+		}
+		else {
+			Timer markStart;
+			_for(j, buck + 1, endBucket[0][buck])
+				_for(k, 0, data[0][att][j].size())
+				(*b)[data[0][att][j][k].subID] = 1;
+			markTime += (double)markStart.elapsed_nano();
+			Timer orStart;
+			if (bitsID[0][buck] != -1)
+				*b = *b | bits[0][att][bitsID[0][buck]];
+			orTime += (double)orStart.elapsed_nano();
+		}
+
+		if (doubleReverse[1][buck]) {
+			Timer markStart;
+			if (bitsID[1][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
+				*bLocal = fullBits[att];
+			else
+				*bLocal = bits[1][att][bitsID[1][buck]];
+			_for(j, buck, endBucket[1][buck])
+				_for(k, 0, data[1][att][j].size())
+				(*bLocal)[data[1][att][j][k].subID] = 0;
+			markTime += (double)markStart.elapsed_nano();
+			Timer orStart;
+			*b = *b | *bLocal;
+			orTime += (double)orStart.elapsed_nano();
+		}
+		else {
+			Timer markStart;
+			_for(j, endBucket[1][buck], buck)
+				_for(k, 0, data[1][att][j].size())
+				(* b)[data[1][att][j][k].subID] = 1;
+			markTime += (double)markStart.elapsed_nano();
+			Timer orStart;
+			if (bitsID[1][buck] != -1)
+				*b = *b | bits[1][att][bitsID[1][buck]]; // Bug: 是att不是i
+			orTime += (double)orStart.elapsed_nano();
+		}
+	}
+
+	//	if (numBits > 1) {
+	Timer orStart;
+	_for(i, 0, numDimension)
+		if (!attExist[i])
+			*b = *b | fullBits[i];
+	orTime += (double)orStart.elapsed_nano();
+	//	}
+	//	else {
+	//		Timer markStart;
+	//		_for(i, 0, numDimension)
+	//			if (!attExist[i])
+	//				_for(j, 0, bitStep)
+	//				_for(k, 0, data[0][i][j].size())
+	//				b[data[0][i][j][k].subID] = 1;
+	//		markTime += (double)markStart.elapsed_nano();
+	//
+	//		Timer orStart;
+	//		_for(i, 0, numDimension)
+	//			if (!attExist[i])
+	//				b = b | bits[0][i][0];
+	//		orTime += (double)orStart.elapsed_nano();
+	//	}
+
+	Timer bitStart;
+	//_for(i, 0, subs)
+	//	if (!(*b)[i])
+	//	{
+	//		++matchSubs;
+	//		//cout << "HEM1 matches sub: " << i << endl;
+	//	}
+	matchSubs = subs - b->count();
+	bitTime += (double)bitStart.elapsed_nano();
+}
 
 //void HEM1::calBucketSize() {
 //	bucketSub.clear();
@@ -435,6 +436,6 @@ void HEM1::printRelation() {
 		cout << "hBkt" << i << ": bID=" << bitsID[1][i] << ", eBkt=" << endBucket[1][i] << ", dRvs=" << doubleReverse[1][i] << "; ";
 		if (i % 5 == 0 && i > 0)cout << "\n";
 	}
-	
+
 	cout << "\n\n";
 }

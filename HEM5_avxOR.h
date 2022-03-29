@@ -43,6 +43,7 @@ public:
 	bool deleteSubscription(IntervalSub sub);
 	//void match(const Pub& pub, int& matchSubs, const vector<Sub>& subList);
 	void match(const Pub& pub, int& matchSubs);
+	void match_debug(const Pub& pub, int& matchSubs);
 
 	void initBits();      // 插入完后初始化bits数组
 	//void calBucketSize(); // 计算bucketSize

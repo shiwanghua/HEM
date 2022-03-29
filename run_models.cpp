@@ -744,7 +744,7 @@ void run_AdaRein_SSS(const intervalGenerator &gen, unordered_map<int, bool> dele
 
 // 纯静模式
 void run_HEM(const intervalGenerator &gen) {
-	HEM rb;
+	HEM hem;
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -755,7 +755,7 @@ void run_HEM(const intervalGenerator &gen) {
 	for (int i = 0; i < subs; i++) {
 		Timer insertStart;
 
-		rb.insert(gen.subList[i]); // Insert sub[i] into data structure.
+		hem.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
@@ -764,16 +764,18 @@ void run_HEM(const intervalGenerator &gen) {
 
 	double initTime;
 	Timer initStart;
-	rb.initBits();
+	hem.initBits();
 	initTime = (double) initStart.elapsed_nano() / 1000000.0;
 
 	// match
 	for (int i = 0; i < pubs; i++) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
-
-		rb.match(gen.pubList[i], matchSubs);
-
+#ifdef DEBUG
+		hem.match_debug(gen.pubList[i], matchSubs);
+#else
+		hem.match(gen.pubList[i], matchSubs);
+#endif // DEBUG
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
@@ -783,23 +785,23 @@ void run_HEM(const intervalGenerator &gen) {
 	cout << endl;
 
 	if (display)
-		rb.printRelation();
+		hem.printRelation();
 	// output
 	string outputFileName = "HEM.txt";
 	string content = expID
 					 + " bits= " + Util::Int2String(be == -1 ? be2 : be)
-					 + " memory= " + Util::Int2String(rb.calMemory())
+					 + " memory= " + Util::Int2String(hem.calMemory())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 					 + " ms InitTime= " + Util::Double2String(initTime)
 					 + " ms AvgConstructionTime= " +
 					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
 					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(rb.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(rb.markTime / pubs / 1000000)
-					 + " ms OrTime= " + to_string(rb.orTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(rb.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(rb.numBucket)
+					 + " ms AvgCmpTime= " + to_string(hem.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(hem.markTime / pubs / 1000000)
+					 + " ms OrTime= " + to_string(hem.orTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(hem.bitTime / pubs / 1000000)
+					 + " ms numBuk= " + Util::Int2String(hem.numBucket)
 					 + " numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
 					 + " numPub= " + Util::Int2String(pubs)
@@ -809,20 +811,22 @@ void run_HEM(const intervalGenerator &gen) {
 					 + " attNumType= " + Util::Int2String(attNumType);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
-	//	outputFileName = "ComprehensiveExpTime.txt";
-	//	content = "HEM0PS= [";
-	//	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
-	//	content[content.length() - 2] = ']';
-	//	Util::WriteData2Begin(outputFileName.c_str(), content);
+#ifdef DEBUG
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "HEM0PS= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif // DEBUG
 
 	//outputFileName = "HEMBucketSize.txt";
-	//rb.calBucketSize();
-	//content = expID + " numBucket= " + Util::Int2String(rb.numBucket)
+	//hem.calBucketSize();
+	//content = expID + " numBucket= " + Util::Int2String(hem.numBucket)
 	//	//+ " sumBukSetSize= " + to_string(accumulate(rein.bucketSub.begin(), rein.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
-	//	+ " maxBukSetSize= " + to_string((*max_element(rb.bucketSub.begin(), rb.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
-	//	+ " minBukSetSize= " + to_string(min_element(rb.bucketSub.begin(), rb.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
-	//_for(i, 0, rb.numBucket)
-	//	content += " " + to_string(rb.bucketSub[i].size());
+	//	+ " maxBukSetSize= " + to_string((*max_element(hem.bucketSub.begin(), hem.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
+	//	+ " minBukSetSize= " + to_string(min_element(hem.bucketSub.begin(), hem.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
+	//_for(i, 0, hem.numBucket)
+	//	content += " " + to_string(hem.bucketSub[i].size());
 	//Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "tmpData/HEM.txt";
@@ -832,7 +836,7 @@ void run_HEM(const intervalGenerator &gen) {
 
 // 静静模式
 void run_HEM1(const intervalGenerator &gen) {
-	HEM1 rb1;
+	HEM1 hem1;
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -843,7 +847,7 @@ void run_HEM1(const intervalGenerator &gen) {
 	for (int i = 0; i < subs; i++) {
 		Timer insertStart;
 
-		rb1.insert(gen.subList[i]); // Insert sub[i] into data structure.
+		hem1.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
@@ -852,16 +856,18 @@ void run_HEM1(const intervalGenerator &gen) {
 
 	double initTime;
 	Timer initStart;
-	rb1.initBits();
+	hem1.initBits();
 	initTime = (double) initStart.elapsed_nano() / 1000000.0;
 
 	// match
 	for (int i = 0; i < pubs; i++) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
-
-		rb1.match(gen.pubList[i], matchSubs);
-
+#ifdef DEBUG
+		hem1.match_debug(gen.pubList[i], matchSubs);
+#else
+		hem1.match(gen.pubList[i], matchSubs);
+#endif // DEBUG
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
@@ -870,25 +876,25 @@ void run_HEM1(const intervalGenerator &gen) {
 	}
 
 	if (display)
-		rb1.printRelation();
+		hem1.printRelation();
 	cout << endl;
 
 	// output
 	string outputFileName = "HEM1.txt";
 	string content = expID
 					 + " bits= " + Util::Int2String(be)
-					 + " memory= " + Util::Int2String(rb1.calMemory())
+					 + " memory= " + Util::Int2String(hem1.calMemory())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 					 + " ms InitTime= " + Util::Double2String(initTime)
 					 + " ms AvgConstructionTime= " +
 					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
 					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(rb1.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(rb1.markTime / pubs / 1000000)
-					 + " ms OrTime= " + to_string(rb1.orTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(rb1.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(rb1.numBucket)
+					 + " ms AvgCmpTime= " + to_string(hem1.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(hem1.markTime / pubs / 1000000)
+					 + " ms OrTime= " + to_string(hem1.orTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(hem1.bitTime / pubs / 1000000)
+					 + " ms numBuk= " + Util::Int2String(hem1.numBucket)
 					 + " numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
 					 + " numPub= " + Util::Int2String(pubs)
@@ -898,20 +904,22 @@ void run_HEM1(const intervalGenerator &gen) {
 					 + " attNumType= " + Util::Int2String(attNumType);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
+#ifdef DEBUG
 	outputFileName = "ComprehensiveExpTime.txt";
 	content = "HEM1SS= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
 	Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif // DEBUG
 
 	//outputFileName = "HEM1BucketSize.txt";
-	//rb.calBucketSize();
-	//content = expID + " numBucket= " + Util::Int2String(rb.numBucket)
+	//hem.calBucketSize();
+	//content = expID + " numBucket= " + Util::Int2String(hem.numBucket)
 	//	//+ " sumBukSetSize= " + to_string(accumulate(rein.bucketSub.begin(), rein.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
-	//	+ " maxBukSetSize= " + to_string((*max_element(rb.bucketSub.begin(), rb.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
-	//	+ " minBukSetSize= " + to_string(min_element(rb.bucketSub.begin(), rb.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
-	//_for(i, 0, rb.numBucket)
-	//	content += " " + to_string(rb.bucketSub[i].size());
+	//	+ " maxBukSetSize= " + to_string((*max_element(hem.bucketSub.begin(), hem.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
+	//	+ " minBukSetSize= " + to_string(min_element(hem.bucketSub.begin(), hem.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
+	//_for(i, 0, hem.numBucket)
+	//	content += " " + to_string(hem.bucketSub[i].size());
 	//Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "tmpData/HEM1.txt";
@@ -921,7 +929,7 @@ void run_HEM1(const intervalGenerator &gen) {
 
 // 静动模式
 void run_HEM2(const intervalGenerator &gen) {
-	HEM2 rb2;
+	HEM2 hem2;
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -932,7 +940,7 @@ void run_HEM2(const intervalGenerator &gen) {
 	for (int i = 0; i < subs; i++) {
 		Timer insertStart;
 
-		rb2.insert(gen.subList[i]); // Insert sub[i] into data structure.
+		hem2.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
@@ -941,16 +949,18 @@ void run_HEM2(const intervalGenerator &gen) {
 
 	double initTime;
 	Timer initStart;
-	rb2.initBits();
+	hem2.initBits();
 	initTime = (double) initStart.elapsed_nano() / 1000000.0;
 
 	// match
 	for (int i = 0; i < pubs; i++) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
-
-		rb2.match(gen.pubList[i], matchSubs);
-
+#ifdef DEBUG
+		hem2.match_debug(gen.pubList[i], matchSubs);
+#else
+		hem2.match(gen.pubList[i], matchSubs);
+#endif // DEBUG
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
@@ -959,25 +969,25 @@ void run_HEM2(const intervalGenerator &gen) {
 	}
 
 	if (display)
-		rb2.printRelation(0);
+		hem2.printRelation(0);
 	cout << endl;
 
 	// output
 	string outputFileName = "HEM2.txt";
 	string content = expID
 					 + " bits= " + Util::Int2String(be)
-					 + " memory= " + Util::Int2String(rb2.calMemory())
+					 + " memory= " + Util::Int2String(hem2.calMemory())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 					 + " ms InitTime= " + Util::Double2String(initTime)
 					 + " ms AvgConstructionTime= " +
 					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
 					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(rb2.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(rb2.markTime / pubs / 1000000)
-					 + " ms OrTime= " + to_string(rb2.orTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(rb2.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(rb2.numBucket)
+					 + " ms AvgCmpTime= " + to_string(hem2.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(hem2.markTime / pubs / 1000000)
+					 + " ms OrTime= " + to_string(hem2.orTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(hem2.bitTime / pubs / 1000000)
+					 + " ms numBuk= " + Util::Int2String(hem2.numBucket)
 					 + " numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
 					 + " numPub= " + Util::Int2String(pubs)
@@ -987,20 +997,22 @@ void run_HEM2(const intervalGenerator &gen) {
 					 + " attNumType= " + Util::Int2String(attNumType);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
+#ifdef DEBUG
 	outputFileName = "ComprehensiveExpTime.txt";
 	content = "HEM2SD= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
 	Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif // DEBUG
 
 	//outputFileName = "HEM2BucketSize.txt";
-	//rb.calBucketSize();
-	//content = expID + " numBucket= " + Util::Int2String(rb.numBucket)
+	//hem.calBucketSize();
+	//content = expID + " numBucket= " + Util::Int2String(hem.numBucket)
 	//	//+ " sumBukSetSize= " + to_string(accumulate(rein.bucketSub.begin(), rein.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
-	//	+ " maxBukSetSize= " + to_string((*max_element(rb.bucketSub.begin(), rb.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
-	//	+ " minBukSetSize= " + to_string(min_element(rb.bucketSub.begin(), rb.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
-	//_for(i, 0, rb.numBucket)
-	//	content += " " + to_string(rb.bucketSub[i].size());
+	//	+ " maxBukSetSize= " + to_string((*max_element(hem.bucketSub.begin(), hem.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
+	//	+ " minBukSetSize= " + to_string(min_element(hem.bucketSub.begin(), hem.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
+	//_for(i, 0, hem.numBucket)
+	//	content += " " + to_string(hem.bucketSub[i].size());
 	//Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "tmpData/HEM2.txt";
@@ -1037,9 +1049,11 @@ void run_HEM3(const intervalGenerator &gen) {
 	for (int i = 0; i < pubs; i++) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
-
+#ifdef DEBUG
+		hem3.match_debug(gen.pubList[i], matchSubs);
+#else
 		hem3.match(gen.pubList[i], matchSubs);
-
+#endif // DEBUG
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
@@ -1076,14 +1090,16 @@ void run_HEM3(const intervalGenerator &gen) {
 					 + " attNumType= " + Util::Int2String(attNumType);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
+#ifdef DEBUG
 	outputFileName = "ComprehensiveExpTime.txt";
 	content = "HEM3PD= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
 	Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif // DEBUG
 
 	//outputFileName = "HEM3BucketSize.txt";
-	//rb.calBucketSize();
+	//hem.calBucketSize();
 	//content = expID + " numBucket= " + Util::Int2String(hem3.numBucket)
 	//	//+ " sumBukSetSize= " + to_string(accumulate(hem3.bucketSub.begin(), hem3.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
 	//	+ " maxBukSetSize= " + to_string((*max_element(hem3.bucketSub.begin(), hem3.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
@@ -1126,9 +1142,11 @@ void run_HEM4(const intervalGenerator &gen) {
 	for (int i = 0; i < pubs; i++) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
-
+#ifdef DEBUG
+		hem4.match_debug(gen.pubList[i], matchSubs);
+#else
 		hem4.match(gen.pubList[i], matchSubs);
-
+#endif // DEBUG
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
@@ -1165,11 +1183,13 @@ void run_HEM4(const intervalGenerator &gen) {
 					 + " attNumType= " + Util::Int2String(attNumType);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
+#ifdef DEBUG
 	outputFileName = "ComprehensiveExpTime.txt";
 	content = "HEM4DS= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
 	Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif // DEBUG
 
 	//outputFileName = "HEM4BucketSize.txt";
 	//hem4.calBucketSize();
@@ -1231,7 +1251,11 @@ void run_HEM5(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 		int64_t begin = GetCPUCycle();
+#ifdef DEBUG
+		hem5.match_debug(gen.pubList[i], matchSubs);
+#else
 		hem5.match(gen.pubList[i], matchSubs);
+#endif // DEBUG
 		matchInstructionList.push_back(GetCPUCycle() - begin);
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double) eventTime / 1000000);
@@ -1272,12 +1296,14 @@ void run_HEM5(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 					 + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
-	/*outputFileName = "ComprehensiveExpTime.txt";
+#ifdef DEBUG
+	outputFileName = "ComprehensiveExpTime.txt";
 	content = "HEM5DD= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
-	Util::WriteData2Begin(outputFileName.c_str(), content);*/
-
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif // DEBUG
+	
 	//outputFileName = "HEM5BucketSize.txt";
 	//hem5.calBucketSize();
 	//content = expID + " numBucket= " + Util::Int2String(hem5.numBucket)
@@ -1380,11 +1406,13 @@ void run_HEM5_VAG(const intervalGenerator &gen, unordered_map<int, bool> deleteN
 					 + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
-	/*outputFileName = "ComprehensiveExpTime.txt";
+#ifdef DEBUG
+	outputFileName = "ComprehensiveExpTime.txt";
 	content = "HEM5DD_VAG= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
-	Util::WriteData2Begin(outputFileName.c_str(), content);*/
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif // DEBUG
 
 	outputFileName = "tmpData/HEM5_VAG.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
@@ -1478,12 +1506,14 @@ void run_HEM5_RAG(const intervalGenerator &gen, unordered_map<int, bool> deleteN
 					 + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
-	/*outputFileName = "ComprehensiveExpTime.txt";
+#ifdef DEBUG
+	outputFileName = "ComprehensiveExpTime.txt";
 	content = "HEM5DD_RAG= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
-	Util::WriteData2Begin(outputFileName.c_str(), content);*/
-
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif // DEBUG
+	
 	outputFileName = "tmpData/HEM5_RAG.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
@@ -1532,9 +1562,11 @@ void run_HEM5_avxOR(const intervalGenerator &gen, unordered_map<int, bool> delet
 	for (int i = 0; i < pubs; i++) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
-
+#ifdef DEBUG
+		hem5_avxor.match_debug(gen.pubList[i], matchSubs);
+#else
 		hem5_avxor.match(gen.pubList[i], matchSubs);
-
+#endif // DEBUG
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
@@ -1573,11 +1605,13 @@ void run_HEM5_avxOR(const intervalGenerator &gen, unordered_map<int, bool> delet
 					 + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
-	/*outputFileName = "ComprehensiveExpTime.txt";
+#ifdef DEBUG
+	outputFileName = "ComprehensiveExpTime.txt";
 	content = "HEM5DD_256OR= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
-	Util::WriteData2Begin(outputFileName.c_str(), content);*/
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif // DEBUG
 
 	//outputFileName = "HEM5BucketSize.txt";
 	//hem5_avxor.calBucketSize();
@@ -1596,7 +1630,7 @@ void run_HEM5_avxOR(const intervalGenerator &gen, unordered_map<int, bool> delet
 
 // HEM 动动模式 + 根据宽度分层
 void run_HEMSC(const intervalGenerator &gen) {
-	HEMSC HEMsc;
+	HEMSC hem_sc;
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -1607,7 +1641,7 @@ void run_HEMSC(const intervalGenerator &gen) {
 	for (int i = 0; i < subs; i++) {
 		Timer insertStart;
 
-		HEMsc.insert(gen.subList[i]); // Insert sub[i] into data structure.
+		hem_sc.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
@@ -1616,16 +1650,18 @@ void run_HEMSC(const intervalGenerator &gen) {
 
 	double initTime;
 	Timer initStart;
-	HEMsc.initBits();
+	hem_sc.initBits();
 	initTime = (double) initStart.elapsed_nano() / 1000000.0;
 
 	// match
 	for (int i = 0; i < pubs; i++) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
-		//cout << "Begin to match event " << i << endl;
-		HEMsc.match(gen.pubList[i], matchSubs);
-
+#ifdef DEBUG
+		hem_sc.match_debug(gen.pubList[i], matchSubs);
+#else
+		hem_sc.match(gen.pubList[i], matchSubs);
+#endif // DEBUG
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
@@ -1634,25 +1670,25 @@ void run_HEMSC(const intervalGenerator &gen) {
 	}
 
 	if (display)
-		HEMsc.printRelation(1, 2);
+		hem_sc.printRelation(1, 2);
 	cout << endl;
 
 	// output
 	string outputFileName = "HEMSC.txt";
 	string content = expID
 					 + " bits= " + Util::Int2String(be)
-					 + " memory= " + Util::Int2String(HEMsc.calMemory())
+					 + " memory= " + Util::Int2String(hem_sc.calMemory())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 					 + " ms InitTime= " + Util::Double2String(initTime)
 					 + " ms AvgConstructionTime= " +
 					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
 					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(HEMsc.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(HEMsc.markTime / pubs / 1000000)
-					 + " ms OrTime= " + to_string(HEMsc.orTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(HEMsc.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(HEMsc.numBucket)
+					 + " ms AvgCmpTime= " + to_string(hem_sc.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(hem_sc.markTime / pubs / 1000000)
+					 + " ms OrTime= " + to_string(hem_sc.orTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(hem_sc.bitTime / pubs / 1000000)
+					 + " ms numBuk= " + Util::Int2String(hem_sc.numBucket)
 					 + " numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
 					 + " numPub= " + Util::Int2String(pubs)
@@ -1663,20 +1699,22 @@ void run_HEMSC(const intervalGenerator &gen) {
 					 + " lvls=" + Util::Int2String(lvls);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
+#ifdef DEBUG
 	outputFileName = "ComprehensiveExpTime.txt";
 	content = "HEMSCDD= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
 	Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif // DEBUG
 
 	//outputFileName = "HEMSCBucketSize.txt";
-	//HEMsc.calBucketSize();
-	//content = expID + " numBucket= " + Util::Int2String(HEMsc.numBucket)
-	//	//+ " sumBukSetSize= " + to_string(accumulate(HEMsc.bucketSub.begin(), HEMsc.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
-	//	+ " maxBukSetSize= " + to_string((*max_element(HEMsc.bucketSub.begin(), HEMsc.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
-	//	+ " minBukSetSize= " + to_string(min_element(HEMsc.bucketSub.begin(), HEMsc.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
-	//_for(i, 0, HEMsc.numBucket)
-	//	content += " " + to_string(HEMsc.bucketSub[i].size());
+	//hem_sc.calBucketSize();
+	//content = expID + " numBucket= " + Util::Int2String(hem_sc.numBucket)
+	//	//+ " sumBukSetSize= " + to_string(accumulate(hem_sc.bucketSub.begin(), hem_sc.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
+	//	+ " maxBukSetSize= " + to_string((*max_element(hem_sc.bucketSub.begin(), hem_sc.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
+	//	+ " minBukSetSize= " + to_string(min_element(hem_sc.bucketSub.begin(), hem_sc.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
+	//_for(i, 0, hem_sc.numBucket)
+	//	content += " " + to_string(hem_sc.bucketSub[i].size());
 	//Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "tmpData/HEMSC.txt";
@@ -1686,7 +1724,7 @@ void run_HEMSC(const intervalGenerator &gen) {
 
 // 状态压缩
 void run_HEMSR(const intervalGenerator &gen) {
-	HEMSR hemSR;
+	HEMSR hem_sr;
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -1697,7 +1735,7 @@ void run_HEMSR(const intervalGenerator &gen) {
 	for (int i = 0; i < subs; i++) {
 		Timer insertStart;
 
-		hemSR.insert(gen.subList[i]); // Insert sub[i] into data structure.
+		hem_sr.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
@@ -1706,16 +1744,18 @@ void run_HEMSR(const intervalGenerator &gen) {
 
 	double initTime;
 	Timer initStart;
-	hemSR.initBits();
+	hem_sr.initBits();
 	initTime = (double) initStart.elapsed_nano() / 1000000.0;
 
 	// match
 	for (int i = 0; i < pubs; i++) {
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
-		//cout << "Begin to match event " << i << endl;
-		hemSR.match(gen.pubList[i], matchSubs);
-
+#ifdef DEBUG
+		hem_sr.match_debug(gen.pubList[i], matchSubs);
+#else
+		hem_sr.match(gen.pubList[i], matchSubs);
+#endif // DEBUG
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
@@ -1724,26 +1764,26 @@ void run_HEMSR(const intervalGenerator &gen) {
 	}
 
 	if (display)
-		hemSR.printRelation();
+		hem_sr.printRelation();
 	cout << endl;
 
 	// output
 	string outputFileName = "HEMSR.txt";
 	string content = expID
 					 + " bits= " + Util::Int2String(be)
-					 + " memory= " + Util::Int2String(hemSR.calMemory())
+					 + " memory= " + Util::Int2String(hem_sr.calMemory())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 					 + " ms InitTime= " + Util::Double2String(initTime)
 					 + " ms AvgConstructionTime= " +
 					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
 					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(hemSR.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(hemSR.markTime / pubs / 1000000)
-					 + " ms OrTime= " + to_string(hemSR.orTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(hemSR.bitTime / pubs / 1000000)
+					 + " ms AvgCmpTime= " + to_string(hem_sr.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(hem_sr.markTime / pubs / 1000000)
+					 + " ms OrTime= " + to_string(hem_sr.orTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(hem_sr.bitTime / pubs / 1000000)
 					 + " ms GroupSize=" + Util::Int2String(gs)
-					 + " numBuk= " + Util::Int2String(hemSR.numBucket)
+					 + " numBuk= " + Util::Int2String(hem_sr.numBucket)
 					 + " numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
 					 + " numPub= " + Util::Int2String(pubs)
@@ -1753,11 +1793,13 @@ void run_HEMSR(const intervalGenerator &gen) {
 					 + " attNumType= " + Util::Int2String(attNumType);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
+#ifdef DEBUG
 	outputFileName = "ComprehensiveExpTime.txt";
 	content = "HEMSRPS= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
 	Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif // DEBUG
 
 	outputFileName = "tmpData/HEMSR.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
