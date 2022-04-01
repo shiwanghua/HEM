@@ -3307,16 +3307,16 @@ void run_AWBTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo
 
 	// 验证插入删除正确性
 	if (verifyID) {
-		for (auto kv : deleteNo) {
-			Timer deleteStart;
-			if (!awbTree.deleteSubscription(gen.subList[kv.first]))
-				cout << "AWB+Tree Hybrid_opt: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
-			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
-		}
-		cout << "AWB+Tree Hybrid_opt Deletion Finishes.\n";
-		//for (auto kv : deleteNo) {
-		//	awbTree.insert(gen.subList[kv.first]);
-		//}
+//		for (auto kv : deleteNo) {
+//			Timer deleteStart;
+//			if (!awbTree.deleteSubscription(gen.subList[kv.first]))
+//				cout << "AWB+Tree Hybrid_opt: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+//			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+//		}
+//		cout << "AWB+Tree Hybrid_opt Deletion Finishes.\n";
+//		for (auto kv : deleteNo) {
+//			awbTree.insert(gen.subList[kv.first]);
+//		}
 	}
 
 	// match
@@ -3378,7 +3378,7 @@ void run_AWBTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo
 }
 
 void measure_numMark(const intervalGenerator& gen) {
-	Rein rein(1);
+	Rein rein(OriginalRein);
 	HEM5 hem5;
 
 	for (int i = 0; i < subs; i++) {

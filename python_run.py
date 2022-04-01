@@ -5,7 +5,7 @@ import os
 import sys
 os.system('ulimit -s unlimited;sudo chmod 777 run')
 os.system('sudo chmod 777 *.txt')
-os.system("rm tmpData/*.txt")
+# os.system("rm tmpData/*.txt")
 
 expID=int(sys.argv[1])
 
@@ -16,11 +16,11 @@ expID=int(sys.argv[1])
 #     expID+=1
 
 # Exp 1 2 Camera Ready Version
-be2=[1,3,6,9,12,15,18,21,24,27]
-for be in be2:
-    os.system('taskset -c 5 ./run '+str(expID)+' 20 '+str(be)+' 0.3')
-    print('Experiment',str(expID),' atts=m=',str(20),' be= ',str(be),' w=0.3 done.\n\n')
-    expID+=1
+# be2=[1,3,6,9,12,15,18,21,24,27]
+# for be in be2:
+#     os.system('taskset -c 5 ./run '+str(expID)+' 20 '+str(be)+' 0.3')
+#     print('Experiment',str(expID),' atts=m=',str(20),' be= ',str(be),' w=0.3 done.\n\n')
+#     expID+=1
 
 # # Ss size of subscriptions 5-30
 # for Ss in range(30,0,-5):

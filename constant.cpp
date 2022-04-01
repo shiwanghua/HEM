@@ -1,7 +1,7 @@
 #include "constant.h"
-string expID = "921";        // Record the experiment ID number
+string expID = "924";        // Record the experiment ID number
 const bool display = false;   // whether to print the mapping relation, 有待逐步改成DEBUG宏定义判断
-const bool verifyID = true; // whether to verify Insertion and Deletion function
+const bool verifyID = false; // whether to verify Insertion and Deletion function
 const int interval = 500;    // after a interval of events is matched, print a log
 const double subp = 0;       // subp比例的订阅的谓词定义在前cons个维度上 in order to make the number of matching subscriptions > 0		  
 double realMatchNum=-1;      // The correct matching number in an experiment (Recorded in Rein).
