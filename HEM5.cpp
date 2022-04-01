@@ -6,7 +6,7 @@ HEM5::HEM5() {
 	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
 	cout << "ExpID = " << expID << ". HEM5DD: bit exponent = " << be << ", bucketStep = " << buckStep
-		<< ", numBucket = " << numBucket << endl;
+		 << ", numBucket = " << numBucket << endl;
 
 	//bucketSub.resize(numBucket);
 	data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
@@ -21,12 +21,12 @@ HEM5::HEM5() {
 
 //else bitStep = numBucket >> 1;
 
-	doubleReverse[0] = new bool* [numDimension];
-	doubleReverse[1] = new bool* [numDimension];
-	endBucket[0] = new int* [numDimension];
-	endBucket[1] = new int* [numDimension];
-	bitsID[0] = new int* [numDimension];
-	bitsID[1] = new int* [numDimension];
+	doubleReverse[0] = new bool *[numDimension];
+	doubleReverse[1] = new bool *[numDimension];
+	endBucket[0] = new int *[numDimension];
+	endBucket[1] = new int *[numDimension];
+	bitsID[0] = new int *[numDimension];
+	bitsID[1] = new int *[numDimension];
 	_for(i, 0, numDimension) {
 		doubleReverse[0][i] = new bool[numBucket];
 		doubleReverse[1][i] = new bool[numBucket];
@@ -42,7 +42,7 @@ HEM5::HEM5() {
 
 HEM5::~HEM5() {
 	_for(i, 0,
-		numDimension) delete[] doubleReverse[0][i], doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
+		 numDimension) delete[] doubleReverse[0][i], doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1], doubleReverse[0], doubleReverse[1];
 }
 
@@ -69,10 +69,10 @@ void HEM5::insert_online(IntervalSub sub) {
 	//	fullBits[sub.constraints[i].att][sub.id] = 1;
 	//}
 	//}
-	for(auto&& cnt:sub.constraints) {
+	for (auto &&cnt: sub.constraints) {
 
 		fullBits[cnt.att][sub.id] = 1;
-		
+
 		bucketID = cnt.lowValue / buckStep;
 		c.val = cnt.lowValue;
 		data[0][cnt.att][bucketID].push_back(c);
@@ -147,14 +147,14 @@ void HEM5::initBits() {
 
 	// 如果有多次初始化
 	_for(i, 0,
-		numDimension) delete[] doubleReverse[0][i], doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
+		 numDimension) delete[] doubleReverse[0][i], doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1], doubleReverse[0], doubleReverse[1];
-	doubleReverse[0] = new bool* [numDimension];
-	doubleReverse[1] = new bool* [numDimension];
-	endBucket[0] = new int* [numDimension];
-	endBucket[1] = new int* [numDimension];
-	bitsID[0] = new int* [numDimension];
-	bitsID[1] = new int* [numDimension];
+	doubleReverse[0] = new bool *[numDimension];
+	doubleReverse[1] = new bool *[numDimension];
+	endBucket[0] = new int *[numDimension];
+	endBucket[1] = new int *[numDimension];
+	bitsID[0] = new int *[numDimension];
+	bitsID[1] = new int *[numDimension];
 	_for(i, 0, numDimension) {
 		doubleReverse[0][i] = new bool[numBucket];
 		doubleReverse[1][i] = new bool[numBucket];
@@ -325,14 +325,12 @@ void HEM5::initBits() {
 				bitsID[1][i][j] = numBits - 1;
 				endBucket[1][i][j] = j + 1; // 如果是第一次进来, j号桶非空, 需要二重反向标记, 否则是空桶, 可以兼容这种情况
 				doubleReverse[1][i][j] = true;
-			}
-			else if (fix[1][i][j] - fix[1][i][highBktId] <=
-				fix[1][i][highContain[hi]] - fix[1][i][j]) { // Bug: 没有减highBktId
+			} else if (fix[1][i][j] - fix[1][i][highBktId] <=
+					   fix[1][i][highContain[hi]] - fix[1][i][j]) { // Bug: 没有减highBktId
 				bitsID[1][i][j] = highBid;
 				endBucket[1][i][j] = highBktId; // 遍历到大于等于endBucket[1][i][j]
 				doubleReverse[1][i][j] = false;
-			}
-			else {
+			} else {
 				bitsID[1][i][j] = hi - 1;              // highBid+1
 				endBucket[1][i][j] = highContain[hi]; // 从j往右遍历到小于endBucket[1][i][j]
 				doubleReverse[1][i][j] = true;
@@ -345,14 +343,12 @@ void HEM5::initBits() {
 				bitsID[0][i][numBucket - j - 1] = numBits - 1;
 				endBucket[0][i][numBucket - j - 1] = numBucket - j - 1;
 				doubleReverse[0][i][numBucket - j - 1] = true;
-			}
-			else if (fix[0][i][numBucket - j] - fix[0][i][lowBktId] <=
-				fix[0][i][lowContain[li]] - fix[0][i][numBucket - j]) {
+			} else if (fix[0][i][numBucket - j] - fix[0][i][lowBktId] <=
+					   fix[0][i][lowContain[li]] - fix[0][i][numBucket - j]) {
 				bitsID[0][i][numBucket - j - 1] = lowBid;
 				endBucket[0][i][numBucket - j - 1] = lowBktId;
 				doubleReverse[0][i][numBucket - j - 1] = false;
-			}
-			else {
+			} else {
 				bitsID[0][i][numBucket - j - 1] = li - 1; // lowBktId+1
 				endBucket[0][i][numBucket - j - 1] = lowContain[li];
 				doubleReverse[0][i][numBucket - j - 1] = true;
@@ -396,159 +392,146 @@ void HEM5::initBits() {
 }
 
 // 不计算时间组成
-void HEM5::match(const Pub& pub, int& matchSubs)
-{
+void HEM5::match(const Pub &pub, int &matchSubs) {
 	// 局部变量存堆上
-	bitset<subs>* b = new bitset<subs>; // register
-	bitset<subs>* bLocal = new bitset<subs>;
+//	bitset<subs>* b = new bitset<subs>; // register
+//	bitset<subs>* bLocal = new bitset<subs>;
+//	vector<bool> attExist(numDimension, false);
+//	int value, att, buck;
+//
+//	_for(i, 0, pub.size)
+//	{
+//		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
+//		attExist[att] = true;
+//		_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
+//			(*b)[data[0][att][buck][k].subID] = 1;
+//		_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
+//			(*b)[data[1][att][buck][k].subID] = 1;
+//
+//		if (doubleReverse[0][att][buck])
+//		{
+//			if (bitsID[0][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
+//				*bLocal = fullBits[att];
+//			else
+//				*bLocal = bits[0][att][bitsID[0][att][buck]];
+//			_for(j, endBucket[0][att][buck], buck + 1)
+//				_for(k, 0, data[0][att][j].size())
+//				(*bLocal)[data[0][att][j][k].subID] = 0;
+//
+//			*b = *b | *bLocal;
+//		}
+//		else
+//		{
+//			_for(j, buck + 1, endBucket[0][att][buck])
+//				_for(k, 0, data[0][att][j].size())
+//				(*b)[data[0][att][j][k].subID] = 1;
+//
+//			if (bitsID[0][att][buck] != -1)
+//				*b = *b | bits[0][att][bitsID[0][att][buck]];
+//		}
+//
+//		if (doubleReverse[1][att][buck])
+//		{
+//			if (bitsID[1][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
+//				*bLocal = fullBits[att];
+//			else
+//				*bLocal = bits[1][att][bitsID[1][att][buck]];
+//
+//			_for(j, buck, endBucket[1][att][buck])
+//				_for(k, 0, data[1][att][j].size())
+//				(*bLocal)[data[1][att][j][k].subID] = 0;
+//
+//			*b = *b | *bLocal;
+//		}
+//		else
+//		{
+//			_for(j, endBucket[1][att][buck], buck)
+//				_for(k, 0, data[1][att][j].size())
+//				(*b)[data[1][att][j][k].subID] = 1;
+//
+//			if (bitsID[1][att][buck] != -1)
+//				*b = *b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
+//		}
+//	}
+//	_for(i, 0, numDimension) if (!attExist[i])
+//		*b = *b | fullBits[i];
+//	matchSubs = numSub - b->count();
+
+	// 局部变量存栈里
+	bitset<subs> b; // register
+	bitset<subs> bLocal;
 	vector<bool> attExist(numDimension, false);
 	int value, att, buck;
 
-	_for(i, 0, pub.size)
-	{
+	_for(i, 0, pub.size) {
 		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 		attExist[att] = true;
 		_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
-			(*b)[data[0][att][buck][k].subID] = 1;
+				b[data[0][att][buck][k].subID] = 1;
 		_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
-			(*b)[data[1][att][buck][k].subID] = 1;
+				b[data[1][att][buck][k].subID] = 1;
 
-		if (doubleReverse[0][att][buck])
-		{
+		if (doubleReverse[0][att][buck]) {
 			if (bitsID[0][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
-				*bLocal = fullBits[att];
+				bLocal = fullBits[att];
 			else
-				*bLocal = bits[0][att][bitsID[0][att][buck]];
-			_for(j, endBucket[0][att][buck], buck + 1)
-				_for(k, 0, data[0][att][j].size())
-				(*bLocal)[data[0][att][j][k].subID] = 0;
+				bLocal = bits[0][att][bitsID[0][att][buck]];
+			_for(j, endBucket[0][att][buck], buck + 1) _for(k, 0,
+															data[0][att][j].size()) bLocal[data[0][att][j][k].subID] = 0;
 
-			*b = *b | *bLocal;
-		}
-		else
-		{
-			_for(j, buck + 1, endBucket[0][att][buck])
-				_for(k, 0, data[0][att][j].size())
-				(*b)[data[0][att][j][k].subID] = 1;
+			b = b | bLocal;
+		} else {
+			_for(j, buck + 1, endBucket[0][att][buck]) _for(k, 0,
+															data[0][att][j].size()) b[data[0][att][j][k].subID] = 1;
 
 			if (bitsID[0][att][buck] != -1)
-				*b = *b | bits[0][att][bitsID[0][att][buck]];
+				b = b | bits[0][att][bitsID[0][att][buck]];
 		}
 
-		if (doubleReverse[1][att][buck])
-		{
+		if (doubleReverse[1][att][buck]) {
 			if (bitsID[1][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
-				*bLocal = fullBits[att];
+				bLocal = fullBits[att];
 			else
-				*bLocal = bits[1][att][bitsID[1][att][buck]];
+				bLocal = bits[1][att][bitsID[1][att][buck]];
 
-			_for(j, buck, endBucket[1][att][buck])
-				_for(k, 0, data[1][att][j].size())
-				(*bLocal)[data[1][att][j][k].subID] = 0;
+			_for(j, buck, endBucket[1][att][buck]) _for(k, 0,
+														data[1][att][j].size()) bLocal[data[1][att][j][k].subID] = 0;
 
-			*b = *b | *bLocal;
-		}
-		else
-		{
-			_for(j, endBucket[1][att][buck], buck)
-				_for(k, 0, data[1][att][j].size())
-				(*b)[data[1][att][j][k].subID] = 1;
+			b = b | bLocal;
+		} else {
+			_for(j, endBucket[1][att][buck], buck) _for(k, 0, data[1][att][j].size()) b[data[1][att][j][k].subID] = 1;
 
 			if (bitsID[1][att][buck] != -1)
-				*b = *b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
+				b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
 		}
 	}
+
+	/*if (numBits > 1)
+	{*/
 	_for(i, 0, numDimension) if (!attExist[i])
-		*b = *b | fullBits[i];
-	matchSubs = numSub - b->count();
+			b = b | fullBits[i];
+	/*}
+	else
+	{
+		_for(i, 0, numDimension) if (!attExist[i])
+			_for(j, 0, endBucket[0][i][0])
+			_for(k, 0, data[0][i][j].size())
+			b[data[0][i][j][k].subID] = 1;
 
-	// 局部变量存栈里
-	//bitset<subs> b; // register
-	//bitset<subs> bLocal;
-	//vector<bool> attExist(numDimension, false);
-	//int value, att, buck;
+		_for(i, 0, numDimension) if (!attExist[i])
+			b = b | bits[0][i][0];
+	}*/
 
-	//_for(i, 0, pub.size)
+	//_for(i, 0, subs) if (!b[i])
 	//{
-	//	value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
-	//	attExist[att] = true;
-	//	_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
-	//		b[data[0][att][buck][k].subID] = 1;
-	//	_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
-	//		b[data[1][att][buck][k].subID] = 1;
-
-	//	if (doubleReverse[0][att][buck])
-	//	{
-	//		if (bitsID[0][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
-	//			bLocal = fullBits[att];
-	//		else
-	//			bLocal = bits[0][att][bitsID[0][att][buck]];
-	//		_for(j, endBucket[0][att][buck], buck + 1)
-	//			_for(k, 0, data[0][att][j].size())
-	//			bLocal[data[0][att][j][k].subID] = 0;
-
-	//		b = b | bLocal;
-	//	}
-	//	else
-	//	{
-	//		_for(j, buck + 1, endBucket[0][att][buck])
-	//			_for(k, 0, data[0][att][j].size())
-	//			b[data[0][att][j][k].subID] = 1;
-
-	//		if (bitsID[0][att][buck] != -1)
-	//			b = b | bits[0][att][bitsID[0][att][buck]];
-	//	}
-
-	//	if (doubleReverse[1][att][buck])
-	//	{
-	//		if (bitsID[1][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
-	//			bLocal = fullBits[att];
-	//		else
-	//			bLocal = bits[1][att][bitsID[1][att][buck]];
-
-	//		_for(j, buck, endBucket[1][att][buck])
-	//			_for(k, 0, data[1][att][j].size())
-	//			bLocal[data[1][att][j][k].subID] = 0;
-
-	//		b = b | bLocal;
-	//	}
-	//	else
-	//	{
-	//		_for(j, endBucket[1][att][buck], buck)
-	//			_for(k, 0, data[1][att][j].size())
-	//			b[data[1][att][j][k].subID] = 1;
-
-	//		if (bitsID[1][att][buck] != -1)
-	//			b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
-	//	}
+	//	++matchSubs;
+	//	//cout << "HEM5 matches sub: " << i << endl;
 	//}
-
-	///*if (numBits > 1)
-	//{*/
-	//_for(i, 0, numDimension) if (!attExist[i])
-	//	b = b | fullBits[i];
-	///*}
-	//else
-	//{
-	//	_for(i, 0, numDimension) if (!attExist[i])
-	//		_for(j, 0, endBucket[0][i][0])
-	//		_for(k, 0, data[0][i][j].size())
-	//		b[data[0][i][j][k].subID] = 1;
-
-	//	_for(i, 0, numDimension) if (!attExist[i])
-	//		b = b | bits[0][i][0];
-	//}*/
-
-	////_for(i, 0, subs) if (!b[i])
-	////{
-	////	++matchSubs;
-	////	//cout << "HEM5 matches sub: " << i << endl;
-	////}
-	//matchSubs = numSub - b.count();
+	matchSubs = numSub - b.count();
 }
 
 // 计算时间组成
-void HEM5::match_debug(const Pub& pub, int& matchSubs) {
+void HEM5::match_debug(const Pub &pub, int &matchSubs) {
 	bitset<subs> b, bLocal;
 	vector<bool> attExist(numDimension, false);
 	int value, att, buck;
@@ -558,10 +541,10 @@ void HEM5::match_debug(const Pub& pub, int& matchSubs) {
 		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 		attExist[att] = true;
 		_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
-			b[data[0][att][buck][k].subID] = 1;
+				b[data[0][att][buck][k].subID] = 1;
 		_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
-			b[data[1][att][buck][k].subID] = 1;
-		compareTime += (double)compareStart.elapsed_nano();
+				b[data[1][att][buck][k].subID] = 1;
+		compareTime += (double) compareStart.elapsed_nano();
 
 		if (doubleReverse[0][att][buck]) {
 			Timer markStart;
@@ -570,22 +553,21 @@ void HEM5::match_debug(const Pub& pub, int& matchSubs) {
 			else
 				bLocal = bits[0][att][bitsID[0][att][buck]];
 			_for(j, endBucket[0][att][buck], buck + 1) _for(k, 0,
-				data[0][att][j].size()) bLocal[data[0][att][j][k].subID] = 0;
-			markTime += (double)markStart.elapsed_nano();
+															data[0][att][j].size()) bLocal[data[0][att][j][k].subID] = 0;
+			markTime += (double) markStart.elapsed_nano();
 
 			Timer orStart;
 			b = b | bLocal;
-			orTime += (double)orStart.elapsed_nano();
-		}
-		else {
+			orTime += (double) orStart.elapsed_nano();
+		} else {
 			Timer markStart;
 			_for(j, buck + 1, endBucket[0][att][buck]) _for(k, 0,
-				data[0][att][j].size()) b[data[0][att][j][k].subID] = 1;
-			markTime += (double)markStart.elapsed_nano();
+															data[0][att][j].size()) b[data[0][att][j][k].subID] = 1;
+			markTime += (double) markStart.elapsed_nano();
 			Timer orStart;
 			if (bitsID[0][att][buck] != -1)
 				b = b | bits[0][att][bitsID[0][att][buck]];
-			orTime += (double)orStart.elapsed_nano();
+			orTime += (double) orStart.elapsed_nano();
 		}
 
 		if (doubleReverse[1][att][buck]) {
@@ -595,28 +577,27 @@ void HEM5::match_debug(const Pub& pub, int& matchSubs) {
 			else
 				bLocal = bits[1][att][bitsID[1][att][buck]];
 			_for(j, buck, endBucket[1][att][buck]) _for(k, 0,
-				data[1][att][j].size()) bLocal[data[1][att][j][k].subID] = 0;
-			markTime += (double)markStart.elapsed_nano();
+														data[1][att][j].size()) bLocal[data[1][att][j][k].subID] = 0;
+			markTime += (double) markStart.elapsed_nano();
 			Timer orStart;
 			b = b | bLocal;
-			orTime += (double)orStart.elapsed_nano();
-		}
-		else {
+			orTime += (double) orStart.elapsed_nano();
+		} else {
 			Timer markStart;
 			_for(j, endBucket[1][att][buck], buck) _for(k, 0, data[1][att][j].size()) b[data[1][att][j][k].subID] = 1;
-			markTime += (double)markStart.elapsed_nano();
+			markTime += (double) markStart.elapsed_nano();
 			Timer orStart;
 			if (bitsID[1][att][buck] != -1)
 				b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
-			orTime += (double)orStart.elapsed_nano();
+			orTime += (double) orStart.elapsed_nano();
 		}
 	}
 
 	//	if (numBits > 1) {
 	Timer orStart;
 	_for(i, 0, numDimension) if (!attExist[i])
-		b = b | fullBits[i];
-	orTime += (double)orStart.elapsed_nano();
+			b = b | fullBits[i];
+	orTime += (double) orStart.elapsed_nano();
 	//	} else {
 	//		Timer markStart;
 	//		_for(i, 0, numDimension) if (!attExist[i])
@@ -635,7 +616,7 @@ void HEM5::match_debug(const Pub& pub, int& matchSubs) {
 	//			//cout << "HEM5 matches sub: " << i << endl;
 	//		}
 	matchSubs = subs - b.count();
-	bitTime += (double)bitStart.elapsed_nano();
+	bitTime += (double) bitStart.elapsed_nano();
 }
 
 //void HEM5::calBucketSize() {
@@ -677,50 +658,51 @@ int HEM5::calMemory() {
 
 	// 两个fix
 	//cout << "fix: " << sizeof(fix) << " " << sizeof(fix[0]) << " " << sizeof(fix[0][10]) << sizeof(fix[1][7][20]) << "\n";
-	size += sizeof(fix) + sizeof(fix[0]) * 2 + sizeof(fix[0][0]) * numDimension + sizeof(fix[0][0][0]) * numDimension * (numBucket + 1) * 2;
+	size += sizeof(fix) + sizeof(fix[0]) * 2 + sizeof(fix[0][0]) * numDimension +
+			sizeof(fix[0][0][0]) * numDimension * (numBucket + 1) * 2;
 
 	// 两个endBucket、两个bitsID、两个doubleReverse
 	size += (4 * sizeof(int) + 2 * sizeof(bool)) * numDimension * numBucket;
 	size += sizeof(endBucket[0]) * 4 + sizeof(endBucket[0][0]) * numDimension * 4;
 	//cout << sizeof(endBucket) << " " << sizeof(endBucket[0]) << " " << sizeof(endBucket[0][0]) << " " << sizeof(endBucket[0][0][0]) << "\n";
 	size = size / 1024 / 1024; // MB
-	return (int)size;
+	return (int) size;
 }
 
 void HEM5::printRelation(int dimension_i) {
 	cout << "\n\nHEM5DDMap\n";
 	if (dimension_i == -1)
 		_for(i, 0, numDimension) {
-		cout << "\nDimension " << i << "    LowBucket Predicates: " << fix[0][i][0] << "   ----------------\n";
-		_for(j, 0, numBucket) {
-			cout << "lBkt" << j << ": bID=" << bitsID[0][i][j] << ", eBkt=" << endBucket[0][i][j] << ", dRvs="
-				<< doubleReverse[0][i][j] << "; ";
-			if (j % 5 == 0 && j > 0)
-				cout << "\n";
+			cout << "\nDimension " << i << "    LowBucket Predicates: " << fix[0][i][0] << "   ----------------\n";
+			_for(j, 0, numBucket) {
+				cout << "lBkt" << j << ": bID=" << bitsID[0][i][j] << ", eBkt=" << endBucket[0][i][j] << ", dRvs="
+					 << doubleReverse[0][i][j] << "; ";
+				if (j % 5 == 0 && j > 0)
+					cout << "\n";
+			}
+			cout << "\n\nDimension " << i << "    HighBucket Predicates: " << fix[1][i][numBucket]
+				 << "   ----------------\n";
+			_for(j, 0, numBucket) {
+				cout << "hBkt" << j << ": bID=" << bitsID[1][i][j] << ", eBkt=" << endBucket[1][i][j] << ", dRvs="
+					 << doubleReverse[1][i][j] << "; ";
+				if (j % 5 == 0 && j > 0)
+					cout << "\n";
+			}
 		}
-		cout << "\n\nDimension " << i << "    HighBucket Predicates: " << fix[1][i][numBucket]
-			<< "   ----------------\n";
-		_for(j, 0, numBucket) {
-			cout << "hBkt" << j << ": bID=" << bitsID[1][i][j] << ", eBkt=" << endBucket[1][i][j] << ", dRvs="
-				<< doubleReverse[1][i][j] << "; ";
-			if (j % 5 == 0 && j > 0)
-				cout << "\n";
-		}
-	}
 	else {
 		cout << "\nDimension: " << dimension_i << "    LowBucket Predicates: " << fix[0][dimension_i][0]
-			<< "   ----------------\n";
+			 << "   ----------------\n";
 		_for(i, 0, numBucket) {
 			cout << "lBkt" << i << ": bID=" << bitsID[0][dimension_i][i] << ", eBkt=" << endBucket[0][dimension_i][i]
-				<< ", dRvs=" << doubleReverse[0][dimension_i][i] << "; ";
+				 << ", dRvs=" << doubleReverse[0][dimension_i][i] << "; ";
 			if (i % 5 == 0 && i > 0)
 				cout << "\n";
 		}
 		cout << "\n\nDimension: " << dimension_i << "    HighBucket Predicates: " << fix[1][dimension_i][numBucket]
-			<< "   ----------------\n";
+			 << "   ----------------\n";
 		_for(i, 0, numBucket) {
 			cout << "hBkt" << i << ": bID=" << bitsID[1][dimension_i][i] << ", eBkt=" << endBucket[1][dimension_i][i]
-				<< ", dRvs=" << doubleReverse[1][dimension_i][i] << "; ";
+				 << ", dRvs=" << doubleReverse[1][dimension_i][i] << "; ";
 			if (i % 5 == 0 && i > 0)
 				cout << "\n";
 		}
@@ -734,26 +716,16 @@ vector<int> HEM5::calMarkNumForBuckets() {
 		_for(j, 0, numDimension) {
 			numMarking[i] += data[0][j][i].size() + data[1][j][i].size(); // 比较
 
-			if (doubleReverse[0][j][i])
-			{
-				_for(k, endBucket[0][j][i], i + 1)
-					numMarking[i] += data[0][j][k].size();
-			}
-			else
-			{
-				_for(k, i + 1, endBucket[0][j][i])
-					numMarking[i] += data[0][j][k].size();
+			if (doubleReverse[0][j][i]) {
+				_for(k, endBucket[0][j][i], i + 1) numMarking[i] += data[0][j][k].size();
+			} else {
+				_for(k, i + 1, endBucket[0][j][i]) numMarking[i] += data[0][j][k].size();
 			}
 
-			if (doubleReverse[1][j][i])
-			{
-				_for(k, i, endBucket[1][j][i])
-					numMarking[i] += data[0][j][k].size();
-			}
-			else
-			{
-				_for(k, endBucket[1][j][i], i)
-					numMarking[i] += data[1][j][k].size();
+			if (doubleReverse[1][j][i]) {
+				_for(k, i, endBucket[1][j][i]) numMarking[i] += data[0][j][k].size();
+			} else {
+				_for(k, endBucket[1][j][i], i) numMarking[i] += data[1][j][k].size();
 			}
 		}
 	}

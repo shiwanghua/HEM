@@ -4,7 +4,7 @@
 #include<iostream>
 #include <immintrin.h> //AVX(include wmmintrin.h)
 
-//#define DEBUG
+#define DEBUG
 
 using namespace std;
 
@@ -23,7 +23,7 @@ extern int m;              // Number of constraints in one pub.
 extern const int attNumType;  // 0: Fixed size of sub and pub. 1: Random size of sub and pub <= $cons and $m
 extern const int attDis;   // The distribution of attributes in subs and pubs. 0:uniform distribution | 1:Zipf distribution
 extern const int valDis;   // The distribution of values in subs and pubs. 0:uniform + fixed width | 1: Uniform + random width >= $width | 2: Zipf + fixed width | 3: Normal Distribution + random width both value ends
-extern const int valDom;   // Cardinality of values.
+extern int valDom;         // Cardinality of values.
 extern double alpha;       // Parameter for Zipf distribution.
 extern double width;       // Width of a predicate.
 extern double mean;        // Mean of Normal Distribution. For events it's ( 1 - mean ).

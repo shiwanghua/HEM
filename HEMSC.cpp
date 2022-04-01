@@ -592,7 +592,7 @@ int HEMSC::calMemory() {
 }
 
 void HEMSC::printRelation(int dimension_i, int li) { // Î¬¶ÈºÅºÍ²ãºÅ
-	cout << "\n\nHEMSCDDMap\n";
+	cout << "\n\nhgreennode_d_vrs\n";
 	if (dimension_i == -1)
 		_for(i, 0, numDimension) {
 		_for(j, 0, numLevel) {

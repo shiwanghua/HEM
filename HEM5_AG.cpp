@@ -20,12 +20,12 @@ HEM5_AG::HEM5_AG(int type) {
 	attrGroupSize = (numDimension + numAttrGroup - 1) / numAttrGroup;
 	attrGroupBits.resize(numAttrGroup);
 
-	doubleReverse[0] = new bool* [numDimension];
-	doubleReverse[1] = new bool* [numDimension];
-	endBucket[0] = new int* [numDimension];
-	endBucket[1] = new int* [numDimension];
-	bitsID[0] = new int* [numDimension];
-	bitsID[1] = new int* [numDimension];
+	doubleReverse[0] = new bool *[numDimension];
+	doubleReverse[1] = new bool *[numDimension];
+	endBucket[0] = new int *[numDimension];
+	endBucket[1] = new int *[numDimension];
+	bitsID[0] = new int *[numDimension];
+	bitsID[1] = new int *[numDimension];
 	_for(i, 0, numDimension) {
 		doubleReverse[0][i] = new bool[numBucket];
 		doubleReverse[1][i] = new bool[numBucket];
@@ -41,19 +41,20 @@ HEM5_AG::HEM5_AG(int type) {
 	if (type == HEM5_DD_VAG)TYPE = "HEM5_DD_VAG";
 	else TYPE = "HEM5_DD_RAG";
 	cout << "ExpID = " << expID << ". " + TYPE + ": bitset number = " << numBits << ", bucketStep = " << buckStep
-		<< ", numBucket = " << numBucket << ", attrGroup = " << numAttrGroup << ", attGroupSize = " << attrGroupSize << endl;
+		 << ", numBucket = " << numBucket << ", attrGroup = " << numAttrGroup << ", attGroupSize = " << attrGroupSize
+		 << endl;
 }
 
 HEM5_AG::~HEM5_AG() {
 	_for(i, 0,
-		numDimension) delete[] doubleReverse[0][i], doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
+		 numDimension) delete[] doubleReverse[0][i], doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1], doubleReverse[0], doubleReverse[1];
 }
 
 void HEM5_AG::insert_VAG(IntervalSub sub) {
 	Combo c;
 	c.subID = sub.id;
-	for (auto&& iCnt : sub.constraints) {
+	for (auto &&iCnt: sub.constraints) {
 		attrGroupBits[iCnt.att / attrGroupSize][sub.id] = 1;
 		c.val = iCnt.lowValue;
 		data[0][iCnt.att][iCnt.lowValue / buckStep].emplace_back(c);
@@ -70,7 +71,7 @@ void HEM5_AG::insert_RAG(IntervalSub sub) {
 	}
 	Combo c;
 	c.subID = sub.id;
-	for (auto&& iCnt : sub.constraints) {
+	for (auto &&iCnt: sub.constraints) {
 		c.val = iCnt.lowValue;
 		data[0][iCnt.att][iCnt.lowValue / buckStep].emplace_back(c);
 		c.val = iCnt.highValue;
@@ -84,7 +85,7 @@ void HEM5_AG::insert_online_VAG(IntervalSub sub) {
 	Combo c;
 	c.subID = sub.id;
 
-	for (auto&& iCnt : sub.constraints) {
+	for (auto &&iCnt: sub.constraints) {
 		fullBits[iCnt.att][sub.id] = 1;
 		attrGroupBits[iCnt.att / attrGroupSize][sub.id] = 1;
 
@@ -119,7 +120,7 @@ void HEM5_AG::insert_online_RAG(IntervalSub sub) {
 			attrGroupBits[i][sub.id] = 1;
 	}
 
-	for (auto&& iCnt : sub.constraints) {
+	for (auto &&iCnt: sub.constraints) {
 		fullBits[iCnt.att][sub.id] = 1;
 
 		bucketID = iCnt.lowValue / buckStep;
@@ -146,7 +147,7 @@ void HEM5_AG::insert_online_RAG(IntervalSub sub) {
 bool HEM5_AG::deleteSubscription_VAG(IntervalSub sub) {
 	int find = 0, b, bucketID, id = sub.id;
 
-	for (auto&& iCnt : sub.constraints) {
+	for (auto &&iCnt: sub.constraints) {
 		fullBits[iCnt.att][id] = 0;
 		attrGroupBits[iCnt.att / attrGroupSize][sub.id] = 0;
 
@@ -193,7 +194,7 @@ bool HEM5_AG::deleteSubscription_RAG(IntervalSub sub) {
 		attrGroupBits[i][sub.id] = 0;
 	}
 
-	for (auto&& iCnt : sub.constraints) {
+	for (auto &&iCnt: sub.constraints) {
 		fullBits[iCnt.att][id] = 0;
 
 		bucketID = iCnt.lowValue / buckStep;
@@ -233,14 +234,14 @@ bool HEM5_AG::deleteSubscription_RAG(IntervalSub sub) {
 void HEM5_AG::initBits() {
 	// 如果有多次初始化
 	_for(i, 0,
-		numDimension) delete[] doubleReverse[0][i], doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
+		 numDimension) delete[] doubleReverse[0][i], doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1], doubleReverse[0], doubleReverse[1];
-	doubleReverse[0] = new bool* [numDimension];
-	doubleReverse[1] = new bool* [numDimension];
-	endBucket[0] = new int* [numDimension];
-	endBucket[1] = new int* [numDimension];
-	bitsID[0] = new int* [numDimension];
-	bitsID[1] = new int* [numDimension];
+	doubleReverse[0] = new bool *[numDimension];
+	doubleReverse[1] = new bool *[numDimension];
+	endBucket[0] = new int *[numDimension];
+	endBucket[1] = new int *[numDimension];
+	bitsID[0] = new int *[numDimension];
+	bitsID[1] = new int *[numDimension];
 	_for(i, 0, numDimension) {
 		doubleReverse[0][i] = new bool[numBucket];
 		doubleReverse[1][i] = new bool[numBucket];
@@ -411,14 +412,12 @@ void HEM5_AG::initBits() {
 				bitsID[1][i][lj] = numBits - 1;
 				endBucket[1][i][lj] = lj + 1; // 如果是第一次进来, j号桶非空, 需要二重反向标记, 否则是空桶, 可以兼容这种情况
 				doubleReverse[1][i][lj] = true;
-			}
-			else if (fix[1][i][lj] - fix[1][i][highBktId] <=
-				fix[1][i][highContain[hi]] - fix[1][i][lj]) { // Bug: 没有减highBktId
+			} else if (fix[1][i][lj] - fix[1][i][highBktId] <=
+					   fix[1][i][highContain[hi]] - fix[1][i][lj]) { // Bug: 没有减highBktId
 				bitsID[1][i][lj] = highBid; // hi - 2
 				endBucket[1][i][lj] = highBktId; // 遍历到大于等于endBucket[1][i][j]
 				doubleReverse[1][i][lj] = false;
-			}
-			else {
+			} else {
 				bitsID[1][i][lj] = hi - 1;             // highBid+1
 				endBucket[1][i][lj] = highContain[hi]; // 从j往右遍历到小于endBucket[1][i][j]
 				doubleReverse[1][i][lj] = true;
@@ -431,14 +430,12 @@ void HEM5_AG::initBits() {
 				bitsID[0][i][hj] = numBits - 1;
 				endBucket[0][i][hj] = hj;
 				doubleReverse[0][i][hj] = true;
-			}
-			else if (fix[0][i][hj + 1] - fix[0][i][lowBktId] <=
-				fix[0][i][lowContain[li]] - fix[0][i][hj + 1]) {
+			} else if (fix[0][i][hj + 1] - fix[0][i][lowBktId] <=
+					   fix[0][i][lowContain[li]] - fix[0][i][hj + 1]) {
 				bitsID[0][i][hj] = lowBid;
 				endBucket[0][i][hj] = lowBktId;
 				doubleReverse[0][i][hj] = false;
-			}
-			else {
+			} else {
 				bitsID[0][i][hj] = li - 1; // lowBid+1
 				endBucket[0][i][hj] = lowContain[li];
 				doubleReverse[0][i][hj] = true;
@@ -481,124 +478,30 @@ void HEM5_AG::initBits() {
 	//cout << "HEM5_AGDD Stop.\n";
 }
 
-// 计算时间组成
-void HEM5_AG::match_VAG(const Pub& pub, int& matchSubs) {
-	bitset<subs> b, bLocal;
-	vector<bool> attExist(numDimension, false);
-	int value, att, buck;
-
-	_for(i, 0, pub.size) {
-		Timer compareStart;
-		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
-		attExist[att] = true;
-		_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
-			b[data[0][att][buck][k].subID] = 1;
-		_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
-			b[data[1][att][buck][k].subID] = 1;
-		compareTime += (double)compareStart.elapsed_nano();
-
-		if (doubleReverse[0][att][buck]) {
-			Timer markStart;
-			if (bitsID[0][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
-				bLocal = fullBits[att];
-			else
-				bLocal = bits[0][att][bitsID[0][att][buck]];
-			_for(j, endBucket[0][att][buck], buck + 1) _for(k, 0,
-				data[0][att][j].size()) bLocal[data[0][att][j][k].subID] = 0;
-			markTime += (double)markStart.elapsed_nano();
-
-			Timer orStart;
-			b = b | bLocal;
-			orTime += (double)orStart.elapsed_nano();
-		}
-		else {
-			Timer markStart;
-			_for(j, buck + 1, endBucket[0][att][buck]) _for(k, 0,
-				data[0][att][j].size()) b[data[0][att][j][k].subID] = 1;
-			markTime += (double)markStart.elapsed_nano();
-			Timer orStart;
-			if (bitsID[0][att][buck] != -1)
-				b = b | bits[0][att][bitsID[0][att][buck]];
-			orTime += (double)orStart.elapsed_nano();
-		}
-
-		if (doubleReverse[1][att][buck]) {
-			Timer markStart;
-			if (bitsID[1][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
-				bLocal = fullBits[att];
-			else
-				bLocal = bits[1][att][bitsID[1][att][buck]];
-			_for(j, buck, endBucket[1][att][buck]) _for(k, 0,
-				data[1][att][j].size()) bLocal[data[1][att][j][k].subID] = 0;
-			markTime += (double)markStart.elapsed_nano();
-			Timer orStart;
-			b = b | bLocal;
-			orTime += (double)orStart.elapsed_nano();
-		}
-		else {
-			Timer markStart;
-			_for(j, endBucket[1][att][buck], buck) _for(k, 0, data[1][att][j].size()) b[data[1][att][j][k].subID] = 1;
-			markTime += (double)markStart.elapsed_nano();
-			Timer orStart;
-			if (bitsID[1][att][buck] != -1)
-				b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
-			orTime += (double)orStart.elapsed_nano();
-		}
-	}
-
-	//	if (numBits > 1) {
-	Timer orStart;
-	_for(i, 0, numDimension) if (!attExist[i])
-		b = b | fullBits[i];
-	orTime += (double)orStart.elapsed_nano();
-	//	} else {
-	//		Timer markStart;
-	//		_for(i, 0, numDimension) if (!attExist[i])
-	//				_for(j, 0, endBucket[0][i][0]) _for(k, 0, data[0][i][j].size()) b[data[0][i][j][k].subID] = 1;
-	//		markTime += (double) markStart.elapsed_nano();
-	//
-	//		Timer orStart;
-	//		_for(i, 0, numDimension) if (!attExist[i])
-	//				b = b | bits[0][i][0];
-	//		orTime += (double) orStart.elapsed_nano();
-	//	}
-
-	Timer bitStart;
-	//	_for(i, 0, subs) if (!b[i]) {
-	//			++matchSubs;
-	//			//cout << "HEM5_AG matches sub: " << i << endl;
-	//		}
-	matchSubs = subs - b.count();
-	bitTime += (double)bitStart.elapsed_nano();
-}
-
-// 不计算时间组成
-void HEM5_AG::match_VAG(const Pub& pub, int& matchSubs)
-{
+void HEM5_AG::match_VAG(const Pub &pub, int &matchSubs) {
 	bitset<subs> b; // register
 	bitset<subs> bLocal;
 	vector<bool> attExist(numDimension, false);
 	vector<bool> attGroupExist(numAttrGroup, false);
 	int value, att, buck;
 
-	_for(i, 0, pub.size)
-	{
+	_for(i, 0, pub.size) {
 #ifdef DEBUG
 		Timer compareStart;
 #endif // DEBUG
 		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 		attExist[att] = true;
 		attGroupExist[att / attrGroupSize] = true;
-		_for(k, 0, data[0][att][buck].size()) 
-			if (data[0][att][buck][k].val > value)
-			b[data[0][att][buck][k].subID] = 1;
-		_for(k, 0, data[1][att][buck].size()) 
-			if (data[1][att][buck][k].val < value)
-			b[data[1][att][buck][k].subID] = 1;
+		for (auto &&iCob: data[0][att][buck])
+			if (iCob.val > value)
+				b[iCob.subID] = 1;
+		for (auto &&iCob: data[1][att][buck])
+			if (iCob.val < value)
+				b[iCob.subID] = 1;
 #ifdef DEBUG
 		compareTime += (double)compareStart.elapsed_nano();
 #endif // DEBUG
-		
+
 		if (doubleReverse[0][att][buck]) {
 #ifdef DEBUG
 			Timer markStart;
@@ -607,8 +510,7 @@ void HEM5_AG::match_VAG(const Pub& pub, int& matchSubs)
 				bLocal = fullBits[att];
 			else
 				bLocal = bits[0][att][bitsID[0][att][buck]];
-			_for(j, endBucket[0][att][buck], buck + 1)
-				for (auto&& iCob : data[0][att][j])
+			_for(j, endBucket[0][att][buck], buck + 1) for (auto &&iCob: data[0][att][j])
 					bLocal[iCob.subID] = 0;
 #ifdef DEBUG
 			markTime += (double)markStart.elapsed_nano();
@@ -618,13 +520,11 @@ void HEM5_AG::match_VAG(const Pub& pub, int& matchSubs)
 #ifdef DEBUG
 			orTime += (double)orStart.elapsed_nano();
 #endif // DEBUG
-		}
-		else {
+		} else {
 #ifdef DEBUG
 			Timer markStart;
 #endif // DEBUG
-			_for(j, buck + 1, endBucket[0][att][buck])
-				for (auto&& iCob : data[0][att][j])
+			_for(j, buck + 1, endBucket[0][att][buck]) for (auto &&iCob: data[0][att][j])
 					b[iCob.subID] = 1;
 #ifdef DEBUG
 			markTime += (double)markStart.elapsed_nano();
@@ -645,8 +545,7 @@ void HEM5_AG::match_VAG(const Pub& pub, int& matchSubs)
 				bLocal = fullBits[att];
 			else
 				bLocal = bits[1][att][bitsID[1][att][buck]];
-			_for(j, buck, endBucket[1][att][buck])
-				for (auto&& iCob : data[1][att][j])
+			_for(j, buck, endBucket[1][att][buck]) for (auto &&iCob: data[1][att][j])
 					bLocal[iCob.subID] = 0;
 #ifdef DEBUG
 			markTime += (double)markStart.elapsed_nano();
@@ -656,13 +555,11 @@ void HEM5_AG::match_VAG(const Pub& pub, int& matchSubs)
 #ifdef DEBUG
 			orTime += (double)orStart.elapsed_nano();
 #endif // DEBUG
-		}
-		else {
+		} else {
 #ifdef DEBUG
 			Timer markStart;
 #endif // DEBUG
-			_for(j, endBucket[1][att][buck], buck)
-				for (auto&& iCob : data[1][att][j])
+			_for(j, endBucket[1][att][buck], buck) for (auto &&iCob: data[1][att][j])
 					b[iCob.subID] = 1;
 #ifdef DEBUG
 			markTime += (double)markStart.elapsed_nano();
@@ -681,17 +578,17 @@ void HEM5_AG::match_VAG(const Pub& pub, int& matchSubs)
 	{*/
 	/*_for(i, 0, numDimension) if (!attExist[i])
 		b = b | fullBits[i];*/
-		/*}
-		else
-		{
-			_for(i, 0, numDimension) if (!attExist[i])
-				_for(j, 0, endBucket[0][i][0])
-				_for(k, 0, data[0][i][j].size())
-				b[data[0][i][j][k].subID] = 1;
+	/*}
+	else
+	{
+		_for(i, 0, numDimension) if (!attExist[i])
+			_for(j, 0, endBucket[0][i][0])
+			_for(k, 0, data[0][i][j].size())
+			b[data[0][i][j][k].subID] = 1;
 
-			_for(i, 0, numDimension) if (!attExist[i])
-				b = b | bits[0][i][0];
-		}*/
+		_for(i, 0, numDimension) if (!attExist[i])
+			b = b | bits[0][i][0];
+	}*/
 #ifdef DEBUG
 	Timer orStart;
 #endif // DEBUG
@@ -702,8 +599,7 @@ void HEM5_AG::match_VAG(const Pub& pub, int& matchSubs)
 				if (!attExist[aj])
 					b = b | fullBits[aj];
 			}
-		}
-		else {
+		} else {
 			b = b | attrGroupBits[AGi];
 		}
 	}
@@ -721,24 +617,21 @@ void HEM5_AG::match_VAG(const Pub& pub, int& matchSubs)
 #endif // DEBUG
 }
 
-void HEM5_AG::match_RAG(const Pub& pub, int& matchSubs) {
+void HEM5_AG::match_RAG(const Pub &pub, int &matchSubs) {
 	bitset<subs> b; // register
 	bitset<subs> bLocal;
 	vector<bool> attExist(numDimension, false);
 	int value, att, buck;
 
-	_for(i, 0, pub.size)
-	{
+	_for(i, 0, pub.size) {
 #ifdef DEBUG
 		Timer compareStart;
 #endif // DEBUG
 		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 		attExist[att] = true;
-		_for(k, 0, data[0][att][buck].size())
-			if (data[0][att][buck][k].val > value)
+		_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
 				b[data[0][att][buck][k].subID] = 1;
-		_for(k, 0, data[1][att][buck].size())
-			if (data[1][att][buck][k].val < value)
+		_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
 				b[data[1][att][buck][k].subID] = 1;
 #ifdef DEBUG
 		compareTime += (double)compareStart.elapsed_nano();
@@ -752,8 +645,7 @@ void HEM5_AG::match_RAG(const Pub& pub, int& matchSubs) {
 				bLocal = fullBits[att];
 			else
 				bLocal = bits[0][att][bitsID[0][att][buck]];
-			_for(j, endBucket[0][att][buck], buck + 1)
-				for (auto&& iCob : data[0][att][j])
+			_for(j, endBucket[0][att][buck], buck + 1) for (auto &&iCob: data[0][att][j])
 					bLocal[iCob.subID] = 0;
 #ifdef DEBUG
 			markTime += (double)markStart.elapsed_nano();
@@ -763,13 +655,11 @@ void HEM5_AG::match_RAG(const Pub& pub, int& matchSubs) {
 #ifdef DEBUG
 			orTime += (double)orStart.elapsed_nano();
 #endif // DEBUG
-		}
-		else {
+		} else {
 #ifdef DEBUG
 			Timer markStart;
 #endif // DEBUG
-			_for(j, buck + 1, endBucket[0][att][buck])
-				for (auto&& iCob : data[0][att][j])
+			_for(j, buck + 1, endBucket[0][att][buck]) for (auto &&iCob: data[0][att][j])
 					b[iCob.subID] = 1;
 #ifdef DEBUG
 			markTime += (double)markStart.elapsed_nano();
@@ -790,8 +680,7 @@ void HEM5_AG::match_RAG(const Pub& pub, int& matchSubs) {
 				bLocal = fullBits[att];
 			else
 				bLocal = bits[1][att][bitsID[1][att][buck]];
-			_for(j, buck, endBucket[1][att][buck])
-				for (auto&& iCob : data[1][att][j])
+			_for(j, buck, endBucket[1][att][buck]) for (auto &&iCob: data[1][att][j])
 					bLocal[iCob.subID] = 0;
 #ifdef DEBUG
 			markTime += (double)markStart.elapsed_nano();
@@ -801,13 +690,11 @@ void HEM5_AG::match_RAG(const Pub& pub, int& matchSubs) {
 #ifdef DEBUG
 			orTime += (double)orStart.elapsed_nano();
 #endif // DEBUG
-		}
-		else {
+		} else {
 #ifdef DEBUG
 			Timer markStart;
 #endif // DEBUG
-			_for(j, endBucket[1][att][buck], buck)
-				for (auto&& iCob : data[1][att][j])
+			_for(j, endBucket[1][att][buck], buck) for (auto &&iCob: data[1][att][j])
 					b[iCob.subID] = 1;
 #ifdef DEBUG
 			markTime += (double)markStart.elapsed_nano();
@@ -826,17 +713,17 @@ void HEM5_AG::match_RAG(const Pub& pub, int& matchSubs) {
 	{*/
 	/*_for(i, 0, numDimension) if (!attExist[i])
 		b = b | fullBits[i];*/
-		/*}
-		else
-		{
-			_for(i, 0, numDimension) if (!attExist[i])
-				_for(j, 0, endBucket[0][i][0])
-				_for(k, 0, data[0][i][j].size())
-				b[data[0][i][j][k].subID] = 1;
+	/*}
+	else
+	{
+		_for(i, 0, numDimension) if (!attExist[i])
+			_for(j, 0, endBucket[0][i][0])
+			_for(k, 0, data[0][i][j].size())
+			b[data[0][i][j][k].subID] = 1;
 
-			_for(i, 0, numDimension) if (!attExist[i])
-				b = b | bits[0][i][0];
-		}*/
+		_for(i, 0, numDimension) if (!attExist[i])
+			b = b | bits[0][i][0];
+	}*/
 #ifdef DEBUG
 	Timer orStart;
 #endif // DEBUG
@@ -900,50 +787,51 @@ int HEM5_AG::calMemory() {
 
 	// 两个fix
 	//cout << "fix: " << sizeof(fix) << " " << sizeof(fix[0]) << " " << sizeof(fix[0][10]) << sizeof(fix[1][7][20]) << "\n";
-	size += sizeof(fix) + sizeof(fix[0]) * 2 + sizeof(fix[0][0]) * numDimension + sizeof(fix[0][0][0]) * numDimension * (numBucket + 1) * 2;
+	size += sizeof(fix) + sizeof(fix[0]) * 2 + sizeof(fix[0][0]) * numDimension +
+			sizeof(fix[0][0][0]) * numDimension * (numBucket + 1) * 2;
 
 	// 两个endBucket、两个bitsID、两个doubleReverse
 	size += (4 * sizeof(int) + 2 * sizeof(bool)) * numDimension * numBucket;
 	size += sizeof(endBucket[0]) * 4 + sizeof(endBucket[0][0]) * numDimension * 4;
 	//cout << sizeof(endBucket) << " " << sizeof(endBucket[0]) << " " << sizeof(endBucket[0][0]) << " " << sizeof(endBucket[0][0][0]) << "\n";
 	size = size / 1024 / 1024; // MB
-	return (int)size;
+	return (int) size;
 }
 
 void HEM5_AG::printRelation(int dimension_i) {
 	cout << "\n\nHEM5_AGDDMap\n";
 	if (dimension_i == -1)
 		_for(i, 0, numDimension) {
-		cout << "\nDimension " << i << "    LowBucket Predicates: " << fix[0][i][0] << "   ----------------\n";
-		_for(j, 0, numBucket) {
-			cout << "lBkt" << j << ": bID=" << bitsID[0][i][j] << ", eBkt=" << endBucket[0][i][j] << ", dRvs="
-				<< doubleReverse[0][i][j] << "; ";
-			if (j % 5 == 0 && j > 0)
-				cout << "\n";
+			cout << "\nDimension " << i << "    LowBucket Predicates: " << fix[0][i][0] << "   ----------------\n";
+			_for(j, 0, numBucket) {
+				cout << "lBkt" << j << ": bID=" << bitsID[0][i][j] << ", eBkt=" << endBucket[0][i][j] << ", dRvs="
+					 << doubleReverse[0][i][j] << "; ";
+				if (j % 5 == 0 && j > 0)
+					cout << "\n";
+			}
+			cout << "\n\nDimension " << i << "    HighBucket Predicates: " << fix[1][i][numBucket]
+				 << "   ----------------\n";
+			_for(j, 0, numBucket) {
+				cout << "hBkt" << j << ": bID=" << bitsID[1][i][j] << ", eBkt=" << endBucket[1][i][j] << ", dRvs="
+					 << doubleReverse[1][i][j] << "; ";
+				if (j % 5 == 0 && j > 0)
+					cout << "\n";
+			}
 		}
-		cout << "\n\nDimension " << i << "    HighBucket Predicates: " << fix[1][i][numBucket]
-			<< "   ----------------\n";
-		_for(j, 0, numBucket) {
-			cout << "hBkt" << j << ": bID=" << bitsID[1][i][j] << ", eBkt=" << endBucket[1][i][j] << ", dRvs="
-				<< doubleReverse[1][i][j] << "; ";
-			if (j % 5 == 0 && j > 0)
-				cout << "\n";
-		}
-	}
 	else {
 		cout << "\nDimension: " << dimension_i << "    LowBucket Predicates: " << fix[0][dimension_i][0]
-			<< "   ----------------\n";
+			 << "   ----------------\n";
 		_for(i, 0, numBucket) {
 			cout << "lBkt" << i << ": bID=" << bitsID[0][dimension_i][i] << ", eBkt=" << endBucket[0][dimension_i][i]
-				<< ", dRvs=" << doubleReverse[0][dimension_i][i] << "; ";
+				 << ", dRvs=" << doubleReverse[0][dimension_i][i] << "; ";
 			if (i % 5 == 0 && i > 0)
 				cout << "\n";
 		}
 		cout << "\n\nDimension: " << dimension_i << "    HighBucket Predicates: " << fix[1][dimension_i][numBucket]
-			<< "   ----------------\n";
+			 << "   ----------------\n";
 		_for(i, 0, numBucket) {
 			cout << "hBkt" << i << ": bID=" << bitsID[1][dimension_i][i] << ", eBkt=" << endBucket[1][dimension_i][i]
-				<< ", dRvs=" << doubleReverse[1][dimension_i][i] << "; ";
+				 << ", dRvs=" << doubleReverse[1][dimension_i][i] << "; ";
 			if (i % 5 == 0 && i > 0)
 				cout << "\n";
 		}
@@ -957,26 +845,16 @@ vector<int> HEM5_AG::calMarkNumForBuckets() {
 		_for(j, 0, numDimension) {
 			numMarking[i] += data[0][j][i].size() + data[1][j][i].size(); // 比较
 
-			if (doubleReverse[0][j][i])
-			{
-				_for(k, endBucket[0][j][i], i + 1)
-					numMarking[i] += data[0][j][k].size();
-			}
-			else
-			{
-				_for(k, i + 1, endBucket[0][j][i])
-					numMarking[i] += data[0][j][k].size();
+			if (doubleReverse[0][j][i]) {
+				_for(k, endBucket[0][j][i], i + 1) numMarking[i] += data[0][j][k].size();
+			} else {
+				_for(k, i + 1, endBucket[0][j][i]) numMarking[i] += data[0][j][k].size();
 			}
 
-			if (doubleReverse[1][j][i])
-			{
-				_for(k, i, endBucket[1][j][i])
-					numMarking[i] += data[0][j][k].size();
-			}
-			else
-			{
-				_for(k, endBucket[1][j][i], i)
-					numMarking[i] += data[1][j][k].size();
+			if (doubleReverse[1][j][i]) {
+				_for(k, i, endBucket[1][j][i]) numMarking[i] += data[0][j][k].size();
+			} else {
+				_for(k, endBucket[1][j][i], i) numMarking[i] += data[1][j][k].size();
 			}
 		}
 	}

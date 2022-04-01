@@ -42,8 +42,8 @@ int main(int argc, char **argv) {
 //	run_rein_hybrid(gen,deleteNo);
 //	run_rein_hybrid_CBOMP(gen,deleteNo);
 //  run_pRein(gen,deleteNo);
-	/*run_AdaRein_ORI(gen, deleteNo);
-	run_AdaRein_SSS(gen, deleteNo);*/
+	run_AdaRein_ORI(gen, deleteNo);
+//	run_AdaRein_SSS(gen, deleteNo);
 
 	run_HEM(gen);
 	run_HEM1(gen);
@@ -57,25 +57,25 @@ int main(int argc, char **argv) {
 	run_HEMSC(gen);
 	run_HEMSR(gen);
 
-//	run_Simple(gen,deleteNo);
+	run_Simple(gen,deleteNo);
 //	run_Simple2(gen,deleteNo);
 //
-	//run_tama(gen,deleteNo);
+	run_tama(gen,deleteNo);
 	//run_btama_forward_C_BOMP(gen, deleteNo); // bTAMA6
 	//run_btama_backward1_C_BOMP(gen, deleteNo);// bTAMA7
 	//run_btama_backward2_CBOMP(gen, deleteNo); // bTAMA8
 //
-	//run_BGTREE_forward_native(gen, deleteNo);
+	run_BGTREE_forward_native(gen, deleteNo);
 //	run_BGTREE_forward_C_BOMP(gen,deleteNo);
 //	run_BGTREE_backward_C_BOMP(gen, deleteNo);
 	//run_BGTREE_d_forward_native(gen, deleteNo);
 	//run_BGTREE_d_backward_native(gen, deleteNo);
 //	run_BGTREE_d_vrs_backward_native(gen, deleteNo);
 
-//	run_OpIndex(gen, deleteNo);
-//	run_bOpIndex2(gen,deleteNo);
-	//run_PSTREE(gen, deleteNo);
-//	run_AWBTREE(gen, deleteNo);
+	run_OpIndex(gen, deleteNo);
+	run_bOpIndex2(gen,deleteNo);
+//	run_PSTREE(gen, deleteNo);
+	run_AWBTREE(gen, deleteNo);
 	//measure_numMark(gen);
 
 	cout << "Done.\n";

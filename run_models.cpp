@@ -29,9 +29,9 @@ void run_rein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "Rein Deletion Finishes.\n";
-		/*for (auto kv: deleteNo) {
-			rein.insert(gen.subList[kv.first]);
-		}*/
+		for (auto kv: deleteNo) {
+			rein.insert_backward_original(gen.subList[kv.first]);
+		}
 	}
 
 	// match
@@ -81,11 +81,13 @@ void run_rein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 					 + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
-	//	outputFileName = "ComprehensiveExpTime.txt";
-	//	content = "Rein= [";
-	//	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
-	//	content[content.length() - 2] = ']';
-	//	Util::WriteData2Begin(outputFileName.c_str(), content);
+#ifdef DEBUG
+		outputFileName = "ComprehensiveExpTime.txt";
+		content = "Rein= [";
+		_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+		content[content.length() - 2] = ']';
+		Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif
 
 	//outputFileName = "ReinBucketSize.txt";
 	//rein.calBucketSize();
@@ -131,9 +133,9 @@ void run_rein_forward_native(const intervalGenerator &gen, unordered_map<int, bo
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "fRein Deletion Finishes.\n";
-		/*for (auto kv: deleteNo) {
-			rein.insert(gen.subList[kv.first]);
-		}*/
+		for (auto kv: deleteNo) {
+			fRein.insert_forward_native(gen.subList[kv.first]);
+		}
 	}
 
 	// match
@@ -180,12 +182,13 @@ void run_rein_forward_native(const intervalGenerator &gen, unordered_map<int, bo
 					 + " stddev= " + Util::Double2String(stddev)
 					 + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
-
-	//	outputFileName = "ComprehensiveExpTime.txt";
-	//	content = "Rein= [";
-	//	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
-	//	content[content.length() - 2] = ']';
-	//	Util::WriteData2Begin(outputFileName.c_str(), content);
+#ifdef DEBUG
+		outputFileName = "ComprehensiveExpTime.txt";
+		content = "Rein= [";
+		_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+		content[content.length() - 2] = ']';
+		Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif
 
 	//outputFileName = "ReinBucketSize.txt";
 	//rein.calBucketSize();
@@ -231,9 +234,9 @@ void run_rein_forward_CBOMP(const intervalGenerator &gen, unordered_map<int, boo
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "fRein_c CBOMP Deletion Finishes.\n";
-		/*for (auto kv: deleteNo) {
-			rein.insert(gen.subList[kv.first]);
-		}*/
+		for (auto kv: deleteNo) {
+			fRein_c.insert_forward_CBOMP(gen.subList[kv.first]);
+		}
 	}
 
 	// match
@@ -320,9 +323,9 @@ void run_rein_hybrid(const intervalGenerator &gen, unordered_map<int, bool> dele
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "HybridRein (hRein) Deletion Finishes.\n";
-		/*for (auto kv: deleteNo) {
-			rein.insert(gen.subList[kv.first]);
-		}*/
+		for (auto kv: deleteNo) {
+			hRein.insert_hybrid_native(gen.subList[kv.first]);
+		}
 	}
 
 	// match
@@ -411,9 +414,9 @@ void run_rein_hybrid_CBOMP(const intervalGenerator &gen, unordered_map<int, bool
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "HybridRein (HRein) with CBOMP Deletion Finishes.\n";
-		/*for (auto kv: deleteNo) {
-			rein.insert(gen.subList[kv.first]);
-		}*/
+		for (auto kv: deleteNo) {
+			hRein_c.insert_hybrid_CBOMP(gen.subList[kv.first]);
+		}
 	}
 
 	// match
@@ -502,9 +505,9 @@ void run_pRein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) 
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "pRein Deletion Finishes.\n";
-		/*for (auto kv: deleteNo) {
+		for (auto kv: deleteNo) {
 			prein.insert(gen.subList[kv.first]);
-		}*/
+		}
 	}
 
 	// match
@@ -601,9 +604,9 @@ void run_AdaRein_ORI(const intervalGenerator &gen, unordered_map<int, bool> dele
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "AdaRein Deletion Finishes.\n";
-		/*for (auto kv: deleteNo) {
+		for (auto kv: deleteNo) {
 			adarein.insert(gen.subList[kv.first]);
-		}*/
+		}
 	}
 
 	// match
@@ -707,7 +710,7 @@ void run_AdaRein_SSS(const intervalGenerator &gen, unordered_map<int, bool> dele
 			cout << "AdaRein_SSS Event " << i << " is matched.\n";
 	}
 
-	cout <<"realFalsePositiveRate= "<<1-realMatchNum/Util::Average(matchSubList)<<"\n\n";
+	cout << "realFalsePositiveRate= " << 1 - realMatchNum / Util::Average(matchSubList) << "\n\n";
 
 	// output
 	string outputFileName = "AdaRein_SSS.txt";
@@ -1241,9 +1244,9 @@ void run_HEM5(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "HEM5DD Deletion Finishes.\n";
-		//for (auto kv: deleteNo) {
-		//	hem5.insert_online(gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
-		//}
+		for (auto kv: deleteNo) {
+			hem5.insert_online(gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
+		}
 	}
 
 	// match
@@ -1303,7 +1306,7 @@ void run_HEM5(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	content[content.length() - 2] = ']';
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 #endif // DEBUG
-	
+
 	//outputFileName = "HEM5BucketSize.txt";
 	//hem5.calBucketSize();
 	//content = expID + " numBucket= " + Util::Int2String(hem5.numBucket)
@@ -1513,7 +1516,7 @@ void run_HEM5_RAG(const intervalGenerator &gen, unordered_map<int, bool> deleteN
 	content[content.length() - 2] = ']';
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 #endif // DEBUG
-	
+
 	outputFileName = "tmpData/HEM5_RAG.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
@@ -1553,9 +1556,9 @@ void run_HEM5_avxOR(const intervalGenerator &gen, unordered_map<int, bool> delet
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "HEM5DD_avxOR Deletion Finishes.\n";
-		//for (auto kv : deleteNo) {
-		//	hem5_avxor.insert_online(gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
-		//}
+		for (auto kv : deleteNo) {
+			hem5_avxor.insert_online(gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
+		}
 	}
 
 	// match
@@ -1835,9 +1838,9 @@ void run_Simple(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "Simple Deletion Finishes.\n";
-		/*for (auto kv: deleteNo) {
+		for (auto kv: deleteNo) {
 			simple.insert(gen.subList[kv.first]);
-		}*/
+		}
 	}
 
 	// match
@@ -1916,9 +1919,9 @@ void run_Simple2(const intervalGenerator &gen, unordered_map<int, bool> deleteNo
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "Simple2 Deletion Finishes.\n";
-		/*for (auto kv: deleteNo) {
+		for (auto kv: deleteNo) {
 			simple2.insert(gen.subList[kv.first]);
-		}*/
+		}
 	}
 
 	// match
@@ -1999,9 +2002,9 @@ void run_tama(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "Tama Deletion Finishes.\n";
-		/*for (auto kv: deleteNo) {
+		for (auto kv: deleteNo) {
 			tama.insert(gen.subList[kv.first]);
-		}*/
+		}
 	}
 
 	// match
@@ -2084,9 +2087,9 @@ void run_btama_forward_C_BOMP(const intervalGenerator &gen, unordered_map<int, b
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "bTama_forward Deletion Finishes.\n";
-		/*for (auto kv: deleteNo) {
+		for (auto kv: deleteNo) {
 			btama.insert(gen.subList[kv.first]);
-		}*/
+		}
 	}
 
 	// match
@@ -2167,9 +2170,9 @@ void run_btama_backward1_C_BOMP(const intervalGenerator &gen, unordered_map<int,
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "bTama_backward1 Deletion Finishes.\n";
-		/*for (auto kv: deleteNo) {
+		for (auto kv: deleteNo) {
 			btama.insert(gen.subList[kv.first]);
-		}*/
+		}
 	}
 
 	// match
@@ -2250,9 +2253,9 @@ void run_btama_backward2_CBOMP(const intervalGenerator &gen, unordered_map<int, 
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "bTama_backward2 Deletion Finishes.\n";
-		/*for (auto kv: deleteNo) {
+		for (auto kv: deleteNo) {
 			btama.insert(gen.subList[kv.first]);
-		}*/
+		}
 	}
 
 	// match
@@ -2350,9 +2353,9 @@ void run_OpIndex(const intervalGenerator &gen, unordered_map<int, bool> deleteNo
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "OpIndex2 Deletion Finishes.\n";
-		/*for (auto kv: deleteNo) {
+		for (auto kv: deleteNo) {
 			opindex2.insert(gen.subList[kv.first]);
-		}*/
+		}
 	}
 
 	// match
@@ -2447,9 +2450,9 @@ void run_bOpIndex2(const intervalGenerator &gen, unordered_map<int, bool> delete
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "bOpIndex2 (C-BOMP) Deletion Finishes.\n";
-		/*for (auto kv: deleteNo) {
+		for (auto kv: deleteNo) {
 			bOpindex2.insert(gen.subList[kv.first]);
-		}*/
+		}
 	}
 
 	// match
@@ -2527,9 +2530,9 @@ void run_BGTREE_forward_native(const intervalGenerator &gen, unordered_map<int, 
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "BG-Tree Forward Deletion Finishes.\n";
-		/*for (auto kv: deleteNo) {
+		for (auto kv: deleteNo) {
 			bgTree.insert(gen.subList[kv.first]);
-		}*/
+		}
 	}
 
 	// match
@@ -2618,9 +2621,9 @@ void run_BGTREE_forward_C_BOMP(const intervalGenerator &gen, unordered_map<int, 
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "BG-Tree(C-BOMP) Forward Deletion Finishes.\n";
-		/*for (auto kv: deleteNo) {
+		for (auto kv: deleteNo) {
 			bgTree.insert(gen.subList[kv.first]);
-		}*/
+		}
 	}
 
 	// match
@@ -2707,9 +2710,9 @@ void run_BGTREE_backward_C_BOMP(const intervalGenerator &gen, unordered_map<int,
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "BG-Tree(C-BOMP) Backward Deletion Finishes.\n";
-		/*for (auto kv: deleteNo) {
+		for (auto kv: deleteNo) {
 			bgTree.insert(gen.subList[kv.first]);
-		}*/
+		}
 	}
 
 	// match
@@ -2796,9 +2799,9 @@ void run_BGTREE_d_forward_native(const intervalGenerator &gen, unordered_map<int
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "BG-Tree_d Forward Deletion Finishes.\n";
-		/*for (auto kv: deleteNo) {
-			bgTree_d.insert(gen.subList[kv.first]);
-		}*/
+		for (auto kv: deleteNo) {
+			bgTree_d.insert(gen.subList[kv.first],gen.subList);
+		}
 	}
 
 	// match
@@ -2887,9 +2890,9 @@ void run_BGTREE_d_backward_native(const intervalGenerator &gen, unordered_map<in
 			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "BG-Tree_d Backward Deletion Finishes.\n";
-		/*for (auto kv: deleteNo) {
-			bgTree_d.insert(gen.subList[kv.first]);
-		}*/
+		for (auto kv: deleteNo) {
+			bgTree_d.insert(gen.subList[kv.first],gen.subList);
+		}
 	}
 
 	// match
@@ -2979,9 +2982,9 @@ void run_BGTREE_d_vrs_forward_native(const intervalGenerator &gen, unordered_map
 	//			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 	//		}
 	//		cout << "BG-Tree_d_vrs Forward Deletion Finishes.\n";
-	//		/*for (auto kv: deleteNo) {
-	//			bgTree_d_vrs.insert(gen.subList[kv.first]);
-	//		}*/
+	//		for (auto kv: deleteNo) {
+	//			bgTree_d_vrs.insert(gen.subList[kv.first],gen.subList);
+	//		}
 	//	}
 	//
 	//	// match
@@ -3070,9 +3073,9 @@ void run_BGTREE_d_vrs_backward_native(const intervalGenerator &gen, unordered_ma
 	//			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 	//		}
 	//		cout << "BG-Tree_d_vrs Backward Deletion Finishes.\n";
-	//		/*for (auto kv: deleteNo) {
-	//			bgTree_d_vrs.insert(gen.subList[kv.first]);
-	//		}*/
+	//		for (auto kv: deleteNo) {
+	//			bgTree_d_vrs.insert(gen.subList[kv.first],gen.subList);
+	//		}
 	//	}
 	//
 	//	// match
@@ -3227,15 +3230,17 @@ void run_PSTREE(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 					 + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
-	//	outputFileName = "ComprehensiveExpTime.txt";
-	//	content = "PS-Tree= [";
-	//	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
-	//	content[content.length() - 2] = ']';
-	//	Util::WriteData2Begin(outputFileName.c_str(), content);
+#ifdef DEBUG
+		outputFileName = "ComprehensiveExpTime.txt";
+		content = "PS-Tree= [";
+		_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+		content[content.length() - 2] = ']';
+		Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "tmpData/PSTree.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
+#endif
 }
 
 void run_AWBTREE(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
