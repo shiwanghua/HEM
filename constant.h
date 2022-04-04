@@ -4,7 +4,7 @@
 #include<iostream>
 #include <immintrin.h> //AVX(include wmmintrin.h)
 
-//#define DEBUG
+#define DEBUG
 
 using namespace std;
 

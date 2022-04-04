@@ -1,5 +1,5 @@
 #include "constant.h"
-string expID = "924";        // Record the experiment ID number
+string expID = "942";        // Record the experiment ID number
 const bool display = false;   // whether to print the mapping relation, 有待逐步改成DEBUG宏定义判断
 const bool verifyID = false; // whether to verify Insertion and Deletion function
 const int interval = 500;    // after a interval of events is matched, print a log
@@ -16,7 +16,7 @@ const int attDis = 0;        // The distribution of attributes in subs and pubs.
 const int valDis = 0;        // The distribution of values in subs and pubs. 0:uniform + fixed width | 1: random width >= $width + Uniform | 2: Zipf + fixed width | 3: Normal + fixed width | 4: Normal + two ends
 int valDom = 1000000;  // Cardinality of values.
 double alpha = 0;            // Parameter for Zipf distribution.
-double width = 0.3;          // Width of a predicate.
+double width = 0.4;          // Width of a predicate.
 double mean = 0.2;           // Mean of Normal Distribution. For events it's ( 1 - mean ).
 double stddev = 1;           // Standard deviation: The square root of variance, representing the dispersion of values from the distribution mean. >0
 

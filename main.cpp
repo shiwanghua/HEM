@@ -5,22 +5,23 @@ int main(int argc, char **argv) {
 	//cin >> subs >> pubs >> atts >> cons>> buks >> m >> attDis >> valDis >> valDom >> alpha >> width;
 	//m = atts; // Note that Rein requires m == atts.
 
-	if (argc == 5) {
+	if (argc == 8) {
 		expID = to_string(atoi(argv[1]));
-//		cons = atoi(argv[2]);
-		m = atoi(argv[2]);
-//		atts=atoi(argv[2]);
-//		alpha=atof(argv[2]);
-		be2 = atoi(argv[3]); // 输入一个bits指数
-		width = atof(argv[4]);
+		atts = atoi(argv[2]);
+		cons = atoi(argv[3]);
+		m = atoi(argv[4]);
+		alpha = atof(argv[5]);
+		width = atof(argv[6]);
+		be = atoi(argv[7]); // 输入一个bits指数
 		cout << "argc=" << argc << endl;
-		cout << argv[0] << "  " << argv[1] << "  " << argv[2] << "  " << argv[3] << "  " << argv[4] << "  n=" << subs
+		cout << argv[0] << "  " << argv[1] << "  " << argv[2] << "  " << argv[3] << "  " << argv[4] << "  " << argv[5]
+			 << "  " << argv[6] << "  " << argv[7] << "  n=" << subs
 			 << endl;
 	}
 
 	intervalGenerator gen(subs, pubs, atts, attrGroup, cons, m, attNumType, attDis, valDis, valDom, alpha, subp, width);
 	gen.GenSubList();
-	gen.GenPubList();
+	gen.GenPubList2();
 //	gen.GenSubList_g();
 //	gen.GenPubList_g();
 
