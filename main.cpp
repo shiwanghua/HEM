@@ -5,7 +5,7 @@ int main(int argc, char **argv) {
 	//cin >> subs >> pubs >> atts >> cons>> buks >> m >> attDis >> valDis >> valDom >> alpha >> width;
 	//m = atts; // Note that Rein requires m == atts.
 
-	if (argc == 8) {
+	if (argc == 10) {
 		expID = to_string(atoi(argv[1]));
 		atts = atoi(argv[2]);
 		cons = atoi(argv[3]);
@@ -13,9 +13,11 @@ int main(int argc, char **argv) {
 		alpha = atof(argv[5]);
 		width = atof(argv[6]);
 		be = atoi(argv[7]); // 输入一个bits指数
+		attrGroup = atoi(argv[8]);
+		valDom = atoi(argv[9]);
 		cout << "argc=" << argc << endl;
 		cout << argv[0] << "  " << argv[1] << "  " << argv[2] << "  " << argv[3] << "  " << argv[4] << "  " << argv[5]
-			 << "  " << argv[6] << "  " << argv[7] << "  n=" << subs
+			 << "  " << argv[6] << "  " << argv[7] << "  " << argv[8] << "  " << argv[9] << "  n=" << subs
 			 << endl;
 	}
 
@@ -38,30 +40,30 @@ int main(int argc, char **argv) {
 	}
 
 	run_rein(gen, deleteNo);
-//	run_rein_forward_native(gen, deleteNo);
-//	run_rein_forward_CBOMP(gen, deleteNo);
-//	run_rein_hybrid(gen, deleteNo);
-//	run_rein_hybrid_CBOMP(gen, deleteNo);
-//	run_pRein(gen, deleteNo);
-//	run_AdaRein_ORI(gen, deleteNo);
-//	run_AdaRein_SSS(gen, deleteNo);
-//
+////	run_rein_forward_native(gen, deleteNo);
+////	run_rein_forward_CBOMP(gen, deleteNo);
+////	run_rein_hybrid(gen, deleteNo);
+////	run_rein_hybrid_CBOMP(gen, deleteNo);
+////	run_pRein(gen, deleteNo);
+	run_AdaRein_ORI(gen, deleteNo);
+////	run_AdaRein_SSS(gen, deleteNo);
+////
 	run_HEM(gen);
-	run_HEM1(gen);
-	run_HEM2(gen);
-	run_HEM3(gen);
-	run_HEM4(gen);
+////	run_HEM1(gen);
+////	run_HEM2(gen);
+////	run_HEM3(gen);
+////	run_HEM4(gen);
 	run_HEM5(gen, deleteNo);
 	run_HEM5_VAG(gen, deleteNo);
 	run_HEM5_RAG(gen, deleteNo);
 	run_HEM5_avxOR(gen, deleteNo);
-	run_HEMSC(gen);
-	run_HEMSR(gen);
-//
-//	run_Simple(gen, deleteNo);
+////	run_HEMSC(gen);
+////	run_HEMSR(gen);
+////
+	run_Simple(gen, deleteNo);
 //	run_Simple2(gen, deleteNo);
 //
-//	run_tama(gen, deleteNo);
+	run_tama(gen, deleteNo);
 //	run_btama_forward_C_BOMP(gen, deleteNo); // bTAMA6
 //	run_btama_backward1_C_BOMP(gen, deleteNo);// bTAMA7
 //	run_btama_backward2_CBOMP(gen, deleteNo); // bTAMA8
@@ -73,7 +75,7 @@ int main(int argc, char **argv) {
 //	run_BGTREE_d_backward_native(gen, deleteNo);
 //	run_BGTREE_d_vrs_backward_native(gen, deleteNo);
 //
-//	run_OpIndex(gen, deleteNo);
+	run_OpIndex(gen, deleteNo);
 //	run_bOpIndex2(gen, deleteNo);
 //	run_PSTREE(gen, deleteNo);
 //	run_AWBTREE(gen, deleteNo);

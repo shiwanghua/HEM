@@ -14,56 +14,144 @@ os.system("sudo cpufreq-set -c " + coreId + " -g performance")
 os.system("sudo cpufreq-set -c " + coreId + " -d 3.7G")
 os.system("sudo cpufreq-set -c " + coreId + " -u 4.9G")
 
-# be Exp 1 2
+# Exp 1: be
 # need to #define DEBUG in constant.h file
-for be in range(9, -1, -1):
-    os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 20 10 20 0.0 0.4 ' + str(be))
-    print('Experiment', str(expID), ': atts= 20, k= 10, m= 20, alpha= 0.0, w= 0.4, be= ', str(be), ' done.\n\n')
-    expID += 1
+# for be in range(9, -1, -1):
+#     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 20 10 20 0.0 0.4 ' + str(be)+' 1 1000000')
+#     print('Experiment', str(expID), ': atts= 20, k= 10, m= 20, alpha= 0.0, w= 0.4, be= ', str(be), 'attrGroup= 1, valDom= 1000000 done.\n\n')
+#     expID += 1
 
 # be2=[1,3,6,9,12,15,18,21,24,27]
 # need to set be to -1
 # for be in be2:
-#     os.system('taskset -c '+ coreId +' ./run '+str(expID)+' 20 '+str(be)+' 0.3')
-#     print('Experiment',str(expID),' atts=m=',str(20),' be= ',str(be),' w=0.3 done.\n\n')
-#     expID+=1
+#     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 20 10 20 0.0 0.4 ' + str(be)+' 1 1000000')
+#     print('Experiment', str(expID), ': atts= 20, k= 10, m= 20, alpha= 0.0, w= 0.4, be= ', str(be), 'attrGroup= 1, valDom= 1000000 done.\n\n')
+#     expID += 1
 
+# Exp 2: 50% null attributes
+# need to #define DEBUG in constant.h file
+# need to use GenSubList_g, GenPubList_g function to generate data!
+# for be in range(9, -1, -1):
+#     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 20 10 10 0.0 0.4 ' + str(be)+' 1 1000000')
+#     print('Experiment', str(expID), ': atts= 20, k= 10, m= 10, alpha= 0.0, w= 0.4, be= ', str(be), ', attrGroup= 1, valDom= 1000000 done.\n\n')
+#     expID += 1
 
-# # Ss size of subscriptions 5-30
+# Exp 3: vitual attribute group
+# need to #define DEBUG in constant.h file
+# AG = [1000, 500, 400, 100, 50, 20]
+# Se = [20, 20, 20, 20, 20, 20]
+# for i in range(6):
+#     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 10000 5 ' + str(Se[i]) + ' 0.0 0.8 1 ' + str(AG[i])+' 1000000')
+#     print('Experiment', str(expID),
+#           ': atts= 10000, k= 5, m= ' + str(Se[i]) + ', alpha= 0.0, w= 0.8, be= 1, attrGgroup= ' + str(
+#               AG[i]) + ', valDom= 1000000 done.\n\n')
+#     expID += 1
+
+# Exp 4: real attribute group
+# need to #define DEBUG in constant.h file
+# need to use GenSubList_g, GenPubList_g function to generate data!
+# AG = [1000, 500, 400, 100, 50, 20]
+# Se = [10, 20, 20, 20, 20, 20]
+# for i in range(6):
+#     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 10000 5 ' + str(Se[i]) + ' 0.0 0.8 1 ' + str(AG[i])+' 1000000')
+#     print('Experiment', str(expID),
+#           ': atts= 10000, k= 5, m= ' + str(Se[i]) + ', alpha= 0.0, w= 0.5, be= 1, attrGroup= ' + str(
+#               AG[i]) + ', valDom= 1000000 done.\n\n')
+#     expID += 1
+
+# # Exp 5: n
+# # need to use GenPubList2 function to generate data!
+# # need to open model test function.
+# need to use GenPubList2 function to generate data!
+# os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 20 10 20 0.0 0.4 4 1 1000000')
+# print('Experiment', str(expID), ': atts= 20, k= 10, m= 20, alpha= 0.0, w= 0.4, be= 4, attrGroup= 1, valDom= 1000000 done.\n\n')
+# expID += 1
+
+# # Exp 6: Ss size of subscriptions 5-30
+# need to use GenPubList2 function to generate data!
 # for Ss in range(30, 0, -5):
-#     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' ' + str(Ss) + ' 5 0.7')
-#     print('Experiment', str(expID), ' Ss=', str(Ss), ' be= 5, w=0.7 done.\n\n')
+#     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 30 ' + str(Ss) + ' 30 0.0 0.8 4 1 1000000')
+#     print('Experiment', str(expID), ': atts= 30, k= ' + str(Ss) + ', m= 30, alpha= 0.0, w= 0.8, be= 4, attrGroup= 1, valDom= 1000000 done.\n\n')
 #     expID += 1
 
-
-# # Se size of events 30-80
+# # Exp 7: Se size of events 30-80
 # for Se in range(80, 20, -10):
-#     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' ' + str(Se) + ' 5 0.3')
-#     print('Experiment ', str(expID), ' Se=', str(30), ' be= 5, w=0.3 done.\n\n')
+#     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 80 5 ' + str(Se) + ' 0.0 0.4 4 1 1000000')
+#     print('Experiment', str(expID), ': atts= 80, k= 5, m= ' + str(Se) + ', alpha= 0.0, w= 0.4, be= 4, attrGroup= 1, valDom= 1000000 done.\n\n')
 #     expID += 1
 
-
-# # width 0.1-0.7
+# # Exp 8: width 0.1-0.7
+# need to use GenPubList2 function to generate data!
 # width = 0.9
 # for i in range(9):
-#     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 20 5 ' + str(width))
-#     print('Experiment', str(expID), ' atts=m=', str(20), ' be=', str(5), 'width=', width, 'done.\n\n')
+#     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 20 5 20 0.0 ' + str(width) + ' 4 1 1000000')
+#     print('Experiment', str(expID), ': atts= 20, k= 5, m= 20, alpha= 0.0, w= ' + str(width) + ', be= 4, attrGroup= 1, valDom= 1000000 done.\n\n')
 #     expID += 1
 #     width -= 0.1
 
-
-# # atts
-# for atts in [10000, 3000, 1000, 300, 100, 30]:
-#     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' ' + str(atts) + ' 5 0.5')
-#     print('Experiment', str(expID), ': atts=', str(atts), ', m=20, be=5, w=0.5 done.\n\n')
+# # Exp 9: virtual attr group
+# attr = [10000, 3000, 1000, 300, 100, 30]
+# be = [1, 2, 3, 4, 4, 4]
+# ag = [400, 200, 100, 60, 50, 1]
+# for i in range(6):
+#     os.system(
+#         'taskset -c ' + coreId + ' ./run ' + str(expID) + ' ' + str(attr[i]) + ' 5 20 0.0 0.8 ' + str(
+#             be[i]) + ' ' + str(ag[i])+' 1000000')
+#     print('Experiment', str(expID),
+#           ': atts= ' + str(attr[i]) + ', k= 5, m= 20, alpha= 0.0, w= 0.8, be= 4, attrGroup= ' + str(
+#               ag[i]) + ', valDom= 1000000 done.\n\n')
 #     expID += 1
 
+# # Exp 10: real attr group
+# attr = [10000, 3000, 1000, 300, 100, 30]
+# be = [1, 2, 3, 4, 4, 4]
+# ag = [100, 50, 40, 15, 5, 1]
+#
+# for i in range(6):
+#     os.system(
+#         'taskset -c ' + coreId + ' ./run ' + str(expID) + ' ' + str(attr[i]) + ' 5 20 0.0 0.8 ' + str(
+#             be[i]) + ' ' + str(ag[i])+' 1000000')
+#     print('Experiment', str(expID),
+#           ': atts= ' + str(attr[i]) + ', k= 5, m= 20, alpha= 0.0, w= 0.8, be= 4, attrGroup= ' + str(
+#               ag[i]) + ', valDom= 1000000 done.\n\n')
+#     expID += 1
 
-# # alpha 0-5 attribute distribution
+# # Exp 11: alpha 0-5 attribute distribution
+# need to set attDis=1
 # for alpha in range(5, -1, -1):
-#     os.system('taskset -c ' + coreId + ' ./cmakeRB ' + str(expID) + ' ' + str(alpha) + ' 5 0.3')
-#     print('Experiment', str(expID), ': alpha=', str(alpha), ', atts=50, m=20, cons=10, be=5, w=0.3 done.\n\n')
+#     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 100 10 20 ' + str(alpha) + ' 0.4 4 25 1000000')
+#     print('Experiment', str(expID), ': atts= 100, k= 10, m= 20, alpha= ' + str(
+#         alpha) + ', w= 0.4, be= 4, attrGroup= 25, valDom= 1000000 done.\n\n')
 #     expID += 1
+
+# # Exp 12: valDom
+# for val in [1000000, 100000, 10000, 1000, 100]:
+#     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 20 10 20 0.0 0.4 4 1 ' + str(val))
+#     print('Experiment', str(expID),
+#           ': atts= 20, k= 10, m= 20, alpha= 0.0, w= 0.4, be= 4, attrGroup= 1, valDom= ' + str(val) + ' done.\n\n')
+#     expID += 1
+# # need to set buks=100
+# os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 20 10 20 0.0 0.4 4 1 100')
+# print('Experiment', str(expID),
+#       ': atts= 20, k= 10, m= 20, alpha= 0.0, w= 0.4, be= 4, attrGroup= 1, valDom= 100 done.\n\n')
+
+# # Exp 13: comprehensive
+# need to set attNumType=1, attDis=1, valDis=1
+# need to #define DEBUG in constant.h file
+# os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 100 10 40 1 0.0 4 25 1000000')
+# print('Experiment', str(expID),
+#       ': atts= 100, k= 10, m= 20, alpha= 1, w= 0.0, be= 4, attrGroup= 25, valDom= 1000000 done.\n\n')
+# expID += 1
+
+# # Exp 14: insert/delete
+# need to use GenPubList2 function to generate data!
+# need to set verifyID to true
+# for Ss in range(30, 0, -5):
+#     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 30 ' + str(Ss) + ' 30 0.0 0.8 4 1 1000000')
+#     print('Experiment', str(expID), ': atts= 30, k= ' + str(Ss) + ', m= 30, alpha= 0.0, w= 0.8, be= 4, attrGroup= 1, valDom= 1000000 done.\n\n')
+#     expID += 1
+
+
 
 path = "tmpData"
 content = ""

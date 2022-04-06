@@ -41,7 +41,7 @@ HEM5_AG::HEM5_AG(int type) {
 	if (type == HEM5_DD_VAG)TYPE = "HEM5_DD_VAG";
 	else TYPE = "HEM5_DD_RAG";
 	cout << "ExpID = " << expID << ". " + TYPE + ": bitset number = " << numBits << ", bucketStep = " << buckStep
-		 << ", numBucket = " << numBucket << ", attrGroup = " << numAttrGroup << ", attGroupSize = " << attrGroupSize
+		 << ", numBucket = " << numBucket << ", attrGroupNum = " << numAttrGroup << ", attGroupSize = " << attrGroupSize
 		 << endl;
 }
 
@@ -779,11 +779,12 @@ int HEM5_AG::calMemory() {
 	}
 
 	// fullBits
-	if (numBits > 1) {
-		size += sizeof(bitset<subs>) * fullBits.size(); // fullBits.size()¼´numDimension
-		size += sizeof(fullBits); // 24
-		//cout << "fullBits: " << sizeof(fullBits) << " " << sizeof(fullBits[0]) << "\n";
-	}
+	size += sizeof(bitset<subs>) * fullBits.size(); // fullBits.size()¼´numDimension
+	size += sizeof(fullBits); // 24
+	//cout << "fullBits: " << sizeof(fullBits) << " " << sizeof(fullBits[0]) << "\n";
+
+	// attrGroupBits
+	size += sizeof(bitset<subs>) * attrGroupBits.size();
 
 	// Á½¸öfix
 	//cout << "fix: " << sizeof(fix) << " " << sizeof(fix[0]) << " " << sizeof(fix[0][10]) << sizeof(fix[1][7][20]) << "\n";
