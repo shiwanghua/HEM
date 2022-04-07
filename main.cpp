@@ -22,10 +22,10 @@ int main(int argc, char **argv) {
 	}
 
 	intervalGenerator gen(subs, pubs, atts, attrGroup, cons, m, attNumType, attDis, valDis, valDom, alpha, subp, width);
-	gen.GenSubList();
-	gen.GenPubList2();
-//	gen.GenSubList_g();
-//	gen.GenPubList_g();
+//	gen.GenSubList();
+//	gen.GenPubList();
+	gen.GenSubList_g();
+	gen.GenPubList_g();
 
 	unordered_map<int, bool> deleteNo;
 	if (verifyID) {
@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
 //
 	run_OpIndex(gen, deleteNo);
 //	run_bOpIndex2(gen, deleteNo);
-//	run_PSTREE(gen, deleteNo);
+	run_PSTREE(gen, deleteNo);
 //	run_AWBTREE(gen, deleteNo);
 //	measure_numMark(gen);
 

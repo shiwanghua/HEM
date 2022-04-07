@@ -125,15 +125,15 @@ os.system("sudo cpufreq-set -c " + coreId + " -u 4.9G")
 #     expID += 1
 
 # # Exp 12: valDom
-# for val in [1000000, 100000, 10000, 1000, 100]:
-#     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 20 10 20 0.0 0.4 4 1 ' + str(val))
-#     print('Experiment', str(expID),
-#           ': atts= 20, k= 10, m= 20, alpha= 0.0, w= 0.4, be= 4, attrGroup= 1, valDom= ' + str(val) + ' done.\n\n')
-#     expID += 1
-# # need to set buks=100
-# os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 20 10 20 0.0 0.4 4 1 100')
-# print('Experiment', str(expID),
-#       ': atts= 20, k= 10, m= 20, alpha= 0.0, w= 0.4, be= 4, attrGroup= 1, valDom= 100 done.\n\n')
+# need to use GenSubList_g, GenPubList_g function to generate data!
+for val in [1000000, 100000, 10000, 1000, 100]:
+    os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 1000 10 20 0.0 0.8 1 40 ' + str(val))
+    print('Experiment', str(expID),
+          ': atts= 1000, k= 10, m= 20, alpha= 0.0, w= 0.8, be= 1, attrGroup= 40, valDom= ' + str(val) + ' done.\n\n')
+    expID += 1
+# need to set buks=100
+# os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 1000 10 20 0.0 0.8 1 40 100')
+# print('Experiment', str(expID),': atts= 1000, k= 10, m= 20, alpha= 0.0, w= 0.8, be= 1, attrGroup= 40, valDom= 100 done.\n\n')
 
 # # Exp 13: comprehensive
 # need to set attNumType=1, attDis=1, valDis=1
