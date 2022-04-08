@@ -4,46 +4,58 @@ import numpy as np
 # 解决坐标轴负号问题
 plt.rcParams['axes.unicode_minus'] = False
 
-be = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+HEM4DS = [
+    4.047486, 2.526655, 1.552167, 0.794416, 0.430514, 0.245464, 0.163093,
+    0.113702, 0.066706, 0.039161
+]
+HEM0PS = [
+    6.179008, 3.92577, 2.010077, 1.148819, 0.556959, 0.287136, 0.145834,
+    0.070261, 0.031981, 0.011284
+]
 
-HEM4DS = [2.776140, 1.685165, 1.070355, 0.722923, 0.501190, 0.367319, 0.316891, 0.281798, 0.263125, 0.250238]
-HEM0PS = [6.273495, 4.781779, 2.171592, 1.035566, 0.648708, 0.445792, 0.368903, 0.324813, 0.440076, 0.302247]
-HEM5_RAG = [2.268200, 1.303265, 0.714360, 0.446621, 0.320168, 0.256228, 0.235016, 0.219805, 0.209685, 0.195970]
-HEM5_VAG = [2.172268, 1.403725, 0.672404, 0.431309, 0.308924, 0.251452, 0.225921, 0.214653, 0.210679, 0.191146]
-HEMSR = [4.736042, 5.735895, 4.612845, 4.643836, 4.620032, 4.539652, 4.608578, 4.621926, 4.632537, 4.620033]
-Rein = [7.002336, 6.595961, 7.351229, 6.606781, 6.651962, 6.715950, 6.603381, 6.582430, 6.619547, 6.609429]
-HEM5_avxOR = [2.225551, 1.253821, 0.679921, 0.435322, 0.323962, 0.266535, 0.232815, 0.220896, 0.210343, 0.204633]
-HEM3PD = [6.162609, 2.558513, 1.162424, 0.626552, 0.406727, 0.270322, 0.220610, 0.192333, 0.247660, 0.221509]
-HEMSC = [1.532988, 0.844481, 0.593137, 0.449465, 0.389169, 0.343743, 0.327409, 0.318438, 0.316031, 0.305171]
-HEM5DD = [2.202456, 1.174252, 0.672344, 0.431968, 0.311317, 0.249285, 0.223943, 0.214652, 0.205108, 0.193234]
-HEM1SS = [2.914707, 2.405431, 1.173535, 0.747683, 0.539255, 0.450987, 0.429358, 0.378858, 0.367352, 0.386273]
-HEM2SD = [2.194664, 1.789330, 1.001863, 0.655345, 0.478635, 0.390273, 0.351716, 0.334473, 0.327827, 0.318934]
+HEM3PD = [
+    6.289745, 2.767193, 1.401119, 0.680176, 0.342275, 0.175087, 0.089294,
+    0.043542, 0.020153, 0.007893
+]
 
+HEM5DD = [
+    2.815691, 1.387544, 0.728088, 0.391327, 0.229163, 0.143344, 0.09613,
+    0.068335, 0.049382, 0.015175
+]
+HEM1SS = [
+    4.614529, 2.54399, 1.267462, 0.687892, 0.385353, 0.241119, 0.162618,
+    0.120626, 0.088552, 0.056948
+]
+HEM2SD = [
+    3.328289, 1.994791, 1.098463, 0.603167, 0.342783, 0.201764, 0.130021,
+    0.088015, 0.061921, 0.039159
+]
 
 Name = ["Rein", "HEM0PS", "HEM1SS", "HEM2SD", "HEM3PD", "HEM4DS", "HEM5DD"]
 
-plt.figure(figsize=(20, 8))
+plt.figure(figsize=(14, 6))
 # plt.subplot()
 x = np.arange(10)  # x轴刻度标签位置
+be = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]
 width = 0.14  # 柱子的宽度
 # 计算每个柱子在x轴上的位置，保证x轴刻度标签居中
-plt.bar(x - 2.5*width, HEM0PS, width, color='DODGERBLUE', label=Name[1])
-plt.bar(x - 1.5*width, HEM1SS, width, color='purple', label=Name[2])
-plt.bar(x - 0.5*width, HEM2SD, width, color='darkorange', label=Name[3])
-plt.bar(x + 0.5*width, HEM3PD, width, color='limegreen', label=Name[4])
-plt.bar(x + 1.5*width, HEM4DS, width, color='brown', label=Name[5])
-plt.bar(x + 2.5*width, HEM5DD, width, color='DEEPPINK', label=Name[6])
-plt.tick_params(direction='out',labelsize=15,length=5.5,width=1)
-plt.xlabel('Value of Bit Exponent',fontsize=20)
-plt.ylabel('Marking Time (ms)',fontsize=20)
+plt.bar(x - 2.5 * width, HEM0PS, width, color='DODGERBLUE', label=Name[1])
+plt.bar(x - 1.5 * width, HEM1SS, width, color='purple', label=Name[2])
+plt.bar(x - 0.5 * width, HEM2SD, width, color='darkorange', label=Name[3])
+plt.bar(x + 0.5 * width, HEM3PD, width, color='limegreen', label=Name[4])
+plt.bar(x + 1.5 * width, HEM4DS, width, color='brown', label=Name[5])
+plt.bar(x + 2.5 * width, HEM5DD, width, color='DEEPPINK', label=Name[6])
+plt.tick_params(direction='out', labelsize=15, length=5.5, width=1)
+plt.xlabel('Number of Groups', fontsize=20)
+plt.ylabel('Marking Time (ms)', fontsize=20)
 # plt.title('4 datasets')
 # x轴刻度标签位置不进行计算
 plt.xticks(x, labels=be)
-plt.legend(fontsize=20,ncol=2)
+plt.legend(fontsize=20, ncol=2)
 plt.grid()
 fig = plt.gcf()
 plt.show()
-fig.savefig('../bemarking.eps',format='eps',bbox_inches='tight')
+fig.savefig('./exp1_markingTime_be.pdf', format='pdf', bbox_inches='tight')
 
 # plt.figure()
 # # plt.plot(be, Rein, marker='o', color='r', label=Name[0])
@@ -61,7 +73,6 @@ fig.savefig('../bemarking.eps',format='eps',bbox_inches='tight')
 # fig = plt.gcf()
 # plt.show()
 # fig.savefig('bemarking.png')
-
 
 # b0 = [a - b for a, b in zip(HEM0PS, HEM1SS)]
 # b1 = [a - b for a, b in zip(HEM1SS, HEM3PD)]
@@ -90,4 +101,3 @@ fig.savefig('../bemarking.eps',format='eps',bbox_inches='tight')
 # #         ha='center', va='center',fontsize = 5,color='black',fontweight='bold',family='Roboto Mono')
 # plt.savefig(r'bemarking2.png', dpi=500,bbox_inches='tight')
 # plt.show()
-
