@@ -28,13 +28,18 @@ os.system("sudo cpufreq-set -c " + coreId + " -u 4.9G")
 #     print('Experiment', str(expID), ': atts= 20, k= 10, m= 20, alpha= 0.0, w= 0.4, be= ', str(be), 'attrGroup= 1, valDom= 1000000 done.\n\n')
 #     expID += 1
 
-# Exp 2: 50% null attributes
+# Exp 2: null attributes
 # need to #define DEBUG in constant.h file
 # need to use GenSubList_g, GenPubList_g function to generate data!
-# for be in range(9, -1, -1):
-#     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 20 10 10 0.0 0.4 ' + str(be)+' 1 1000000')
-#     print('Experiment', str(expID), ': atts= 20, k= 10, m= 10, alpha= 0.0, w= 0.4, be= ', str(be), ', attrGroup= 1, valDom= 1000000 done.\n\n')
-#     expID += 1
+Se = [1000, 800, 600, 400, 200, 10]
+groupNum = [1, 1, 1, 2, 5, 100]
+for i in range(6):
+    os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 1000 10 ' + str(Se[i]) + ' 0.0 0.4 1 ' + str(
+        groupNum[i]) + ' 1000000')
+    print('Experiment', str(expID),
+          ': atts= 1000, k= 10, m= ' + str(Se[i]) + ', alpha= 0.0, w= 0.4, be= 1, attrGroup= ' + str(
+              groupNum[i]) + ', valDom= 1000000 done.\n\n')
+    expID += 1
 
 # Exp 3: vitual attribute group
 # need to #define DEBUG in constant.h file
@@ -126,11 +131,11 @@ os.system("sudo cpufreq-set -c " + coreId + " -u 4.9G")
 
 # # Exp 12: valDom
 # need to use GenSubList_g, GenPubList_g function to generate data!
-for val in [1000000, 100000, 10000, 1000, 100]:
-    os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 1000 10 20 0.0 0.8 1 40 ' + str(val))
-    print('Experiment', str(expID),
-          ': atts= 1000, k= 10, m= 20, alpha= 0.0, w= 0.8, be= 1, attrGroup= 40, valDom= ' + str(val) + ' done.\n\n')
-    expID += 1
+# for val in [1000000, 100000, 10000, 1000, 100]:
+#     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 1000 10 20 0.0 0.8 1 40 ' + str(val))
+#     print('Experiment', str(expID),
+#           ': atts= 1000, k= 10, m= 20, alpha= 0.0, w= 0.8, be= 1, attrGroup= 40, valDom= ' + str(val) + ' done.\n\n')
+#     expID += 1
 # need to set buks=100
 # os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 1000 10 20 0.0 0.8 1 40 100')
 # print('Experiment', str(expID),': atts= 1000, k= 10, m= 20, alpha= 0.0, w= 0.8, be= 1, attrGroup= 40, valDom= 100 done.\n\n')
@@ -150,7 +155,6 @@ for val in [1000000, 100000, 10000, 1000, 100]:
 #     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 30 ' + str(Ss) + ' 30 0.0 0.8 4 1 1000000')
 #     print('Experiment', str(expID), ': atts= 30, k= ' + str(Ss) + ', m= 30, alpha= 0.0, w= 0.8, be= 4, attrGroup= 1, valDom= 1000000 done.\n\n')
 #     expID += 1
-
 
 
 path = "tmpData"

@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
 //
 	run_OpIndex(gen, deleteNo);
 //	run_bOpIndex2(gen, deleteNo);
-	run_PSTREE(gen, deleteNo);
+//	run_PSTREE(gen, deleteNo);
 //	run_AWBTREE(gen, deleteNo);
 //	measure_numMark(gen);
 
