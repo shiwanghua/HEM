@@ -107,7 +107,7 @@ void intervalGenerator::GenPubList2() {
 		pubList.emplace_back(pub);
 	}
 	//	cout<<"id= "<<id<<"\n";
-		//	freopen("EventsDataset.txt", "r", stdin);
+	//	freopen("EventsDataset.txt", "r", stdin);
 	ifstream infile;
 	infile.open("EventsDataset.txt", ios::in);
 	if (!infile.is_open()) {
@@ -142,7 +142,7 @@ void intervalGenerator::GenPubList2() {
 				//				tmp.att = x;  // Second way Third way
 				tmp.att = j;  // First way
 				infile >> v;
-				tmp.value = (int)v;
+				tmp.value = (int) v;
 				//				cout<<pub.id<<" "<<tmp.value<<" ";
 				pub.pairs.emplace_back(tmp);
 			}
@@ -150,14 +150,14 @@ void intervalGenerator::GenPubList2() {
 			pubList.emplace_back(pub);
 			for (int j = 0; j < 50 - pub.size; j++)
 				infile >> v; // 多余数据
-		}
-		else {
+		} else {
 			for (int j = 0; j < 50; j++)
 				infile >> v; // 多余数据
 		}
 	}
 	infile.close();
 }
+
 void intervalGenerator::GenPubList_g() {
 	for (int i = 0; i < pubs; i++) {
 		pubList.emplace_back(GenOnePub_g(i));
@@ -182,7 +182,7 @@ Sub generator::GenOneSub(int id, int size, int atts, int attDis, int valDis, int
 }
 
 IntervalSub intervalGenerator::GenOneSub(int id, int size, int atts, int attDis, int valDis, int valDom, double alpha,
-	double width) {
+										 double width) {
 	IntervalSub sub;
 	sub.id = id;
 	if (attNumType)
@@ -192,8 +192,9 @@ IntervalSub intervalGenerator::GenOneSub(int id, int size, int atts, int attDis,
 
 	if (attDis == 0)
 		GenUniformAtts(sub, atts);
-	else //if (attDis == 1)
+	else if (attDis == 1 || attDis == 2)
 		GenZipfAtts(sub, atts, alpha);
+
 
 	if (valDis == 0) // Uniform + fixed width
 		GenUniformValues(sub);
@@ -250,6 +251,7 @@ Pub generator::GenOnePub(int m, int atts, int attDis, int valDis, int valDom, do
 	GenUniformValues(pub, valDom);
 	return pub;
 }
+
 Pub intervalGenerator::GenOnePub(int id, int m, int atts, int attDis, int valDis, int valDom, double alpha) {
 	Pub pub;
 	pub.id = id;
@@ -258,7 +260,7 @@ Pub intervalGenerator::GenOnePub(int id, int m, int atts, int attDis, int valDis
 	else
 		pub.size = m;
 
-	if (attDis == 0) // Uniform
+	if (attDis == 0 || attDis == 2) // Uniform
 		GenUniformAtts(pub, atts);
 	else if (attDis == 1)
 		GenZipfAtts(pub, atts, alpha);
@@ -272,6 +274,7 @@ Pub intervalGenerator::GenOnePub(int id, int m, int atts, int attDis, int valDis
 	else cout << "Wrong valDis for events.\n";
 	return pub;
 }
+
 Pub intervalGenerator::GenOnePub_g(int id) {
 	Pub pub;
 	pub.id = id;
@@ -296,7 +299,7 @@ Pub intervalGenerator::GenOnePub_g(int id) {
 }
 
 
-void generator::GenUniformAtts(Sub& sub, int atts) {
+void generator::GenUniformAtts(Sub &sub, int atts) {
 	vector<int> a;
 	for (int i = 0; i < sub.size; i++) {
 		int x = random(atts);
@@ -309,15 +312,14 @@ void generator::GenUniformAtts(Sub& sub, int atts) {
 	}
 }
 
-void intervalGenerator::GenUniformAtts(IntervalSub& sub, int atts) {
+void intervalGenerator::GenUniformAtts(IntervalSub &sub, int atts) {
 	if (sub.id < subp * subs) {
 		for (int i = 0; i < sub.size; i++) {
 			IntervalCnt tmp;
 			tmp.att = i;
 			sub.constraints.push_back(tmp);
 		}
-	}
-	else {
+	} else {
 		vector<int> a;
 		for (int i = 0; i < sub.size; i++) {
 			int x = random(atts);
@@ -330,7 +332,8 @@ void intervalGenerator::GenUniformAtts(IntervalSub& sub, int atts) {
 		}
 	}
 }
-void intervalGenerator::GenUniformAtts_g(IntervalSub& sub) {
+
+void intervalGenerator::GenUniformAtts_g(IntervalSub &sub) {
 	int groupNo = random(attrGroupNum);
 	int attrBase = groupNo * groupSize;
 	vector<int> a;
@@ -345,7 +348,7 @@ void intervalGenerator::GenUniformAtts_g(IntervalSub& sub) {
 	}
 }
 
-void generator::GenUniformAtts(Pub& pub, int atts) {
+void generator::GenUniformAtts(Pub &pub, int atts) {
 	vector<int> a;
 	for (int i = 0; i < pub.size; i++) {
 		int x = random(atts);
@@ -357,7 +360,8 @@ void generator::GenUniformAtts(Pub& pub, int atts) {
 		pub.pairs.push_back(tmp);
 	}
 }
-void intervalGenerator::GenUniformAtts(Pub& pub, int atts) {
+
+void intervalGenerator::GenUniformAtts(Pub &pub, int atts) {
 	if (pub.id < subp * pubs) {
 		vector<int> a;
 		int i = 0;
@@ -377,8 +381,7 @@ void intervalGenerator::GenUniformAtts(Pub& pub, int atts) {
 			tmp.att = x;
 			pub.pairs.push_back(tmp);
 		}
-	}
-	else {
+	} else {
 		vector<int> a;
 		for (int i = 0; i < pub.size; i++) {
 			int x = random(atts);
@@ -391,7 +394,8 @@ void intervalGenerator::GenUniformAtts(Pub& pub, int atts) {
 		}
 	}
 }
-void intervalGenerator::GenUniformAtts_g(Pub& pub) {
+
+void intervalGenerator::GenUniformAtts_g(Pub &pub) {
 	int groupNo = random(attrGroupNum);
 	int attrBase = groupNo * groupSize;
 	vector<int> a;
@@ -406,7 +410,7 @@ void intervalGenerator::GenUniformAtts_g(Pub& pub) {
 	}
 }
 
-void generator::GenZipfAtts(Sub& sub, int atts, double alpha) {
+void generator::GenZipfAtts(Sub &sub, int atts, double alpha) {
 	vector<int> a;
 	for (int i = 0; i < sub.size; i++) {
 		int x = zipfDistribution(atts, alpha);
@@ -419,7 +423,7 @@ void generator::GenZipfAtts(Sub& sub, int atts, double alpha) {
 	}
 }
 
-void intervalGenerator::GenZipfAtts(IntervalSub& sub, int atts, double alpha) {
+void intervalGenerator::GenZipfAtts(IntervalSub &sub, int atts, double alpha) {
 	vector<int> a;
 	for (int i = 0; i < sub.size; i++) {
 		int x = zipfDistribution(atts, alpha);
@@ -431,7 +435,8 @@ void intervalGenerator::GenZipfAtts(IntervalSub& sub, int atts, double alpha) {
 		sub.constraints.push_back(tmp);
 	}
 }
-void intervalGenerator::GenZipfAtts_g(IntervalSub& sub) {
+
+void intervalGenerator::GenZipfAtts_g(IntervalSub &sub) {
 	int groupNo = random(attrGroupNum);
 	int attrBase = groupNo * groupSize;
 	vector<int> a;
@@ -446,7 +451,7 @@ void intervalGenerator::GenZipfAtts_g(IntervalSub& sub) {
 	}
 }
 
-void generator::GenZipfAtts(Pub& pub, int atts, double alpha) {
+void generator::GenZipfAtts(Pub &pub, int atts, double alpha) {
 	vector<int> a;
 	for (int i = 0; i < pub.size; i++) {
 		int x = zipfDistribution(atts, alpha);
@@ -459,7 +464,7 @@ void generator::GenZipfAtts(Pub& pub, int atts, double alpha) {
 	}
 }
 
-void intervalGenerator::GenZipfAtts(Pub& pub, int atts, double alpha) {
+void intervalGenerator::GenZipfAtts(Pub &pub, int atts, double alpha) {
 	vector<int> a;
 	for (int i = 0; i < pub.size; i++) {
 		int x = zipfDistribution(atts, alpha);
@@ -471,7 +476,8 @@ void intervalGenerator::GenZipfAtts(Pub& pub, int atts, double alpha) {
 		pub.pairs.push_back(tmp);
 	}
 }
-void intervalGenerator::GenZipfAtts_g(Pub& pub) {
+
+void intervalGenerator::GenZipfAtts_g(Pub &pub) {
 	int groupNo = random(attrGroupNum);
 	int attrBase = groupNo * groupSize;
 	vector<int> a;
@@ -486,7 +492,7 @@ void intervalGenerator::GenZipfAtts_g(Pub& pub) {
 	}
 }
 
-void generator::GenUniformValues(Sub& sub, int valDom) {
+void generator::GenUniformValues(Sub &sub, int valDom) {
 	for (int i = 0; i < sub.size; i++) {
 		int x = random(valDom);
 		sub.constraints[i].value = x;
@@ -495,7 +501,7 @@ void generator::GenUniformValues(Sub& sub, int valDom) {
 	}
 }
 
-void intervalGenerator::GenUniformValues(IntervalSub& sub) {
+void intervalGenerator::GenUniformValues(IntervalSub &sub) {
 	int fixedWidth = valDom * width;
 	for (int i = 0; i < sub.size; i++) {
 		int x = random(int(valDom * (1.0 - width)));
@@ -506,7 +512,7 @@ void intervalGenerator::GenUniformValues(IntervalSub& sub) {
 }
 
 // Random width + Uniform, >=width
-void intervalGenerator::GenUniformValues_w(IntervalSub& sub) {
+void intervalGenerator::GenUniformValues_w(IntervalSub &sub) {
 	int w, x, y;
 	int minRange = valDom * width;
 	int maxVal = valDom - minRange;
@@ -520,7 +526,7 @@ void intervalGenerator::GenUniformValues_w(IntervalSub& sub) {
 }
 
 // Random width + Zipf, >=width
-void intervalGenerator::GenZipfValues(IntervalSub& sub) {
+void intervalGenerator::GenZipfValues(IntervalSub &sub) {
 	int w, x, y;
 	int minRange = valDom * width;
 	int maxVal = valDom - minRange;
@@ -535,7 +541,7 @@ void intervalGenerator::GenZipfValues(IntervalSub& sub) {
 }
 
 // Predicate value in Normal Distribution fixed width
-void intervalGenerator::GenNormalValues(IntervalSub& sub) {
+void intervalGenerator::GenNormalValues(IntervalSub &sub) {
 	static unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 	static std::default_random_engine generator(seed);
 	static std::normal_distribution<double> distribution(mean, stddev);
@@ -554,7 +560,7 @@ void intervalGenerator::GenNormalValues(IntervalSub& sub) {
 }
 
 // Predicate value in NormalDsitribution two ends
-void intervalGenerator::GenNormalValues_t(IntervalSub& sub) {
+void intervalGenerator::GenNormalValues_t(IntervalSub &sub) {
 	static unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 	static std::default_random_engine generator(seed);
 	static std::normal_distribution<double> distribution(mean, stddev);
@@ -570,7 +576,7 @@ void intervalGenerator::GenNormalValues_t(IntervalSub& sub) {
 }
 
 // 根据28原则生成订阅
-void intervalGenerator::Gen28SubsPredicate(IntervalSub& sub, double l, double h) {
+void intervalGenerator::Gen28SubsPredicate(IntervalSub &sub, double l, double h) {
 	int minV = valDom * l;
 	int maxV = valDom * h;
 	int range = maxV - minV;
@@ -584,27 +590,27 @@ void intervalGenerator::Gen28SubsPredicate(IntervalSub& sub, double l, double h)
 	}
 }
 
-void generator::GenUniformValues(Pub& pub, int valDom) {
+void generator::GenUniformValues(Pub &pub, int valDom) {
 	for (int i = 0; i < pub.size; i++) {
 		int x = random(valDom);
 		pub.pairs[i].value = x;
 	}
 }
 
-void intervalGenerator::GenUniformValues(Pub& pub) {
+void intervalGenerator::GenUniformValues(Pub &pub) {
 	for (int i = 0; i < pub.size; i++) {
 		int x = random(valDom);
 		pub.pairs[i].value = x;
 	}
 }
 
-void intervalGenerator::GenZipfValues(Pub& pub) {
+void intervalGenerator::GenZipfValues(Pub &pub) {
 	for (int i = 0; i < pub.size; i++) {
 		pub.pairs[i].value = zipfDistribution(valDom, alpha);
 	}
 }
 
-void intervalGenerator::GenNormalValues(Pub& pub) {
+void intervalGenerator::GenNormalValues(Pub &pub) {
 	static unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 	static std::default_random_engine generator(seed);
 	static std::normal_distribution<double> distribution(1 - mean, stddev);
@@ -640,7 +646,7 @@ int generator::zipfDistribution(int n, double alpha) {
 
 	if (first) {
 		for (i = 1; i <= n; i++)
-			c = c + (1.0 / pow((double)i, alpha));
+			c = c + (1.0 / pow((double) i, alpha));
 		c = 1.0 / c;
 		first = false;
 	}
@@ -648,13 +654,13 @@ int generator::zipfDistribution(int n, double alpha) {
 	while (true) {
 		// Pull a uniform random number (0 < z < 1)
 		do {
-			z = (double)rand() / RAND_MAX;
+			z = (double) rand() / RAND_MAX;
 		} while ((z == 0) || (z == 1));
 
 		// Map z to the value
 		sum_prob = 0;
 		for (i = 1; i <= n; i++) {
-			sum_prob = sum_prob + c / pow((double)i, alpha);
+			sum_prob = sum_prob + c / pow((double) i, alpha);
 			if (sum_prob >= z) {
 				zipf_value = i;
 				break;
@@ -678,7 +684,7 @@ int intervalGenerator::zipfDistribution(int n, double alpha) {
 
 	if (first) {
 		for (i = 1; i <= n; i++)
-			c = c + (1.0 / pow((double)i, alpha));
+			c = c + (1.0 / pow((double) i, alpha));
 		c = 1.0 / c;
 		first = false;
 	}
@@ -686,13 +692,13 @@ int intervalGenerator::zipfDistribution(int n, double alpha) {
 	while (true) {
 		// Pull a uniform random number (0 < z < 1)
 		do {
-			z = (double)rand() / RAND_MAX;
+			z = (double) rand() / RAND_MAX;
 		} while ((z == 0) || (z == 1));
 
 		// Map z to the value
 		sum_prob = 0;
 		for (i = 1; i <= n; i++) {
-			sum_prob = sum_prob + c / pow((double)i, alpha);
+			sum_prob = sum_prob + c / pow((double) i, alpha);
 			if (sum_prob >= z) {
 				zipf_value = i;
 				break;
@@ -705,9 +711,9 @@ int intervalGenerator::zipfDistribution(int n, double alpha) {
 }
 
 int generator::random(int x) {
-	return (int)(x * (rand() / (RAND_MAX + 1.0)));
+	return (int) (x * (rand() / (RAND_MAX + 1.0)));
 }
 
 int intervalGenerator::random(int x) {
-	return (int)(x * (rand() / (RAND_MAX + 1.0)));
+	return (int) (x * (rand() / (RAND_MAX + 1.0)));
 }

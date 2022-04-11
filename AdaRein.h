@@ -28,7 +28,8 @@ class AdaRein {
 
 public:
     int numBucket;
-    AdaRein(int);
+	int maxSkipPredicate;
+	AdaRein(int);
 
     void insert(IntervalSub sub);
     bool deleteSubscription(IntervalSub sub);
