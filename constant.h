@@ -4,7 +4,7 @@
 #include<iostream>
 #include <immintrin.h> //AVX(include wmmintrin.h)
 
-//#define DEBUG
+#define DEBUG
 
 using namespace std;
 
@@ -56,8 +56,10 @@ enum {
 	AdaRein_DSS, // Dynamic Succession Selection
 	AdaRein_DDS, // Dynamic Discretization Selection
 	AdaRein_IBU, // Independent Bucket Unit (Static)
-	AdaRein_PPH  // PeePHole
+	AdaRein_PPH,  // PeePHole
+	AdaRein_SSS_B
 };
+
 // pRein
 extern int parallelDegree;
 

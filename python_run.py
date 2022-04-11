@@ -34,16 +34,17 @@ os.system("sudo cpufreq-set -c " + coreId + " -u 4.9G")
 Se = [1000, 800, 600, 400, 200, 10]
 groupNum = [1, 1, 1, 2, 5, 100]
 for i in range(6):
-    os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 1000 10 ' + str(Se[i]) + ' 0.0 0.4 1 ' + str(
-        groupNum[i]) + ' 1000000')
-    print('Experiment', str(expID),
-          ': atts= 1000, k= 10, m= ' + str(Se[i]) + ', alpha= 0.0, w= 0.4, be= 1, attrGroup= ' + str(
-              groupNum[i]) + ', valDom= 1000000 done.\n\n')
+    os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 1000 10 ' +
+              str(Se[i]) + ' 0.0 0.4 1 ' + str(groupNum[i]) + ' 1000000')
+    print(
+        'Experiment', str(expID), ': atts= 1000, k= 10, m= ' + str(Se[i]) +
+        ', alpha= 0.0, w= 0.4, be= 1, attrGroup= ' + str(groupNum[i]) +
+        ', valDom= 1000000 done.\n\n')
     expID += 1
 
 # Exp 3: vitual attribute group
 # need to #define DEBUG in constant.h file
-# AG = [1000, 500, 400, 100, 50, 20]
+# AG = [20,50,100,400,500,1000]
 # Se = [20, 20, 20, 20, 20, 20]
 # for i in range(6):
 #     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 10000 5 ' + str(Se[i]) + ' 0.0 0.8 1 ' + str(AG[i])+' 1000000')
@@ -55,8 +56,8 @@ for i in range(6):
 # Exp 4: real attribute group
 # need to #define DEBUG in constant.h file
 # need to use GenSubList_g, GenPubList_g function to generate data!
-# AG = [1000, 500, 400, 100, 50, 20]
-# Se = [10, 20, 20, 20, 20, 20]
+# AG = [20,50,100,400,500,1000]
+# Se = [20, 20, 20, 20, 20, 10]
 # for i in range(6):
 #     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 10000 5 ' + str(Se[i]) + ' 0.0 0.8 1 ' + str(AG[i])+' 1000000')
 #     print('Experiment', str(expID),
@@ -155,7 +156,6 @@ for i in range(6):
 #     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 30 ' + str(Ss) + ' 30 0.0 0.8 4 1 1000000')
 #     print('Experiment', str(expID), ': atts= 30, k= ' + str(Ss) + ', m= 30, alpha= 0.0, w= 0.8, be= 4, attrGroup= 1, valDom= 1000000 done.\n\n')
 #     expID += 1
-
 
 path = "tmpData"
 content = ""

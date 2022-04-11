@@ -47,6 +47,8 @@ void run_AdaRein_SSS(const intervalGenerator& gen, unordered_map<int, bool> dele
 //void run_AdaRein_DDS(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 //void run_AdaRein_IBU(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 //void run_AdaRein_PPH(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
+void run_AdaRein_SSS_B(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
+
 
 void run_HEM(const intervalGenerator& gen);
 void run_HEM1(const intervalGenerator& gen);

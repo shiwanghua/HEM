@@ -24,6 +24,7 @@ class AdaRein {
 	vector<bool> skipped;
 	vector<attAndCount> attsCounts; // 用于原始版本
     vector<int> endBucket[2]; // i号属性上所应遍历到的终点桶 low(0)上表示遍历到小于这个桶, high(1)上表示遍历到大于等于这个桶
+    vector<int> beginBucket[2]; // SSS_b: i号属性上开始遍历的桶 low(0)上表示从这个桶开始往大号桶遍历
 
 public:
     int numBucket;
@@ -38,6 +39,9 @@ public:
 
     void static_succession_selection(double falsePositive, const vector<IntervalSub>& subList);
     void approx_match_sss(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
+
+    void static_succession_selection_backward(double falsePositive, const vector<IntervalSub>& subList);
+    void approx_match_sss_b(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
 
     int calMemory();      // 计算占用内存大小, 返回MB
 };

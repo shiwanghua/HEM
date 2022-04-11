@@ -31,6 +31,9 @@ HEM2SD = [
     0.088015, 0.061921, 0.039159
 ]
 
+Memory=[157, 159, 169, 188, 226, 302, 455, 760, 1370, 2591]
+
+
 Name = ["Rein", "HEM0PS", "HEM1SS", "HEM2SD", "HEM3PD", "HEM4DS", "HEM5DD"]
 
 plt.figure(figsize=(14, 6))
