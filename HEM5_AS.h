@@ -8,7 +8,7 @@
 #include <bitset>
 
 // Virtual/Real Attribute Group Mode
-class HEM5_AG
+class HEM5_AS
 {
 private:
 	int numSub, numDimension, buckStep, numBits, numAttrGroup, attrGroupSize;
@@ -28,22 +28,22 @@ public:
 	double bitTime = 0.0;                   // 遍历bits数组得到结果所需的时间
 	//vector<unordered_set<int>> bucketSub;   // id相同的桶存储的不同订阅个数的和
 
-	HEM5_AG(int);
-	~HEM5_AG();
+	HEM5_AS(int);
+	~HEM5_AS();
 
-	void insert_VAG(IntervalSub sub); // 没有bitset时的插入算法
-	void insert_RAG(IntervalSub sub); // 没有bitset时的插入算法
+	void insert_VAS(IntervalSub sub); // 没有bitset时的插入算法
+	void insert_RAS(IntervalSub sub); // 没有bitset时的插入算法
 
 	void initBits();      // 插入完后初始化bits数组
 
-	void insert_online_VAG(IntervalSub sub); // 构建好订阅集后的在线插入订阅算法, 虚拟属性组版本
-	void insert_online_RAG(IntervalSub sub); // 构建好订阅集后的在线插入订阅算法, 实际属性组版本
+	void insert_online_VAS(IntervalSub sub); // 构建好订阅集后的在线插入订阅算法, 虚拟属性组版本
+	void insert_online_RAS(IntervalSub sub); // 构建好订阅集后的在线插入订阅算法, 实际属性组版本
 
-	bool deleteSubscription_VAG(IntervalSub sub);
-	bool deleteSubscription_RAG(IntervalSub sub);
+	bool deleteSubscription_VAS(IntervalSub sub);
+	bool deleteSubscription_RAS(IntervalSub sub);
 
-	void match_VAG(const Pub& pub, int& matchSubs);
-	void match_RAG(const Pub& pub, int& matchSubs);
+	void match_VAS(const Pub& pub, int& matchSubs);
+	void match_RAS(const Pub& pub, int& matchSubs);
 
 	//void calBucketSize(); // 计算bucketSize
 	int calMemory();      // 计算占用内存大小

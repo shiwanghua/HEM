@@ -49,6 +49,7 @@ enum {
 //const int MAX_ATTS = 20; // Tama
 //const int MAX_BUCKS = 1000;
 extern const double falsePositiveRate;
+extern const int adarein_level;
 enum {
 	AdaRein_ORI,
 	AdaRein_SSS, // Static Succession Selection
@@ -57,7 +58,9 @@ enum {
 	AdaRein_DDS, // Dynamic Discretization Selection
 	AdaRein_IBU, // Independent Bucket Unit (Static)
 	AdaRein_PPH,  // PeePHole
-	AdaRein_SSS_B
+	AdaRein_SSS_B,// Static Succession Selection Backward
+	AdaRein_SSS_C, // Static Succession Selection Crossed
+	AdaRein_SSS_L
 };
 
 // pRein
@@ -74,8 +77,8 @@ extern const int blockNum; // 或运算次数
 extern const int ptrIncrement;
 extern const __m256i mask;
 enum {
-	HEM5_DD_VAG,
-	HEM5_DD_RAG
+	HEM5_DD_VAS,
+	HEM5_DD_RAS
 };
 
 // Tama

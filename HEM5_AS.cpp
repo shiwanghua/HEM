@@ -1,6 +1,6 @@
-#include "HEM5_AG.h"
+#include "HEM5_AS.h"
 
-HEM5_AG::HEM5_AG(int type) {
+HEM5_AS::HEM5_AS(int type) {
 	numSub = 0;
 	numDimension = atts;
 	buckStep = (valDom - 1) / buks + 1;
@@ -38,20 +38,20 @@ HEM5_AG::HEM5_AG(int type) {
 	fix[0].resize(numDimension, vector<int>(numBucket + 1));
 	fix[1].resize(numDimension, vector<int>(numBucket + 1));
 	string TYPE;
-	if (type == HEM5_DD_VAG)TYPE = "HEM5_DD_VAG";
-	else TYPE = "HEM5_DD_RAG";
+	if (type == HEM5_DD_VAS)TYPE = "HEM5_DD_VAS";
+	else TYPE = "HEM5_DD_RAS";
 	cout << "ExpID = " << expID << ". " + TYPE + ": bitset number = " << numBits << ", bucketStep = " << buckStep
 		 << ", numBucket = " << numBucket << ", attrGroupNum = " << numAttrGroup << ", attGroupSize = " << attrGroupSize
 		 << endl;
 }
 
-HEM5_AG::~HEM5_AG() {
+HEM5_AS::~HEM5_AS() {
 	_for(i, 0,
 		 numDimension) delete[] doubleReverse[0][i], doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1], doubleReverse[0], doubleReverse[1];
 }
 
-void HEM5_AG::insert_VAG(IntervalSub sub) {
+void HEM5_AS::insert_VAS(IntervalSub sub) {
 	Combo c;
 	c.subID = sub.id;
 	for (auto &&iCnt: sub.constraints) {
@@ -64,7 +64,7 @@ void HEM5_AG::insert_VAG(IntervalSub sub) {
 	numSub++;
 }
 
-void HEM5_AG::insert_RAG(IntervalSub sub) {
+void HEM5_AS::insert_RAS(IntervalSub sub) {
 	for (int attGroupNo = sub.constraints[0].att / attrGroupSize, i = 0; i < numAttrGroup; i++) {
 		if (i != attGroupNo)
 			attrGroupBits[i][sub.id] = 1;
@@ -80,7 +80,7 @@ void HEM5_AG::insert_RAG(IntervalSub sub) {
 	numSub++;
 }
 
-void HEM5_AG::insert_online_VAG(IntervalSub sub) {
+void HEM5_AS::insert_online_VAS(IntervalSub sub) {
 	int b, bucketID;
 	Combo c;
 	c.subID = sub.id;
@@ -110,7 +110,7 @@ void HEM5_AG::insert_online_VAG(IntervalSub sub) {
 	numSub++;
 }
 
-void HEM5_AG::insert_online_RAG(IntervalSub sub) {
+void HEM5_AS::insert_online_RAS(IntervalSub sub) {
 	int b, bucketID;
 	Combo c;
 	c.subID = sub.id;
@@ -144,7 +144,7 @@ void HEM5_AG::insert_online_RAG(IntervalSub sub) {
 	numSub++;
 }
 
-bool HEM5_AG::deleteSubscription_VAG(IntervalSub sub) {
+bool HEM5_AS::deleteSubscription_VAS(IntervalSub sub) {
 	int find = 0, b, bucketID, id = sub.id;
 
 	for (auto &&iCnt: sub.constraints) {
@@ -185,7 +185,7 @@ bool HEM5_AG::deleteSubscription_VAG(IntervalSub sub) {
 	return find == sub.size << 1;
 }
 
-bool HEM5_AG::deleteSubscription_RAG(IntervalSub sub) {
+bool HEM5_AS::deleteSubscription_RAS(IntervalSub sub) {
 	int find = 0, b, bucketID, id = sub.id;
 
 	// int attGroupNo = sub.constraints[0].att / attrGroupSize;
@@ -231,7 +231,7 @@ bool HEM5_AG::deleteSubscription_RAG(IntervalSub sub) {
 	return find == sub.size << 1;
 }
 
-void HEM5_AG::initBits() {
+void HEM5_AS::initBits() {
 	// 如果有多次初始化
 	_for(i, 0,
 		 numDimension) delete[] doubleReverse[0][i], doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
@@ -478,7 +478,7 @@ void HEM5_AG::initBits() {
 	//cout << "HEM5_AGDD Stop.\n";
 }
 
-void HEM5_AG::match_VAG(const Pub &pub, int &matchSubs) {
+void HEM5_AS::match_VAS(const Pub &pub, int &matchSubs) {
 	bitset<subs> b; // register
 	bitset<subs> bLocal;
 	vector<bool> attExist(numDimension, false);
@@ -617,7 +617,7 @@ void HEM5_AG::match_VAG(const Pub &pub, int &matchSubs) {
 #endif // DEBUG
 }
 
-void HEM5_AG::match_RAG(const Pub &pub, int &matchSubs) {
+void HEM5_AS::match_RAS(const Pub &pub, int &matchSubs) {
 	bitset<subs> b; // register
 	bitset<subs> bLocal;
 	vector<bool> attExist(numDimension, false);
@@ -748,7 +748,7 @@ void HEM5_AG::match_RAG(const Pub &pub, int &matchSubs) {
 #endif // DEBUG
 }
 
-//void HEM5_AG::calBucketSize() {
+//void HEM5_AS::calBucketSize() {
 //	bucketSub.clear();
 //	bucketSub.resize(numBucket);
 //	_for(i, 0, numDimension)
@@ -761,7 +761,7 @@ void HEM5_AG::match_RAG(const Pub &pub, int &matchSubs) {
 //		}
 //}
 
-int HEM5_AG::calMemory() {
+int HEM5_AS::calMemory() {
 	long long size = 0; // Byte
 	size += sizeof(bits) + sizeof(bits[0]) * 2 + sizeof(data) + sizeof(data[0]) + sizeof(data[1]);
 	//cout << sizeof(bits[0]) << " " << sizeof(bits[1]) <<" " << sizeof(data) << " " << sizeof(data[0]) << " " << sizeof(data[1]) << "\n";
@@ -799,7 +799,7 @@ int HEM5_AG::calMemory() {
 	return (int) size;
 }
 
-void HEM5_AG::printRelation(int dimension_i) {
+void HEM5_AS::printRelation(int dimension_i) {
 	cout << "\n\nHEM5_AGDDMap\n";
 	if (dimension_i == -1)
 		_for(i, 0, numDimension) {
@@ -840,7 +840,7 @@ void HEM5_AG::printRelation(int dimension_i) {
 	cout << "\n\n";
 }
 
-vector<int> HEM5_AG::calMarkNumForBuckets() {
+vector<int> HEM5_AS::calMarkNumForBuckets() {
 	vector<int> numMarking(numBucket, 0);
 	_for(i, 0, numBucket) {
 		_for(j, 0, numDimension) {

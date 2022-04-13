@@ -64,6 +64,6 @@ plt.tick_params(direction='out', labelsize=18, length=4, width=1)
 
 gcf = plt.gcf()
 plt.show()
-gcf.savefig('./exp3_4_matchingTime_VRAG.pdf',
+gcf.savefig('./exp3_4_matchingTime_VRAS.pdf',
             format='pdf',
             bbox_inches='tight')

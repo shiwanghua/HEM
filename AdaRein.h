@@ -44,6 +44,9 @@ public:
     void static_succession_selection_backward(double falsePositive, const vector<IntervalSub>& subList);
     void approx_match_sss_b(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
 
+    void static_succession_selection_crossed(double falsePositive, const vector<IntervalSub>& subList);
+    void approx_match_sss_c(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
+
     int calMemory();      // 计算占用内存大小, 返回MB
 };
 
