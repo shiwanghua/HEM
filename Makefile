@@ -420,32 +420,32 @@ HEM5.cpp.s:
 	$(MAKE) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/HEM5.cpp.s
 .PHONY : HEM5.cpp.s
 
-HEM5_AG.o: HEM5_AG.cpp.o
+HEM5_AS.o: HEM5_AS.cpp.o
 
-.PHONY : HEM5_AG.o
+.PHONY : HEM5_AS.o
 
 # target to build an object file
-HEM5_AG.cpp.o:
-	$(MAKE) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/HEM5_AG.cpp.o
-.PHONY : HEM5_AG.cpp.o
+HEM5_AS.cpp.o:
+	$(MAKE) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/HEM5_AS.cpp.o
+.PHONY : HEM5_AS.cpp.o
 
-HEM5_AG.i: HEM5_AG.cpp.i
+HEM5_AS.i: HEM5_AS.cpp.i
 
-.PHONY : HEM5_AG.i
+.PHONY : HEM5_AS.i
 
 # target to preprocess a source file
-HEM5_AG.cpp.i:
-	$(MAKE) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/HEM5_AG.cpp.i
-.PHONY : HEM5_AG.cpp.i
+HEM5_AS.cpp.i:
+	$(MAKE) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/HEM5_AS.cpp.i
+.PHONY : HEM5_AS.cpp.i
 
-HEM5_AG.s: HEM5_AG.cpp.s
+HEM5_AS.s: HEM5_AS.cpp.s
 
-.PHONY : HEM5_AG.s
+.PHONY : HEM5_AS.s
 
 # target to generate assembly for a file
-HEM5_AG.cpp.s:
-	$(MAKE) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/HEM5_AG.cpp.s
-.PHONY : HEM5_AG.cpp.s
+HEM5_AS.cpp.s:
+	$(MAKE) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/HEM5_AS.cpp.s
+.PHONY : HEM5_AS.cpp.s
 
 HEM5_avxOR.o: HEM5_avxOR.cpp.o
 
@@ -975,9 +975,9 @@ help:
 	@echo "... HEM5.o"
 	@echo "... HEM5.i"
 	@echo "... HEM5.s"
-	@echo "... HEM5_AG.o"
-	@echo "... HEM5_AG.i"
-	@echo "... HEM5_AG.s"
+	@echo "... HEM5_AS.o"
+	@echo "... HEM5_AS.i"
+	@echo "... HEM5_AS.s"
 	@echo "... HEM5_avxOR.o"
 	@echo "... HEM5_avxOR.i"
 	@echo "... HEM5_avxOR.s"
