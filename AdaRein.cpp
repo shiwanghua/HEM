@@ -8,51 +8,51 @@ AdaRein::AdaRein(int type) : numSub(0) {
 	skipped.resize(atts, false);
 	string TYPE;
 	switch (type) {
-	case AdaRein_ORI:
-		TYPE = "AdaRein_ORI";
-		attsCounts.resize(atts);
-		break;
-	case AdaRein_SSS:
-		TYPE = "AdaRein_SSS";
-		attsCounts.resize(atts);
-		endBucket[0].resize(atts, buks - 1);
-		endBucket[1].resize(atts, 0);
-		break;
-	case AdaRein_SDS:
-		TYPE = "AdaRein_SDS";
-		break;
-	case AdaRein_DSS:
-		TYPE = "AdaRein_DSS";
-		break;
-	case AdaRein_DDS:
-		TYPE = "AdaRein_DDS";
-		break;
-	case AdaRein_IBU:
-		TYPE = "AdaRein_IBU";
-		break;
-	case AdaRein_PPH:
-		TYPE = "AdaRein_PPH";
-		break;
-	case AdaRein_SSS_B:
-		TYPE = "AdaRein_SSS_B";
-		attsCounts.resize(atts);
-		beginBucket[0].resize(atts, 0);
-		beginBucket[1].resize(atts, buks - 1);
-		break;
-	case AdaRein_SSS_C:
-		TYPE = "AdaRein_SSS_C";
-		attsCounts.resize(atts);
-		beginBucket[0].resize(atts, 0);
-		beginBucket[1].resize(atts, buks - 1);
-		endBucket[0].resize(atts, buks - 1);
-		endBucket[1].resize(atts, 0);
-		break;
-	default:
-		break;
+		case AdaRein_ORI:
+			TYPE = "AdaRein_ORI";
+			attsCounts.resize(atts);
+			break;
+		case AdaRein_SSS:
+			TYPE = "AdaRein_SSS";
+			attsCounts.resize(atts);
+			endBucket[0].resize(atts, buks - 1);
+			endBucket[1].resize(atts, 0);
+			break;
+		case AdaRein_SDS:
+			TYPE = "AdaRein_SDS";
+			break;
+		case AdaRein_DSS:
+			TYPE = "AdaRein_DSS";
+			break;
+		case AdaRein_DDS:
+			TYPE = "AdaRein_DDS";
+			break;
+		case AdaRein_IBU:
+			TYPE = "AdaRein_IBU";
+			break;
+		case AdaRein_PPH:
+			TYPE = "AdaRein_PPH";
+			break;
+		case AdaRein_SSS_B:
+			TYPE = "AdaRein_SSS_B";
+			attsCounts.resize(atts);
+			beginBucket[0].resize(atts, 0);
+			beginBucket[1].resize(atts, buks - 1);
+			break;
+		case AdaRein_SSS_C:
+			TYPE = "AdaRein_SSS_C";
+			attsCounts.resize(atts);
+			beginBucket[0].resize(atts, 0);
+			beginBucket[1].resize(atts, buks - 1);
+			endBucket[0].resize(atts, buks - 1);
+			endBucket[1].resize(atts, 0);
+			break;
+		default:
+			break;
 	}
 	cout << "ExpID = " << expID << ". " + TYPE + ": falsePositiveRate_local = " << falsePositiveRate
-		<< ", bucketStep = "
-		<< buckStep << ", numBucket = " << numBucket << endl;
+		 << ", bucketStep = "
+		 << buckStep << ", numBucket = " << numBucket << endl;
 }
 
 void AdaRein::insert(IntervalSub sub) {
@@ -97,7 +97,7 @@ bool AdaRein::deleteSubscription(IntervalSub sub) {
 	return find == 2 * sub.size;
 }
 
-void AdaRein::exact_match(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList) {
+void AdaRein::exact_match(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
 	vector<bool> bits(subs, false);
 	vector<bool> attExist(atts, false);
 
@@ -130,7 +130,7 @@ void AdaRein::exact_match(const Pub& pub, int& matchSubs, const vector<IntervalS
 			++matchSubs;
 }
 
-void AdaRein::original_selection(double falsePositive, const vector<IntervalSub>& subList) {
+void AdaRein::original_selection(double falsePositive, const vector<IntervalSub> &subList) {
 	for (int i = 0; i < atts; i++) {
 		attsCounts[i].att = i;
 		attsCounts[i].count = 0;
@@ -160,7 +160,7 @@ void AdaRein::original_selection(double falsePositive, const vector<IntervalSub>
 
 	int maxSkipPredicate =
 		numPredicate - (avgSubSize + log(falsePositive + 1) / log(avgWidth / valDom)) *
-		subs; // 至多可以过滤的谓词数, currentSum的最大值
+					   subs; // 至多可以过滤的谓词数, currentSum的最大值
 #ifdef DEBUG
 	cout << "maxSkipPredicate= " << maxSkipPredicate << "\n";
 	int numSkipAttr = 0;
@@ -169,7 +169,7 @@ void AdaRein::original_selection(double falsePositive, const vector<IntervalSub>
 	for (int i = 0; i < atts; i++) {
 		numSkipPredicate += attsCounts[i].count;
 		// 等效版本:
-		if ((double)(numPredicate - numSkipPredicate) / (double)subs >
+		if ((double) (numPredicate - numSkipPredicate) / (double) subs >
 			avgSubSize + log(falsePositive + 1) / log(avgWidth / valDom)) {
 			//		if ((double)(numPredicate - numSkipPredicate) / (double)subList.size() > subList[0].constraints.size() + log(falsePositive + 1) / log((subList[0].constraints[0].highValue - subList[0].constraints[0].lowValue) / (double)valDom)) {
 			skipped[attsCounts[i].att] = true;
@@ -177,8 +177,7 @@ void AdaRein::original_selection(double falsePositive, const vector<IntervalSub>
 			numSkipAttr++;
 			//cout << "Skip Attribute " << attsCounts[skipIndex].att<<"\n"; // could output in finding order.
 #endif
-		}
-		else {
+		} else {
 			numSkipPredicate -= attsCounts[i].count; // back
 			break;
 		}
@@ -186,16 +185,16 @@ void AdaRein::original_selection(double falsePositive, const vector<IntervalSub>
 
 #ifdef DEBUG
 	cout << "avgSubSize= " << avgSubSize << ", " << "avgWidth= " << avgWidth << ", numPredicate= " << numPredicate
-		<< ", maxSkipPredicate= " << maxSkipPredicate << ", numSkipPredicate= " << numSkipPredicate << ".\n";
+		 << ", maxSkipPredicate= " << maxSkipPredicate << ", numSkipPredicate= " << numSkipPredicate << ".\n";
 	cout << "Total skipped attribute: " << numSkipAttr << " among " << atts << " attributes.\n";
 	cout << "Skip attribute:";
 	_for(i, 0, atts) if (skipped[i])
-		cout << " " << i;
+			cout << " " << i;
 	cout << "\n";
 #endif
 }
 
-void AdaRein::approx_match_ori(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList) {
+void AdaRein::approx_match_ori(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
 	vector<bool> bits(subs, false);
 	vector<bool> attExist(atts, false);
 	for (int i = 0; i < pub.size; i++) {
@@ -230,7 +229,7 @@ void AdaRein::approx_match_ori(const Pub& pub, int& matchSubs, const vector<Inte
 			++matchSubs;
 }
 
-void AdaRein::static_succession_selection(double falsePositive, const vector<IntervalSub>& subList) {
+void AdaRein::static_succession_selection(double falsePositive, const vector<IntervalSub> &subList) {
 	for (int i = 0; i < atts; i++) {
 		attsCounts[i].att = i;
 		attsCounts[i].count = 0;
@@ -238,9 +237,9 @@ void AdaRein::static_succession_selection(double falsePositive, const vector<Int
 
 	int numPredicate = 0, numSkipPredicate = 0; // 谓词总数, 已过滤的谓词总数
 	double avgSubSize = 0, avgWidth = 0; // 平均每个订阅有多少个谓词, 谓词的平均宽度
-	for (auto&& iSub : subList) {
+	for (auto &&iSub: subList) {
 		//numPredicate += iSub.constraints.size(); // 冗余
-		for (auto&& iCnt : iSub.constraints) {
+		for (auto &&iCnt: iSub.constraints) {
 			//++attsCounts[iCnt.att].count; // 冗余
 			avgWidth += iCnt.highValue - iCnt.lowValue;
 		}
@@ -250,7 +249,7 @@ void AdaRein::static_succession_selection(double falsePositive, const vector<Int
 		_for(j, 0, buks) attsCounts[i].count += data[0][i][j].size();
 		numPredicate += attsCounts[i].count;
 	}
-	avgSubSize = (double)numPredicate / subList.size();
+	avgSubSize = (double) numPredicate / subList.size();
 	avgWidth /= numPredicate;
 
 	sort(attsCounts.begin(), attsCounts.end());
@@ -266,7 +265,7 @@ void AdaRein::static_succession_selection(double falsePositive, const vector<Int
 	cout << "k2= " << maxSkipPredicate << "\n";
 	maxSkipPredicate =
 		numPredicate - log(pow(avgWidth / valDom, avgSubSize) + falsePositiveRate_global) / log(avgWidth / valDom) *
-		subs; // 至多可以过滤的谓词数, currentSum的最大值
+					   subs; // 至多可以过滤的谓词数, currentSum的最大值
 	cout << "k3_global= " << maxSkipPredicate << "\n";
 	int numSkipAttr = 0;
 	int numSkipBkt = 0;
@@ -287,14 +286,13 @@ void AdaRein::static_succession_selection(double falsePositive, const vector<Int
 			numSkipAttr++;
 			//cout << "Skip Attribute " << attsCounts[skipIndex].att<<"\n"; // could output in finding order.
 #endif // DEBUG
-		}
-		else {
+		} else {
 			break;
 		}
 	}
 
 	// <low0/high1, AttributeId, bucketId, sizeOfBucket>
-	auto cmp = [&](const auto& a, const auto& b) {
+	auto cmp = [&](const auto &a, const auto &b) {
 		return get<3>(a) > get<3>(b); // a桶小, 返回false, 就把a作为根, 即实现小根堆
 	};
 	priority_queue<tuple<int, int, int, int>, vector<tuple<int, int, int, int>>, decltype(cmp)> minHeap(cmp);
@@ -307,10 +305,10 @@ void AdaRein::static_succession_selection(double falsePositive, const vector<Int
 	while (true) {
 		auto item = minHeap.top();
 		minHeap.pop();
-		if (numSkipPredicate + get<3>(item) > maxSkipPredicate) {
+		if (numSkipPredicate + get<3>(item) / 2 > maxSkipPredicate) {
 			break;
 		}
-		numSkipPredicate = numSkipPredicate + get<3>(item);
+		numSkipPredicate = numSkipPredicate + get<3>(item) / 2;
 #ifdef DEBUG
 		numSkipBkt++;
 #endif
@@ -321,8 +319,7 @@ void AdaRein::static_succession_selection(double falsePositive, const vector<Int
 				get<3>(item) = data[0][get<1>(item)][get<2>(item)].size(); // 更新桶大小
 				minHeap.push(item);
 			}
-		}
-		else { // high
+		} else { // high
 			get<2>(item) += 1; // 过滤掉这个桶
 			endBucket[1][get<1>(item)] = get<2>(item); // 过滤掉这个桶
 			if (get<2>(item) < buks - 1) { // 还有剩余的桶可以被过滤
@@ -333,25 +330,25 @@ void AdaRein::static_succession_selection(double falsePositive, const vector<Int
 	}
 #ifdef DEBUG
 	cout << "rightMatchNum= " << pow(width, avgSubSize) * subs << ", wrongMatchNum= "
-		<< pow(width, avgSubSize) * subs / (1 - falsePositive) * falsePositive << ", falsePositiveRate_local= "
-		<< falsePositive
-		<< ", falsePositiveRate_global= " << falsePositiveRate_global << ".\n";
+		 << pow(width, avgSubSize) * subs / (1 - falsePositive) * falsePositive << ", falsePositiveRate_local= "
+		 << falsePositive
+		 << ", falsePositiveRate_global= " << falsePositiveRate_global << ".\n";
 	cout << "avgSubSize= " << avgSubSize << ", " << "avgWidth= " << avgWidth << ", numPredicate= " << numPredicate
-		<< ", maxSkipPredicate= " << maxSkipPredicate << ", numSkipPredicate= " << numSkipPredicate << ".\n";
+		 << ", maxSkipPredicate= " << maxSkipPredicate << ", numSkipPredicate= " << numSkipPredicate << ".\n";
 	cout << "Total skipped attribute: " << numSkipAttr << " among " << atts << " attributes.\n";
 	cout << "Total skipped bucket: " << numSkipAttr << "*2*" << buks << " + " << numSkipBkt << " = "
-		<< numSkipAttr * 2 * buks + numSkipBkt << " among " << atts * 2 * buks << " buckets.\n";
+		 << numSkipAttr * 2 * buks + numSkipBkt << " among " << atts * 2 * buks << " buckets.\n";
 	cout << "Skip attribute:";
 	_for(i, 0, atts) if (skipped[i])
-		cout << " " << i;
+			cout << " " << i;
 	cout << "\n";
 #endif
 }
 
-void AdaRein::approx_match_sss(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList) {
+void AdaRein::approx_match_sss(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
 	bitset<subs> bits;
 	vector<bool> attExist(atts, false);
-	for (auto&& iPair : pub.pairs) {
+	for (auto &&iPair: pub.pairs) {
 		int att = iPair.att;
 		attExist[att] = true;
 		if (skipped[att])
@@ -383,7 +380,7 @@ void AdaRein::approx_match_sss(const Pub& pub, int& matchSubs, const vector<Inte
 	matchSubs = subs - bits.count();
 }
 
-void AdaRein::static_succession_selection_backward(double falsePositive, const vector<IntervalSub>& subList) {
+void AdaRein::static_succession_selection_backward(double falsePositive, const vector<IntervalSub> &subList) {
 	for (int i = 0; i < atts; i++) {
 		attsCounts[i].att = i;
 		attsCounts[i].count = 0;
@@ -391,9 +388,9 @@ void AdaRein::static_succession_selection_backward(double falsePositive, const v
 
 	int numPredicate = 0, numSkipPredicate = 0; // 谓词总数, 已过滤的谓词总数
 	double avgSubSize = 0, avgWidth = 0; // 平均每个订阅有多少个谓词, 谓词的平均宽度
-	for (auto&& iSub : subList) {
+	for (auto &&iSub: subList) {
 		//numPredicate += iSub.constraints.size(); // 冗余
-		for (auto&& iCnt : iSub.constraints) {
+		for (auto &&iCnt: iSub.constraints) {
 			//++attsCounts[iCnt.att].count; // 冗余
 			avgWidth += iCnt.highValue - iCnt.lowValue;
 		}
@@ -403,7 +400,7 @@ void AdaRein::static_succession_selection_backward(double falsePositive, const v
 		_for(j, 0, buks) attsCounts[i].count += data[0][i][j].size();
 		numPredicate += attsCounts[i].count;
 	}
-	avgSubSize = (double)numPredicate / subList.size();
+	avgSubSize = (double) numPredicate / subList.size();
 	avgWidth /= numPredicate;
 
 	sort(attsCounts.begin(), attsCounts.end());
@@ -420,7 +417,7 @@ void AdaRein::static_succession_selection_backward(double falsePositive, const v
 	cout << "k2= " << maxSkipPredicate << "\n";
 	maxSkipPredicate =
 		numPredicate - log(pow(avgWidth / valDom, avgSubSize) + falsePositiveRate_global) / log(avgWidth / valDom) *
-		subs; // 至多可以过滤的谓词数, currentSum的最大值
+					   subs; // 至多可以过滤的谓词数, currentSum的最大值
 	cout << "k3_global= " << maxSkipPredicate << "\n";
 	int numSkipAttr = 0;
 	int numSkipBkt = 0;
@@ -442,14 +439,13 @@ void AdaRein::static_succession_selection_backward(double falsePositive, const v
 			numSkipAttr++;
 			//cout << "Skip Attribute " << attsCounts[skipIndex].att<<"\n"; // could output in finding order.
 #endif // DEBUG
-		}
-		else {
+		} else {
 			break;
 		}
 	}
 
 	// <low0/high1, AttributeId, bucketId, sizeOfBucket>
-	auto cmp = [&](const auto& a, const auto& b) {
+	auto cmp = [&](const auto &a, const auto &b) {
 		return get<3>(a) > get<3>(b); // a桶小, 返回false, 就把a作为根, 即实现小根堆
 	};
 	priority_queue<tuple<int, int, int, int>, vector<tuple<int, int, int, int>>, decltype(cmp)> minHeap(cmp);
@@ -478,8 +474,7 @@ void AdaRein::static_succession_selection_backward(double falsePositive, const v
 				get<3>(item) = data[0][get<1>(item)][get<2>(item)].size();
 				minHeap.push(item);
 			}
-		}
-		else { // high
+		} else { // high
 			get<2>(item) -= 1; // 过滤掉这个桶
 			beginBucket[1][get<1>(item)] = get<2>(item); // 过滤掉这个桶
 			if (get<2>(item) > 0) { // 还有剩余的桶可以被过滤, 为0时停止, 因为0号桶在LVE上顶多是比较桶不可能是标记桶
@@ -490,25 +485,25 @@ void AdaRein::static_succession_selection_backward(double falsePositive, const v
 	}
 #ifdef DEBUG
 	cout << "rightMatchNum= " << pow(width, avgSubSize) * subs << ", wrongMatchNum= "
-		<< pow(width, avgSubSize) * subs / (1 - falsePositive) * falsePositive << ", falsePositiveRate_local= "
-		<< falsePositive
-		<< ", falsePositiveRate_global= " << falsePositiveRate_global << ".\n";
+		 << pow(width, avgSubSize) * subs / (1 - falsePositive) * falsePositive << ", falsePositiveRate_local= "
+		 << falsePositive
+		 << ", falsePositiveRate_global= " << falsePositiveRate_global << ".\n";
 	cout << "avgSubSize= " << avgSubSize << ", " << "avgWidth= " << avgWidth << ", numPredicate= " << numPredicate
-		<< ", maxSkipPredicate= " << maxSkipPredicate << ", numSkipPredicate= " << numSkipPredicate << ".\n";
+		 << ", maxSkipPredicate= " << maxSkipPredicate << ", numSkipPredicate= " << numSkipPredicate << ".\n";
 	cout << "Total skipped attribute: " << numSkipAttr << " among " << atts << " attributes.\n";
 	cout << "Total skipped bucket: " << numSkipAttr << "*2*" << buks << " + " << numSkipBkt << " = "
-		<< numSkipAttr * 2 * buks + numSkipBkt << " among " << atts * 2 * buks << " buckets.\n";
+		 << numSkipAttr * 2 * buks + numSkipBkt << " among " << atts * 2 * buks << " buckets.\n";
 	cout << "Skip attribute:";
 	_for(i, 0, atts) if (skipped[i])
-		cout << " " << i;
+			cout << " " << i;
 	cout << "\n";
 #endif
 }
 
-void AdaRein::approx_match_sss_b(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList) {
+void AdaRein::approx_match_sss_b(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
 	bitset<subs> bits;
 	vector<bool> attExist(atts, false);
-	for (auto&& iPair : pub.pairs) {
+	for (auto &&iPair: pub.pairs) {
 		int att = iPair.att;
 		attExist[att] = true;
 		if (skipped[att])
@@ -534,13 +529,13 @@ void AdaRein::approx_match_sss_b(const Pub& pub, int& matchSubs, const vector<In
 	for (int i = 0; i < atts; i++)
 		if (!attExist[i] && !skipped[i])
 			for (int j = beginBucket[1][i]; j >= 0; j--)
-				for (auto&& k : data[1][i][j])
+				for (auto &&k: data[1][i][j])
 					bits[k.subID] = true;
 
 	matchSubs = subs - bits.count();
 }
 
-void AdaRein::static_succession_selection_crossed(double falsePositive, const vector<IntervalSub>& subList) {
+void AdaRein::static_succession_selection_crossed(double falsePositive, const vector<IntervalSub> &subList) {
 	for (int i = 0; i < atts; i++) {
 		attsCounts[i].att = i;
 		attsCounts[i].count = 0;
@@ -548,9 +543,9 @@ void AdaRein::static_succession_selection_crossed(double falsePositive, const ve
 
 	int numPredicate = 0, numSkipPredicate = 0; // 谓词总数, 已过滤的谓词总数
 	double avgSubSize = 0, avgWidth = 0; // 平均每个订阅有多少个谓词, 谓词的平均宽度
-	for (auto&& iSub : subList) {
+	for (auto &&iSub: subList) {
 		//numPredicate += iSub.constraints.size(); // 冗余
-		for (auto&& iCnt : iSub.constraints) {
+		for (auto &&iCnt: iSub.constraints) {
 			//++attsCounts[iCnt.att].count; // 冗余
 			avgWidth += iCnt.highValue - iCnt.lowValue;
 		}
@@ -560,7 +555,7 @@ void AdaRein::static_succession_selection_crossed(double falsePositive, const ve
 		_for(j, 0, buks) attsCounts[i].count += data[0][i][j].size();
 		numPredicate += attsCounts[i].count;
 	}
-	avgSubSize = (double)numPredicate / subList.size();
+	avgSubSize = (double) numPredicate / subList.size();
 	avgWidth /= numPredicate;
 
 	sort(attsCounts.begin(), attsCounts.end());
@@ -577,7 +572,7 @@ void AdaRein::static_succession_selection_crossed(double falsePositive, const ve
 	cout << "k2= " << maxSkipPredicate << "\n";
 	maxSkipPredicate =
 		numPredicate - log(pow(avgWidth / valDom, avgSubSize) + falsePositiveRate_global) / log(avgWidth / valDom) *
-		subs; // 至多可以过滤的谓词数, currentSum的最大值
+					   subs; // 至多可以过滤的谓词数, currentSum的最大值
 	cout << "k3_global= " << maxSkipPredicate << "\n";
 	int numSkipAttr = 0;
 	int numSkipBkt = 0;
@@ -597,8 +592,7 @@ void AdaRein::static_succession_selection_crossed(double falsePositive, const ve
 			numSkipAttr++;
 			//cout << "Skip Attribute " << attsCounts[skipIndex].att<<"\n"; // could output in finding order.
 #endif // DEBUG
-		}
-		else {
+		} else {
 			break;
 		}
 	}
@@ -612,7 +606,7 @@ void AdaRein::static_succession_selection_crossed(double falsePositive, const ve
 	}
 
 	// <low0/high1, AttributeId, bucketId, sizeOfBucket>
-	auto cmp = [&](const auto& a, const auto& b) {
+	auto cmp = [&](const auto &a, const auto &b) {
 		return get<3>(a) > get<3>(b); // a桶小, 返回false, 就把a作为根, 即实现小根堆
 	};
 	priority_queue<tuple<int, int, int, int>, vector<tuple<int, int, int, int>>, decltype(cmp)> minHeap(cmp);
@@ -622,10 +616,12 @@ void AdaRein::static_succession_selection_crossed(double falsePositive, const ve
 	while (skipIndex < atts) {
 		if (endBucket[0][attsCounts[skipIndex].att] > 0)
 			minHeap.push(
-				make_tuple(0, attsCounts[skipIndex].att, endBucket[0][attsCounts[skipIndex].att], data[0][attsCounts[skipIndex].att][endBucket[0][attsCounts[skipIndex].att]].size()));
+				make_tuple(0, attsCounts[skipIndex].att, endBucket[0][attsCounts[skipIndex].att],
+						   data[0][attsCounts[skipIndex].att][endBucket[0][attsCounts[skipIndex].att]].size()));
 		if (beginBucket[1][attsCounts[skipIndex].att] < buks - 1)
 			minHeap.push(
-				make_tuple(1, attsCounts[skipIndex].att, beginBucket[1][attsCounts[skipIndex].att], data[1][attsCounts[skipIndex].att][beginBucket[1][attsCounts[skipIndex].att]].size()));
+				make_tuple(1, attsCounts[skipIndex].att, beginBucket[1][attsCounts[skipIndex].att],
+						   data[1][attsCounts[skipIndex].att][beginBucket[1][attsCounts[skipIndex].att]].size()));
 		skipIndex++;
 	}
 
@@ -648,8 +644,7 @@ void AdaRein::static_succession_selection_crossed(double falsePositive, const ve
 					get<3>(item) = data[0][get<1>(item)][get<2>(item)].size();
 					minHeap.push(item);
 				}
-			}
-			else { // 小号桶
+			} else { // 小号桶
 				get<2>(item) += 1; // 过滤掉这个桶
 				beginBucket[0][get<1>(item)] = get<2>(item); // 过滤掉这个桶
 				if (get<2>(item) <= endBucket[0][get<1>(item)]) { // 还有剩余的桶可以被过滤
@@ -659,8 +654,7 @@ void AdaRein::static_succession_selection_crossed(double falsePositive, const ve
 				}
 			}
 			end[0][get<1>(item)] = !end[0][get<1>(item)];
-		}
-		else { // high
+		} else { // high
 			if (end[1][get<1>(item)]) { // 大号桶(beginBucket)
 				get<2>(item) -= 1; // 过滤掉这个桶
 				beginBucket[1][get<1>(item)] = get<2>(item); // 过滤掉这个大号桶
@@ -669,8 +663,7 @@ void AdaRein::static_succession_selection_crossed(double falsePositive, const ve
 					get<3>(item) = data[1][get<1>(item)][get<2>(item)].size(); // 更新桶大小
 					minHeap.push(item);
 				}
-			}
-			else { // 小号桶(endBucket)
+			} else { // 小号桶(endBucket)
 				get<2>(item) += 1; // 过滤掉这个桶
 				endBucket[1][get<1>(item)] = get<2>(item); // 过滤掉这个桶
 				if (get<2>(item) <= beginBucket[1][get<1>(item)]) { // 还有剩余的桶可以被过滤
@@ -684,25 +677,25 @@ void AdaRein::static_succession_selection_crossed(double falsePositive, const ve
 	}
 #ifdef DEBUG
 	cout << "rightMatchNum= " << pow(width, avgSubSize) * subs << ", wrongMatchNum= "
-		<< pow(width, avgSubSize) * subs / (1 - falsePositive) * falsePositive << ", falsePositiveRate_local= "
-		<< falsePositive
-		<< ", falsePositiveRate_global= " << falsePositiveRate_global << ".\n";
+		 << pow(width, avgSubSize) * subs / (1 - falsePositive) * falsePositive << ", falsePositiveRate_local= "
+		 << falsePositive
+		 << ", falsePositiveRate_global= " << falsePositiveRate_global << ".\n";
 	cout << "avgSubSize= " << avgSubSize << ", " << "avgWidth= " << avgWidth << ", numPredicate= " << numPredicate
-		<< ", maxSkipPredicate= " << maxSkipPredicate << ", numSkipPredicate= " << numSkipPredicate << ".\n";
+		 << ", maxSkipPredicate= " << maxSkipPredicate << ", numSkipPredicate= " << numSkipPredicate << ".\n";
 	cout << "Total skipped attribute: " << numSkipAttr << " among " << atts << " attributes.\n";
 	cout << "Total skipped bucket: " << numSkipAttr << "*2*" << buks << " + " << numSkipBkt << " = "
-		<< numSkipAttr * 2 * buks + numSkipBkt << " among " << atts * 2 * buks << " buckets.\n";
+		 << numSkipAttr * 2 * buks + numSkipBkt << " among " << atts * 2 * buks << " buckets.\n";
 	cout << "Skip attribute:";
 	_for(i, 0, atts) if (skipped[i])
-		cout << " " << i;
+			cout << " " << i;
 	cout << "\n";
 #endif
 }
 
-void AdaRein::approx_match_sss_c(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList) {
+void AdaRein::approx_match_sss_c(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
 	bitset<subs> bits;
 	vector<bool> attExist(atts, false);
-	for (auto&& iPair : pub.pairs) {
+	for (auto &&iPair: pub.pairs) {
 		int att = iPair.att;
 		attExist[att] = true;
 		if (skipped[att])
@@ -712,15 +705,16 @@ void AdaRein::approx_match_sss_c(const Pub& pub, int& matchSubs, const vector<In
 		for (int k = 0; k < data[0][att][buck].size(); k++)
 			if (data[0][att][buck][k].val > value)
 				bits[data[0][att][buck][k].subID] = true;
-		for (int j = max(buck + 1, beginBucket[0][att]); j < min(buks, endBucket[0][att] + 1); j++) // 和HEM系列的设计不同, 这里取闭括号
-			for (auto&& k : data[0][att][j])
+		for (int j = max(buck + 1, beginBucket[0][att]);
+			 j < min(buks, endBucket[0][att] + 1); j++) // 和HEM系列的设计不同, 这里取闭括号
+			for (auto &&k: data[0][att][j])
 				bits[k.subID] = true;
 
 		for (int k = 0; k < data[1][att][buck].size(); k++)
 			if (data[1][att][buck][k].val < value)
 				bits[data[1][att][buck][k].subID] = true;
 		for (int j = min(buck - 1, beginBucket[1][att]); j >= max(0, endBucket[1][att]); j--)
-			for (auto&& k : data[1][att][j])
+			for (auto &&k: data[1][att][j])
 				bits[k.subID] = true;
 	}
 
@@ -728,7 +722,7 @@ void AdaRein::approx_match_sss_c(const Pub& pub, int& matchSubs, const vector<In
 	for (int i = 0; i < atts; i++)
 		if (!attExist[i] && !skipped[i])
 			for (int j = beginBucket[1][i]; j >= max(0, endBucket[1][i]); j--)
-				for (auto&& k : data[1][i][j])
+				for (auto &&k: data[1][i][j])
 					bits[k.subID] = true;
 
 	matchSubs = subs - bits.count();
@@ -740,5 +734,5 @@ int AdaRein::calMemory() {
 	size += sizeof(bool) * atts + sizeof(attAndCount) * atts;
 	//cout << "attAndCount size = " << sizeof(attAndCount) << endl; // 8
 	size = size / 1024 / 1024; // MB
-	return (int)size;
+	return (int) size;
 }
