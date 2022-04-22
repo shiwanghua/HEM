@@ -62,21 +62,22 @@ plt.gca().yaxis.set_major_formatter(FuncFormatter(to_percent))
 
 plt.xticks(x, labels=be)
 plt.yticks(np.arange(0, 1.01, 0.1))
-plt.xlabel('Number of Groups', fontsize=20)  # ,fontsize=13
-plt.ylabel('Time Proportion (%)', fontsize=20)  # ,fontsize=13
+plt.xlabel('Number of Groups', fontsize=16)  # ,fontsize=13
+plt.ylabel('Time Proportion (%)', fontsize=16)  # ,fontsize=13
 plt.tick_params(direction='out',
-                labelsize=13,
+                labelsize=14,
                 length=4,
                 width=1,
                 top=False,
                 right=False)
-plt.legend(fontsize=9, loc=(-0.014, 1.01),
-           ncol=4)  #fontsize=6,frameon=False,loc='upper center',ncol=6
+plt.legend(
+    fontsize=13, loc=(-0.15, 1.01), ncol=4, columnspacing=0.3
+)  # labelspacing=0.4, fontsize=6,frameon=False,loc='upper center',ncol=6
 # # ax.text(.87,-.08,'\nVisualization by DataCharm',transform = ax.transAxes,
 # #         ha='center', va='center',fontsize = 5,color='black',fontweight='bold',family='Roboto Mono')
 
 gcf = plt.gcf()
 plt.show()
-gcf.savefig('../exp1_HEM5TimeDistribution_be.pdf',
+gcf.savefig('./exp1_HEM5TimeDistribution_be.pdf',
             format='pdf',
             bbox_inches='tight')

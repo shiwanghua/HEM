@@ -1,8 +1,11 @@
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib import rc
 # 解决坐标轴负号问题
 plt.rcParams['axes.unicode_minus'] = False
+rc('mathtext', default='regular')
+plt.rcParams['font.family'] = ['Times New Roman']  #
 
 HEM4DS = [
     4.047486, 2.526655, 1.552167, 0.794416, 0.430514, 0.245464, 0.163093,
@@ -31,10 +34,9 @@ HEM2SD = [
     0.088015, 0.061921, 0.039159
 ]
 
-Memory=[157, 159, 169, 188, 226, 302, 455, 760, 1370, 2591]
+Memory = [157, 159, 169, 188, 226, 302, 455, 760, 1370, 2591]
 
-
-Name = ["Rein", "HEM0PS", "HEM1SS", "HEM2SD", "HEM3PD", "HEM4DS", "HEM5DD"]
+Name = ["Rein", "HEMPS", "HEMSS", "HEMSD", "HEMPD", "HEMDS", "HEMDD"]
 
 plt.figure(figsize=(14, 6))
 # plt.subplot()
@@ -48,13 +50,13 @@ plt.bar(x - 0.5 * width, HEM2SD, width, color='darkorange', label=Name[3])
 plt.bar(x + 0.5 * width, HEM3PD, width, color='limegreen', label=Name[4])
 plt.bar(x + 1.5 * width, HEM4DS, width, color='brown', label=Name[5])
 plt.bar(x + 2.5 * width, HEM5DD, width, color='DEEPPINK', label=Name[6])
-plt.tick_params(direction='out', labelsize=15, length=5.5, width=1)
-plt.xlabel('Number of Groups', fontsize=20)
-plt.ylabel('Marking Time (ms)', fontsize=20)
+plt.tick_params(direction='out', labelsize=28, length=5.5, width=1)
+plt.xlabel('Number of Groups', fontsize=32)
+plt.ylabel('Marking Time (ms)', fontsize=32)
 # plt.title('4 datasets')
 # x轴刻度标签位置不进行计算
 plt.xticks(x, labels=be)
-plt.legend(fontsize=20, ncol=2)
+plt.legend(fontsize=30, ncol=2)
 plt.grid()
 fig = plt.gcf()
 plt.show()

@@ -5,7 +5,8 @@ from matplotlib import rc
 
 rc('mathtext', default='regular')
 from matplotlib.pyplot import MultipleLocator
-# ��������Ḻ����??
+
+plt.rcParams['font.family'] = ['Times New Roman']
 plt.rcParams['axes.unicode_minus'] = False
 
 be = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -25,13 +26,13 @@ OpIndex2 = [61.273606, 40.896958, 25.819700, 16.657835, 8.618768, 1.331137]
 
 # 11: 22607/1024
 Name = [
-    "Rein", "HEM0PS", "BIOP1SS", "BIOP2SD", "BIOP3PD", "BIOP4DS", "HEM5DD",
+    "REIN", "HEMPS", "HEMSS", "BIOP2SD", "BIOP3PD", "BIOP4DS", "HEMDD",
     "Simple", "Simple2"
 ]
 x = np.arange(6)  # x��̶ȱ�ǩλ??
 width = 0.25
 
-plt.figure(figsize=(8, 8))
+plt.figure(figsize=(5, 4))
 
 plt.bar(x - width, Rein, width, color='r',
         label=Name[0])  # r"$HEM0PS\_20S_e$" 'limegreen'
@@ -46,7 +47,7 @@ plt.ylabel('Matching Time (ms)', fontsize=20)
 # plt.title('4 datasets')
 
 plt.xticks(x, labels=["0", "0.2", "0.4", "0.6", "0.8", "0.99"])
-plt.legend(fontsize=16, loc=(0.7 / 10, 3.2 / 4), ncol=1)
+plt.legend(fontsize=11, loc=(0.3 / 10, 2.98 / 4), ncol=1)
 plt.grid()
 # plt.title(r"Exp2: Marking Time when $\frac{S_e}{d}=q=0.5$",fontsize=18)
 

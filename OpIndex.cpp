@@ -407,12 +407,14 @@ int OpIndex2::calMemory()
 	long long size = 0; // Byte
 	_for(i, 0, atts)
 	{
+		size += sizeof(data[i]);
 		_for(j, 0, atts)
 		{
+			size += sizeof(data[i][j]);
 			size += data[i][j].size() * sizeof(IntervalCombo); // sig 数组
 		}
 	}
-	size += atts * sizeof(bool) + atts * sizeof(int); // isPivot, fre
+	size += atts * sizeof(bool) + 2 * atts * sizeof(int); // isPivot, fre, pivotCount
 	size = size / 1024 / 1024;						  // MB
 	return (int)size;
 }
@@ -567,13 +569,14 @@ int bOpIndex2::calMemory()
 	long long size = 0; // Byte
 	_for(i, 0, atts)
 	{
-
+		size += sizeof(data[i]);
 		_for(j, 0, atts)
 		{
+			size += sizeof(data[i][j]);
 			size += data[i][j].size() * sizeof(IntervalCombo); // sig 数组
 		}
 	}
-	size += atts * sizeof(bool) + atts * sizeof(int); // isPivot, fre
+	size += atts * sizeof(bool) + 2*atts * sizeof(int); // isPivot, fre, pivotCount
 	size = size / 1024 / 1024;						  // MB
 	return (int)size;
 }
