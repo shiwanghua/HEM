@@ -37,7 +37,8 @@ ax.plot(x, TAMA, marker='*', color='DarkCyan', label=Name[3])
 ax.plot(x, AdaREIN, marker='x', color='DarkMagenta', label=Name[4])
 ax.plot(x, OpIndex, marker='h', color='DimGray', label=Name[5])  #   slategray
 
-ax.legend(fontsize=11, ncol=2)  #fontsize=10  loc=(1.36/5,0.05/5)
+ax.legend(fontsize=14, ncol=2, loc='upper left',
+          columnspacing=0.3)  #fontsize=10  loc=(1.36/5,0.05/5)
 ax.grid()
 ax.set_xlim(30, 80)
 ax.set_xticks(x)
@@ -47,7 +48,7 @@ ax.set_ylim(0, 15)
 # ax.set_yticks([2,4,8,16])
 # ax.set_yticklabels(['-1', '0', '1'])
 ax.set_zorder(0)
-plt.tick_params(labelsize=22)
+plt.tick_params(labelsize=24)
 gcf = plt.gcf()
 plt.show()
 gcf.savefig('./exp7_Se.pdf', format='pdf', bbox_inches='tight')

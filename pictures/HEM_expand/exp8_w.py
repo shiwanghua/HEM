@@ -64,18 +64,18 @@ ax.plot(x, TAMA, marker='*', color='DarkCyan', label=Name[3])
 ax.plot(x, AdaREIN, marker='x', color='DarkMagenta', label=Name[4])
 ax.plot(x, OpIndex, marker='h', color='DimGray', label=Name[5])  #   slategray
 
-ax.legend(fontsize=13, ncol=2,
-          loc=(1.3 / 5, 1.78 / 5))  #fontsize=10    loc='upper left'
+ax.legend(fontsize=13, ncol=2, loc=(1.65 / 5, 2.3 / 5),
+          columnspacing=0.3)  #fontsize=10    loc='upper left'
 ax.grid()
 ax.set_xlim(0.1, 0.9)
 ax.set_xticks(x)
 # ax.set_xticklabels(x)
 # ax.set_yscale("log")
-ax.set_ylim(0, 16)
+ax.set_ylim(0, 12.5)
 # ax.set_yticks([0,3,6,9,12,15])
 # ax.set_yticklabels(['-1', '0', '1'])
 ax.set_zorder(0)
-plt.tick_params(labelsize=22)
+plt.tick_params(labelsize=24)
 gcf = plt.gcf()
 plt.show()
 gcf.savefig('./exp8_w.pdf', format='pdf', bbox_inches='tight')

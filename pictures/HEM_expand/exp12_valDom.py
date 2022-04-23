@@ -44,9 +44,10 @@ ax.plot(x, HEM5_RAG, marker='.', color='DODGERBLUE', label=Name[1])
 ax.plot(x, OpIndex2, marker='h', color='DimGray', label=Name[5])  #   slategray
 ax.plot(x, Tama, marker='*', color='DarkCyan', label=Name[3])
 ax.plot(x, AdaRein_ORI, marker='x', color='DarkMagenta', label=Name[4])
-ax.plot(x, PSTree, marker='1', color='DarkOrange', label=Name[6])  #
+# ax.plot(x, PSTree, marker='1', color='DarkOrange', label=Name[6])  #
 
-ax.legend(fontsize=12, loc=(1 / 4, 1.4 / 4), ncol=2)  #fontsize=10
+ax.legend(fontsize=16, loc=(0.6 / 4, 0.8 / 4), ncol=2,
+          columnspacing=0.3)  #fontsize=10
 ax.grid()
 ax.set_xlim(0, 4)
 ax.set_xticks(x)
@@ -56,7 +57,7 @@ ax.set_xticklabels(x_label)
 # ax.set_yticks([0,2,8,32,128,256])
 # ax.set_yticklabels(['-1', '0', '1'])
 ax.set_zorder(0)
-plt.tick_params(labelsize=22)
+plt.tick_params(labelsize=24)
 gcf = plt.gcf()
 plt.show()
 gcf.savefig('./exp12_valDom.pdf', format='pdf', bbox_inches='tight')

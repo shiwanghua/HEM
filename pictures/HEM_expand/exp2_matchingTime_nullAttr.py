@@ -31,6 +31,7 @@ Name = [
 ]
 x = np.arange(6)  # x��̶ȱ�ǩλ??
 width = 0.25
+lsize = 24
 
 plt.figure(figsize=(5, 4))
 
@@ -41,9 +42,10 @@ plt.bar(x, HEM0, width, color='DODGERBLUE',
 plt.bar(x + width, HEM5, width, color='DEEPPINK',
         label=Name[6])  # limegreen brown DEEPPINK r"$HEM5DD\_10S_e$"
 
-plt.tick_params(direction='out', labelsize=15, length=5.5, width=1)
-plt.xlabel('Proportion of Null Attributes', fontsize=20)
-plt.ylabel('Matching Time (ms)', fontsize=20)
+plt.tick_params(labelsize=18)
+# plt.tick_params(direction='out', labelsize=24, length=5.5, width=1)
+plt.xlabel('Proportion of Null Attributes', fontsize=lsize)
+plt.ylabel('Matching Time (ms)', fontsize=lsize)
 # plt.title('4 datasets')
 
 plt.xticks(x, labels=["0", "0.2", "0.4", "0.6", "0.8", "0.99"])

@@ -64,12 +64,8 @@ plt.xticks(x, labels=be)
 plt.yticks(np.arange(0, 1.01, 0.1))
 plt.xlabel('Number of Groups', fontsize=16)  # ,fontsize=13
 plt.ylabel('Time Proportion (%)', fontsize=16)  # ,fontsize=13
-plt.tick_params(direction='out',
-                labelsize=14,
-                length=4,
-                width=1,
-                top=False,
-                right=False)
+# plt.tick_params(direction='out',labelsize=14,length=4,width=1,top=False,right=False)
+plt.tick_params(labelsize=14)
 plt.legend(
     fontsize=13, loc=(-0.15, 1.01), ncol=4, columnspacing=0.3
 )  # labelspacing=0.4, fontsize=6,frameon=False,loc='upper center',ncol=6

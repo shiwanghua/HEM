@@ -95,23 +95,9 @@ os.system("sudo cpufreq-set -c " + coreId + " -u 4.9G")
 #     width -= 0.1
 
 # # Exp 9: virtual attr group
-attr = [10000, 3000, 1000, 300, 100, 30]
-be = [1, 2, 3, 4, 4, 4]
-ag = [400, 200, 100, 60, 50, 1]
-for i in range(6):
-    os.system(
-        'taskset -c ' + coreId + ' ./run ' + str(expID) + ' ' + str(attr[i]) + ' 5 20 0.0 0.8 ' + str(
-            be[i]) + ' ' + str(ag[i])+' 1000000')
-    print('Experiment', str(expID),
-          ': atts= ' + str(attr[i]) + ', k= 5, m= 20, alpha= 0.0, w= 0.8, be= 4, attrGroup= ' + str(
-              ag[i]) + ', valDom= 1000000 done.\n\n')
-    expID += 1
-
-# # Exp 10: real attr group
 # attr = [10000, 3000, 1000, 300, 100, 30]
 # be = [1, 2, 3, 4, 4, 4]
-# ag = [100, 50, 40, 15, 5, 1]
-#
+# ag = [400, 200, 100, 60, 50, 1]
 # for i in range(6):
 #     os.system(
 #         'taskset -c ' + coreId + ' ./run ' + str(expID) + ' ' + str(attr[i]) + ' 5 20 0.0 0.8 ' + str(
@@ -120,6 +106,22 @@ for i in range(6):
 #           ': atts= ' + str(attr[i]) + ', k= 5, m= 20, alpha= 0.0, w= 0.8, be= 4, attrGroup= ' + str(
 #               ag[i]) + ', valDom= 1000000 done.\n\n')
 #     expID += 1
+
+# # Exp 10: real attr group
+attr = [10000, 3000, 1000, 300, 100, 30]
+be = [1, 2, 3, 4, 4, 4]
+# ag = [100, 50, 40, 15, 5, 1]
+ag = [500, 150, 50, 15, 5, 1]
+
+for i in range(6):
+    os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' ' +
+              str(attr[i]) + ' 5 20 0.0 0.8 ' + str(be[i]) + ' ' + str(ag[i]) +
+              ' 1000000')
+    print(
+        'Experiment', str(expID), ': atts= ' + str(attr[i]) +
+        ', k= 5, m= 20, alpha= 0.0, w= 0.8, be= ' + str(be[i]) +
+        ', attrGroup= ' + str(ag[i]) + ', valDom= 1000000 done.\n\n')
+    expID += 1
 
 # # Exp 11: alpha 0-5 attribute distribution
 # need to set attDis=1

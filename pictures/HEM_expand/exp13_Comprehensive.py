@@ -1460,10 +1460,10 @@ from matplotlib import rc
 from matplotlib.pyplot import MultipleLocator
 
 rc('mathtext', default='regular')
-
+plt.rcParams['font.family'] = ['Times New Roman']
 plt.rcParams['axes.unicode_minus'] = False
 
-Name = ["REIN", "BIOP5DD", "Simple", "TAMA", "Ada-REIN", "OpIndex", "PS-Tree"]
+Name = ["REIN", "HEM", "Simple", "TAMA", "Ada-REIN", "OpIndex", "PS-Tree"]
 numEvent = 1000
 x = [i for i in range(numEvent)]
 # xx=[i*200 for i in range(1,7)]
@@ -1472,8 +1472,11 @@ fig = plt.figure(figsize=(18, 8))
 
 ax = fig.add_subplot(111)
 
-ax.set_xlabel('Event ID', fontsize=20)
-ax.set_ylabel('Matching Time (ms)', fontsize=20)
+lsize = 34
+lgdsize = 28
+tickSize = 28
+ax.set_xlabel('Event ID', fontsize=lsize)
+ax.set_ylabel('Matching Time (ms)', fontsize=lsize)
 
 # plt.xticks(range(0,10))
 # ax.plot(x, OpIndex, marker='h', color='DimGray', label=Name[5]) #   slategray
@@ -1491,8 +1494,9 @@ ax.set_ylabel('Matching Time (ms)', fontsize=20)
 # ax.plot(x, TAMA, marker='*', color='DarkCyan', label=Name[3])
 # ax.plot(x, AdaREIN, marker='x', color='DarkMagenta', label=Name[4])
 
-ax.plot(x, OpIndex2[:numEvent], color='DimGray', label=Name[5])  #   slategray
 ax.plot(x, Rein[:numEvent], color='r', label=Name[0])
+ax.plot(x, AdaRein[:numEvent], color='DarkMagenta', label=Name[4])
+ax.plot(x, OpIndex2[:numEvent], color='DimGray', label=Name[5])  #   slategray
 # ax.plot(x, BIOP0PS[:numEvent],  color='DODGERBLUE', label="BIOP0PS")
 # ax.plot(x, BIOP1SS[:numEvent], color='g', label="BIOP1SS")
 # ax.plot(x, BIOP2SD[:numEvent],  color='b', label="BIOP2SD")
@@ -1501,16 +1505,14 @@ ax.plot(x, Rein[:numEvent], color='r', label=Name[0])
 # ax.plot(x, BIOPSRPS[:numEvent],  color='Tan', label="BIOPSRPS")
 # ax.plot(x, BIOPSCDD[:numEvent], color='LightPink', label="BIOPSCDD")
 # ax.plot(x, Simple[:numEvent],  color='deepskyblue', label=Name[2])
-ax.plot(x, Simple[:numEvent], color='deepskyblue',
-        label=Name[2])  # deepskyblue  Indigo
+# ax.plot(x, Simple[:numEvent], color='deepskyblue',label=Name[2]) # deepskyblue  Indigo
 ax.plot(x, Tama[:numEvent], color='DarkCyan', label=Name[3])
-ax.plot(x, AdaRein[:numEvent], color='DarkMagenta', label=Name[4])
-ax.plot(x, HEM5DD_VAG[:numEvent], color='DEEPPINK', label=Name[1])
+ax.plot(x, HEM5DD_VAG[:numEvent], color='DODGERBLUE', label=Name[1])
 
-ax.legend(fontsize=18, loc='upper center',
-          ncol=6)  # fontsize=10 loc=(1.36/5,0.01/5),
+ax.legend(fontsize=lgdsize, loc='upper left', ncol=3,
+          columnspacing=0.25)  # fontsize=10 loc=(1.36/5,0.01/5),
 ax.grid()
-ax.set_xlim(0, numEvent+1)
+ax.set_xlim(0, numEvent + 1)
 ax.set_ylim(0, 20)
 # ax.set_xticks([0,1,2,3,4,5])
 # ax.set_xticklabels(x)
@@ -1524,7 +1526,8 @@ ax.set_ylim(0, 20)
 #     size.set_fontsize('16')
 # plt.tick_params(labelsize=16)
 
-plt.xticks(fontsize=16)  # fontname="Calibri", ,rotation=45
+plt.xticks(fontsize=tickSize)  # fontname="Calibri", ,rotation=45
+plt.yticks(fontsize=tickSize)
 
 gcf = plt.gcf()
 plt.show()
