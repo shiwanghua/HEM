@@ -5,7 +5,7 @@ import os
 import sys
 
 expID = int(sys.argv[1])
-coreId = '6'
+coreId = '8'
 
 os.system('ulimit -s unlimited;sudo chmod 777 run')
 os.system('sudo chmod 777 *.txt')
@@ -108,6 +108,7 @@ os.system("sudo cpufreq-set -c " + coreId + " -u 4.9G")
 #     expID += 1
 
 # # Exp 10: real attr group
+# need to use GenSubList_g, GenPubList_g function to generate data!
 attr = [10000, 3000, 1000, 300, 100, 30]
 be = [1, 2, 3, 4, 4, 4]
 # ag = [100, 50, 40, 15, 5, 1]
