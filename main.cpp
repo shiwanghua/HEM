@@ -21,9 +21,16 @@ int main(int argc, char **argv) {
 			 << endl;
 	}
 
+	// bind to cpu core
+	int core_id = 3;
+	cpu_set_t mask;
+	CPU_ZERO(&mask);
+	CPU_SET(core_id, &mask);
+	sched_setaffinity(0, sizeof(mask), &mask);
+
 	intervalGenerator gen(subs, pubs, atts, attrGroup, cons, m, attNumType, attDis, valDis, valDom, alpha, subp, width);
 	gen.GenSubList();
-	gen.GenPubList();
+	gen.GenPubList2();
 	//gen.GenSubList_g();
 	//gen.GenPubList_g();
 
@@ -45,10 +52,10 @@ int main(int argc, char **argv) {
 ////	run_rein_hybrid(gen, deleteNo);
 ////	run_rein_hybrid_CBOMP(gen, deleteNo);
 ////	run_pRein(gen, deleteNo);
-	run_AdaRein_ORI(gen, deleteNo);
-	run_AdaRein_SSS(gen, deleteNo);
-	run_AdaRein_SSS_B(gen, deleteNo);
-	run_AdaRein_SSS_C(gen, deleteNo);
+//	run_AdaRein_ORI(gen, deleteNo);
+//	run_AdaRein_SSS(gen, deleteNo);
+//	run_AdaRein_SSS_B(gen, deleteNo);
+//	run_AdaRein_SSS_C(gen, deleteNo);
 ////
 	//run_HEM(gen);
 ////	run_HEM1(gen);
@@ -77,7 +84,7 @@ int main(int argc, char **argv) {
 //	run_BGTREE_d_backward_native(gen, deleteNo);
 //	run_BGTREE_d_vrs_backward_native(gen, deleteNo);
 //
-	//run_OpIndex(gen, deleteNo);
+	run_OpIndex(gen, deleteNo);
 //	run_bOpIndex2(gen, deleteNo);
 //	run_PSTREE(gen, deleteNo);
 //	run_AWBTREE(gen, deleteNo);

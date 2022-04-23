@@ -31,16 +31,16 @@ os.system("sudo cpufreq-set -c " + coreId + " -u 4.9G")
 # Exp 2: null attributes
 # need to #define DEBUG in constant.h file
 # need to use GenSubList_g, GenPubList_g function to generate data!
-Se = [1000, 800, 600, 400, 200, 10]
-groupNum = [1, 1, 1, 2, 5, 100]
-for i in range(6):
-    os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 1000 10 ' +
-              str(Se[i]) + ' 0.0 0.4 1 ' + str(groupNum[i]) + ' 1000000')
-    print(
-        'Experiment', str(expID), ': atts= 1000, k= 10, m= ' + str(Se[i]) +
-        ', alpha= 0.0, w= 0.4, be= 1, attrGroup= ' + str(groupNum[i]) +
-        ', valDom= 1000000 done.\n\n')
-    expID += 1
+# Se = [1000, 800, 600, 400, 200, 10]
+# groupNum = [1, 1, 1, 2, 5, 100]
+# for i in range(6):
+#     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 1000 10 ' +
+#               str(Se[i]) + ' 0.0 0.4 1 ' + str(groupNum[i]) + ' 1000000')
+#     print(
+#         'Experiment', str(expID), ': atts= 1000, k= 10, m= ' + str(Se[i]) +
+#         ', alpha= 0.0, w= 0.4, be= 1, attrGroup= ' + str(groupNum[i]) +
+#         ', valDom= 1000000 done.\n\n')
+#     expID += 1
 
 # Exp 3: vitual attribute group
 # need to #define DEBUG in constant.h file
@@ -66,7 +66,6 @@ for i in range(6):
 #     expID += 1
 
 # # Exp 5: n
-# # need to use GenPubList2 function to generate data!
 # # need to open model test function.
 # need to use GenPubList2 function to generate data!
 # os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 20 10 20 0.0 0.4 4 1 1000000')
@@ -96,17 +95,17 @@ for i in range(6):
 #     width -= 0.1
 
 # # Exp 9: virtual attr group
-# attr = [10000, 3000, 1000, 300, 100, 30]
-# be = [1, 2, 3, 4, 4, 4]
-# ag = [400, 200, 100, 60, 50, 1]
-# for i in range(6):
-#     os.system(
-#         'taskset -c ' + coreId + ' ./run ' + str(expID) + ' ' + str(attr[i]) + ' 5 20 0.0 0.8 ' + str(
-#             be[i]) + ' ' + str(ag[i])+' 1000000')
-#     print('Experiment', str(expID),
-#           ': atts= ' + str(attr[i]) + ', k= 5, m= 20, alpha= 0.0, w= 0.8, be= 4, attrGroup= ' + str(
-#               ag[i]) + ', valDom= 1000000 done.\n\n')
-#     expID += 1
+attr = [10000, 3000, 1000, 300, 100, 30]
+be = [1, 2, 3, 4, 4, 4]
+ag = [400, 200, 100, 60, 50, 1]
+for i in range(6):
+    os.system(
+        'taskset -c ' + coreId + ' ./run ' + str(expID) + ' ' + str(attr[i]) + ' 5 20 0.0 0.8 ' + str(
+            be[i]) + ' ' + str(ag[i])+' 1000000')
+    print('Experiment', str(expID),
+          ': atts= ' + str(attr[i]) + ', k= 5, m= 20, alpha= 0.0, w= 0.8, be= 4, attrGroup= ' + str(
+              ag[i]) + ', valDom= 1000000 done.\n\n')
+    expID += 1
 
 # # Exp 10: real attr group
 # attr = [10000, 3000, 1000, 300, 100, 30]

@@ -404,7 +404,9 @@ void OpIndex2::calcFrequency(const vector<IntervalSub> &subList)
 
 int OpIndex2::calMemory()
 {
-	long long size = 0; // Byte
+	long long size = sizeof(data); // Byte
+	//cout<<sizeof(data)<<" "<<sizeof(data[0])<<" "<<sizeof(data[0][0])<<" "<<sizeof(data[10][123])<<"\n";
+	// 24 24 24 24
 	_for(i, 0, atts)
 	{
 		size += sizeof(data[i]);

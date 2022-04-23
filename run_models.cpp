@@ -3425,6 +3425,10 @@ void run_PSTREE(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
+
+		if(i%200000==0){
+			cout<<"PS-Tree Insert sub "<<i<<endl;
+		}
 	}
 	cout << "PS-Tree Insertion Finishes.\n";
 
@@ -3460,7 +3464,7 @@ void run_PSTREE(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 	cout << endl;
 
 	// output
-	string outputFileName = "PSTree.txt";
+	string outputFileName = "PSTB.txt";
 	string content = expID
 					 + " memory= " + Util::Int2String(psTree.calMemory())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
@@ -3493,7 +3497,7 @@ void run_PSTREE(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 #endif
 
-	outputFileName = "tmpData/PSTree.txt";
+	outputFileName = "tmpData/PSTB.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
