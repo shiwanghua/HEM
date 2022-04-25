@@ -1,0 +1,169 @@
+Date : 2022-04-25 02:55:39
+Directory : d:\codes\c++\Rein-Bits\HEM
+Total : 126 files,  34933 codes, 6823 comments, 5685 blanks, all 47441 lines
+
+Languages
++--------------+------------+------------+------------+------------+------------+
+| language     | files      | code       | comment    | blank      | total      |
++--------------+------------+------------+------------+------------+------------+
+| C++          |         61 |     15,170 |      4,309 |      2,251 |     21,730 |
+| CSS          |          4 |      6,847 |        171 |      1,121 |      8,139 |
+| JavaScript   |          3 |      6,623 |      1,543 |      1,517 |      9,683 |
+| Python       |         47 |      3,523 |        651 |        397 |      4,571 |
+| HTML         |          2 |      1,357 |         16 |         46 |      1,419 |
+| Jupyter      |          4 |        662 |          0 |          4 |        666 |
+| Makefile     |          1 |        604 |        130 |        315 |      1,049 |
+| Markdown     |          1 |        107 |          0 |         24 |        131 |
+| Shell Script |          2 |         37 |          3 |          9 |         49 |
+| Log          |          1 |          3 |          0 |          1 |          4 |
++--------------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                   |        126 |     34,933 |      6,823 |      5,685 |     47,441 |
+| HEM_camera_ready_version                                                                            |          8 |     14,356 |      1,730 |      2,682 |     18,768 |
+| HEM_camera_ready_version\DASFAA-2022_files                                                          |          7 |     13,470 |      1,714 |      2,638 |     17,822 |
+| Testing                                                                                             |          1 |          3 |          0 |          1 |          4 |
+| Testing\Temporary                                                                                   |          1 |          3 |          0 |          1 |          4 |
+| pictures                                                                                            |         49 |      4,018 |        517 |        368 |      4,903 |
+| pictures\HEM_DASFAA                                                                                 |         30 |      1,267 |        308 |        220 |      1,795 |
+| pictures\HEM_DASFAA\programs                                                                        |         30 |      1,267 |        308 |        220 |      1,795 |
+| pictures\HEM_DASFAA\programs\.ipynb_checkpoints                                                     |          1 |         80 |          0 |          1 |         81 |
+| pictures\HEM_expand                                                                                 |         19 |      2,751 |        209 |        148 |      3,108 |
+| pictures\HEM_expand\.ipynb_checkpoints                                                              |          1 |        260 |          0 |          1 |        261 |
++-----------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------------------------------------+--------------+------------+------------+------------+------------+
+| filename                                                                                            | language     | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------+--------------+------------+------------+------------+------------+
+| d:\codes\c++\Rein-Bits\HEM\AWBTree.cpp                                                              | C++          |        392 |         47 |         36 |        475 |
+| d:\codes\c++\Rein-Bits\HEM\AWBTree.h                                                                | C++          |         53 |         13 |         12 |         78 |
+| d:\codes\c++\Rein-Bits\HEM\AdaRein.cpp                                                              | C++          |        624 |         41 |         73 |        738 |
+| d:\codes\c++\Rein-Bits\HEM\AdaRein.h                                                                | C++          |         36 |          7 |         11 |         54 |
+| d:\codes\c++\Rein-Bits\HEM\BGTree.cpp                                                               | C++          |        850 |          4 |         37 |        891 |
+| d:\codes\c++\Rein-Bits\HEM\BGTree.h                                                                 | C++          |        118 |          7 |         34 |        159 |
+| d:\codes\c++\Rein-Bits\HEM\BGTree_d.cpp                                                             | C++          |        842 |         15 |         33 |        890 |
+| d:\codes\c++\Rein-Bits\HEM\BGTree_d.h                                                               | C++          |        118 |          7 |         29 |        154 |
+| d:\codes\c++\Rein-Bits\HEM\BGTree_d_vrs.cpp                                                         | C++          |        351 |        687 |         18 |      1,056 |
+| d:\codes\c++\Rein-Bits\HEM\BGTree_d_vrs.h                                                           | C++          |        123 |         12 |         30 |        165 |
+| d:\codes\c++\Rein-Bits\HEM\BloomFilter.h                                                            | C++          |         26 |          9 |          6 |         41 |
+| d:\codes\c++\Rein-Bits\HEM\HEM.cpp                                                                  | C++          |        157 |        237 |         33 |        427 |
+| d:\codes\c++\Rein-Bits\HEM\HEM.h                                                                    | C++          |         36 |          7 |          7 |         50 |
+| d:\codes\c++\Rein-Bits\HEM\HEM1.cpp                                                                 | C++          |        261 |        137 |         44 |        442 |
+| d:\codes\c++\Rein-Bits\HEM\HEM1.h                                                                   | C++          |         37 |          7 |          7 |         51 |
+| d:\codes\c++\Rein-Bits\HEM\HEM2.cpp                                                                 | C++          |        310 |        260 |         44 |        614 |
+| d:\codes\c++\Rein-Bits\HEM\HEM2.h                                                                   | C++          |         38 |          6 |          7 |         51 |
+| d:\codes\c++\Rein-Bits\HEM\HEM3.cpp                                                                 | C++          |        242 |        114 |         38 |        394 |
+| d:\codes\c++\Rein-Bits\HEM\HEM3.h                                                                   | C++          |         37 |          6 |          7 |         50 |
+| d:\codes\c++\Rein-Bits\HEM\HEM4.cpp                                                                 | C++          |        367 |        151 |         46 |        564 |
+| d:\codes\c++\Rein-Bits\HEM\HEM4.h                                                                   | C++          |         38 |          6 |          8 |         52 |
+| d:\codes\c++\Rein-Bits\HEM\HEM5.cpp                                                                 | C++          |        438 |        230 |         65 |        733 |
+| d:\codes\c++\Rein-Bits\HEM\HEM5.h                                                                   | C++          |         41 |          6 |          8 |         55 |
+| d:\codes\c++\Rein-Bits\HEM\HEM5_AS.cpp                                                              | C++          |        633 |        163 |         67 |        863 |
+| d:\codes\c++\Rein-Bits\HEM\HEM5_AS.h                                                                | C++          |         39 |          3 |         11 |         53 |
+| d:\codes\c++\Rein-Bits\HEM\HEM5_avxOR.cpp                                                           | C++          |        462 |        156 |         60 |        678 |
+| d:\codes\c++\Rein-Bits\HEM\HEM5_avxOR.h                                                             | C++          |         41 |          6 |          8 |         55 |
+| d:\codes\c++\Rein-Bits\HEM\HEMSC.cpp                                                                | C++          |        396 |        179 |         50 |        625 |
+| d:\codes\c++\Rein-Bits\HEM\HEMSC.h                                                                  | C++          |         38 |          8 |          8 |         54 |
+| d:\codes\c++\Rein-Bits\HEM\HEMSR.cpp                                                                | C++          |        227 |         44 |         31 |        302 |
+| d:\codes\c++\Rein-Bits\HEM\HEMSR.h                                                                  | C++          |         40 |          9 |          7 |         56 |
+| d:\codes\c++\Rein-Bits\HEM\HEM_camera_ready_version\DASFAA-2022.html                                | HTML         |        886 |         16 |         44 |        946 |
+| d:\codes\c++\Rein-Bits\HEM\HEM_camera_ready_version\DASFAA-2022_files\bootstrap.js                  | JavaScript   |          2 |          5 |          1 |          8 |
+| d:\codes\c++\Rein-Bits\HEM\HEM_camera_ready_version\DASFAA-2022_files\font-awesome.min.css          | CSS          |          1 |          3 |          1 |          5 |
+| d:\codes\c++\Rein-Bits\HEM\HEM_camera_ready_version\DASFAA-2022_files\jquery.js                     | JavaScript   |      6,578 |      1,504 |      1,516 |      9,598 |
+| d:\codes\c++\Rein-Bits\HEM\HEM_camera_ready_version\DASFAA-2022_files\main.css                      | CSS          |      6,383 |         24 |      1,073 |      7,480 |
+| d:\codes\c++\Rein-Bits\HEM\HEM_camera_ready_version\DASFAA-2022_files\smallscreen.css               | CSS          |        228 |         67 |         22 |        317 |
+| d:\codes\c++\Rein-Bits\HEM\HEM_camera_ready_version\DASFAA-2022_files\tcc_l.combined.1.0.6.min.js   | JavaScript   |         43 |         34 |          0 |         77 |
+| d:\codes\c++\Rein-Bits\HEM\HEM_camera_ready_version\DASFAA-2022_files\widescreen.css                | CSS          |        235 |         77 |         25 |        337 |
+| d:\codes\c++\Rein-Bits\HEM\Makefile                                                                 | Makefile     |        604 |        130 |        315 |      1,049 |
+| d:\codes\c++\Rein-Bits\HEM\OpIndex.cpp                                                              | C++          |        527 |          7 |         50 |        584 |
+| d:\codes\c++\Rein-Bits\HEM\OpIndex.h                                                                | C++          |         79 |          7 |         33 |        119 |
+| d:\codes\c++\Rein-Bits\HEM\PSTree.cpp                                                               | C++          |        260 |         90 |         30 |        380 |
+| d:\codes\c++\Rein-Bits\HEM\PSTree.h                                                                 | C++          |         51 |          5 |          7 |         63 |
+| d:\codes\c++\Rein-Bits\HEM\README.md                                                                | Markdown     |        107 |          0 |         24 |        131 |
+| d:\codes\c++\Rein-Bits\HEM\Rein.cpp                                                                 | C++          |        723 |        150 |         70 |        943 |
+| d:\codes\c++\Rein-Bits\HEM\Rein.h                                                                   | C++          |         50 |         46 |         15 |        111 |
+| d:\codes\c++\Rein-Bits\HEM\Simple.cpp                                                               | C++          |         50 |          1 |          9 |         60 |
+| d:\codes\c++\Rein-Bits\HEM\Simple.h                                                                 | C++          |         22 |          8 |          5 |         35 |
+| d:\codes\c++\Rein-Bits\HEM\Simple2.cpp                                                              | C++          |         51 |          1 |         10 |         62 |
+| d:\codes\c++\Rein-Bits\HEM\Simple2.h                                                                | C++          |         23 |          7 |          5 |         35 |
+| d:\codes\c++\Rein-Bits\HEM\Tama.cpp                                                                 | C++          |        136 |          5 |         10 |        151 |
+| d:\codes\c++\Rein-Bits\HEM\Tama.h                                                                   | C++          |         34 |          8 |         18 |         60 |
+| d:\codes\c++\Rein-Bits\HEM\Testing\Temporary\LastTest.log                                           | Log          |          3 |          0 |          1 |          4 |
+| d:\codes\c++\Rein-Bits\HEM\bTama.cpp                                                                | C++          |        189 |         24 |         12 |        225 |
+| d:\codes\c++\Rein-Bits\HEM\bTama.h                                                                  | C++          |         41 |         12 |         21 |         74 |
+| d:\codes\c++\Rein-Bits\HEM\chrono_time.h                                                            | C++          |         39 |          0 |         10 |         49 |
+| d:\codes\c++\Rein-Bits\HEM\compile.sh                                                               | Shell Script |         18 |          0 |          6 |         24 |
+| d:\codes\c++\Rein-Bits\HEM\constant.cpp                                                             | C++          |         42 |         11 |         10 |         63 |
+| d:\codes\c++\Rein-Bits\HEM\constant.h                                                               | C++          |         76 |         15 |         16 |        107 |
+| d:\codes\c++\Rein-Bits\HEM\data_structure.h                                                         | C++          |         91 |          7 |         20 |        118 |
+| d:\codes\c++\Rein-Bits\HEM\draw.py                                                                  | Python       |        138 |         15 |         12 |        165 |
+| d:\codes\c++\Rein-Bits\HEM\generator.cpp                                                            | C++          |        613 |         37 |         69 |        719 |
+| d:\codes\c++\Rein-Bits\HEM\generator.h                                                              | C++          |         82 |          2 |         41 |        125 |
+| d:\codes\c++\Rein-Bits\HEM\main.cpp                                                                 | C++          |         50 |         44 |         10 |        104 |
+| d:\codes\c++\Rein-Bits\HEM\match_time.html                                                          | HTML         |        471 |          0 |          2 |        473 |
+| d:\codes\c++\Rein-Bits\HEM\pRein.cpp                                                                | C++          |        132 |         98 |         20 |        250 |
+| d:\codes\c++\Rein-Bits\HEM\pRein.h                                                                  | C++          |         41 |         13 |          9 |         63 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\.ipynb_checkpoints\exp1-checkpoint.ipynb    | Jupyter      |         80 |          0 |          1 |         81 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\HEM_exp1_matchingTime.py                    | Python       |         57 |         12 |          7 |         76 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\exp1.ipynb                                  | Jupyter      |         80 |          0 |          1 |         81 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\exp10_construction.py                       | Python       |         42 |          5 |          7 |         54 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\exp10_deletion.py                           | Python       |         48 |         15 |         10 |         73 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\exp11_memory.py                             | Python       |         36 |          4 |          5 |         45 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\exp1_BIOP5DDTimeDistributionByBe.py         | Python       |         36 |         13 |         12 |         61 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\exp1_markingTime.py                         | Python       |         32 |         56 |          8 |         96 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\exp1_matchingTime.py                        | Python       |         49 |         26 |         16 |         91 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\exp2_markingTime.py                         | Python       |         36 |          6 |         10 |         52 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\exp3_n.py                                   | Python       |         35 |          3 |          6 |         44 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\exp4_Ss.py                                  | Python       |         41 |          9 |          9 |         59 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\exp5_Se.py                                  | Python       |         34 |          5 |          6 |         45 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\exp6_w.py                                   | Python       |         34 |          5 |          9 |         48 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\exp7_d.py                                   | Python       |         37 |          4 |          6 |         47 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\exp8_attrZipf.py                            | Python       |         34 |          4 |          6 |         44 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\exp9_Comprehensive.py                       | Python       |         42 |         38 |         13 |         93 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\exp_BIOPSR_bitOrTime.py                     | Python       |         43 |          5 |         10 |         58 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\hem_exp10_deletion.py                       | Python       |         50 |         16 |         13 |         79 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\hem_exp10_insertingTime.py                  | Python       |         44 |          6 |          6 |         56 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\hem_exp11_memory.py                         | Python       |         37 |          5 |          4 |         46 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\hem_exp1_BIOP0PSTimeDistributionByBe.py     | Python       |         40 |         12 |         11 |         63 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\hem_exp1_markingTime.py                     | Python       |         22 |         16 |          3 |         41 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\hem_exp3_n.py                               | Python       |         36 |          5 |          5 |         46 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\hem_exp4_Ss.py                              | Python       |         44 |          4 |          9 |         57 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\hem_exp5_Se.py                              | Python       |         42 |          6 |          4 |         52 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\hem_exp6_w.py                               | Python       |         42 |          6 |          7 |         55 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\hem_exp7_d.py                               | Python       |         44 |          5 |          3 |         52 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\hem_exp8_alpha.py                           | Python       |         42 |          5 |          3 |         50 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_DASFAA\programs\rein_hem5_numMark.py                        | Python       |         28 |         12 |         10 |         50 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_expand\.ipynb_checkpoints\VisualizeDataset-checkpoint.ipynb | Jupyter      |        260 |          0 |          1 |        261 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_expand\VisualizeDataset.ipynb                               | Jupyter      |        242 |          0 |          1 |        243 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_expand\exp10_d_RAS.py                                       | Python       |         44 |          6 |          8 |         58 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_expand\exp11_alpha.py                                       | Python       |         50 |          4 |          7 |         61 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_expand\exp12_valDom.py                                      | Python       |         51 |          6 |          8 |         65 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_expand\exp13_Comprehensive.py                               | Python       |      1,487 |         36 |         12 |      1,535 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_expand\exp14_constructingTime.py                            | Python       |         45 |          6 |          9 |         60 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_expand\exp14_deletingTime.py                                | Python       |         47 |         15 |          9 |         71 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_expand\exp15_memory.py                                      | Python       |         37 |          6 |          7 |         50 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_expand\exp1_HEM5TimeDistribution_be.py                      | Python       |         56 |         13 |         11 |         80 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_expand\exp1_markingTime_be.py                               | Python       |         52 |         49 |          9 |        110 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_expand\exp1_matchingTime_memory_be.py                       | Python       |         61 |         12 |          8 |         81 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_expand\exp2_matchingTime_nullAttr.py                        | Python       |         47 |          4 |         10 |         61 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_expand\exp3_4_matchingTime_VRAS.py                          | Python       |         39 |         25 |          9 |         73 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_expand\exp5_n.py                                            | Python       |         37 |          5 |          7 |         49 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_expand\exp6_Ss.py                                           | Python       |         42 |          4 |          9 |         55 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_expand\exp7_Se.py                                           | Python       |         41 |          6 |          8 |         55 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_expand\exp8_w.py                                            | Python       |         68 |          7 |          7 |         82 |
+| d:\codes\c++\Rein-Bits\HEM\pictures\HEM_expand\exp9_d_VAS.py                                        | Python       |         45 |          5 |          8 |         58 |
+| d:\codes\c++\Rein-Bits\HEM\printer.cpp                                                              | C++          |         77 |         49 |         23 |        149 |
+| d:\codes\c++\Rein-Bits\HEM\printer.h                                                                | C++          |         21 |          3 |         14 |         38 |
+| d:\codes\c++\Rein-Bits\HEM\python_run.py                                                            | Python       |         29 |        119 |         21 |        169 |
+| d:\codes\c++\Rein-Bits\HEM\run.sh                                                                   | Shell Script |         19 |          3 |          3 |         25 |
+| d:\codes\c++\Rein-Bits\HEM\run_models.cpp                                                           | C++          |      2,679 |        466 |        473 |      3,618 |
+| d:\codes\c++\Rein-Bits\HEM\run_models.h                                                             | C++          |         68 |          6 |         17 |         91 |
+| d:\codes\c++\Rein-Bits\HEM\test.cpp                                                                 | C++          |         24 |        319 |         28 |        371 |
+| d:\codes\c++\Rein-Bits\HEM\util.cpp                                                                 | C++          |        396 |         74 |         70 |        540 |
+| d:\codes\c++\Rein-Bits\HEM\util.h                                                                   | C++          |      1,092 |        210 |        251 |      1,553 |
+| Total                                                                                               |              |     34,933 |      6,823 |      5,685 |     47,441 |
++-----------------------------------------------------------------------------------------------------+--------------+------------+------------+------------+------------+

@@ -49,18 +49,22 @@ enum {
 //const int MAX_ATTS = 20; // Tama
 //const int MAX_BUCKS = 1000;
 extern const double falsePositiveRate;
-extern const int adarein_level;
+extern const int adarein_level = 2;
+// extern const double divider;
 enum {
 	AdaRein_ORI,
-	AdaRein_SSS, // Static Succession Selection
-	AdaRein_SDS, // Static Discretization Selection
-	AdaRein_DSS, // Dynamic Succession Selection
-	AdaRein_DDS, // Dynamic Discretization Selection
-	AdaRein_IBU, // Independent Bucket Unit (Static)
-	AdaRein_PPH,  // PeePHole
-	AdaRein_SSS_B,// Static Succession Selection Backward
-	AdaRein_SSS_C, // Static Succession Selection Crossed
-	AdaRein_SSS_L
+
+	AdaRein_SSS,       // Static Succession Selection
+	AdaRein_SSS_B,     // Static Succession Selection Backward
+	AdaRein_SSS_C,     // Static Succession Selection Crossed
+	AdaRein_SSS_C_PPH, // PeePHole
+	AdaRein_SSS_C_W,   // Static Succession Selection Crossed WidthClassification
+
+	AdaRein_SDS,       // Static Discretization Selection
+	AdaRein_DSS,       // Dynamic Succession Selection
+	AdaRein_DDS,       // Dynamic Discretization Selection
+				       
+	AdaRein_IBU        // Independent Bucket Unit (Static)
 };
 
 // pRein

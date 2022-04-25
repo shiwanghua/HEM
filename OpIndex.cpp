@@ -574,7 +574,8 @@ int bOpIndex2::calMemory()
 		size += sizeof(data[i]);
 		_for(j, 0, atts)
 		{
-			size += sizeof(data[i][j]);
+
+ 			size += sizeof(data[i][j]);
 			size += data[i][j].size() * sizeof(IntervalCombo); // sig สýื้
 		}
 	}

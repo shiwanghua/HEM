@@ -1,5 +1,5 @@
 #include "constant.h"
-string expID = "1173";       // Record the experiment ID number
+string expID = "1182";       // Record the experiment ID number
 const bool display = false;  // whether to print the mapping relation, 有待逐步改成DEBUG宏定义判断
 const bool verifyID = false; // whether to verify Insertion and Deletion function
 const int interval = 500;    // after a interval of events is matched, print a log
@@ -39,9 +39,10 @@ const __m256i mask = _mm256_set1_epi32(0x80000000);
 // Tama
 const int level = 13;
 
-//AdaRein
+// AdaRein
 const double falsePositiveRate = 0.05;
 const int adarein_level = 2;
+//const double divider=0.2;
 
 // pRein
 int parallelDegree = 4;

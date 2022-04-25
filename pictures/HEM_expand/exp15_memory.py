@@ -33,12 +33,12 @@ ax.plot(x, TAMA, marker='*', color='DarkCyan', label=Name[3])
 ax.plot(x, AdaREIN, marker='x', color='DarkMagenta', label=Name[4])
 ax.plot(x, OpIndex, marker='h', color='DimGray', label=Name[5])  #   slategray
 
-ax.legend(fontsize=14, ncol=1)  #fontsize=10 loc=(1.36/5,0.05/5),
+ax.legend(fontsize=15, ncol=1)  #fontsize=10 loc=(1.36/5,0.05/5),
 ax.grid()
 ax.set_xlim(0, 5)
 ax.set_xticks([0, 1, 2, 3, 4, 5])
 ax.set_xticklabels(x)
-ax.set_yscale("log")
+# ax.set_yscale("log")
 # ax.yaxis.set_ticks([0,100,1000,2000])
 # ax.set_yticks([0,100,1000,2000])
 # ax.set_yticklabels(['0','100','1000','2000'])
