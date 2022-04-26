@@ -19,6 +19,7 @@
 //#include <boost/thread.hpp>
 //#include <boost/function.hpp>
 //#include <boost/noncopyable.hpp>
+#include <boost/asio.hpp>
 //using namespace boost;
 //using namespace boost::placeholders;
 
@@ -40,26 +41,30 @@
 //#endif
 //}
 
-class cls {
-public:
-	float f=19.9;
-};
-
-cls test() {
-	cls c;
-	c.f = 33.222;
-	return c;
+int gl = 0;
+void my_task()
+{
+	printf("%d\n", gl);
+	Sleep(1000);
+	gl += 1;
+	printf("%d\n", gl);
 }
 
-int massin() {
-	cls qq;
-	vector<cls> a;
-	a.emplace_back(qq);
-	a.emplace_back(test());
-	for (auto&& q : a) {
-		printf("%f ", q.f);
-	}
+int main() {
+	// Launch the pool with four threads.
+	boost::asio::thread_pool pool(2);
+	printf("%d\n", gl);
+	// Submit a function to the pool.
+	boost::asio::post(pool, my_task);
+	pool.wait();
+	printf("%d\n", gl);
+	system("pause");
+	return 0;
+}
 
+
+
+// 测试或运算
 //	const int it = 18;
 //	double percent[it] = {0.00005, 0.0001, 0.0005, 0.001, 0.0025, 0.005, 0.0075, 0.01, 0.0125, 0.015, 0.0175, 0.02,
 //						  0.0225, 0.025, 0.0275, 0.03, 0.0325, 0.8};
@@ -99,9 +104,26 @@ int massin() {
 //		cout << "p" << percent[i] << " ones: " << ones << " mark: " << t1 << "ns/" << ut1 << " or: " << t2 <<"ns/"<<ut2<< "\n\n";
 //	}
 
-	system("pause");
-	return 0;
-}
+//class cls {
+//public:
+//	float f = 19.9;
+//};
+//
+//cls test() {
+//	cls c;
+//	c.f = 33.222;
+//	return c;
+//}
+//
+//int main() {
+//	cls qq;
+//	vector<cls> a;
+//	a.emplace_back(qq);
+//	a.emplace_back(test());
+//	for (auto&& q : a) {
+//		printf("%f ", q.f);
+//	}
+// }
 //typedef boost::function<void(void)> MyTask;
 //
 ////任务队列--noncopyable

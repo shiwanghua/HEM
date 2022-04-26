@@ -49,7 +49,7 @@ enum {
 //const int MAX_ATTS = 20; // Tama
 //const int MAX_BUCKS = 1000;
 extern const double falsePositiveRate;
-extern const int adarein_level = 2;
+extern const int adarein_level;
 // extern const double divider;
 enum {
 	AdaRein_ORI,

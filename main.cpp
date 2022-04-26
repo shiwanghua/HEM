@@ -1,6 +1,6 @@
 #include "run_models.h"
 
-int main(int argc, char **argv)
+int main22(int argc, char **argv)
 {
 	//freopen("paras.txt", "r", stdin);
 	//cin >> subs >> pubs >> atts >> cons>> buks >> m >> attDis >> valDis >> valDom >> alpha >> width;
@@ -24,17 +24,17 @@ int main(int argc, char **argv)
 	}
 
 	// bind to cpu core
-	int core_id = 8;
+	/*int core_id = 8;
 	cpu_set_t mask;
 	CPU_ZERO(&mask);
 	CPU_SET(core_id, &mask);
-	sched_setaffinity(0, sizeof(mask), &mask);
+	sched_setaffinity(0, sizeof(mask), &mask);*/
 
 	intervalGenerator gen(subs, pubs, atts, attrGroup, cons, m, attNumType, attDis, valDis, valDom, alpha, subp, width);
-//	gen.GenSubList();
-//	gen.GenPubList();
-	gen.GenSubList_g();
-	gen.GenPubList_g();
+	gen.GenSubList();
+	gen.GenPubList();
+	//gen.GenSubList_g();
+	//gen.GenPubList_g();
 
 	unordered_map<int, bool> deleteNo;
 	if (verifyID)
