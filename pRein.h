@@ -16,7 +16,8 @@
 //#include <boost/thread/thread.hpp>
 //#include <boost/bind.hpp>
 #include <boost/asio.hpp>
-
+#include "ThreadPool.h"
+#include "thpool.h"
 #define _for(i,a,b) for( int i=(a); i<(b); ++i)
 #define __for(i,a,b) for( int i=(a); i<=(b); ++i)
 #define mfor(i,a,b) for(int i=(a);i>(b);--i)
@@ -31,16 +32,19 @@ struct parallelData{
 	int end;
 	int buckStep;
 };
-
-void pReinThreadFunction(bool bits[],bool attExist[],vector<vector<vector<Combo>>> data[],const Pub& pub,int begin,int end,int buckStep);
+void pReinThreadFunction1(void *pd1);
 
 // Parallel Rein in openmp
 class pRein {
 	int numSub, numDimension, buckStep,pD;    // parallelDegree
+	vector<bool> bits;
+	vector<bool> attExist;
 	vector<vector<vector<Combo>>> data[2];    // 0:left parenthesis, 1:right parenthesis
 //	boost::thread_group vecThreads;
-//	boost::asio::thread_pool threadPool;
+//	boost::asio::thread_pool threadPool(parallelData);
 //	ThreadPool_asio threadPoolAsio;
+//	ThreadPool threadPool;
+	threadpool thpool;
 public:
 	int numBucket;
 	double compareTime = 0.0; // 所有维度上事件值落入的那个cell里逐个精确比较的时间
@@ -57,6 +61,11 @@ public:
 	bool deleteSubscription(IntervalSub sub);
 	void calBucketSize(); // 计算bucketSize
 	int calMemory();     // 计算占用内存大小, 返回MB
+
+
+	//	bool bits[],bool attExist[],vector<vector<vector<Combo>>> data[], ,int buckStep
+	void pReinThreadFunction2(const Pub& pub,int begin,int end);
+
 };
 
 #endif //MAC_PREIN_H

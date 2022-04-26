@@ -41,7 +41,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++2a -march=native -O3 -mavx2 -st
 # add_executable(main ${SOURCE_FILES})
 
 aux_source_directory(. SRC_LIST)
-add_executable(run ${SRC_LIST} BGTree_d_vrs.cpp BGTree_d_vrs.h) # pRein.cpp pRein.h
+add_executable(run ${SRC_LIST} BGTree_d_vrs.cpp BGTree_d_vrs.h ThreadPool.h thpool.cpp thpool.h) # pRein.cpp pRein.h
 # target_link_libraries(hello ${MPI_LIBRARIES})
 
 

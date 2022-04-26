@@ -132,10 +132,10 @@
 		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/HEM5.h">
 			<Option target="run"/>
 		</Unit>
-		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/HEM5_AG.cpp">
+		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/HEM5_AS.cpp">
 			<Option target="run"/>
 		</Unit>
-		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/HEM5_AG.h">
+		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/HEM5_AS.h">
 			<Option target="run"/>
 		</Unit>
 		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/HEM5_avxOR.cpp">
@@ -192,6 +192,9 @@
 		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/Tama.h">
 			<Option target="run"/>
 		</Unit>
+		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/ThreadPool.h">
+			<Option target="run"/>
+		</Unit>
 		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/bTama.cpp">
 			<Option target="run"/>
 		</Unit>
@@ -232,6 +235,12 @@
 			<Option target="run"/>
 		</Unit>
 		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/test.cpp">
+			<Option target="run"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/thpool.cpp">
+			<Option target="run"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/thpool.h">
 			<Option target="run"/>
 		</Unit>
 		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/util.cpp">

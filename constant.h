@@ -68,7 +68,7 @@ enum {
 };
 
 // pRein
-extern int parallelDegree;
+extern const int parallelDegree;
 
 // HEM bRein
 extern int be;             // 每个维度上 2 * 2^bits个bits数组

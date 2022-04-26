@@ -1,5 +1,5 @@
 #include "constant.h"
-string expID = "1182";       // Record the experiment ID number
+string expID = "1183";       // Record the experiment ID number
 const bool display = false;  // whether to print the mapping relation, 有待逐步改成DEBUG宏定义判断
 const bool verifyID = false; // whether to verify Insertion and Deletion function
 const int interval = 500;    // after a interval of events is matched, print a log
@@ -7,16 +7,16 @@ const double subp = 0;       // subp比例的订阅的谓词定义在前cons个�
 double realMatchNum=-1;      // The correct matching number in an experiment (Recorded in Rein).
 //const int subs = 1000000;  // Number of subscriptions.
 const int pubs = 1000;       // Number of publications.
-int atts = 10000;             // Total number of attributes, i.e. dimensions.
-int attrGroup = 100;           // The number of attribute group in #atts attributes.
-int cons = 5;               // Number of constraints(predicates) in one sub.
-int m = 20;                 // Number of attributes in one pub.
+int atts = 100;             // Total number of attributes, i.e. dimensions.
+int attrGroup = 1;           // The number of attribute group in #atts attributes.
+int cons = 10;               // Number of constraints(predicates) in one sub.
+int m = 100;                 // Number of attributes in one pub.
 const int attNumType = 0;    // 0: Fixed size of sub and pub. 1: Random size of sub and pub, <= $cons and $m.
 const int attDis = 0;        // The distribution of attributes in subs and pubs. 0:uniform distribution | 1:Zipf distribution | 2: sub Zipf, pub 满维
 const int valDis = 0;        // The distribution of values in subs and pubs. 0:uniform + fixed width | 1: random width >= $width + Uniform | 2: Zipf + fixed width | 3: Normal + fixed width | 4: Normal + two ends
 int valDom = 1000000;        // Cardinality of values.
 double alpha = 0;            // Parameter for Zipf distribution.
-double width = 0.8;          // Width of a predicate.
+double width = 0.4;          // Width of a predicate.
 double mean = 0.5;           // Mean of Normal Distribution. For events it's ( 1 - mean ).
 double stddev = 1;           // Standard deviation: The square root of variance, representing the dispersion of values from the distribution mean. >0
 
@@ -45,7 +45,7 @@ const int adarein_level = 2;
 //const double divider=0.2;
 
 // pRein
-int parallelDegree = 4;
+const int parallelDegree = 4;
 
 // BG-Tree
 const int initH = 10;           // Initial height

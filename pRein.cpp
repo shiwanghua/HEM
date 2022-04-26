@@ -4,19 +4,21 @@
 
 #include "pRein.h"
 
-pRein::pRein(): numSub(0), numDimension(atts), pD(parallelDegree) {
+pRein::pRein() : numSub(0), numDimension(atts), pD(parallelDegree) {
 	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
 	cout << "ExpID = " << expID << ". pRein: bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
 	bucketSub.resize(numBucket);
 	data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
 	data[1].resize(numDimension, vector<vector<Combo>>(numBucket));
+	boost::asio::thread_pool pool(parallelDegree);
 //	_for(i,0,parallelDegree){
 //		boost::thread t;
 //		vecThreads.add_thread(&t);
 //	}
 //	threadPoolAsio.initThreads(parallelDegree);
-
+//	threadPool.initThreadPool(parallelDegree);
+	thpool = thpool_init(parallelDegree);
 }
 
 void pRein::insert(IntervalSub sub) {
@@ -171,22 +173,53 @@ void pRein::parallelMatch(const Pub &pub, int &matchSubs) {
 	bool *attExist = new bool[numDimension];
 	memset(attExist, 0, sizeof(bool) * numDimension);
 	int seg = (pub.size + pD - 1) / pD;
-	for (int i = 0; i < pD; i++) {
-//		parallelData pdata;
-//		pdata.bits = bits;
-//		pdata.attExist = attExist;
-//		pdata.data = data;
-//		pdata.pub = &pub;
-//		pdata.buckStep = buckStep;
-//		pdata.begin = seg * i;
-//		pdata.end = min(pub.size, seg * (i + 1));
+	for (int i = 0; i < pub.size; i+=seg) {
+		parallelData pdata;
+		pdata.bits = bits;
+		pdata.attExist = attExist;
+		pdata.data = data;
+		pdata.pub = &pub;
+		pdata.buckStep = buckStep;
+		pdata.begin = i;
+		pdata.end = min(pub.size, i+seg);
+		printf("pub%d, begin=%d, end=%d\n", pub.id, pdata.begin, pdata.end);
+		fflush(stdout);
+		thpool_add_work(thpool, pReinThreadFunction1, &pdata);
+
 //		threads[i] = thread(pReinThreadFunction, &pdata);
 //		threads[i] = thread(pReinThreadFunction, ref(bits),ref(attExist),ref(data),ref(pub),seg * i,min(pub.size, seg * (i + 1)),buckStep);
 //		threads[i] = thread(pReinThreadFunction, bits, attExist, data, pub, seg * i, min(pub.size, seg * (i + 1)),
 //							buckStep);
-		cout<<"i= "<<i<<"\n";
-	}
+//		boost::asio::post(threadPool, [&](){cout<<i;});
 
+//		threadPool.enqueue(pReinThreadFunction2,pub,i,min(i+seg, pub.size)); // does not capture 'this'
+
+//		threadPool.enqueue([this,&bits,&pub,&data,=begin,=end]{
+//			printf("pub%d, begin=%d, end=%d", pub.id, begin, end);
+//			for (int i = begin; i < end; i++) {
+//				int value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
+//				attExist[att] = true;
+//
+//				for (int k = 0; k < data[0][att][buck].size(); k++)
+//					if (data[0][att][buck][k].val > value)
+//						bits[data[0][att][buck][k].subID] = true;
+//				for (int k = 0; k < data[1][att][buck].size(); k++)
+//					if (data[1][att][buck][k].val < value)
+//						bits[data[1][att][buck][k].subID] = true;
+//
+//				for (int j = buck + 1; j < data[1][att].size(); j++)
+//					for (int k = 0; k < data[0][att][j].size(); k++)
+//						bits[data[0][att][j][k].subID] = true;
+//				for (int j = buck - 1; j >= 0; j--)
+//					for (int k = 0; k < data[1][att][j].size(); k++)
+//						bits[data[1][att][j][k].subID] = true;
+//			}
+//		})
+
+	}
+	printf("\n");
+	fflush(stdout);
+	thpool_wait(thpool);
 	for (int i = 0; i < numDimension; i++)
 		if (!attExist[i]) {
 //			cout << "Null attribute: " << i << endl;
@@ -199,36 +232,36 @@ void pRein::parallelMatch(const Pub &pub, int &matchSubs) {
 			++matchSubs;
 			//cout << "rein matches sub: " << i << endl;
 		}
-	delete bits,attExist;
+	delete bits, attExist;
 }
 
-//void pReinThreadFunction(void *pd1) {
-//	parallelData* pd = (parallelData*)pd1;
-////	printf("ThreadID: %d\n", this_thread::get_id());
-////	fflush(stdout);
-//	for (int i = pd->begin; i < pd->end; i++) {
-//		int value = pd->pub->pairs[i].value, att = pd->pub->pairs[i].att, buck = value / pd->buckStep;
-//		pd->attExist[att] = true;
-//
-//		for (int k = 0; k < pd->data[0][att][buck].size(); k++)
-//			if (pd->data[0][att][buck][k].val > value)
-//				pd->bits[pd->data[0][att][buck][k].subID] = true;
-//		for (int k = 0; k < pd->data[1][att][buck].size(); k++)
-//			if (pd->data[1][att][buck][k].val < value)
-//				pd->bits[pd->data[1][att][buck][k].subID] = true;
-//
-//		for (int j = buck + 1; j < pd->data[1][att].size(); j++)
-//			for (int k = 0; k < pd->data[0][att][j].size(); k++)
-//				pd->bits[pd->data[0][att][j][k].subID] = true;
-//		for (int j = buck - 1; j >= 0; j--)
-//			for (int k = 0; k < pd->data[1][att][j].size(); k++)
-//				pd->bits[pd->data[1][att][j][k].subID] = true;
-//	}
-//}
+void pReinThreadFunction1(void *pd1) {
+	parallelData *pd = (parallelData *) pd1;
+	printf("SubThread: pub%d, begin=%d, end=%d\n\n", pd->pub->id, pd->begin, pd->end); //this_thread::get_id()
+	fflush(stdout);
+	int value,att,buck;
+	for (int i = pd->begin; i < pd->end; i++) {
+		value = pd->pub->pairs[i].value, att = pd->pub->pairs[i].att, buck = value / pd->buckStep;
+		pd->attExist[att] = true;
 
-void pReinThreadFunction(bool bits[], bool attExist[], vector<vector<vector<Combo>>> data[], const Pub &pub, int begin,
-						 int end, int buckStep) {
-	printf("pub%d, begin=%d, end=%d", pub.id,begin,end);
+		for (int k = 0; k < pd->data[0][att][buck].size(); k++)
+			if (pd->data[0][att][buck][k].val > value)
+				pd->bits[pd->data[0][att][buck][k].subID] = true;
+		for (int k = 0; k < pd->data[1][att][buck].size(); k++)
+			if (pd->data[1][att][buck][k].val < value)
+				pd->bits[pd->data[1][att][buck][k].subID] = true;
+
+		for (int j = buck + 1; j < pd->data[1][att].size(); j++)
+			for (int k = 0; k < pd->data[0][att][j].size(); k++)
+				pd->bits[pd->data[0][att][j][k].subID] = true;
+		for (int j = buck - 1; j >= 0; j--)
+			for (int k = 0; k < pd->data[1][att][j].size(); k++)
+				pd->bits[pd->data[1][att][j][k].subID] = true;
+	}
+}
+
+void pRein::pReinThreadFunction2(const Pub &pub, int begin, int end) {
+	printf("pub%d, begin=%d, end=%d", pub.id, begin, end);
 	for (int i = begin; i < end; i++) {
 		int value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 		attExist[att] = true;

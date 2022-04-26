@@ -45,12 +45,12 @@ int gl = 0;
 void my_task()
 {
 	printf("%d\n", gl);
-	Sleep(1000);
+	sleep(1000);
 	gl += 1;
 	printf("%d\n", gl);
 }
 
-int main() {
+int mainss() {
 	// Launch the pool with four threads.
 	boost::asio::thread_pool pool(2);
 	printf("%d\n", gl);
