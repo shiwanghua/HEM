@@ -51,12 +51,12 @@ int main(int argc, char **argv) {
 	////	run_rein_forward_CBOMP(gen, deleteNo);
 	////	run_rein_hybrid(gen, deleteNo);
 	////	run_rein_hybrid_CBOMP(gen, deleteNo);
-	run_pRein(gen, deleteNo);
+	//run_pRein(gen, deleteNo);
 //	run_AdaRein_ORI(gen, deleteNo);
 	//	run_AdaRein_SSS(gen, deleteNo);
 	//	run_AdaRein_SSS_B(gen, deleteNo);
 	//	run_AdaRein_SSS_C(gen, deleteNo);
-	////
+	run_AdaRein_SSS_C_W(gen, deleteNo);
 	//run_HEM(gen);
 	////	run_HEM1(gen);
 	////	run_HEM2(gen);

@@ -45,7 +45,7 @@ int gl = 0;
 void my_task()
 {
 	printf("%d\n", gl);
-	sleep(1000);
+	//sleep(1000);
 	gl += 1;
 	printf("%d\n", gl);
 }

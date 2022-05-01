@@ -653,6 +653,9 @@ void AdaRein::static_succession_selection_crossed(double falsePositive, const ve
 		while (beginBucket[0][i] < endBucket[0][i] && data[0][i][beginBucket[0][i]].size() == 0) endBucket[0][i]--;
 		while (beginBucket[1][i] > endBucket[1][i] && data[1][i][beginBucket[1][i]].size() == 0) beginBucket[1][i]--;
 		while (beginBucket[1][i] > endBucket[1][i] && data[1][i][endBucket[1][i]].size() == 0) endBucket[1][i]++;
+#ifdef DEBUG
+		numSkipBkt += beginBucket[0][i] + buks - 1 - endBucket[0][i] + endBucket[1][i] + buks - 1 - beginBucket[1][i];
+#endif
 	}
 
 	// <low0/high1, AttributeId, bucketId, sizeOfBucket>
@@ -727,6 +730,18 @@ void AdaRein::static_succession_selection_crossed(double falsePositive, const ve
 			end[1][get<1>(item)] = !end[1][get<1>(item)];
 		}
 	}
+
+	// 如果离散的端桶连起来构成了全过滤属性, 就标记到sekippedW上
+	_for(i, 0, atts) {
+		if (beginBucket[0][i] >= endBucket[0][i] && beginBucket[1][i] <= endBucket[1][i]) {
+			printf("Error: if %d is a full-skipped attribute, it would already be skipped before discretization selection.", i);
+			skipped[i] = true;
+#ifdef DEBUG
+			numSkipAttr++; // 这里加上的话, numSkipBkt就不准确了
+#endif // DEBUG
+		}
+	}
+
 #ifdef DEBUG
 	cout << "In theory, rightMatchNum= " << pow(width, avgSubSize) * subs << ", wrongMatchNum= "
 		<< pow(width, avgSubSize) * subs / (1 - falsePositive) * falsePositive << ", falsePositiveRate_local= "
@@ -757,15 +772,14 @@ void AdaRein::approx_match_sss_c(const Pub& pub, int& matchSubs, const vector<In
 		for (int k = 0; k < data[0][att][buck].size(); k++)
 			if (data[0][att][buck][k].val > value)
 				bits[data[0][att][buck][k].subID] = true;
-		for (int j = max(buck + 1, beginBucket[0][att]);
-			j < min(buks, endBucket[0][att] + 1); j++) // 和HEM系列的设计不同, 这里取闭括号
+		for (int j = max(buck + 1, beginBucket[0][att]); j <= endBucket[0][att]; j++)
 			for (auto&& k : data[0][att][j])
 				bits[k.subID] = true;
 
 		for (int k = 0; k < data[1][att][buck].size(); k++)
 			if (data[1][att][buck][k].val < value)
 				bits[data[1][att][buck][k].subID] = true;
-		for (int j = min(buck - 1, beginBucket[1][att]); j >= max(0, endBucket[1][att]); j--)
+		for (int j = min(buck - 1, beginBucket[1][att]); j >= endBucket[1][att]; j--)
 			for (auto&& k : data[1][att][j])
 				bits[k.subID] = true;
 	}
@@ -863,6 +877,9 @@ void AdaRein::static_succession_selection_crossed_width(double falsePositive, co
 				beBW.first.second--;
 			while (beBW.second.first > beBW.second.second && dataw[1][beBW.second.first].size() == 0) beBW.second.first--;
 			while (beBW.second.first > beBW.second.second && dataw[1][beBW.second.second].size() == 0) beBW.second.second++;
+#ifdef DEBUG
+			numSkipBkt += beBW.first.first + levelBuks - 1 - beBW.first.second + beBW.second.second + levelBuks - 1 - beBW.second.first;
+#endif
 		}
 
 		// 统计这层上的各属性上的谓词数量
@@ -978,6 +995,19 @@ void AdaRein::static_succession_selection_crossed_width(double falsePositive, co
 		skipWidthIndex--;
 	} // 宽度层
 
+	// 如果离散的端桶连起来构成了全过滤属性, 就标记到sekippedW上
+	_for(i, 0, atts) {
+		_for(j, 0, adarein_level) {
+			if (beBucketW[i][j].first.first >= beBucketW[i][j].first.second && beBucketW[i][j].second.first <= beBucketW[i][j].second.second) {
+				printf("Error: if %d is a full-skipped attribute on width level %d, it would already be skipped before discretization selection.", i, j);
+				skippedW[i][j] = true;
+#ifdef DEBUG
+				numSkipAttr++; // 这里加上的话, numSkipBkt就不准确了
+#endif // DEBUG
+			}
+		}
+	}
+
 #ifdef DEBUG
 	cout << "In theory, rightMatchNum= " << pow(width, avgSubSize) * subs << ", wrongMatchNum= "
 		<< pow(width, avgSubSize) * subs / (1 - falsePositive) * falsePositive << ", falsePositiveRate_local= "
@@ -1009,32 +1039,38 @@ void AdaRein::approx_match_sss_c_w(const Pub& pub, int& matchSubs, const vector<
 		int value = iPair.value, buck = value / levelBuckStep;
 		attExist[att] = true;
 
-		_for(i, 0, adarein_level) {
-			if (skippedW[att][i])
+		_for(wi, 0, adarein_level) {
+			if (skippedW[att][wi])
 				continue;
-			for (int k = 0; k < data[0][att][buck].size(); k++)
-				if (data[0][att][buck][k].val > value)
-					bits[data[0][att][buck][k].subID] = true;
-			for (int j = max(buck + 1, beginBucket[0][att]);
-				j < min(buks, endBucket[0][att] + 1); j++) // 和HEM系列的设计不同, 这里取闭括号
-				for (auto&& k : data[0][att][j])
+
+			for (auto cmb : dataW[att][wi][0][buck])
+				if (cmb.val > value)
+					bits[cmb.subID] = true;
+			for (int j = max(buck + 1, beBucketW[att][wi].first.first);
+				j <= beBucketW[att][wi].first.second; j++) // 和HEM系列的设计不同, 这里取闭括号
+				for (auto&& k : dataW[att][wi][0][j])
 					bits[k.subID] = true;
 
-			for (int k = 0; k < data[1][att][buck].size(); k++)
-				if (data[1][att][buck][k].val < value)
-					bits[data[1][att][buck][k].subID] = true;
-			for (int j = min(buck - 1, beginBucket[1][att]); j >= max(0, endBucket[1][att]); j--)
-				for (auto&& k : data[1][att][j])
+			for (auto cmb : dataW[att][wi][1][buck])
+				if (cmb.val < value)
+					bits[cmb.subID] = true;
+			for (int j = min(buck - 1, beBucketW[att][wi].second.first);
+				j >= beBucketW[att][wi].second.second; j++)
+				for (auto&& k : dataW[att][wi][1][j])
 					bits[k.subID] = true;
 		}
 	}
 
 	// 可以替换为1次位集或
-	for (int i = 0; i < atts; i++)
-		if (!attExist[i] && !skipped[i])
-			for (int j = beginBucket[1][i]; j >= max(0, endBucket[1][i]); j--)
-				for (auto&& k : data[1][i][j])
-					bits[k.subID] = true;
+	for (int ai = 0; ai < atts; ai++)
+		if (!attExist[ai]) {
+			for (int wi = 0; wi < adarein_level; wi++) {
+				if (skippedW[ai][wi]) continue;
+				for (int j = beBucketW[ai][wi].second.first; j >= beBucketW[ai][wi].second.second; j--)
+					for (auto&& k : dataW[ai][wi][1][j])
+						bits[k.subID] = true;
+			}
+		}
 
 	matchSubs = subs - bits.count();
 }
