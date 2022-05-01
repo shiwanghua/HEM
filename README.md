@@ -35,12 +35,12 @@
 
 1. Run command "sudo cmake ."
 2. Run command "sudo make"
-3. Run command "sudo cpufreq-set -c 20 -g performance" (调整第 20 号核为性能模式下运行)
-4. sudo cpufreq-set -c 20 -d 3.6G
-5. sudo cpufreq-set -c 20 -u 4.9G
-6. Run command "ulimit -s unlimited; sudo taskset -c 20 ./run" (20 指指定第 20 号核单独运行程序)
+3. Run command "sudo cpufreq-set -c 8 -g performance" (调整第 8 号核为性能模式下运行)
+4. sudo cpufreq-set -c 8 -d 3.6G
+5. sudo cpufreq-set -c 8 -u 4.9G
+6. Run command "ulimit -s unlimited; taskset -c 8 ./run" (20 指指定第 20 号核单独运行程序)
 
-- debug: g++ -g -o run _.h _.cpp -mavx2 -std=c++2a; gdb run
+- debug: g++ -g -o run *.h *.cpp -mavx2 -std=c++2a -lboost_system -lpthread; gdb run
 
 #### 注意事项
 

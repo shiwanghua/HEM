@@ -1022,16 +1022,18 @@ void run_AdaRein_SSS_C_W(const intervalGenerator& gen, unordered_map<int, bool> 
 			cout << "AdaRein_SSS_C_W Event " << i << " is matched.\n";
 	}
 
+	double falseAvgMatchNum=Util::Average(matchSubList);
+
 #ifdef DEBUG
-	cout << "falseMatchNum= " << Util::Average(matchSubList) << ", realFalsePositiveRate= " \
-		<< 1 - realMatchNum / Util::Average(matchSubList) << ", matchTime= " \
+	cout << "falseMatchNum= " << falseAvgMatchNum << ", realFalsePositiveRate= " \
+		<< 1 - realMatchNum / falseAvgMatchNum << ", matchTime= " \
 		<< Util::Double2String(Util::Average(matchTimeList)) << "\n\n";
 #endif
 
 	// output
 	string outputFileName = "AdaRein_SSS_C_W.txt";
 	string content = expID
-		+ " memory= " + Util::Int2String(adarein_sss_c_w.calMemory())
+		+ " memory= " + Util::Int2String(adarein_sss_c_w.calMemory_sss_c_w())
 		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 		+ " ms InitTime= " + Util::Double2String(initTime)
@@ -1041,7 +1043,7 @@ void run_AdaRein_SSS_C_W(const intervalGenerator& gen, unordered_map<int, bool> 
 		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
 		+ " ms maxSkipPre= " + Util::Int2String(adarein_sss_c_w.maxSkipPredicate)
 		+ " ms fPR= " + Util::Double2String(falsePositiveRate)
-		+ " realfPR= " + Util::Double2String(1 - realMatchNum / Util::Average(matchSubList))
+		+ " realfPR= " + Util::Double2String(1 - realMatchNum / falseAvgMatchNum)
 		+ " numSub= " + Util::Int2String(subs)
 		+ " subSize= " + Util::Int2String(cons)
 		+ " numPub= " + Util::Int2String(pubs)
