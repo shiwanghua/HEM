@@ -173,18 +173,19 @@ void pRein::parallelMatch(const Pub &pub, int &matchSubs) {
 	bool *attExist = new bool[numDimension];
 	memset(attExist, 0, sizeof(bool) * numDimension);
 	int seg = (pub.size + pD - 1) / pD;
+	parallelData* pdata;
 	for (int i = 0; i < pub.size; i+=seg) {
-		parallelData pdata;
-		pdata.bits = bits;
-		pdata.attExist = attExist;
-		pdata.data = data;
-		pdata.pub = &pub;
-		pdata.buckStep = buckStep;
-		pdata.begin = i;
-		pdata.end = min(pub.size, i+seg);
-		printf("pub%d, begin=%d, end=%d\n", pub.id, pdata.begin, pdata.end);
-		fflush(stdout);
-		thpool_add_work(thpool, pReinThreadFunction1, &pdata);
+		pdata=new parallelData;
+		pdata->bits = bits;
+		pdata->attExist = attExist;
+		pdata->data = data;
+		pdata->pub = &pub;
+		pdata->buckStep = buckStep;
+		pdata->begin = i;
+		pdata->end = min(pub.size, i+seg);
+//		printf("pub%d, begin=%d, end=%d\n", pub.id, pdata->begin, pdata->end);
+//		fflush(stdout);
+		thpool_add_work(thpool, pReinThreadFunction1, pdata);
 
 //		threads[i] = thread(pReinThreadFunction, &pdata);
 //		threads[i] = thread(pReinThreadFunction, ref(bits),ref(attExist),ref(data),ref(pub),seg * i,min(pub.size, seg * (i + 1)),buckStep);
@@ -217,8 +218,8 @@ void pRein::parallelMatch(const Pub &pub, int &matchSubs) {
 //		})
 
 	}
-	printf("\n");
-	fflush(stdout);
+//	printf("\n");
+//	fflush(stdout);
 	thpool_wait(thpool);
 	for (int i = 0; i < numDimension; i++)
 		if (!attExist[i]) {
@@ -237,8 +238,8 @@ void pRein::parallelMatch(const Pub &pub, int &matchSubs) {
 
 void pReinThreadFunction1(void *pd1) {
 	parallelData *pd = (parallelData *) pd1;
-	printf("SubThread: pub%d, begin=%d, end=%d\n\n", pd->pub->id, pd->begin, pd->end); //this_thread::get_id()
-	fflush(stdout);
+//	printf("SubThread: pub%d, begin=%d, end=%d\n\n", pd->pub->id, pd->begin, pd->end); //this_thread::get_id()
+//	fflush(stdout);
 	int value,att,buck;
 	for (int i = pd->begin; i < pd->end; i++) {
 		value = pd->pub->pairs[i].value, att = pd->pub->pairs[i].att, buck = value / pd->buckStep;
@@ -258,6 +259,7 @@ void pReinThreadFunction1(void *pd1) {
 			for (int k = 0; k < pd->data[1][att][j].size(); k++)
 				pd->bits[pd->data[1][att][j][k].subID] = true;
 	}
+	delete pd;
 }
 
 void pRein::pReinThreadFunction2(const Pub &pub, int begin, int end) {

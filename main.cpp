@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
 		}
 	}
 
-//	run_rein(gen, deleteNo);
+	run_rein(gen, deleteNo);
 	////	run_rein_forward_native(gen, deleteNo);
 	////	run_rein_forward_CBOMP(gen, deleteNo);
 	////	run_rein_hybrid(gen, deleteNo);
