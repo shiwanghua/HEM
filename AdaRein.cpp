@@ -60,7 +60,7 @@ AdaRein::AdaRein(int type) : numSub(0) {
 		case AdaRein_SSS_C_W:
 			TYPE = "AdaRein_SSS_C_W";
 			levelBuks = buks / adarein_level;
-			buckStep = (valDom - 1) / levelBuks + 1;
+			levelBuckStep = (valDom - 1) / levelBuks + 1; // 3 hour-bug: buckStep =
 			levelBuks = (valDom - 1) / buckStep + 1;
 			widthStep = valDom / adarein_level;
 			attsCounts.resize(atts);

@@ -17,7 +17,7 @@
 class AdaRein {
 	int buckStep, numSub;
 	//int dividerValue; // SSS-C-PPH 二分界点
-	
+
 	//vector<Combo> data[MAX_ATTS][2][MAX_BUCKS];    // 0:left parenthesis, 1:right parenthesis
 //    bool bits[MAX_SUBS];
 //    bool skipped[MAX_ATTS];
@@ -29,7 +29,7 @@ class AdaRein {
 	vector<int> endBucket[2]; // i号属性上所应遍历到的终点桶 low(0)上表示遍历到小于这个桶, high(1)上表示遍历到大于等于这个桶
 	vector<int> beginBucket[2]; // SSS_b: i号属性上开始遍历的桶 low(0)上表示从这个桶开始往大号桶遍历
 
-	int levelBuks, levelBuckStep, widthStep; // 每一层的桶数, 每一层的桶覆盖的宽度, 相邻层之间最大宽度的差
+	int levelBuks, levelBuckStep, widthStep; // 每一层的桶数, 每一层的每个桶代表的区间宽度, 相邻层之间谓词最大宽度的差
 	vector<vector<bool>> skippedW; // attr->width
 	//vector<vector<attAndCount>> attsCountsW;
 	vector<vector<vector<vector<vector<Combo>>>>> dataW; // SSS-C-PPH SSS-C-W: attr->level->low/high->bucketId->offset
