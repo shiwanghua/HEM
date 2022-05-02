@@ -1,5 +1,5 @@
 #include "constant.h"
-string expID = "1193";       // Record the experiment ID number
+string expID = "1211";       // Record the experiment ID number
 const bool display = false;  // whether to print the mapping relation, 有待逐步改成DEBUG宏定义判断
 const bool verifyID = false; // whether to verify Insertion and Deletion function
 const int interval = 500;    // after a interval of events is matched, print a log
@@ -25,6 +25,14 @@ const int buks = 1000;       // Number of buckets.
 const int awRein_Ppoint = 0.25 * valDom; // HybridRein
 //const int awRein_level=4; // The levels of the forward counting matching of HybridRein
 
+// AdaRein
+const double falsePositiveRate = 0.05;
+const int adarein_level = 2;
+//const double divider=0.2;
+
+// pRein
+const int parallelDegree = 10;
+
 // HEM
 int be = 1;                 // bit exponent. In each dimension, there are 2 * 2^{be} bitsets.
 int be2 = 50;                // When be=-1, be2 is adopted. In each dimension, there are 2 * be2 bitsets.
@@ -38,14 +46,6 @@ const __m256i mask = _mm256_set1_epi32(0x80000000);
 
 // Tama
 const int level = 13;
-
-// AdaRein
-const double falsePositiveRate = 0.05;
-const int adarein_level = 2;
-//const double divider=0.2;
-
-// pRein
-const int parallelDegree = 10;
 
 // BG-Tree
 const int initH = 10;           // Initial height

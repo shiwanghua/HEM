@@ -58,11 +58,11 @@ AdaRein::AdaRein(int type) : numSub(0) {
 			skipped.resize(atts, false);
 			break;
 		case AdaRein_SSS_C_W:
-			TYPE = "AdaRein_SSS_C_W";
+			TYPE = "AdaRein_SSS_C_W" + to_string(adarein_level);
 			levelBuks = buks / adarein_level;
 			levelBuckStep = (valDom - 1) / levelBuks + 1; // 3 hour-bug: buckStep =
-			levelBuks = (valDom - 1) / buckStep + 1;
-			widthStep = valDom / adarein_level;
+			levelBuks = (valDom - 1) / levelBuckStep + 1; // bug: buckStep-levelBuckStep
+			widthStep = (valDom - 1) / adarein_level + 1;
 			attsCounts.resize(atts);
 			skippedW.resize(atts, vector<bool>(adarein_level, false));
 			dataW.resize(atts, vector<vector<vector<vector<Combo>>>>(
@@ -191,8 +191,8 @@ void AdaRein::original_selection(double falsePositive, const vector<IntervalSub>
 			avgWidth += subList[i].constraints[j].highValue - subList[i].constraints[j].lowValue;
 		}
 	}
-	avgSubSize = numPredicate / subList.size();
-	avgWidth /= numPredicate;
+	avgSubSize = (double) numPredicate / subList.size();
+	avgWidth /= (double) numPredicate * valDom;
 
 	// faster version, need to be verified.--没有算avgWidth！
 	/*_for(skipIndex, 0, atts) {
@@ -204,7 +204,7 @@ void AdaRein::original_selection(double falsePositive, const vector<IntervalSub>
 	sort(attsCounts.begin(), attsCounts.end());
 
 	int maxSkipPredicate =
-		numPredicate - (avgSubSize + log(falsePositive + 1) / log(avgWidth / valDom)) *
+		numPredicate - (avgSubSize + log(falsePositive + 1) / log(avgWidth)) *
 					   subs; // 至多可以过滤的谓词数, currentSum的最大值
 #ifdef DEBUG
 	cout << "maxSkipPredicate= " << maxSkipPredicate << "\n";
@@ -215,7 +215,7 @@ void AdaRein::original_selection(double falsePositive, const vector<IntervalSub>
 		numSkipPredicate += attsCounts[i].count;
 		// 等效版本:
 		if ((double) (numPredicate - numSkipPredicate) / (double) subs >
-			avgSubSize + log(falsePositive + 1) / log(avgWidth / valDom)) {
+			avgSubSize + log(falsePositive + 1) / log(avgWidth)) {
 			//		if ((double)(numPredicate - numSkipPredicate) / (double)subList.size() > subList[0].constraints.size() + log(falsePositive + 1) / log((subList[0].constraints[0].highValue - subList[0].constraints[0].lowValue) / (double)valDom)) {
 			skipped[attsCounts[i].att] = true;
 #ifdef DEBUG
@@ -295,21 +295,21 @@ void AdaRein::static_succession_selection(double falsePositive, const vector<Int
 		numPredicate += attsCounts[i].count;
 	}
 	avgSubSize = (double) numPredicate / subList.size();
-	avgWidth /= numPredicate;
+	avgWidth /= (double) numPredicate * valDom;
 
 	sort(attsCounts.begin(), attsCounts.end());
 
 	// minPredicate 解释性代码
-	//double minK = log(pow(avgWidth / valDom, avgSubSize) + falsePositive) / log(avgWidth / valDom);
+	//double minK = log(pow(avgWidth, avgSubSize) + falsePositive) / log(avgWidth);
 	//inline auto valid = [&](double) {return (double)(numPredicate - numSkipPredicate) > minK * subs; };
 
-	double falsePositiveRate_global = pow(width, avgSubSize) * subs / (1 - falsePositive) * falsePositive / subs;
+	double falsePositiveRate_global = pow(avgWidth, avgSubSize) * subs / (1 - falsePositive) * falsePositive / subs;
 
 #ifdef DEBUG
-	maxSkipPredicate = numPredicate - (avgSubSize - log(1 - falsePositive) / log(avgWidth / valDom)) * subs; // k2
+	maxSkipPredicate = numPredicate - (avgSubSize - log(1 - falsePositive) / log(avgWidth)) * subs; // k2
 	cout << "k2= " << maxSkipPredicate << "\n";
 	maxSkipPredicate =
-		numPredicate - log(pow(avgWidth / valDom, avgSubSize) + falsePositiveRate_global) / log(avgWidth / valDom) *
+		numPredicate - log(pow(avgWidth, avgSubSize) + falsePositiveRate_global) / log(avgWidth) *
 					   subs; // 至多可以过滤的谓词数, currentSum的最大值
 	cout << "k3_global= " << maxSkipPredicate << "\n";
 	int numSkipAttr = 0;
@@ -317,7 +317,7 @@ void AdaRein::static_succession_selection(double falsePositive, const vector<Int
 #endif
 
 	maxSkipPredicate =
-		numPredicate - log(pow(avgWidth / valDom, avgSubSize) / (1 - falsePositive)) / log(avgWidth / valDom) * subs;
+		numPredicate - log(pow(avgWidth, avgSubSize) / (1 - falsePositive)) / log(avgWidth) * subs;
 	//	maxSkipPredicate/=2;
 	cout << "k3_local= " << maxSkipPredicate << "\n";
 
@@ -446,7 +446,7 @@ void AdaRein::static_succession_selection_backward(double falsePositive, const v
 		numPredicate += attsCounts[i].count;
 	}
 	avgSubSize = (double) numPredicate / subList.size();
-	avgWidth /= numPredicate;
+	avgWidth /= (double) numPredicate * valDom;
 
 	sort(attsCounts.begin(), attsCounts.end());
 
@@ -454,14 +454,14 @@ void AdaRein::static_succession_selection_backward(double falsePositive, const v
 	//double minK = log(pow(avgWidth / valDom, avgSubSize) + falsePositive) / log(avgWidth / valDom);
 	//inline auto valid = [&](double) {return (double)(numPredicate - numSkipPredicate) > minK * subs; };
 
-	double falsePositiveRate_global = pow(width, avgSubSize) * subs / (1 - falsePositive) * falsePositive / subs;
+	double falsePositiveRate_global = pow(avgWidth, avgSubSize) * subs / (1 - falsePositive) * falsePositive / subs;
 
-	int maxSkipPredicate = numPredicate - (avgSubSize - log(1 - falsePositive) / log(avgWidth / valDom)) * subs; // k2
+	int maxSkipPredicate = numPredicate - (avgSubSize - log(1 - falsePositive) / log(avgWidth)) * subs; // k2
 
 #ifdef DEBUG
 	cout << "k2= " << maxSkipPredicate << "\n";
 	maxSkipPredicate =
-		numPredicate - log(pow(avgWidth / valDom, avgSubSize) + falsePositiveRate_global) / log(avgWidth / valDom) *
+		numPredicate - log(pow(avgWidth, avgSubSize) + falsePositiveRate_global) / log(avgWidth) *
 					   subs; // 至多可以过滤的谓词数, currentSum的最大值
 	cout << "k3_global= " << maxSkipPredicate << "\n";
 	int numSkipAttr = 0;
@@ -469,7 +469,7 @@ void AdaRein::static_succession_selection_backward(double falsePositive, const v
 #endif
 
 	maxSkipPredicate =
-		numPredicate - log(pow(avgWidth / valDom, avgSubSize) / (1 - falsePositive)) / log(avgWidth / valDom) * subs;
+		numPredicate - log(pow(avgWidth, avgSubSize) / (1 - falsePositive)) / log(avgWidth) * subs;
 	//	maxSkipPredicate *= 6;
 	cout << "k3_local= " << maxSkipPredicate << "\n";
 
@@ -601,7 +601,7 @@ void AdaRein::static_succession_selection_crossed(double falsePositive, const ve
 		numPredicate += attsCounts[i].count;
 	}
 	avgSubSize = (double) numPredicate / subList.size();
-	avgWidth /= numPredicate;
+	avgWidth /= (double) numPredicate * valDom;
 
 	sort(attsCounts.begin(), attsCounts.end());
 
@@ -609,14 +609,14 @@ void AdaRein::static_succession_selection_crossed(double falsePositive, const ve
 	//double minK = log(pow(avgWidth / valDom, avgSubSize) + falsePositive) / log(avgWidth / valDom);
 	//inline auto valid = [&](double) {return (double)(numPredicate - numSkipPredicate) > minK * subs; };
 
-	double falsePositiveRate_global = pow(width, avgSubSize) * subs / (1 - falsePositive) * falsePositive / subs;
+	double falsePositiveRate_global = pow(avgWidth, avgSubSize) * subs / (1 - falsePositive) * falsePositive / subs;
 
-	int maxSkipPredicate = numPredicate - (avgSubSize - log(1 - falsePositive) / log(avgWidth / valDom)) * subs; // k2
+	int maxSkipPredicate = numPredicate - (avgSubSize - log(1 - falsePositive) / log(avgWidth)) * subs; // k2
 
 #ifdef DEBUG
 	cout << "k2= " << maxSkipPredicate << "\n";
 	maxSkipPredicate =
-		numPredicate - log(pow(avgWidth / valDom, avgSubSize) + falsePositiveRate_global) / log(avgWidth / valDom) *
+		numPredicate - log(pow(avgWidth, avgSubSize) + falsePositiveRate_global) / log(avgWidth) *
 					   subs; // 至多可以过滤的谓词数, currentSum的最大值
 	cout << "k3_global= " << maxSkipPredicate << "\n";
 	int numSkipAttr = 0;
@@ -624,7 +624,7 @@ void AdaRein::static_succession_selection_crossed(double falsePositive, const ve
 #endif
 
 	maxSkipPredicate =
-		numPredicate - log(pow(avgWidth / valDom, avgSubSize) / (1 - falsePositive)) / log(avgWidth / valDom) * subs;
+		numPredicate - log(pow(avgWidth, avgSubSize) / (1 - falsePositive)) / log(avgWidth) * subs;
 	//	maxSkipPredicate *= 6;
 	cout << "k3_local= " << maxSkipPredicate << "\n";
 
@@ -834,34 +834,34 @@ void AdaRein::static_succession_selection_crossed_width(double falsePositive, co
 		}
 	}
 	avgSubSize = (double) numPredicate / subList.size();
-	avgWidth /= numPredicate;
+	avgWidth /= (double) numPredicate * valDom;
 
 	// minPredicate 解释性代码
-	//double minK = log(pow(avgWidth / valDom, avgSubSize) + falsePositive) / log(avgWidth / valDom);
+	//double minK = log(pow(avgWidth, avgSubSize) + falsePositive) / log(avgWidth);
 	//inline auto valid = [&](double) {return (double)(numPredicate - numSkipPredicate) > minK * subs; };
 
-	double falsePositiveRate_global = pow(width, avgSubSize) * subs / (1 - falsePositive) * falsePositive / subs;
+	double falsePositiveRate_global = pow(avgWidth, avgSubSize) * subs / (1 - falsePositive) * falsePositive / subs;
 
-	int maxSkipPredicate = numPredicate - (avgSubSize - log(1 - falsePositive) / log(avgWidth / valDom)) * subs; // k2
+	int maxSkipPredicate = numPredicate - (avgSubSize - log(1 - falsePositive) / log(avgWidth)) * subs; // k2
 
 #ifdef DEBUG
 	cout << "k2= " << maxSkipPredicate << "\n";
 	maxSkipPredicate =
-		numPredicate - log(pow(avgWidth / valDom, avgSubSize) + falsePositiveRate_global) / log(avgWidth / valDom) *
-					   subs; // 至多可以过滤的谓词数, currentSum的最大值
+		numPredicate - log(pow(avgWidth, avgSubSize) + falsePositiveRate_global) / log(avgWidth) *
+					   subs; // 至多可以过滤的谓词数, numSkipPredicate的最大值
 	cout << "k3_global= " << maxSkipPredicate << "\n";
 	int numSkipAttr = 0;
 	int numSkipBkt = 0;
 #endif
 
 	maxSkipPredicate =
-		numPredicate - log(pow(avgWidth / valDom, avgSubSize) / (1 - falsePositive)) / log(avgWidth / valDom) * subs;
+		numPredicate - log(pow(avgWidth, avgSubSize) / (1 - falsePositive)) / log(avgWidth) * subs;
 	//	maxSkipPredicate *= 6;
 	cout << "k3_local= " << maxSkipPredicate << "\n";
 
 	int skipWidthIndex = adarein_level - 1; // 从最大概率层开始过滤
 	while (skipWidthIndex >= 0) {
-
+//		cout << skipWidthIndex << "\n";
 		// 统计这层上的各属性上的谓词数量
 		for (int i = 0; i < atts; i++) {
 			attsCounts[i].att = i;
@@ -876,12 +876,13 @@ void AdaRein::static_succession_selection_crossed_width(double falsePositive, co
 		// 静态连续地找该层上的全过滤属性
 		int skipIndex = 0;
 		for (skipIndex = 0; skipIndex < atts; skipIndex++) {
+//			cout << "s= " << skipIndex << "\n";
 			if (numSkipPredicate + attsCounts[skipIndex].count < maxSkipPredicate) {
+//				cout << "Skip Attribute " << attsCounts[skipIndex].att<<" on widthIndex "<<skipWidthIndex<<"\n"; // could output in finding order.
 				numSkipPredicate = numSkipPredicate + attsCounts[skipIndex].count;
-				skippedW[skipWidthIndex][attsCounts[skipIndex].att] = true;
+				skippedW[attsCounts[skipIndex].att][skipWidthIndex] = true;
 #ifdef DEBUG
 				numSkipAttr++; // 过滤不同宽度上的同一属性会计多次
-				//cout << "Skip Attribute " << attsCounts[skipIndex].att<<"on widthIndex "<<skipWidthIndex<<"\n"; // could output in finding order.
 #endif // DEBUG
 			} else {
 				break;
@@ -1006,8 +1007,9 @@ void AdaRein::static_succession_selection_crossed_width(double falsePositive, co
 	}
 
 #ifdef DEBUG
-	cout << "In theory, rightMatchNum= " << pow(width, avgSubSize) * subs << ", wrongMatchNum= "
-		 << pow(width, avgSubSize) * subs / (1 - falsePositive) * falsePositive << ", falsePositiveRate_local= "
+	cout << "In theory, rightMatchNum= " << pow(width, avgSubSize) * (double) subs << ", wrongMatchNum= "
+		 << pow(width, avgSubSize) * (double) subs / (1 - falsePositive) * falsePositive
+		 << ", falsePositiveRate_local= "
 		 << falsePositive
 		 << ", falsePositiveRate_global= " << falsePositiveRate_global << ".\n";
 	cout << "avgSubSize= " << avgSubSize << ", " << "avgWidth= " << avgWidth << ", numPredicate= " << numPredicate
@@ -1085,10 +1087,9 @@ int AdaRein::calMemory() {
 
 int AdaRein::calMemory_sss_c_w() {
 	long long size = 0; // Byte
-	_for(ai, 0, atts)
-		_for(wi, 0, adarein_level)
-			_for(bi, 0, levelBuks)
-				size += sizeof(Combo) * (dataW[ai][wi][0][bi].size() +dataW[ai][wi][1][bi].size());
+	_for(ai, 0, atts) _for(wi, 0, adarein_level) _for(bi, 0, levelBuks) size += sizeof(Combo) *
+																				(dataW[ai][wi][0][bi].size() +
+																				 dataW[ai][wi][1][bi].size());
 	size += sizeof(bool) * atts + sizeof(attAndCount) * atts;
 	//cout << "attAndCount size = " << sizeof(attAndCount) << endl; // 8
 	size = size / 1024 / 1024; // MB
