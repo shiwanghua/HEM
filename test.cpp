@@ -19,7 +19,7 @@
 //#include <boost/thread.hpp>
 //#include <boost/function.hpp>
 //#include <boost/noncopyable.hpp>
-#include <boost/asio.hpp>
+//#include <boost/asio.hpp>
 //using namespace boost;
 //using namespace boost::placeholders;
 
@@ -52,11 +52,11 @@ void my_task()
 
 int mainss() {
 	// Launch the pool with four threads.
-	boost::asio::thread_pool pool(2);
+//	boost::asio::thread_pool pool(2);
 	printf("%d\n", gl);
 	// Submit a function to the pool.
-	boost::asio::post(pool, my_task);
-	pool.wait();
+//	boost::asio::post(pool, my_task);
+//	pool.wait();
 	printf("%d\n", gl);
 	system("pause");
 	return 0;

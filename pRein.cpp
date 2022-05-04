@@ -11,7 +11,7 @@ pRein::pRein() : numSub(0), numDimension(atts), pD(parallelDegree) {
 	bucketSub.resize(numBucket);
 	data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
 	data[1].resize(numDimension, vector<vector<Combo>>(numBucket));
-	boost::asio::thread_pool pool(parallelDegree);
+//	boost::asio::thread_pool pool(parallelDegree);
 //	_for(i,0,parallelDegree){
 //		boost::thread t;
 //		vecThreads.add_thread(&t);

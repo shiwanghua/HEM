@@ -12,7 +12,8 @@ set( CMAKE_BUILD_TYPE Release )
 #    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS} -O3 -std=c++0x")
 #endif()
 
-
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
 #set(CMAKE_C_COMPILER /usr/bin/mpicc)
 #set(CMAKE_CXX_COMPILER /usr/bin/mpic++)
 SET(CMAKE_CXX_COMPILER "g++")
@@ -26,8 +27,8 @@ SET(CMAKE_CXX_COMPILER "g++")
 
 #SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++0x")
 #set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3" )
-#LINK_LIBRARIES(m)
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++2a -march=native -O3 -mavx2 -static -lboost_system -lboost_thread -lpthread -pthread -L /usr/local/lib/" ) # -g  -DDEBUG -mavx512bw -mavx512vl -mavx512f -mavx512cd -mavx512dq -msse -lboost_thread -lboost_system
+LINK_LIBRARIES(m)
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -march=native -O3 -mavx2 -pthread -static ")  # -L /usr/local/lib/  -lboost_system -lboost_thread -lpthread  -g  -DDEBUG -mavx512bw -mavx512vl -mavx512f -mavx512cd -mavx512dq -msse -lboost_thread -lboost_system -std=c++2a
 #set(CMAKE_C_STANDARD 17)
 #set(CMAKE_CXX_FLAGS_DEBUG “${CMAKE_CXX_FLAGS_DEBUG} -O0”)
 #set(CMAKE_C_FLAGS_DEBUG “${CMAKE_C_FLAGS_DEBUG} -O0”)
@@ -43,7 +44,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++2a -march=native -O3 -mavx2 -st
 aux_source_directory(. SRC_LIST)
 add_executable(run ${SRC_LIST} BGTree_d_vrs.cpp BGTree_d_vrs.h ThreadPool.h thpool.cpp thpool.h) # pRein.cpp pRein.h
 # target_link_libraries(hello ${MPI_LIBRARIES})
-
+target_link_libraries(run PUBLIC Threads::Threads)
 
 # cmake -G "MinGW Makefiles" .
 # mingw32-make

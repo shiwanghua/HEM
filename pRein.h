@@ -15,7 +15,7 @@
 //#include <boost/thread/thread_pool.hpp>
 //#include <boost/thread/thread.hpp>
 //#include <boost/bind.hpp>
-#include <boost/asio.hpp>
+//#include <boost/asio.hpp>
 #include "ThreadPool.h"
 #include "thpool.h"
 #define _for(i,a,b) for( int i=(a); i<(b); ++i)
