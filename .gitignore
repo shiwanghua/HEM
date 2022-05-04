@@ -54,7 +54,7 @@ x64
 *.user
 cmake_install.cmake
 CMakeCache.txt
-CMakeFiles/
+CMakeFiles
 # Rein.txt
 # HEM.txt
 # ReinBucketSize.txt
@@ -64,3 +64,4 @@ CMakeFiles/
 cmakeRB
 .idea
 .cmake
+
