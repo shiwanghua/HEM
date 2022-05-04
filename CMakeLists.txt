@@ -16,7 +16,7 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 #set(CMAKE_C_COMPILER /usr/bin/mpicc)
 #set(CMAKE_CXX_COMPILER /usr/bin/mpic++)
-SET(CMAKE_CXX_COMPILER "g++")
+#SET(CMAKE_CXX_COMPILER "g++")
 #find_package(MPI REQUIRED)
 
 # 按地址把MPI库包含进来
@@ -28,7 +28,7 @@ SET(CMAKE_CXX_COMPILER "g++")
 #SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++0x")
 #set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3" )
 LINK_LIBRARIES(m)
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -march=native -O3 -mavx2 -pthread -static ")  # -L /usr/local/lib/  -lboost_system -lboost_thread -lpthread  -g  -DDEBUG -mavx512bw -mavx512vl -mavx512f -mavx512cd -mavx512dq -msse -lboost_thread -lboost_system -std=c++2a
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -march=native -O3 -mavx512f ") #-mavx2  -static -pthread -L /usr/local/lib/  -lboost_system -lboost_thread -lpthread  -g  -DDEBUG -mavx512bw -mavx512vl -mavx512f -mavx512cd -mavx512dq -msse -lboost_thread -lboost_system -std=c++2a
 #set(CMAKE_C_STANDARD 17)
 #set(CMAKE_CXX_FLAGS_DEBUG “${CMAKE_CXX_FLAGS_DEBUG} -O0”)
 #set(CMAKE_C_FLAGS_DEBUG “${CMAKE_C_FLAGS_DEBUG} -O0”)

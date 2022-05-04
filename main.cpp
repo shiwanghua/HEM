@@ -5,7 +5,7 @@ int main(int argc, char **argv) {
 	//cin >> subs >> pubs >> atts >> cons>> buks >> m >> attDis >> valDis >> valDom >> alpha >> width;
 	//m = atts; // Note that Rein requires m == atts.
 
-	if (argc == 10) {
+	if (argc == 11) {
 		expID = to_string(atoi(argv[1]));
 		atts = atoi(argv[2]);
 		cons = atoi(argv[3]);
@@ -15,9 +15,10 @@ int main(int argc, char **argv) {
 		be = atoi(argv[7]); // 输入一个bits指数
 		attrGroup = atoi(argv[8]);
 		valDom = atoi(argv[9]);
-		cout << "argc=" << argc << endl;
+		parallelDegree = atoi(argv[10]);
+                cout << "argc=" << argc << endl;
 		cout << argv[0] << "  " << argv[1] << "  " << argv[2] << "  " << argv[3] << "  " << argv[4] << "  " << argv[5]
-			 << "  " << argv[6] << "  " << argv[7] << "  " << argv[8] << "  " << argv[9] << "  n=" << subs
+			 << "  " << argv[6] << "  " << argv[7] << "  " << argv[8] << "  " << argv[9] << "  "<< argv[10] << "  n=" << subs
 			 << endl;
 	}
 
@@ -46,12 +47,12 @@ int main(int argc, char **argv) {
 		}
 	}
 
-	run_rein(gen, deleteNo);
+	//run_rein(gen, deleteNo);
 	////	run_rein_forward_native(gen, deleteNo);
 	////	run_rein_forward_CBOMP(gen, deleteNo);
 	////	run_rein_hybrid(gen, deleteNo);
 	////	run_rein_hybrid_CBOMP(gen, deleteNo);
-	run_pRein(gen, deleteNo);
+//	run_pRein(gen, deleteNo);
 //	run_AdaRein_ORI(gen, deleteNo);
 //	run_AdaRein_SSS(gen, deleteNo);
 //	run_AdaRein_SSS_B(gen, deleteNo);
@@ -65,7 +66,7 @@ int main(int argc, char **argv) {
 	//run_HEM5(gen, deleteNo);
 //	run_HEM5_VAG(gen, deleteNo);
 //	run_HEM5_RAG(gen, deleteNo);
-	//run_HEM5_avxOR(gen, deleteNo);
+	run_HEM5_avxOR(gen, deleteNo);
 	////	run_HEMSC(gen);
 	////	run_HEMSR(gen);
 	////
