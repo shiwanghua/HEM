@@ -37,14 +37,13 @@ void pReinThreadFunction1(void *pd1);
 // Parallel Rein in openmp
 class pRein {
 	int numSub, numDimension, buckStep,pD;    // parallelDegree
-	vector<bool> bits;
-	vector<bool> attExist;
+//	vector<bool> bits;
 	vector<vector<vector<Combo>>> data[2];    // 0:left parenthesis, 1:right parenthesis
 //	boost::thread_group vecThreads;
 //	boost::asio::thread_pool threadPool(parallelData);
 //	ThreadPool_asio threadPoolAsio;
-//	ThreadPool threadPool;
-	threadpool thpool;
+	ThreadPool threadPool;
+//	threadpool thpool;
 public:
 	int numBucket;
 	double compareTime = 0.0; // 所有维度上事件值落入的那个cell里逐个精确比较的时间
