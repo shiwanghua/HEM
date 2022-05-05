@@ -59,7 +59,7 @@ CMakeFiles
 # HEM.txt
 # ReinBucketSize.txt
 # HEMBucketSize.txt
-/cmake-build-debug/
+cmake-build-debug/
 /build/
 cmakeRB
 .idea

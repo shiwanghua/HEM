@@ -6,7 +6,7 @@
 #define MAC_PREIN_H
 
 #include <cstring>
-#include "util.h"
+#include "Util.h"
 #include "constant.h"
 #include "omp.h"
 #include <algorithm>

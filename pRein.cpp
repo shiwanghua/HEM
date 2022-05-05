@@ -7,7 +7,8 @@
 pRein::pRein() : numSub(0), numDimension(atts), pD(parallelDegree) {
 	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
-	cout << "ExpID = " << expID << ". pRein: bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
+	cout << "ExpID = " << expID << ". pRein: bucketStep = " << buckStep << ", numBucket = " << numBucket
+		 << ", parallelDegree = " << parallelDegree << endl;
 	bucketSub.resize(numBucket);
 	data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
 	data[1].resize(numDimension, vector<vector<Combo>>(numBucket));
@@ -233,11 +234,87 @@ void pRein::parallelMatch(const Pub &pub, int &matchSubs) {
 			}
 	}
 
+//  one thread merges 4 results
+	vector<bitset<subs>> threadResult2;
 	for (int i = 0; i < parallelDegree; i++)
-		gb |= threadResult[i].get();
+		threadResult2.emplace_back(threadResult[i].get());
+	int pDi = parallelDegree >> 2, pDn = parallelDegree;
+	while (pDn > 3) {
+		for (int i = 0; i < pDi; i++) {
+			threadResult[i] = threadPool.enqueue([&, i](int pDi) {
+				return threadResult2[i] | threadResult2[i + pDi] | threadResult2[i + (pDi << 1)] |
+					   threadResult2[i + 3 * pDi];
+			}, pDi);
+		}
+		for (int i = 0; i < pDi; i++) {
+			threadResult2[i] = threadResult[i].get();
+		}
+		if (pDi < 4) {
+			for (int i = 1; i < pDi; i++)
+				threadResult2[0] |= threadResult2[i];
+		}
+		pDn = pDi;
+		pDi = pDi >> 2;
+	}
 
-	matchSubs = subs - gb.count();
-}
+	// one thread merges two results
+//	vector<bitset<subs>> threadResult2;
+//	for (int i = 0; i < parallelDegree; i++)
+//		threadResult2.emplace_back(threadResult[i].get());
+//	int pDi = (parallelDegree + 1) >> 1, pDn = parallelDegree;
+//	while (pDn > 1) {
+//		for (int i = 0; i < pDi; i++) {
+//			if (i + pDi < pDn)
+//				threadResult[i] = threadPool.enqueue([&, i](int j) {
+//					return threadResult2[i] | threadResult2[j];
+//				}, i + pDi);
+//		}
+//		for (int i = 0; i < pDi; i++) {
+//			if (i + pDi < pDn)
+//				threadResult2[i]=threadResult[i].get();
+//		}
+//		pDn = pDi;
+//		pDi = (pDi + 1) >> 1;
+//	}
+
+	// À¿—≠ª∑Bug only use threadResult to store result
+//	for (int i = 0; i < parallelDegree; i++)
+//		threadResult[i].wait();
+//
+//	int pDi = (parallelDegree + 1) >> 1, pDn = parallelDegree;
+//	while (pDn > 1) {
+//		for (int i = 0; i < pDi; i++) {
+//			if (i + pDi < pDn)
+//				threadResult[i] = threadPool.enqueue([&, i](int j) {
+//					printf("pub%d, i=%d, j=%d\n", pub.id, i, j);
+//					fflush(stdout);
+//					return threadResult[i].get() | threadResult[j].get();
+//				}, i + pDi);
+//		}
+//		for (int i = 0; i < pDi; i++) {
+//			printf("i=%d\n",i);
+//			if (i + pDi < pDn)
+//				threadResult[i].wait();
+//		}
+//		pDn = pDi;
+//		pDi = (pDi + 1) >> 1;
+//		printf("pDi=%d, pDn=%d\n",pDi,pDn);
+//		fflush(stdout);
+//	}
+//	printf("2 pDi=%d, pDn=%d\n",pDi,pDn);
+//	fflush(stdout);
+
+	if (pub.size < atts) {
+		gb |= threadResult2[0];
+		matchSubs = subs - gb.count();
+	} else {
+		matchSubs = subs - threadResult2[0].count();
+	}
+
+	// without optimization:
+//	for (int i = 0; i < parallelDegree; i++)
+//		gb |= threadResult[i].get();
+//	matchSubs = subs - gb.count();
 
 //	printf("\n");
 //	fflush(stdout);
@@ -248,6 +325,8 @@ void pRein::parallelMatch(const Pub &pub, int &matchSubs) {
 //				//cout << "rein matches sub: " << i << endl;
 //			}
 //	}
+}
+
 
 void pReinThreadFunction1(void *pd1) {
 	parallelData *pd = (parallelData *) pd1;

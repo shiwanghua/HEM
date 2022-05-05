@@ -195,6 +195,12 @@
 		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/ThreadPool.h">
 			<Option target="run"/>
 		</Unit>
+		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/Util.cpp">
+			<Option target="run"/>
+		</Unit>
+		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/Util.h">
+			<Option target="run"/>
+		</Unit>
 		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/bTama.cpp">
 			<Option target="run"/>
 		</Unit>
@@ -241,12 +247,6 @@
 			<Option target="run"/>
 		</Unit>
 		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/thpool.h">
-			<Option target="run"/>
-		</Unit>
-		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/util.cpp">
-			<Option target="run"/>
-		</Unit>
-		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/util.h">
 			<Option target="run"/>
 		</Unit>
 		<Unit filename="/home/swh/桌面/MyProgram/MatchingAlgorithmsComparison/CMakeLists.txt">

@@ -1,7 +1,7 @@
 #ifndef bTAMA_H
 #define bTAMA_H
 
-#include "util.h"
+#include "Util.h"
 #include "constant.h"
 #include <bitset>
 

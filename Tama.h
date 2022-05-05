@@ -1,7 +1,7 @@
 #ifndef TAMA_H
 #define TAMA_H
 
-#include "util.h"
+#include "Util.h"
 #include "constant.h"
 
 using namespace std;

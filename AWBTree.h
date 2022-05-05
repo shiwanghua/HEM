@@ -2,7 +2,7 @@
 #define _AWBTree_H
 
 #include <cstring>
-#include "util.h"
+#include "Util.h"
 
 using namespace std;
 

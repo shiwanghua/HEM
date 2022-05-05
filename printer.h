@@ -5,7 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include "data_structure.h"
-#include "util.h"
+#include "Util.h"
 #include <vector>
 
 using namespace std;

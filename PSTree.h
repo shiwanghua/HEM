@@ -1,7 +1,7 @@
 #pragma once
 #ifndef _PSTREE_H
 #define _PSTREE_H
-#include "util.h"
+#include "Util.h"
 #include "constant.h"
 
 using namespace std;

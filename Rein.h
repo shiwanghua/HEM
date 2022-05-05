@@ -1,7 +1,7 @@
 #ifndef _REIN_H
 #define _REIN_H
 #include <cstring>
-#include "util.h"
+#include "Util.h"
 #include "constant.h"
 #include <algorithm>
 #include <unordered_set>

@@ -1,8 +1,8 @@
 #include "constant.h"
-string expID = "1270";       // Record the experiment ID number
+string expID = "1290";       // Record the experiment ID number
 const bool display = false;  // whether to print the mapping relation, 有待逐步改成DEBUG宏定义判断
 const bool verifyID = false; // whether to verify Insertion and Deletion function
-const int interval = 500;    // after a interval of events is matched, print a log
+const int interval = 200;    // after a interval of events is matched, print a log
 const double subp = 0;       // subp比例的订阅的谓词定义在前cons个维度上 in order to make the number of matching subscriptions > 0		  
 double realMatchNum=-1;      // The correct matching number in an experiment (Recorded in Rein).
 //const int subs = 1000000;  // Number of subscriptions.
@@ -31,14 +31,14 @@ const int adarein_level = 3;
 //const double divider=0.2;
 
 // pRein
-int parallelDegree = 128;
+int parallelDegree = 32;
 
 // HEM
 int be = 4;                 // bit exponent. In each dimension, there are 2 * 2^{be} bitsets.
 int be2 = 50;                // When be=-1, be2 is adopted. In each dimension, there are 2 * be2 bitsets.
 const int lvls = 2;         // HEMSC number of levels
 int gs = 5;                 // HEMSR Group Size 一组有多少个维度
-const int blockSize = 512;  // 每次对256位做逻辑运算
+const int blockSize = 256;  // 每次对256位做逻辑运算
 const int ptrSize = 64;     // 每次只能加载__int64 64位
 const int blockNum = (subs + blockSize - 1) / blockSize; //  把做 subs 位的逻辑运算 简化为做 blockNum 次逻辑运算
 const int ptrIncrement = blockSize / ptrSize;       //  需要加载的次数
