@@ -197,7 +197,7 @@ void pRein::parallelMatch(const Pub &pub, int &matchSubs) {
 	for (int begin = 0; begin < pub.size; begin += seg) {
 		threadResult.emplace_back(threadPool.enqueue([this, &pub, &seg, begin] {
 //			printf("pub%d, begin=%d\n", pub.id, begin);
-			bitset<subs> b;
+			bitset<subs> b;//=new bitset<subs>;
 			for (int i = begin; i < min(begin + seg, pub.size); i++) {
 				int value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 
@@ -235,15 +235,16 @@ void pRein::parallelMatch(const Pub &pub, int &matchSubs) {
 	}
 
 //  one thread merges 4 results
-	vector<bitset<subs>> threadResult2;
+/*	vector<bitset<subs>*> threadResult2;
 	for (int i = 0; i < parallelDegree; i++)
 		threadResult2.emplace_back(threadResult[i].get());
 	int pDi = parallelDegree >> 2, pDn = parallelDegree;
 	while (pDn > 3) {
 		for (int i = 0; i < pDi; i++) {
 			threadResult[i] = threadPool.enqueue([&, i](int pDi) {
-				return threadResult2[i] | threadResult2[i + pDi] | threadResult2[i + (pDi << 1)] |
-					   threadResult2[i + 3 * pDi];
+				           bitset<subs>* pb=new bitset<subs>;
+                                           *pb=(*pb)|(*threadResult2[i] | *threadResult2[i + pDi] | *threadResult2[i + (pDi << 1)] |*threadResult2[i + 3 * pDi]);
+                                           return pb;
 			}, pDi);
 		}
 		for (int i = 0; i < pDi; i++) {
@@ -251,11 +252,12 @@ void pRein::parallelMatch(const Pub &pub, int &matchSubs) {
 		}
 		if (pDi < 4) {
 			for (int i = 1; i < pDi; i++)
-				threadResult2[0] |= threadResult2[i];
+				*(threadResult2[0]) |= *(threadResult2[i]);
 		}
 		pDn = pDi;
 		pDi = pDi >> 2;
 	}
+*/
 
 	// one thread merges two results
 //	vector<bitset<subs>> threadResult2;
@@ -304,17 +306,17 @@ void pRein::parallelMatch(const Pub &pub, int &matchSubs) {
 //	printf("2 pDi=%d, pDn=%d\n",pDi,pDn);
 //	fflush(stdout);
 
-	if (pub.size < atts) {
-		gb |= threadResult2[0];
+/*	if (pub.size < atts) {
+		gb |= *(threadResult2[0]);
 		matchSubs = subs - gb.count();
 	} else {
-		matchSubs = subs - threadResult2[0].count();
+		matchSubs = subs - (*(threadResult2[0])).count();
 	}
-
+*/
 	// without optimization:
-//	for (int i = 0; i < parallelDegree; i++)
-//		gb |= threadResult[i].get();
-//	matchSubs = subs - gb.count();
+	for (int i = 0; i < parallelDegree; i++)
+		gb |= threadResult[i].get();
+	matchSubs = subs - gb.count();
 
 //	printf("\n");
 //	fflush(stdout);
