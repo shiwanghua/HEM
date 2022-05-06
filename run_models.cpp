@@ -67,7 +67,8 @@ void run_rein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 					 + " ms AvgCmpTime= " + to_string(rein.compareTime / pubs / 1000000)
 					 + " ms AvgMarkTime= " + to_string(rein.markTime / pubs / 1000000)
 					 + " ms AvgBitTime= " + to_string(rein.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(rein.numBucket)
+					 + " ms pD= " + to_string(parallelDegree)
+					 + " numBuk= " + Util::Int2String(rein.numBucket)
 					 + " numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
 					 + " numPub= " + Util::Int2String(pubs)
@@ -873,7 +874,7 @@ void run_AdaRein_SSS_B(const intervalGenerator &gen, unordered_map<int, bool> de
 }
 
 
-void run_AdaRein_SSS_C(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) {
+void run_AdaRein_SSS_C(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	AdaRein adarein_sss_c(AdaRein_SSS_C);
 
 	vector<double> insertTimeList;
@@ -888,26 +889,26 @@ void run_AdaRein_SSS_C(const intervalGenerator& gen, unordered_map<int, bool> de
 		adarein_sss_c.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
-		insertTimeList.push_back((double)insertTime / 1000000);
+		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "AdaRein_SSS_C Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
 	adarein_sss_c.static_succession_selection_crossed(falsePositiveRate, gen.subList);
-	initTime = (double)initStart.elapsed_nano() / 1000000.0;
+	initTime = (double) initStart.elapsed_nano() / 1000000.0;
 	cout << "AdaRein_SSS_C Skipping Task Finishes.\n";
 
 	// 验证插入删除正确性
 	if (verifyID) {
-		for (auto kv : deleteNo) {
+		for (auto kv: deleteNo) {
 			Timer deleteStart;
 			if (!adarein_sss_c.deleteSubscription(gen.subList[kv.first]))
 				cout << "AdaRein_SSS_C: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
-			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "AdaRein_SSS_C Deletion Finishes.\n";
-		for (auto kv : deleteNo) {
+		for (auto kv: deleteNo) {
 			adarein_sss_c.insert(gen.subList[kv.first]);
 		}
 	}
@@ -920,7 +921,7 @@ void run_AdaRein_SSS_C(const intervalGenerator& gen, unordered_map<int, bool> de
 		adarein_sss_c.approx_match_sss_c(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-		matchTimeList.push_back((double)eventTime / 1000000);
+		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
 			cout << "AdaRein_SSS_C Event " << i << " is matched.\n";
@@ -935,25 +936,25 @@ void run_AdaRein_SSS_C(const intervalGenerator& gen, unordered_map<int, bool> de
 	// output
 	string outputFileName = "AdaRein_SSS_C.txt";
 	string content = expID
-		+ " memory= " + Util::Int2String(adarein_sss_c.calMemory())
-		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-		+ " ms InitTime= " + Util::Double2String(initTime)
-		+ " ms AvgConstructionTime= " +
-		Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-		+ " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-		+ " ms maxSkipPre= " + Util::Int2String(adarein_sss_c.maxSkipPredicate)
-		+ " ms fPR= " + Util::Double2String(falsePositiveRate)
-		+ " realfPR= " + Util::Double2String(1 - realMatchNum / Util::Average(matchSubList))
-		+ " numSub= " + Util::Int2String(subs)
-		+ " subSize= " + Util::Int2String(cons)
-		+ " numPub= " + Util::Int2String(pubs)
-		+ " pubSize= " + Util::Int2String(m)
-		+ " attTypes= " + Util::Int2String(atts)
-		+ " attGroup= " + Util::Int2String(attrGroup)
-		+ " attNumType= " + Util::Int2String(attNumType)
-		+ " valDom= " + Util::Double2String(valDom);
+					 + " memory= " + Util::Int2String(adarein_sss_c.calMemory())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms InitTime= " + Util::Double2String(initTime)
+					 + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms maxSkipPre= " + Util::Int2String(adarein_sss_c.maxSkipPredicate)
+					 + " ms fPR= " + Util::Double2String(falsePositiveRate)
+					 + " realfPR= " + Util::Double2String(1 - realMatchNum / Util::Average(matchSubList))
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts)
+					 + " attGroup= " + Util::Int2String(attrGroup)
+					 + " attNumType= " + Util::Int2String(attNumType)
+					 + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -969,7 +970,7 @@ void run_AdaRein_SSS_C(const intervalGenerator& gen, unordered_map<int, bool> de
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_AdaRein_SSS_C_W(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) {
+void run_AdaRein_SSS_C_W(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	AdaRein adarein_sss_c_w(AdaRein_SSS_C_W);
 
 	vector<double> insertTimeList;
@@ -984,26 +985,26 @@ void run_AdaRein_SSS_C_W(const intervalGenerator& gen, unordered_map<int, bool> 
 		adarein_sss_c_w.insert_sss_c_w(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
-		insertTimeList.push_back((double)insertTime / 1000000);
+		insertTimeList.push_back((double) insertTime / 1000000);
 	}
 	cout << "AdaRein_SSS_C_W Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
 	adarein_sss_c_w.static_succession_selection_crossed_width(falsePositiveRate, gen.subList);
-	initTime = (double)initStart.elapsed_nano() / 1000000.0;
+	initTime = (double) initStart.elapsed_nano() / 1000000.0;
 	cout << "AdaRein_SSS_C_W Skipping Task Finishes.\n";
 
 	// 验证插入删除正确性
 	if (verifyID) {
-		for (auto kv : deleteNo) {
+		for (auto kv: deleteNo) {
 			Timer deleteStart;
 			if (!adarein_sss_c_w.deleteSubscription(gen.subList[kv.first]))
 				cout << "AdaRein_SSS_C_W: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
-			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "AdaRein_SSS_C_W Deletion Finishes.\n";
-		for (auto kv : deleteNo) {
+		for (auto kv: deleteNo) {
 			adarein_sss_c_w.insert(gen.subList[kv.first]);
 		}
 	}
@@ -1016,13 +1017,13 @@ void run_AdaRein_SSS_C_W(const intervalGenerator& gen, unordered_map<int, bool> 
 		adarein_sss_c_w.approx_match_sss_c_w(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-		matchTimeList.push_back((double)eventTime / 1000000);
+		matchTimeList.push_back((double) eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
 			cout << "AdaRein_SSS_C_W Event " << i << " is matched.\n";
 	}
 
-	double falseAvgMatchNum=Util::Average(matchSubList);
+	double falseAvgMatchNum = Util::Average(matchSubList);
 
 #ifdef DEBUG
 	cout << "falseMatchNum= " << falseAvgMatchNum << ", realFalsePositiveRate= " \
@@ -1033,25 +1034,25 @@ void run_AdaRein_SSS_C_W(const intervalGenerator& gen, unordered_map<int, bool> 
 	// output
 	string outputFileName = "AdaRein_SSS_C_W.txt";
 	string content = expID
-		+ " memory= " + Util::Int2String(adarein_sss_c_w.calMemory_sss_c_w())
-		+ " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-		+ " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-		+ " ms InitTime= " + Util::Double2String(initTime)
-		+ " ms AvgConstructionTime= " +
-		Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-		+ " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-		+ " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-		+ " ms maxSkipPre= " + Util::Int2String(adarein_sss_c_w.maxSkipPredicate)
-		+ " ms fPR= " + Util::Double2String(falsePositiveRate)
-		+ " realfPR= " + Util::Double2String(1 - realMatchNum / falseAvgMatchNum)
-		+ " numSub= " + Util::Int2String(subs)
-		+ " subSize= " + Util::Int2String(cons)
-		+ " numPub= " + Util::Int2String(pubs)
-		+ " pubSize= " + Util::Int2String(m)
-		+ " attTypes= " + Util::Int2String(atts)
-		+ " attGroup= " + Util::Int2String(attrGroup)
-		+ " attNumType= " + Util::Int2String(attNumType)
-		+ " valDom= " + Util::Double2String(valDom);
+					 + " memory= " + Util::Int2String(adarein_sss_c_w.calMemory_sss_c_w())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms InitTime= " + Util::Double2String(initTime)
+					 + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms maxSkipPre= " + Util::Int2String(adarein_sss_c_w.maxSkipPredicate)
+					 + " ms fPR= " + Util::Double2String(falsePositiveRate)
+					 + " realfPR= " + Util::Double2String(1 - realMatchNum / falseAvgMatchNum)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts)
+					 + " attGroup= " + Util::Int2String(attrGroup)
+					 + " attNumType= " + Util::Int2String(attNumType)
+					 + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -1533,7 +1534,7 @@ void run_HEM4(const intervalGenerator &gen) {
 
 // 动动模式
 void run_HEM5(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
-	HEM5 hem5;
+	HEM5 hem5(false);
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -1638,6 +1639,109 @@ void run_HEM5(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 	//_for(i, 0, hem5.numBucket)
 	//	content += " " + to_string(hem5.bucketSub[i].size());
 	//Util::WriteData2Begin(outputFileName.c_str(), content);
+
+	outputFileName = "tmpData/HEM5.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
+}
+
+void run_HEM5_parallel(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
+	HEM5 hem5_p(true);
+
+	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchInstructionList;
+	vector<double> matchSubList;
+
+	// insert
+	for (int i = 0; i < subs; i++) {
+		Timer insertStart;
+
+		hem5_p.insert(gen.subList[i]); // Insert sub[i] into data structure.
+
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double) insertTime / 1000000);
+	}
+	cout << "HEM5DD-Parallel Insertion Finishes.\n";
+
+	double initTime;
+	Timer initStart;
+	hem5_p.initBits();
+	initTime = (double) initStart.elapsed_nano() / 1000000.0;
+
+	// 验证插入删除正确性
+	if (verifyID) {
+		for (auto kv: deleteNo) {
+			Timer deleteStart;
+			if (!hem5_p.deleteSubscription(gen.subList[kv.first]))
+				cout << "HEM5DD-Parallel: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
+		}
+		cout << "HEM5DD-Parallel Deletion Finishes.\n";
+		for (auto kv: deleteNo) {
+			hem5_p.insert_online(gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
+		}
+	}
+
+	// match
+	for (int i = 0; i < pubs; i++) {
+		int matchSubs = 0; // Record the number of matched subscriptions.
+		Timer matchStart;
+		int64_t begin = GetCPUCycle();
+#ifdef DEBUG
+		hem5_p.match_debug(gen.pubList[i], matchSubs);
+#else
+		hem5_p.match_parallel(gen.pubList[i], matchSubs);
+#endif // DEBUG
+		matchInstructionList.push_back(GetCPUCycle() - begin);
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double) eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "HEM5DD-Parallel Event " << i << " is matched.\n";
+	}
+
+	if (display)
+		hem5_p.printRelation(1);
+	cout << endl;
+
+	// output
+	string outputFileName = "HEM5.txt";
+	string content = expID
+					 + " bits= " + Util::Int2String(be)
+					 + " memory= " + Util::Int2String(hem5_p.calMemory())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms InitTime= " + Util::Double2String(initTime)
+					 + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList))
+					 + " AvgCmpTime= " + to_string(hem5_p.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(hem5_p.markTime / pubs / 1000000)
+					 + " ms OrTime= " + to_string(hem5_p.orTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(hem5_p.bitTime / pubs / 1000000)
+					 + " ms pD= " + to_string(parallelDegree)
+					 + " numBuk= " + Util::Int2String(hem5_p.numBucket)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts)
+					 + " attGroup= " + Util::Int2String(attrGroup)
+					 + " attNumType= " + Util::Int2String(attNumType)
+					 + " valDom= " + Util::Double2String(valDom);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+#ifdef DEBUG
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "HEM5DD_Parallel= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif // DEBUG
 
 	outputFileName = "tmpData/HEM5.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
@@ -3524,8 +3628,8 @@ void run_PSTREE(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double) insertTime / 1000000);
 
-		if(i%200000==0){
-			cout<<"PS-Tree Insert sub "<<i<<endl;
+		if (i % 200000 == 0) {
+			cout << "PS-Tree Insert sub " << i << endl;
 		}
 	}
 	cout << "PS-Tree Insertion Finishes.\n";
@@ -3693,7 +3797,7 @@ void run_AWBTREE(const intervalGenerator &gen, unordered_map<int, bool> deleteNo
 
 void measure_numMark(const intervalGenerator &gen) {
 	Rein rein(OriginalRein);
-	HEM5 hem5;
+	HEM5 hem5(false);
 
 	for (int i = 0; i < subs; i++) {
 		rein.insert_backward_original(gen.subList[i]);

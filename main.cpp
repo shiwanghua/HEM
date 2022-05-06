@@ -16,9 +16,10 @@ int main(int argc, char **argv) {
 		attrGroup = atoi(argv[8]);
 		valDom = atoi(argv[9]);
 		parallelDegree = atoi(argv[10]);
-                cout << "argc=" << argc << endl;
+		cout << "argc=" << argc << endl;
 		cout << argv[0] << "  " << argv[1] << "  " << argv[2] << "  " << argv[3] << "  " << argv[4] << "  " << argv[5]
-			 << "  " << argv[6] << "  " << argv[7] << "  " << argv[8] << "  " << argv[9] << "  "<< argv[10] << "  n=" << subs
+			 << "  " << argv[6] << "  " << argv[7] << "  " << argv[8] << "  " << argv[9] << "  " << argv[10] << "  n="
+			 << subs
 			 << endl;
 	}
 
@@ -43,7 +44,7 @@ int main(int argc, char **argv) {
 			id = rand() % subs;
 			while (deleteNo.count(id))
 				id = rand() % subs;
-			deleteNo[id] = true;
+				deleteNo[id] = true;
 		}
 	}
 
@@ -63,7 +64,8 @@ int main(int argc, char **argv) {
 	////	run_HEM2(gen);
 	////	run_HEM3(gen);
 	////	run_HEM4(gen);
-     	run_HEM5(gen, deleteNo);
+	run_HEM5(gen, deleteNo);
+	run_HEM5_parallel(gen, deleteNo);
 //	run_HEM5_VAG(gen, deleteNo);
 //	run_HEM5_RAG(gen, deleteNo);
 	run_HEM5_avxOR(gen, deleteNo);

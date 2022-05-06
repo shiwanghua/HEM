@@ -1,11 +1,14 @@
 #include "HEM5.h"
 
-HEM5::HEM5() {
+HEM5::HEM5(bool threadPoolParallel) {
 	numSub = 0;
 	numDimension = atts;
 	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
-	cout << "ExpID = " << expID << ". HEM5DD: bit exponent = " << be << ", bucketStep = " << buckStep
+	string type = "HEM5DD";
+	if (threadPoolParallel)
+		type += "-Parallel" + to_string(parallelDegree);
+	cout << "ExpID = " << expID << ". " + type + ": bit exponent = " << be << ", bucketStep = " << buckStep
 		 << ", numBucket = " << numBucket << endl;
 
 	//bucketSub.resize(numBucket);
@@ -38,6 +41,10 @@ HEM5::HEM5() {
 
 	fix[0].resize(numDimension, vector<int>(numBucket + 1));
 	fix[1].resize(numDimension, vector<int>(numBucket + 1));
+
+	if (threadPoolParallel) {
+		threadPool.initThreadPool(parallelDegree);
+	}
 }
 
 HEM5::~HEM5() {
@@ -463,8 +470,8 @@ void HEM5::match(const Pub &pub, int &matchSubs) {
 	vector<bool> attExist(numDimension, false);
 	int value, att, buck;
 
-	_for(i, 0, pub.size) {
-		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
+	for (const auto &pp: pub.pairs) {
+		value = pp.value, att = pp.att, buck = value / buckStep;
 		attExist[att] = true;
 		_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
 				b[data[0][att][buck][k].subID] = 1;
@@ -617,6 +624,91 @@ void HEM5::match_debug(const Pub &pub, int &matchSubs) {
 	//		}
 	matchSubs = subs - b.count();
 	bitTime += (double) bitStart.elapsed_nano();
+}
+
+void HEM5::match_parallel(const Pub &pub, int &matchSubs) {
+
+	vector<future<bitset<subs>>> threadResult;
+	int seg = (pub.size + parallelDegree - 1) / parallelDegree;
+	for (int begin = 0; begin < pub.size; begin += seg) {
+		threadResult.emplace_back(threadPool.enqueue([this, &pub, &seg, begin] {
+// 局部变量存栈里
+			bitset<subs> b; // register
+			bitset<subs> bLocal;
+			int value, att, buck;
+			for (int i = begin; i < min(begin + seg, pub.size); i++) {
+				value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
+
+				_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
+						b[data[0][att][buck][k].subID] = 1;
+				_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
+						b[data[1][att][buck][k].subID] = 1;
+
+				if (doubleReverse[0][att][buck]) {
+					if (bitsID[0][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
+						bLocal = fullBits[att];
+					else
+						bLocal = bits[0][att][bitsID[0][att][buck]];
+					_for(j, endBucket[0][att][buck], buck + 1) _for(k, 0,
+																	data[0][att][j].size()) bLocal[data[0][att][j][k].subID] = 0;
+
+					b = b | bLocal;
+				} else {
+					_for(j, buck + 1, endBucket[0][att][buck]) _for(k, 0,
+																	data[0][att][j].size()) b[data[0][att][j][k].subID] = 1;
+
+					if (bitsID[0][att][buck] != -1)
+						b = b | bits[0][att][bitsID[0][att][buck]];
+				}
+
+				if (doubleReverse[1][att][buck]) {
+					if (bitsID[1][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
+						bLocal = fullBits[att];
+					else
+						bLocal = bits[1][att][bitsID[1][att][buck]];
+
+					_for(j, buck, endBucket[1][att][buck]) _for(k, 0,
+																data[1][att][j].size()) bLocal[data[1][att][j][k].subID] = 0;
+
+					b = b | bLocal;
+				} else {
+					_for(j, endBucket[1][att][buck], buck) _for(k, 0,
+																data[1][att][j].size()) b[data[1][att][j][k].subID] = 1;
+
+					if (bitsID[1][att][buck] != -1)
+						b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
+				}
+			}
+			return b;
+		}));
+	}
+
+	bitset<subs> gb;
+	if (pub.size < atts) {
+		vector<bool> attExist(numDimension, false);
+		for (const auto item: pub.pairs)
+			attExist[item.att] = true;
+
+		/*if (numBits > 1)
+	{*/
+		_for(i, 0, numDimension) if (!attExist[i])
+				gb = gb | fullBits[i];
+		/*}
+		else
+		{
+			_for(i, 0, numDimension) if (!attExist[i])
+				_for(j, 0, endBucket[0][i][0])
+				_for(k, 0, data[0][i][j].size())
+				b[data[0][i][j][k].subID] = 1;
+
+			_for(i, 0, numDimension) if (!attExist[i])
+				b = b | bits[0][i][0];
+		}*/
+	}
+
+	for (int i = 0; i < threadResult.size(); i++)
+		gb |= threadResult[i].get();
+	matchSubs = numSub - gb.count();
 }
 
 //void HEM5::calBucketSize() {
