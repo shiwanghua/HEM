@@ -14,6 +14,7 @@ void intervalGenerator::GenSubList() {
 	for (int i = 0; i < subs; i++) {
 		IntervalSub sub = GenOneSub(i, cons, atts, attDis, valDis, valDom, alpha, width);
 		subList.emplace_back(sub);
+                if(i&&i%50000000==0) cout<<"Gen sub"<<i<<"\n";
 	}
 }
 

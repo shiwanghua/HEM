@@ -121,14 +121,14 @@ public:
 
 	static void Pub2dPub(Pub pub, dPub &dpub);
 
-	static inline void bitsetOr(bitset<subs>& b1, bitset<subs>& b2); // b1=b1|b2;
+	static inline void bitsetOr(bitset<subs>& b1, const bitset<subs>& b2); // b1=b1|b2;
 
 //	static uint64_t GetCPUCycle();
 };
 
 
 // 256
-inline void Util::bitsetOr(bitset<subs> &b1, bitset<subs> &b2) { // b1=b1|b2;
+/*inline void Util::bitsetOr(bitset<subs> &b1, const bitset<subs> &b2) { // b1=b1|b2;
 	__m256i b1_256, b2_256;
 	long long int *begin1 = reinterpret_cast<long long int *> (&b1);
 	long long int *begin2 = reinterpret_cast<long long int *> (&b2);
@@ -144,27 +144,27 @@ inline void Util::bitsetOr(bitset<subs> &b1, bitset<subs> &b2) { // b1=b1|b2;
 		begin1 += ptrIncrement;
 		begin2 += ptrIncrement;
 	}
-}
+}*/
 
 // 512
-//void Util::bitsetOr(bitset<subs> &b1, bitset<subs> &b2) { // b1=b1|b2;
-//	__m512i b1_512, b2_512;
-//	long long int *begin1 = reinterpret_cast<long long int *> (&b1);
-//	long long int *begin2 = reinterpret_cast<long long int *> (&b2);
-//
-//	_for(i, 0, blockNum) {
-////		b1_512 = _mm512_loadu_si512(begin1, mask);
-//		b1_512 = _mm512_loadu_si512 (begin1);
-//		b2_512 = _mm512_loadu_si512(begin2);
-//
-//		b1_512 = _mm512_or_si512(b1_512, b2_512);
-//
-//		_mm512_store_si512(begin1,  b1_512);
-//
-//		begin1 += ptrIncrement;
-//		begin2 += ptrIncrement;
-//	}
-//}
+void Util::bitsetOr(bitset<subs> &b1, const bitset<subs> &b2) { // b1=b1|b2;
+	__m512i b1_512, b2_512;
+	long long int *begin1 = reinterpret_cast<long long int *> (&b1);
+	long long int *begin2 = reinterpret_cast<long long int *>(const_cast<bitset<subs> *> (&b2));
+
+	_for(i, 0, blockNum) {
+//		b1_512 = _mm512_loadu_si512(begin1, mask);
+		b1_512 = _mm512_loadu_si512 (begin1);
+		b2_512 = _mm512_loadu_si512(begin2);
+
+         	b1_512 = _mm512_or_si512(b1_512, b2_512);
+
+		_mm512_store_si512(begin1,  b1_512);
+
+		begin1 += ptrIncrement;
+		begin2 += ptrIncrement;
+	}
+}
 
 // Win10
 //inline void Util::bitsetOr(bitset<subs>& b1, bitset<subs>& b2) { // b1=b1|b2;

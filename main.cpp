@@ -65,10 +65,11 @@ int main(int argc, char **argv) {
 	////	run_HEM3(gen);
 	////	run_HEM4(gen);
 	run_HEM5(gen, deleteNo);
+        run_HEM5_avxOR(gen, deleteNo);
 	run_HEM5_parallel(gen, deleteNo);
+        run_HEM5_avxOR_parallel(gen, deleteNo);
 //	run_HEM5_VAG(gen, deleteNo);
 //	run_HEM5_RAG(gen, deleteNo);
-	run_HEM5_avxOR(gen, deleteNo);
 	////	run_HEMSC(gen);
 	////	run_HEMSR(gen);
 	////

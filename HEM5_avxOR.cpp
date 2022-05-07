@@ -5,7 +5,7 @@ HEM5_avxOR::HEM5_avxOR() {
 	numDimension = atts;
 	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
-	cout << "ExpID = " << expID << ". HEM5_"+to_string(blockSize)+"ORDD: bit exponent = " << be << ", bucketStep = " << buckStep
+	cout << "ExpID = " << expID << ". HEM5DD_avxOR"+to_string(blockSize)+": bit exponent = " << be << ", bucketStep = " << buckStep
 		<< ", numBucket = " << numBucket << endl;
 
 	//bucketSub.resize(numBucket);

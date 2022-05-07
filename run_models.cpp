@@ -1707,7 +1707,7 @@ void run_HEM5_parallel(const intervalGenerator &gen, unordered_map<int, bool> de
 	cout << endl;
 
 	// output
-	string outputFileName = "HEM5.txt";
+	string outputFileName = "pHEM5.txt";
 	string content = expID
 					 + " bits= " + Util::Int2String(be)
 					 + " memory= " + Util::Int2String(hem5_p.calMemory())
@@ -1743,7 +1743,110 @@ void run_HEM5_parallel(const intervalGenerator &gen, unordered_map<int, bool> de
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 #endif // DEBUG
 
-	outputFileName = "tmpData/HEM5.txt";
+	outputFileName = "tmpData/pHEM5.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
+}
+
+void run_HEM5_avxOR_parallel(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
+	HEM5 hem5_avxOR_p(true);
+
+	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchInstructionList;
+	vector<double> matchSubList;
+
+	// insert
+	for (int i = 0; i < subs; i++) {
+		Timer insertStart;
+
+		hem5_avxOR_p.insert(gen.subList[i]); // Insert sub[i] into data structure.
+
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double) insertTime / 1000000);
+	}
+	cout << "HEM5DD-axvOR-Parallel Insertion Finishes.\n";
+
+	double initTime;
+	Timer initStart;
+	hem5_avxOR_p.initBits();
+	initTime = (double) initStart.elapsed_nano() / 1000000.0;
+
+	// 验证插入删除正确性
+	if (verifyID) {
+		for (auto kv: deleteNo) {
+			Timer deleteStart;
+			if (!hem5_avxOR_p.deleteSubscription(gen.subList[kv.first]))
+				cout << "HEM5DD-avxOR-Parallel: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double) deleteStart.elapsed_nano() / 1000000);
+		}
+		cout << "HEM5DD-avxOR-Parallel Deletion Finishes.\n";
+		for (auto kv: deleteNo) {
+			hem5_avxOR_p.insert_online(gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
+		}
+	}
+
+	// match
+	for (int i = 0; i < pubs; i++) {
+		int matchSubs = 0; // Record the number of matched subscriptions.
+		Timer matchStart;
+		int64_t begin = GetCPUCycle();
+#ifdef DEBUG
+		hem5_avxOR_p.match_debug(gen.pubList[i], matchSubs);
+#else
+		hem5_avxOR_p.match_avxOR_parallel(gen.pubList[i], matchSubs);
+#endif // DEBUG
+		matchInstructionList.push_back(GetCPUCycle() - begin);
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double) eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "HEM5DD-avxOR-Parallel Event " << i << " is matched.\n";
+	}
+
+	if (display)
+		hem5_avxOR_p.printRelation(1);
+	cout << endl;
+
+	// output
+	string outputFileName = "pHEM5_avxOR.txt";
+	string content = expID
+					 + " bits= " + Util::Int2String(be)
+					 + " memory= " + Util::Int2String(hem5_avxOR_p.calMemory())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms InitTime= " + Util::Double2String(initTime)
+					 + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList))
+					 + " AvgCmpTime= " + to_string(hem5_avxOR_p.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(hem5_avxOR_p.markTime / pubs / 1000000)
+					 + " ms OrTime= " + to_string(hem5_avxOR_p.orTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(hem5_avxOR_p.bitTime / pubs / 1000000)
+					 + " ms pD= " + to_string(parallelDegree)
+					 + " numBuk= " + Util::Int2String(hem5_avxOR_p.numBucket)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts)
+					 + " attGroup= " + Util::Int2String(attrGroup)
+					 + " attNumType= " + Util::Int2String(attNumType)
+					 + " valDom= " + Util::Double2String(valDom);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+#ifdef DEBUG
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "HEM5DD_Parallel= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif // DEBUG
+
+	outputFileName = "tmpData/pHEM5_avxOR.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }

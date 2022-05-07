@@ -50,6 +50,8 @@ public:
 
 	void match_parallel(const Pub &pub, int &matchSubs);
 
+	void match_avxOR_parallel(const Pub &pub, int &matchSubs);
+
 	void initBits();      // 插入完后初始化bits数组
 	//void calBucketSize(); // 计算bucketSize
 	int calMemory();      // 计算占用内存大小
