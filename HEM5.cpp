@@ -6,8 +6,10 @@ HEM5::HEM5(bool threadPoolParallel) {
 	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
 	string type = "HEM5DD";
-	if (threadPoolParallel)
+	if (threadPoolParallel){
+		threadPool.initThreadPool(parallelDegree);
 		type += "-Parallel" + to_string(parallelDegree);
+	}
 	cout << "ExpID = " << expID << ". " + type + ": bit exponent = " << be << ", bucketStep = " << buckStep
 		 << ", numBucket = " << numBucket << endl;
 
@@ -41,10 +43,6 @@ HEM5::HEM5(bool threadPoolParallel) {
 
 	fix[0].resize(numDimension, vector<int>(numBucket + 1));
 	fix[1].resize(numDimension, vector<int>(numBucket + 1));
-
-	if (threadPoolParallel) {
-		threadPool.initThreadPool(parallelDegree);
-	}
 }
 
 HEM5::~HEM5() {
@@ -629,14 +627,19 @@ void HEM5::match_debug(const Pub &pub, int &matchSubs) {
 void HEM5::match_parallel(const Pub &pub, int &matchSubs) {
 
 	vector<future<bitset<subs>>> threadResult;
-	int seg = (pub.size + parallelDegree - 1) / parallelDegree;
-	for (int begin = 0; begin < pub.size; begin += seg) {
-		threadResult.emplace_back(threadPool.enqueue([this, &pub, &seg, begin] {
+	int seg = pub.size / parallelDegree;
+	int remainder=pub.size%parallelDegree;
+	int tId=0,end;
+	for (int begin = 0; begin < pub.size; begin = end,tId++) {
+		if(tId<remainder)
+			end=begin+seg+1;
+		else end=begin+seg;
+		threadResult.emplace_back(threadPool.enqueue([this, &pub, begin, end] {
 // 局部变量存栈里
 			bitset<subs> b; // register
 			bitset<subs> bLocal;
 			int value, att, buck;
-			for (int i = begin; i < min(begin + seg, pub.size); i++) {
+			for (int i = begin; i < end; i++) {
 				value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 
 				_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
@@ -705,23 +708,66 @@ void HEM5::match_parallel(const Pub &pub, int &matchSubs) {
 				b = b | bits[0][i][0];
 		}*/
 	}
+#ifdef DEBUG
+	Timer mergeStart;
+#endif
 
-	for (int i = 0; i < threadResult.size(); i++)
-		gb |= threadResult[i].get();
-	matchSubs = numSub - gb.count();
+	vector<bitset<subs>> threadResult2;
+	for (int i = 0; i < parallelDegree; i++)
+		threadResult2.emplace_back(threadResult[i].get());
+	int pDi = (parallelDegree + 1) >> 1, pDn = parallelDegree;
+	while (pDn > 1) {
+		for (int i = 0; i < pDi; i++) {
+			if (i + pDi < pDn)
+				threadResult[i] = threadPool.enqueue([&, i](int j) {
+					return threadResult2[i] | threadResult2[j];
+				}, i + pDi);
+		}
+		for (int i = 0; i < pDi; i++) {
+			if (i + pDi < pDn)
+				threadResult2[i]=threadResult[i].get();
+		}
+		pDn = pDi;
+		pDi = (pDi + 1) >> 1;
+	}
+
+//	for (int i = 0; i < threadResult.size(); i++)
+//		gb |= threadResult[i].get();
+
+#ifdef DEBUG
+	mergeTime+=(double)mergeStart.elapsed_nano();
+	Timer bitStart;
+#endif
+
+	if (pub.size < atts) {
+		gb |= (threadResult2[0]);
+		matchSubs = numSub - gb.count();
+	} else {
+		matchSubs = numSub - threadResult2[0].count();
+	}
+//	matchSubs = numSub - gb.count();
+
+#ifdef DEBUG
+	bitTime += (double)bitStart.elapsed_nano();
+#endif // DEBUG
 }
 
-void HEM5::match_avxOR_parallel(const Pub &pub, int &matchSubs){
+void HEM5::match_avxOR_parallel(const Pub &pub, int &matchSubs) {
 
 	vector<future<bitset<subs>>> threadResult;
-	int seg = (pub.size + parallelDegree - 1) / parallelDegree;
-	for (int begin = 0; begin < pub.size; begin += seg) {
-		threadResult.emplace_back(threadPool.enqueue([this, &pub, &seg, begin] {
+	int seg = pub.size / parallelDegree;
+	int remainder=pub.size%parallelDegree;
+	int tId=0,end;
+	for (int begin = 0; begin < pub.size; begin = end,tId++) {
+		if(tId<remainder)
+			end=begin+seg+1;
+		else end=begin+seg;
+		threadResult.emplace_back(threadPool.enqueue([this, &pub, begin, end] {
 // 局部变量存栈里
 			bitset<subs> b; // register
 			bitset<subs> bLocal;
 			int value, att, buck;
-			for (int i = begin; i < min(begin + seg, pub.size); i++) {
+			for (int i = begin; i < end; i++) {
 				value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 
 				_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
@@ -734,8 +780,9 @@ void HEM5::match_avxOR_parallel(const Pub &pub, int &matchSubs){
 						bLocal = fullBits[att];
 					else
 						bLocal = bits[0][att][bitsID[0][att][buck]];
-					_for(j, endBucket[0][att][buck], buck + 1) _for(k, 0,
-																	data[0][att][j].size()) bLocal[data[0][att][j][k].subID] = 0;
+					_for(j, endBucket[0][att][buck], buck + 1) 
+					_for(k, 0, data[0][att][j].size()) 
+					    bLocal[data[0][att][j][k].subID] = 0;
 
 					Util::bitsetOr(b, bLocal);//b = b | bLocal;
 				} else {
@@ -743,7 +790,8 @@ void HEM5::match_avxOR_parallel(const Pub &pub, int &matchSubs){
 																	data[0][att][j].size()) b[data[0][att][j][k].subID] = 1;
 
 					if (bitsID[0][att][buck] != -1)
-						Util::bitsetOr(b, bits[0][att][bitsID[0][att][buck]]);//b = b | bits[0][att][bitsID[0][att][buck]];
+						Util::bitsetOr(b,
+									   bits[0][att][bitsID[0][att][buck]]);//b = b | bits[0][att][bitsID[0][att][buck]];
 				}
 
 				if (doubleReverse[1][att][buck]) {
@@ -761,7 +809,8 @@ void HEM5::match_avxOR_parallel(const Pub &pub, int &matchSubs){
 																data[1][att][j].size()) b[data[1][att][j][k].subID] = 1;
 
 					if (bitsID[1][att][buck] != -1)
-						Util::bitsetOr(b, bits[1][att][bitsID[1][att][buck]]);//b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
+						Util::bitsetOr(b,
+									   bits[1][att][bitsID[1][att][buck]]);//b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
 				}
 			}
 			return b;
@@ -791,11 +840,20 @@ void HEM5::match_avxOR_parallel(const Pub &pub, int &matchSubs){
 		}*/
 	}
 
+#ifdef DEBUG
+	Timer mergeStart;
+#endif
 	for (int i = 0; i < threadResult.size(); i++)
 		Util::bitsetOr(gb, threadResult[i].get());//gb |= threadResult[i].get();
+#ifdef DEBUG
+	mergeTime+=(double)mergeStart.elapsed_nano();
+	Timer bitStart;
+#endif
 	matchSubs = numSub - gb.count();
-
-}
+#ifdef DEBUG
+	bitTime += (double)bitStart.elapsed_nano();
+#endif // DEBUG
+} // match_avxOR_parallel
 
 //void HEM5::calBucketSize() {
 //	bucketSub.clear();

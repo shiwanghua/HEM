@@ -38,8 +38,12 @@ HEM5_AS::HEM5_AS(int type) {
 	fix[0].resize(numDimension, vector<int>(numBucket + 1));
 	fix[1].resize(numDimension, vector<int>(numBucket + 1));
 	string TYPE;
-	if (type == HEM5_DD_VAS)TYPE = "HEM5_DD_VAS";
-	else TYPE = "HEM5_DD_RAS";
+	if (type == HEM5_DD_VAS) TYPE = "HEM5_DD_VAS";
+	else if(type==HEM5_DD_RAS) TYPE = "HEM5_DD_RAS";
+	else if(type==HEM5_DD_RAS_AVXOR_PARALLEL) {
+		TYPE = "HEM5_DD_RAS_AVXOR"+to_string(blockSize)+"_PARALLEL";
+		threadPool.initThreadPool(parallelDegree);
+	}
 	cout << "ExpID = " << expID << ". " + TYPE + ": bitset number = " << numBits << ", bucketStep = " << buckStep
 		 << ", numBucket = " << numBucket << ", attrGroupNum = " << numAttrGroup << ", attGroupSize = " << attrGroupSize
 		 << endl;
@@ -743,6 +747,110 @@ void HEM5_AS::match_RAS(const Pub &pub, int &matchSubs) {
 	//			//cout << "HEM5_VAG matches sub: " << i << endl;
 	//		}
 	matchSubs = subs - b.count();
+#ifdef DEBUG
+	bitTime += (double)bitStart.elapsed_nano();
+#endif // DEBUG
+}
+
+void HEM5_AS::match_RAS_avxOR_parallel(const Pub &pub, int &matchSubs) {
+	vector<future<bitset<subs>>> threadResult;
+	int seg = pub.size / parallelDegree;
+	int remainder=pub.size%parallelDegree;
+	int tId=0,end;
+	for (int begin = 0; begin < pub.size; begin = end,tId++) {
+		if(tId<remainder)
+			end=begin+seg+1;
+		else end=begin+seg;
+		threadResult.emplace_back(threadPool.enqueue([this, &pub, begin, end] {
+// 局部变量存栈里
+			bitset<subs> b; // register
+			bitset<subs> bLocal;
+			
+			int value, att, buck;
+			for (int i = begin; i < end; i++) {
+				value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
+				_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
+						b[data[0][att][buck][k].subID] = 1;
+				_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
+						b[data[1][att][buck][k].subID] = 1;
+
+				if (doubleReverse[0][att][buck]) {
+					if (bitsID[0][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
+						bLocal = fullBits[att];
+					else
+						bLocal = bits[0][att][bitsID[0][att][buck]];
+					_for(j, endBucket[0][att][buck], buck + 1) 
+					for (auto &&iCob: data[0][att][j])
+							bLocal[iCob.subID] = 0;
+					Util::bitsetOr(b, bLocal);
+				} else {
+					_for(j, buck + 1, endBucket[0][att][buck]) for (auto &&iCob: data[0][att][j])
+							b[iCob.subID] = 1;
+					if (bitsID[0][att][buck] != -1)
+						Util::bitsetOr(b,bits[0][att][bitsID[0][att][buck]]);
+				}
+
+				if (doubleReverse[1][att][buck]) {
+					if (bitsID[1][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
+						bLocal = fullBits[att];
+					else
+						bLocal = bits[1][att][bitsID[1][att][buck]];
+					_for(j, buck, endBucket[1][att][buck]) for (auto &&iCob: data[1][att][j])
+							bLocal[iCob.subID] = 0;
+					Util::bitsetOr(b, bLocal);
+				} else {
+					_for(j, endBucket[1][att][buck], buck) for (auto &&iCob: data[1][att][j])
+							b[iCob.subID] = 1;
+					if (bitsID[1][att][buck] != -1)
+						Util::bitsetOr(b, bits[1][att][bitsID[1][att][buck]]);//b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
+				}
+			}
+			return b;
+		}));
+	}
+
+	// 处理空维度情况
+	/*if (numBits > 1) // 如果只有一个bitset时bitset是设置为负责一半的桶而不是全部桶就要用if区分
+	{*/
+	/*_for(i, 0, numDimension) if (!attExist[i])
+		b = b | fullBits[i];*/
+	/*}
+	else
+	{
+		_for(i, 0, numDimension) if (!attExist[i])
+			_for(j, 0, endBucket[0][i][0])
+			_for(k, 0, data[0][i][j].size())
+			b[data[0][i][j][k].subID] = 1;
+
+		_for(i, 0, numDimension) if (!attExist[i])
+			b = b | bits[0][i][0];
+	}*/
+	int attGroupNo = pub.pairs[0].att / attrGroupSize;
+	bitset<subs> gb=attrGroupBits[attGroupNo];
+	if(pub.size<attrGroupSize){
+		vector<bool> attExist(numDimension, false);
+		for (auto& item: pub.pairs)
+			attExist[item.att] = true;
+		int base = attGroupNo * attrGroupSize;
+		_for(ai, base, base + attrGroupSize) {
+			if (!attExist[ai])
+				gb = gb | fullBits[ai];
+		}
+	}
+#ifdef DEBUG
+	Timer mergeStart;
+#endif // DEBUG
+	for (int i = 0; i < threadResult.size(); i++)
+		Util::bitsetOr(gb, threadResult[i].get());
+#ifdef DEBUG
+	mergeTime += (double)mergeStart.elapsed_nano();
+	Timer bitStart;
+#endif // DEBUG
+	//	_for(i, 0, subs) if (!b[i]) {
+	//			++matchSubs;
+	//			//cout << "HEM5_VAG matches sub: " << i << endl;
+	//		}
+	matchSubs = subs - gb.count();
 #ifdef DEBUG
 	bitTime += (double)bitStart.elapsed_nano();
 #endif // DEBUG

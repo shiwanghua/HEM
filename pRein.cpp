@@ -169,7 +169,7 @@ int pRein::calMemory() {
 }
 
 void pRein::parallelMatch(const Pub &pub, int &matchSubs) {
-	int seg = (pub.size + pD - 1) / pD;
+//	int seg = (pub.size + pD - 1) / pD;
 //	parallelData* pdata;
 //	for (int i = 0; i < pub.size; i += seg) {
 //		pdata=new parallelData;
@@ -194,11 +194,17 @@ void pRein::parallelMatch(const Pub &pub, int &matchSubs) {
 
 //		threadPool.enqueue(pReinThreadFunction2,pub,i,min(i+seg, pub.size)); // does not capture 'this'
 	vector<future<bitset<subs>>> threadResult;
-	for (int begin = 0; begin < pub.size; begin += seg) {
-		threadResult.emplace_back(threadPool.enqueue([this, &pub, &seg, begin] {
+	int seg = pub.size / parallelDegree;
+	int remainder=pub.size%parallelDegree;
+	int tId=0,end;
+	for (int begin = 0; begin < pub.size; begin = end,tId++) {
+		if(tId<remainder)
+			end=begin+seg+1;
+		else end=begin+seg;
+		threadResult.emplace_back(threadPool.enqueue([this, &pub, begin, end] {
 //			printf("pub%d, begin=%d\n", pub.id, begin);
 			bitset<subs> b;//=new bitset<subs>;
-			for (int i = begin; i < min(begin + seg, pub.size); i++) {
+			for (int i = begin; i < end; i++) {
 				int value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 
 				for (int k = 0; k < data[0][att][buck].size(); k++)
@@ -314,9 +320,19 @@ void pRein::parallelMatch(const Pub &pub, int &matchSubs) {
 	}
 */
 	// without optimization:
-	for (int i = 0; i < parallelDegree; i++)
+#ifdef DEBUG
+	Timer mergeStart;
+#endif
+	for (int i = 0; i < threadResult.size(); i++)
 		gb |= threadResult[i].get();
-	matchSubs = subs - gb.count();
+#ifdef DEBUG
+	mergeTime+=(double)mergeStart.elapsed_nano();
+	Timer bitStart;
+#endif
+	matchSubs = numSub - gb.count();
+#ifdef DEBUG
+	bitTime += (double)bitStart.elapsed_nano();
+#endif // DEBUG
 
 //	printf("\n");
 //	fflush(stdout);

@@ -128,10 +128,10 @@ public:
 
 
 // 256
-/*inline void Util::bitsetOr(bitset<subs> &b1, const bitset<subs> &b2) { // b1=b1|b2;
+void Util::bitsetOr(bitset<subs> &b1, const bitset<subs> &b2) { // b1=b1|b2;
 	__m256i b1_256, b2_256;
 	long long int *begin1 = reinterpret_cast<long long int *> (&b1);
-	long long int *begin2 = reinterpret_cast<long long int *> (&b2);
+	long long int *begin2 = reinterpret_cast<long long int *> (const_cast<bitset<subs> *> (&b2));
 
 	_for(i, 0, blockNum) {
 		b1_256 = _mm256_maskload_epi64(begin1, mask);
@@ -144,10 +144,10 @@ public:
 		begin1 += ptrIncrement;
 		begin2 += ptrIncrement;
 	}
-}*/
+}
 
 // 512
-void Util::bitsetOr(bitset<subs> &b1, const bitset<subs> &b2) { // b1=b1|b2;
+/*void Util::bitsetOr(bitset<subs> &b1, const bitset<subs> &b2) { // b1=b1|b2;
 	__m512i b1_512, b2_512;
 	long long int *begin1 = reinterpret_cast<long long int *> (&b1);
 	long long int *begin2 = reinterpret_cast<long long int *>(const_cast<bitset<subs> *> (&b2));
@@ -164,7 +164,7 @@ void Util::bitsetOr(bitset<subs> &b1, const bitset<subs> &b2) { // b1=b1|b2;
 		begin1 += ptrIncrement;
 		begin2 += ptrIncrement;
 	}
-}
+}*/
 
 // Win10
 //inline void Util::bitsetOr(bitset<subs>& b1, bitset<subs>& b2) { // b1=b1|b2;

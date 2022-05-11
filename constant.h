@@ -82,7 +82,8 @@ extern const int ptrIncrement;
 extern const __m256i mask;
 enum {
 	HEM5_DD_VAS,
-	HEM5_DD_RAS
+	HEM5_DD_RAS,
+	HEM5_DD_RAS_AVXOR_PARALLEL
 };
 
 // Tama

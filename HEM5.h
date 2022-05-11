@@ -32,6 +32,7 @@ public:
 	double markTime = 0.0;                  // 标记时间
 	double orTime = 0.0;                    // 或运算时间
 	double bitTime = 0.0;                   // 遍历bits数组得到结果所需的时间
+	double mergeTime = 0.0;
 	//vector<unordered_set<int>> bucketSub;   // id相同的桶存储的不同订阅个数的和
 
 	HEM5(bool threadPoolParallel);

@@ -61,8 +61,9 @@ void run_HEM5(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 void run_HEM5_avxOR(const intervalGenerator& gen, unordered_map<int,bool> deleteNo);
 void run_HEM5_parallel(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 void run_HEM5_avxOR_parallel(const intervalGenerator& gen, unordered_map<int,bool> deleteNo);
-void run_HEM5_VAG(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
-void run_HEM5_RAG(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
+void run_HEM5_VAS(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
+void run_HEM5_RAS(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
+void run_HEM5_RAS_avxOR_parallel(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 void run_HEMSC(const intervalGenerator& gen);
 void run_HEMSR(const intervalGenerator& gen);
 

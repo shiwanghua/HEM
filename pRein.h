@@ -49,6 +49,7 @@ public:
 	double compareTime = 0.0; // 所有维度上事件值落入的那个cell里逐个精确比较的时间
 	double markTime = 0.0;    // 标记时间
 	double bitTime = 0.0;     // 遍历bits数组得到结果所需的时间
+	double mergeTime=0.0;     // Merge the partial result of threads to the final result
 	vector<unordered_set<int>> bucketSub;   // id相同的桶存储的不同订阅个数的和
 
 	pRein();
