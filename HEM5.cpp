@@ -1,16 +1,20 @@
 #include "HEM5.h"
 
-HEM5::HEM5(bool threadPoolParallel) {
+HEM5::HEM5(int type) {
 	numSub = 0;
 	numDimension = atts;
 	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
-	string type = "HEM5DD";
-	if (threadPoolParallel){
+	string TYPE = "HEM5DD";
+	if(type==HEM5_DD_PARALLEL){
 		threadPool.initThreadPool(parallelDegree);
-		type += "-Parallel" + to_string(parallelDegree);
+		TYPE += "-Parallel" + to_string(parallelDegree);
 	}
-	cout << "ExpID = " << expID << ". " + type + ": bit exponent = " << be << ", bucketStep = " << buckStep
+	else if (type==HEM5_DD_AVXOR_PARALLEL){
+		threadPool.initThreadPool(parallelDegree);
+		TYPE += "-avxOR"+to_string(blockSize)+"-Parallel" + to_string(parallelDegree);
+	}
+	cout << "ExpID = " << expID << ". " + TYPE + ": bit exponent = " << be << ", bucketStep = " << buckStep
 		 << ", numBucket = " << numBucket << endl;
 
 	//bucketSub.resize(numBucket);
@@ -625,7 +629,6 @@ void HEM5::match_debug(const Pub &pub, int &matchSubs) {
 }
 
 void HEM5::match_parallel(const Pub &pub, int &matchSubs) {
-
 	vector<future<bitset<subs>>> threadResult;
 	int seg = pub.size / parallelDegree;
 	int remainder=pub.size%parallelDegree;
@@ -708,44 +711,49 @@ void HEM5::match_parallel(const Pub &pub, int &matchSubs) {
 				b = b | bits[0][i][0];
 		}*/
 	}
-#ifdef DEBUG
+
+	// vector<bitset<subs>> threadResult2;
+	// for (int i = 0; i < parallelDegree; i++)
+	// 	threadResult2.emplace_back(threadResult[i].get());
+
+#ifdef DEBUG // 对于单线程归并，如果没有 获取所有线程的部分结果后 才开始计时，就会导致不公平
 	Timer mergeStart;
 #endif
 
-	vector<bitset<subs>> threadResult2;
-	for (int i = 0; i < parallelDegree; i++)
-		threadResult2.emplace_back(threadResult[i].get());
-	int pDi = (parallelDegree + 1) >> 1, pDn = parallelDegree;
-	while (pDn > 1) {
-		for (int i = 0; i < pDi; i++) {
-			if (i + pDi < pDn)
-				threadResult[i] = threadPool.enqueue([&, i](int j) {
-					return threadResult2[i] | threadResult2[j];
-				}, i + pDi);
-		}
-		for (int i = 0; i < pDi; i++) {
-			if (i + pDi < pDn)
-				threadResult2[i]=threadResult[i].get();
-		}
-		pDn = pDi;
-		pDi = (pDi + 1) >> 1;
-	}
+	// int pDi = (parallelDegree + 1) >> 1, pDn = parallelDegree;
+	// while (pDn > 1) {
+	// 	for (int i = 0; i < pDi; i++) {
+	// 		if (i + pDi < pDn)
+	// 			threadResult[i] = threadPool.enqueue([&, i](int j) {
+	// 				return threadResult2[i] | threadResult2[j];
+	// 			}, i + pDi);
+	// 	}
+	// 	for (int i = 0; i < pDi; i++) {
+	// 		if (i + pDi < pDn)
+	// 			threadResult2[i]=threadResult[i].get();
+	// 	}
+	// 	pDn = pDi;
+	// 	pDi = (pDi + 1) >> 1;
+	// }
 
-//	for (int i = 0; i < threadResult.size(); i++)
-//		gb |= threadResult[i].get();
+	for (int i = 0; i < threadResult.size(); i++)
+		gb |= threadResult[i].get();
+
+	// for (int i = 0; i < threadResult2.size(); i++)
+		// gb |= threadResult2[i];
 
 #ifdef DEBUG
 	mergeTime+=(double)mergeStart.elapsed_nano();
 	Timer bitStart;
 #endif
 
-	if (pub.size < atts) {
-		gb |= (threadResult2[0]);
-		matchSubs = numSub - gb.count();
-	} else {
-		matchSubs = numSub - threadResult2[0].count();
-	}
-//	matchSubs = numSub - gb.count();
+	// if (pub.size < atts) {
+	// 	gb |= (threadResult2[0]);
+	// 	matchSubs = numSub - gb.count();
+	// } else {
+	// 	matchSubs = numSub - threadResult2[0].count();
+	// }
+	matchSubs = numSub - gb.count();
 
 #ifdef DEBUG
 	bitTime += (double)bitStart.elapsed_nano();
@@ -774,24 +782,26 @@ void HEM5::match_avxOR_parallel(const Pub &pub, int &matchSubs) {
 						b[data[0][att][buck][k].subID] = 1;
 				_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
 						b[data[1][att][buck][k].subID] = 1;
-
+			
 				if (doubleReverse[0][att][buck]) {
 					if (bitsID[0][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
 						bLocal = fullBits[att];
 					else
 						bLocal = bits[0][att][bitsID[0][att][buck]];
 					_for(j, endBucket[0][att][buck], buck + 1) 
-					_for(k, 0, data[0][att][j].size()) 
-					    bLocal[data[0][att][j][k].subID] = 0;
-
+					for (auto &&iCob: data[0][att][j])
+							bLocal[iCob.subID] = 0;
+					// printf("a0\n");
+					// fflush(stdout);
 					Util::bitsetOr(b, bLocal);//b = b | bLocal;
 				} else {
-					_for(j, buck + 1, endBucket[0][att][buck]) _for(k, 0,
-																	data[0][att][j].size()) b[data[0][att][j][k].subID] = 1;
-
+					_for(j, buck + 1, endBucket[0][att][buck]) 
+					for (auto &&iCob: data[0][att][j])
+							b[iCob.subID] = 1;
+					// printf("b0\n");
+					// fflush(stdout);
 					if (bitsID[0][att][buck] != -1)
-						Util::bitsetOr(b,
-									   bits[0][att][bitsID[0][att][buck]]);//b = b | bits[0][att][bitsID[0][att][buck]];
+						Util::bitsetOr(b, bits[0][att][bitsID[0][att][buck]]);//b = b | bits[0][att][bitsID[0][att][buck]];
 				}
 
 				if (doubleReverse[1][att][buck]) {
@@ -800,17 +810,16 @@ void HEM5::match_avxOR_parallel(const Pub &pub, int &matchSubs) {
 					else
 						bLocal = bits[1][att][bitsID[1][att][buck]];
 
-					_for(j, buck, endBucket[1][att][buck]) _for(k, 0,
-																data[1][att][j].size()) bLocal[data[1][att][j][k].subID] = 0;
-
+					_for(j, buck, endBucket[1][att][buck]) 
+					for (auto &&iCob: data[1][att][j])
+							bLocal[iCob.subID] = 0;
 					Util::bitsetOr(b, bLocal);//b = b | bLocal;
 				} else {
-					_for(j, endBucket[1][att][buck], buck) _for(k, 0,
-																data[1][att][j].size()) b[data[1][att][j][k].subID] = 1;
-
+					_for(j, endBucket[1][att][buck], buck) 
+					for (auto &&iCob: data[1][att][j])
+							b[iCob.subID] = 1;
 					if (bitsID[1][att][buck] != -1)
-						Util::bitsetOr(b,
-									   bits[1][att][bitsID[1][att][buck]]);//b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
+						Util::bitsetOr(b, bits[1][att][bitsID[1][att][buck]]);//b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
 				}
 			}
 			return b;
@@ -825,7 +834,8 @@ void HEM5::match_avxOR_parallel(const Pub &pub, int &matchSubs) {
 
 		/*if (numBits > 1)
 	{*/
-		_for(i, 0, numDimension) if (!attExist[i])
+		_for(i, 0, numDimension) 
+			if (!attExist[i])
 				Util::bitsetOr(gb, fullBits[i]); //gb = gb | fullBits[i];
 		/*}
 		else
@@ -839,12 +849,13 @@ void HEM5::match_avxOR_parallel(const Pub &pub, int &matchSubs) {
 				b = b | bits[0][i][0];
 		}*/
 	}
-
+	
 #ifdef DEBUG
 	Timer mergeStart;
 #endif
-	for (int i = 0; i < threadResult.size(); i++)
+	for (int i = 0; i < threadResult.size(); i++){
 		Util::bitsetOr(gb, threadResult[i].get());//gb |= threadResult[i].get();
+	}
 #ifdef DEBUG
 	mergeTime+=(double)mergeStart.elapsed_nano();
 	Timer bitStart;

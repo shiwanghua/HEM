@@ -24,11 +24,11 @@ int main(int argc, char **argv) {
 	}
 
 	// bind to cpu core
-	int core_id = 8;
-	cpu_set_t mask;
-	CPU_ZERO(&mask);
-	CPU_SET(core_id, &mask);
-	sched_setaffinity(0, sizeof(mask), &mask);
+	// int core_id = 8;
+	// cpu_set_t mask;
+	// CPU_ZERO(&mask);
+	// CPU_SET(core_id, &mask);
+	// sched_setaffinity(0, sizeof(mask), &mask);
 
 	intervalGenerator gen(subs, pubs, atts, attrGroup, cons, m, attNumType, attDis, valDis, valDom, alpha, subp, width);
 	gen.GenSubList();
@@ -48,6 +48,7 @@ int main(int argc, char **argv) {
 		}
 	}
 
+if(parallelDegree<3)
 	run_rein(gen, deleteNo);
 	////	run_rein_forward_native(gen, deleteNo);
 	////	run_rein_forward_CBOMP(gen, deleteNo);
@@ -59,15 +60,17 @@ int main(int argc, char **argv) {
 //	run_AdaRein_SSS_B(gen, deleteNo);
 //	run_AdaRein_SSS_C(gen, deleteNo);
 //	run_AdaRein_SSS_C_W(gen, deleteNo);
-	//run_HEM(gen);
+	// run_HEM(gen);
 	////	run_HEM1(gen);
 	////	run_HEM2(gen);
 	////	run_HEM3(gen);
 	////	run_HEM4(gen);
-	run_HEM5(gen, deleteNo);
+if(parallelDegree<3)
+    run_HEM5(gen, deleteNo);
+if(parallelDegree<3)
     run_HEM5_avxOR(gen, deleteNo);
 	run_HEM5_parallel(gen, deleteNo);
-    run_HEM5_avxOR_parallel(gen, deleteNo);
+   	run_HEM5_avxOR_parallel(gen, deleteNo);
 //	run_HEM5_VAS(gen, deleteNo);
 //	run_HEM5_RAS(gen, deleteNo);
 	run_HEM5_RAS_avxOR_parallel(gen, deleteNo);

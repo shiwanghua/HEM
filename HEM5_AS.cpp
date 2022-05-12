@@ -784,7 +784,8 @@ void HEM5_AS::match_RAS_avxOR_parallel(const Pub &pub, int &matchSubs) {
 							bLocal[iCob.subID] = 0;
 					Util::bitsetOr(b, bLocal);
 				} else {
-					_for(j, buck + 1, endBucket[0][att][buck]) for (auto &&iCob: data[0][att][j])
+					_for(j, buck + 1, endBucket[0][att][buck]) 
+					for (auto &&iCob: data[0][att][j])
 							b[iCob.subID] = 1;
 					if (bitsID[0][att][buck] != -1)
 						Util::bitsetOr(b,bits[0][att][bitsID[0][att][buck]]);
@@ -795,11 +796,13 @@ void HEM5_AS::match_RAS_avxOR_parallel(const Pub &pub, int &matchSubs) {
 						bLocal = fullBits[att];
 					else
 						bLocal = bits[1][att][bitsID[1][att][buck]];
-					_for(j, buck, endBucket[1][att][buck]) for (auto &&iCob: data[1][att][j])
+					_for(j, buck, endBucket[1][att][buck]) 
+					for (auto &&iCob: data[1][att][j])
 							bLocal[iCob.subID] = 0;
 					Util::bitsetOr(b, bLocal);
 				} else {
-					_for(j, endBucket[1][att][buck], buck) for (auto &&iCob: data[1][att][j])
+					_for(j, endBucket[1][att][buck], buck) 
+					for (auto &&iCob: data[1][att][j])
 							b[iCob.subID] = 1;
 					if (bitsID[1][att][buck] != -1)
 						Util::bitsetOr(b, bits[1][att][bitsID[1][att][buck]]);//b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: ÊÇatt²»ÊÇi

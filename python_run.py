@@ -160,18 +160,13 @@ os.system("sudo cpufreq-set -c " + coreId + " -u 4.9G")
 #     expID += 1
 
 # Exp 16: SIMD
-dimen=[16, 32, 64, 128, 256, 512] # =\psi_e
-for d in dimen:
-    os.system(' ./run ' + str(expID) + ' '+str(d)+' 10 '+str(d)+' 0.0 0.4 4 1 1000000 1')
-    print('Experiment', str(expID), ': atts= '+str(d)+', k= 10, m= '+str(d)+', alpha= 0.0, w= 0.4, be= 4, attrGroup= 1, valDom= 1000000, pD= 1 done.\n\n')
-    expID += 1
-
-# Exp 17: parallel degree
-# for pD in [1,2,4,8,16,32,64]:
-#     os.system(' ./run ' + str(expID) + ' 512 10 512 0.0 0.4 4 1 1000000 ' + str(pD))
-#     print('Experiment', str(expID), ': atts= 512, k= 10, m= 512, alpha= 0.0, w= 0.4, be= 4, attrGroup= 1, valDom= 1000000, pD= ' + str(pD) + ' done.\n\n')
+# dimen=[16, 32, 64, 128, 256, 512] # =\psi_e
+# for d in dimen:
+#     os.system(' ./run ' + str(expID) + ' '+str(d)+' 10 '+str(d)+' 0.0 0.4 4 1 1000000 1')
+#     print('Experiment', str(expID), ': atts= '+str(d)+', k= 10, m= '+str(d)+', alpha= 0.0, w= 0.4, be= 4, attrGroup= 1, valDom= 1000000, pD= 1 done.\n\n')
 #     expID += 1
 
+# Exp 17: parallel degree 
 # Exp 18: pHEMDD-avxOR 组合实验
 # for pD in [1,2,4,8,16,32,64]:
 #     os.system(' ./run ' + str(expID) + ' 512 10 512 0.0 0.4 4 1 1000000 ' + str(pD))
@@ -180,10 +175,10 @@ for d in dimen:
 
 # Exp 19: pHEMDD-RAS-avxOR
 # please set n=134217728
-# for pD in [1,2,4,8,16,32,64]:
-#     os.system(' ./run ' + str(expID) + ' 4096 10 64 0.0 0.4 4 64 1000000 ' + str(pD))
-#     print('Experiment', str(expID), ': atts= 4096, k= 10, m= 64, alpha= 0.0, w= 0.4, be= 4, attrGroup= 64, valDom= 1000000, pD= ' + str(pD) + ' done.\n\n')
-#     expID += 1
+for pD in [1,2,4,8,16,32,64]:
+    os.system(' ./run ' + str(expID) + ' 2048 10 64 0.0 0.4 1 32 1000000 ' + str(pD))
+    print('Experiment', str(expID), ': atts= 2048, k= 10, m= 64, alpha= 0.0, w= 0.4, be= 1, attrGroup= 32, valDom= 1000000, pD= ' + str(pD) + ' done.\n\n')
+    expID += 1
 
 path = "tmpData"
 content = ""

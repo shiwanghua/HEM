@@ -4,7 +4,7 @@
 #include<iostream>
 #include <immintrin.h> //AVX(include wmmintrin.h)
 
-//#define DEBUG
+#define DEBUG
 
 using namespace std;
 
@@ -14,7 +14,7 @@ extern const bool verifyID;// whether to verify Insertion and Deletion function
 extern const int interval; // 每匹配这么多个事件输出一条日志信息
 extern const double subp;  // subp比例的订阅和事件的谓词定义在前cons个维度上
 extern double realMatchNum;
-const int subs = 1048576;//134217728;  // Number of subscriptions.
+const int subs = 134217728;  //1048576;//134217728;  // Number of subscriptions.
 extern const int pubs;     // Number of publications.
 extern int atts;           // Total number of attributes, i.e. dimensions.
 extern int attrGroup;          // The number of attribute group in #atts attributes.
@@ -81,6 +81,9 @@ extern const int blockNum; // 或运算次数
 extern const int ptrIncrement;
 extern const __m256i mask;
 enum {
+	HEM5_DD,
+	HEM5_DD_PARALLEL,
+	HEM5_DD_AVXOR_PARALLEL,
 	HEM5_DD_VAS,
 	HEM5_DD_RAS,
 	HEM5_DD_RAS_AVXOR_PARALLEL

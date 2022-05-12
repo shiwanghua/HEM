@@ -1,5 +1,5 @@
 #include "constant.h"
-string expID = "1347";       // Record the experiment ID number
+string expID = "1389";       // Record the experiment ID number
 const bool display = false;  // whether to print the mapping relation, 有待逐步改成DEBUG宏定义判断
 const bool verifyID = false; // whether to verify Insertion and Deletion function
 const int interval = 100;    // after a interval of events is matched, print a log
@@ -7,10 +7,10 @@ const double subp = 0;       // subp比例的订阅的谓词定义在前cons个�
 double realMatchNum=-1;      // The correct matching number in an experiment (Recorded in Rein).
 //const int subs = 1000000;  // Number of subscriptions.
 const int pubs = 1000;       // Number of publications.
-int atts = 20;             // Total number of attributes, i.e. dimensions.
+int atts = 512;             // Total number of attributes, i.e. dimensions.
 int attrGroup = 1;           // The number of attribute group in #atts attributes.
 int cons = 10;               // Number of constraints(predicates) in one sub.
-int m = 20;                 // Number of attributes in one pub.
+int m = 512;                 // Number of attributes in one pub.
 const int attNumType = 0;    // 0: Fixed size of sub and pub. 1: Random size of sub and pub, <= $cons and $m.
 const int attDis = 0;        // The distribution of attributes in subs and pubs. 0:uniform distribution | 1:Zipf distribution | 2: sub Zipf, pub 满维
 const int valDis = 0;        // The distribution of values in subs and pubs. 0:uniform + fixed width | 1: random width >= $width + Uniform | 2: Zipf + fixed width | 3: Normal + fixed width | 4: Normal + two ends
@@ -30,8 +30,8 @@ const double falsePositiveRate = 0.05;
 const int adarein_level = 3;
 //const double divider=0.2;
 
-// pRein HEM5DD
-int parallelDegree = 8;
+// pRein pHEM5DD pHEM5DD-avxOR pHEM5DD-RAS-avxOR
+int parallelDegree = 1;
 
 // HEM
 int be = 4;                 // bit exponent. In each dimension, there are 2 * 2^{be} bitsets.

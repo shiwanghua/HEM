@@ -501,8 +501,9 @@ void HEM5_avxOR::match_debug(const Pub& pub, int& matchSubs) {
 				bLocal = fullBits[att];
 			else
 				bLocal = bits[0][att][bitsID[0][att][buck]];
-			_for(j, endBucket[0][att][buck], buck + 1) _for(k, 0,
-				data[0][att][j].size()) bLocal[data[0][att][j][k].subID] = 0;
+			_for(j, endBucket[0][att][buck], buck + 1) 
+			_for(k, 0, data[0][att][j].size()) 
+				bLocal[data[0][att][j][k].subID] = 0;
 			markTime += (double)markStart.elapsed_nano();
 
 			Timer orStart;

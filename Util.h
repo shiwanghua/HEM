@@ -147,24 +147,30 @@ void Util::bitsetOr(bitset<subs> &b1, const bitset<subs> &b2) { // b1=b1|b2;
 }
 
 // 512
-/*void Util::bitsetOr(bitset<subs> &b1, const bitset<subs> &b2) { // b1=b1|b2;
-	__m512i b1_512, b2_512;
-	long long int *begin1 = reinterpret_cast<long long int *> (&b1);
-	long long int *begin2 = reinterpret_cast<long long int *>(const_cast<bitset<subs> *> (&b2));
+// void Util::bitsetOr(bitset<subs> &b1, const bitset<subs> &b2) { // b1=b1|b2;
+// 	__m512i b1_512, b2_512;
+// 	long long int *begin1 = reinterpret_cast<long long int *> (&b1);
+// 	long long int *begin2 = reinterpret_cast<long long int *>(const_cast<bitset<subs> *> (&b2));
 
-	_for(i, 0, blockNum) {
-//		b1_512 = _mm512_loadu_si512(begin1, mask);
-		b1_512 = _mm512_loadu_si512 (begin1);
-		b2_512 = _mm512_loadu_si512(begin2);
+// 	_for(i, 0, blockNum) {
+// //		b1_512 = _mm512_loadu_si512(begin1, mask);
+// 		b1_512 = _mm512_loadu_si512 (begin1);
+// 		b2_512 = _mm512_loadu_si512(begin2);
+//         printf("1\n");
+// 		fflush(stdout);
+//         b1_512 = _mm512_or_si512(b1_512, b2_512);
+//         printf("2\n");
+// 		fflush(stdout);
+// 		_mm512_store_si512(begin1,  b1_512);
+//         printf("3\n");
+// 		fflush(stdout);
+// 		begin1 += ptrIncrement;
+// 		begin2 += ptrIncrement;
+// 	}
 
-         	b1_512 = _mm512_or_si512(b1_512, b2_512);
-
-		_mm512_store_si512(begin1,  b1_512);
-
-		begin1 += ptrIncrement;
-		begin2 += ptrIncrement;
-	}
-}*/
+//     printf("return begin=%x\n",&b1);
+// 	fflush(stdout);
+// }
 
 // Win10
 //inline void Util::bitsetOr(bitset<subs>& b1, bitset<subs>& b2) { // b1=b1|b2;

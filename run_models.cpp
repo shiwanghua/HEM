@@ -68,6 +68,7 @@ void run_rein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
 					 + " ms AvgMarkTime= " + to_string(rein.markTime / pubs / 1000000)
 					 + " ms AvgBitTime= " + to_string(rein.bitTime / pubs / 1000000)
 					 + " ms pD= " + to_string(parallelDegree)
+					 + " avx= " + to_string(blockSize)
 					 + " numBuk= " + Util::Int2String(rein.numBucket)
 					 + " numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
@@ -1533,7 +1534,7 @@ void run_HEM4(const intervalGenerator &gen) {
 
 // 动动模式
 void run_HEM5(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
-	HEM5 hem5(false);
+	HEM5 hem5(HEM5_DD);
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -1757,7 +1758,7 @@ void run_HEM5_avxOR(const intervalGenerator &gen, unordered_map<int, bool> delet
 }
 
 void run_HEM5_parallel(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
-	HEM5 hem5_p(true);
+	HEM5 hem5_p(HEM5_DD_PARALLEL);
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -1800,11 +1801,7 @@ void run_HEM5_parallel(const intervalGenerator &gen, unordered_map<int, bool> de
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 		int64_t begin = GetCPUCycle();
-#ifdef DEBUG
-		hem5_p.match_debug(gen.pubList[i], matchSubs);
-#else
 		hem5_p.match_parallel(gen.pubList[i], matchSubs);
-#endif // DEBUG
 		matchInstructionList.push_back(GetCPUCycle() - begin);
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double) eventTime / 1000000);
@@ -1833,7 +1830,6 @@ void run_HEM5_parallel(const intervalGenerator &gen, unordered_map<int, bool> de
 					 + " ms MergeTime= " + to_string(hem5_p.mergeTime / pubs / 1000000)
 					 + " ms AvgBitTime= " + to_string(hem5_p.bitTime / pubs / 1000000)
 					 + " ms pD= " + to_string(parallelDegree)
-					 + " avx= "+ to_string(blockSize)
 					 + " numBuk= " + Util::Int2String(hem5_p.numBucket)
 					 + " numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
@@ -1859,7 +1855,7 @@ void run_HEM5_parallel(const intervalGenerator &gen, unordered_map<int, bool> de
 }
 
 void run_HEM5_avxOR_parallel(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) {
-	HEM5 hem5_avxOR_p(true);
+	HEM5 hem5_avxOR_p(HEM5_DD_AVXOR_PARALLEL);
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -1903,11 +1899,7 @@ void run_HEM5_avxOR_parallel(const intervalGenerator &gen, unordered_map<int, bo
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 		int64_t begin = GetCPUCycle();
-#ifdef DEBUG
-		hem5_avxOR_p.match_debug(gen.pubList[i], matchSubs);
-#else
 		hem5_avxOR_p.match_avxOR_parallel(gen.pubList[i], matchSubs);
-#endif // DEBUG
 		matchInstructionList.push_back(GetCPUCycle() - begin);
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double) eventTime / 1000000);

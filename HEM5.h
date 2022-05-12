@@ -35,7 +35,7 @@ public:
 	double mergeTime = 0.0;
 	//vector<unordered_set<int>> bucketSub;   // id相同的桶存储的不同订阅个数的和
 
-	HEM5(bool threadPoolParallel);
+	HEM5(int type);
 
 	~HEM5();
 
