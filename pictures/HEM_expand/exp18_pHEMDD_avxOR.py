@@ -10,25 +10,20 @@ from matplotlib.pyplot import MultipleLocator
 plt.rcParams['font.family'] = ['Times New Roman']
 plt.rcParams['axes.unicode_minus'] = False
 
-pD = [2, 4, 8, 16, 32, 64]
-pHEM5_HEM5 = [1.502, 3.198, 5.929, 11.248, 10.31, 6.241]
-per_pHEM5_HEM5 = [0.751, 0.8, 0.741, 0.703, 0.322, 0.098]
+pD = [1, 2, 4, 8, 16, 32, 64]
+pHEM5_avxOR_HEM5 = [1.677, 2.289, 4.832, 9.698, 13.974, 13.278, 7.937]
 
-x = np.arange(6)
+x = np.arange(7)
 width = 0.4
-lsize = 34
-tickSize = 30
+lsize = 24
+tickSize = 20
 
-plt.figure(figsize=(18, 6))
+plt.figure(figsize=(5, 4))
 # plt.tight_layout()
 
-plt.subplots_adjust(left=None, bottom=None, right=None, top=None, \
-    wspace=0.25, hspace=0.45)
-
-plt.subplot(121)
 # plt.bar(x - width, Rein, width, color='r',
 # label=Name[0])  # r"$HEM0PS\_20S_e$" 'limegreen'
-plt.bar(x, pHEM5_HEM5, width,
+plt.bar(x, pHEM5_avxOR_HEM5, width,
         color='#00BFFF')  # label=Name[1] r"$BIOP3PD\_10S_e$"
 # plt.bar(x + width, HEM5, width, color='DEEPPINK',
 #         label=Name[6])  # limegreen brown DEEPPINK r"$HEM5DD\_10S_e$"
@@ -38,27 +33,12 @@ plt.tick_params(labelsize=tickSize)
 plt.xlabel('Parallel Degree', fontsize=lsize)
 plt.ylabel('SpeedUp', fontsize=lsize)
 
-plt.xticks(x, labels=["2", "4", "8", "16", "32", "64"])
+plt.xticks(x, labels=["1", "2", "4", "8", "16", "32", "64"])
 # plt.legend(fontsize=11, loc=(0.3 / 10, 2.98 / 4), ncol=1)
 plt.grid()
 # plt.title(r"Exp2: Marking Time when $\frac{S_e}{d}=q=0.5$",fontsize=18)
-plt.yticks([0, 3, 6, 9, 12])
-
-plt.subplot(122)
-plt.bar(x, per_pHEM5_HEM5, width, color='#00BFFF')  #, label=Name[5]
-plt.xlabel('Parallel Degree', fontsize=lsize)
-plt.ylabel('Efficiency (%)', fontsize=lsize)
-plt.grid()
-plt.xticks(x, labels=["2", "4", "8", "16", "32", "64"])
-plt.tick_params(labelsize=tickSize)
-
-
-def to_percent(temp, position):
-    return '%1.0f' % (100 * temp) + '%'
-
-
-plt.gca().yaxis.set_major_formatter(FuncFormatter(to_percent))
+plt.yticks([0, 3, 6, 9, 12, 15])
 
 fig = plt.gcf()
 plt.show()
-fig.savefig('./exp17_pHEM.pdf', format='pdf', bbox_inches='tight')
+fig.savefig('./exp18_pHEMDD_avxOR.pdf', format='pdf', bbox_inches='tight')
