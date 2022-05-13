@@ -175,6 +175,7 @@ os.system("sudo cpufreq-set -c " + coreId + " -u 4.9G")
 
 # Exp 19: pHEMDD-RAS-avxOR
 # please set n=134217728
+# # need to use GenSubList_g, GenPubList_g function to generate data!
 for pD in [1,2,4,8,16,32,64]:
     os.system(' ./run ' + str(expID) + ' 2048 10 64 0.0 0.4 1 32 1000000 ' + str(pD))
     print('Experiment', str(expID), ': atts= 2048, k= 10, m= 64, alpha= 0.0, w= 0.4, be= 1, attrGroup= 32, valDom= 1000000, pD= ' + str(pD) + ' done.\n\n')
