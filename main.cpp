@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
 		}
 	}
 
-	// run_rein(gen, deleteNo);
+	run_rein(gen, deleteNo);
 	////	run_rein_forward_native(gen, deleteNo);
 	////	run_rein_forward_CBOMP(gen, deleteNo);
 	////	run_rein_hybrid(gen, deleteNo);
@@ -59,19 +59,19 @@ int main(int argc, char **argv) {
 //	run_AdaRein_SSS_B(gen, deleteNo);
 //	run_AdaRein_SSS_C(gen, deleteNo);
 //	run_AdaRein_SSS_C_W(gen, deleteNo);
-	// run_HEM(gen);
+	run_HEM(gen);
 	////	run_HEM1(gen);
 	////	run_HEM2(gen);
 	////	run_HEM3(gen);
 	////	run_HEM4(gen);
-    // run_HEM5(gen, deleteNo);
-	// run_HEM5_avxOR(gen, deleteNo);
+	run_HEM5(gen, deleteNo);
+	run_HEM5_avxOR(gen, deleteNo);
 	// run_HEM5_parallel(gen, deleteNo);
    	// run_HEM5_avxOR_parallel(gen, deleteNo);
 //	run_HEM5_VAS(gen, deleteNo);
-if(parallelDegree<5)
-	run_HEM5_RAS(gen, deleteNo);
-	run_HEM5_RAS_avxOR_parallel(gen, deleteNo);
+//if(parallelDegree<5)
+//	run_HEM5_RAS(gen, deleteNo);
+//	run_HEM5_RAS_avxOR_parallel(gen, deleteNo);
 	////	run_HEMSC(gen);
 	////	run_HEMSR(gen);
 	////
