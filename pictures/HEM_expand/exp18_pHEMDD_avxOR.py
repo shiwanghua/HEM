@@ -11,7 +11,10 @@ plt.rcParams['font.family'] = ['Times New Roman']
 plt.rcParams['axes.unicode_minus'] = False
 
 pD = [1, 2, 4, 8, 16, 32, 64]
-pHEM5_avxOR_HEM5 = [1.677, 2.289, 4.832, 9.698, 13.974, 13.278, 7.937]
+
+# pHEM5_avxOR_HEM5 = [1.677, 2.289, 4.832, 9.698, 13.974, 13.278, 7.937]
+
+pHEM5_avxOR_HEM5 = [1.663, 2.237, 4.271, 8.123, 15.245, 17.072, 15.826]
 
 x = np.arange(7)
 width = 0.4
