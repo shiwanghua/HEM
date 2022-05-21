@@ -31,10 +31,10 @@ int main(int argc, char **argv) {
 	// sched_setaffinity(0, sizeof(mask), &mask);
 
 	intervalGenerator gen(subs, pubs, atts, attrGroup, cons, m, attNumType, attDis, valDis, valDom, alpha, subp, width);
-	//gen.GenSubList();
-	//gen.GenPubList();
-	gen.GenSubList_g();
-	gen.GenPubList_g();
+	gen.GenSubList();
+	gen.GenPubList();
+//	gen.GenSubList_g();
+//	gen.GenPubList_g();
 
 	unordered_map<int, bool> deleteNo;
 	if (verifyID) {
@@ -54,18 +54,19 @@ int main(int argc, char **argv) {
 	////	run_rein_hybrid(gen, deleteNo);
 	////	run_rein_hybrid_CBOMP(gen, deleteNo);
 //	run_pRein(gen, deleteNo);
-//	run_AdaRein_ORI(gen, deleteNo);
-//	run_AdaRein_SSS(gen, deleteNo);
-//	run_AdaRein_SSS_B(gen, deleteNo);
-//	run_AdaRein_SSS_C(gen, deleteNo);
-//	run_AdaRein_SSS_C_W(gen, deleteNo);
-	run_HEM(gen);
+	run_AdaRein_ORI(gen, deleteNo);
+	run_AdaRein_SSS(gen, deleteNo);
+	run_AdaRein_SSS_B(gen, deleteNo);
+	run_AdaRein_SSS_C(gen, deleteNo);
+	run_AdaRein_SSS_C_W(gen, deleteNo);
+	run_AdaRein_DSS_B(gen,deleteNo);
+//	run_HEM(gen);
 	////	run_HEM1(gen);
 	////	run_HEM2(gen);
 	////	run_HEM3(gen);
 	////	run_HEM4(gen);
-	run_HEM5(gen, deleteNo);
-	run_HEM5_avxOR(gen, deleteNo);
+//	run_HEM5(gen, deleteNo);
+//	run_HEM5_avxOR(gen, deleteNo);
 	// run_HEM5_parallel(gen, deleteNo);
    	// run_HEM5_avxOR_parallel(gen, deleteNo);
 //	run_HEM5_VAS(gen, deleteNo);

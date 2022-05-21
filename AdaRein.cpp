@@ -42,7 +42,7 @@ AdaRein::AdaRein(int type) : numSub(0) {
 			data[1].resize(atts, vector<vector<Combo >>(numBucket));
 			skipped.resize(atts, false);
 			break;
-		case AdaRein_SSS_C_PPH:
+		case AdaRein_SSS_C_PPH: // 未实现
 			TYPE = "AdaRein_SSS_C_PPH";
 			buckStep = (valDom - 1) / (buks / 2) + 1;
 			//dividerValue = divider * valDom;
@@ -81,11 +81,26 @@ AdaRein::AdaRein(int type) : numSub(0) {
 		case AdaRein_SDS:
 			TYPE = "AdaRein_SDS";
 			break;
-		case AdaRein_DSS:
-			TYPE = "AdaRein_DSS";
+		case AdaRein_DSS_B:
+			TYPE = "AdaRein_DSS_B";
+			data[0].resize(atts, vector<vector<Combo >>(numBucket));
+			data[1].resize(atts, vector<vector<Combo >>(numBucket));
+			attsPredicate.resize(atts, 0);
+			numSkipPredicateInTotal = numSkipBuckInTotal = numSkipAttsInTotal = 0;
 			break;
-		case AdaRein_DDS:
-			TYPE = "AdaRein_DDS";
+		case AdaRein_DSS_B_W:
+			TYPE = "AdaRein_DSS_B_W" + to_string(adarein_level);
+			levelBuks = buks / adarein_level;
+			levelBuckStep = (valDom - 1) / levelBuks + 1;
+			levelBuks = (valDom - 1) / levelBuckStep + 1;
+			widthStep = (valDom - 1) / adarein_level + 1;
+			attsCounts.resize(atts);
+			dataW.resize(atts, vector<vector<vector<vector<Combo>>>>(
+				adarein_level, vector<vector<vector<Combo>>>(
+					2, vector<vector<Combo>>(levelBuks))));
+			break;
+		case AdaRein_DDS_B:
+			TYPE = "AdaRein_DDS_B";
 			break;
 		case AdaRein_IBU:
 			TYPE = "AdaRein_IBU";
@@ -203,11 +218,12 @@ void AdaRein::original_selection(double falsePositive, const vector<IntervalSub>
 
 	sort(attsCounts.begin(), attsCounts.end());
 
-	int maxSkipPredicate =
+	maxSkipPredicate =
 		numPredicate - (avgSubSize + log(falsePositive + 1) / log(avgWidth)) *
 					   subs; // 至多可以过滤的谓词数, currentSum的最大值
-#ifdef DEBUG
 	cout << "maxSkipPredicate= " << maxSkipPredicate << "\n";
+
+#ifdef DEBUG
 	int numSkipAttr = 0;
 #endif // DEBUG
 
@@ -456,7 +472,7 @@ void AdaRein::static_succession_selection_backward(double falsePositive, const v
 
 	double falsePositiveRate_global = pow(avgWidth, avgSubSize) * subs / (1 - falsePositive) * falsePositive / subs;
 
-	int maxSkipPredicate = numPredicate - (avgSubSize - log(1 - falsePositive) / log(avgWidth)) * subs; // k2
+	maxSkipPredicate = numPredicate - (avgSubSize - log(1 - falsePositive) / log(avgWidth)) * subs; // k2
 
 #ifdef DEBUG
 	cout << "k2= " << maxSkipPredicate << "\n";
@@ -611,7 +627,7 @@ void AdaRein::static_succession_selection_crossed(double falsePositive, const ve
 
 	double falsePositiveRate_global = pow(avgWidth, avgSubSize) * subs / (1 - falsePositive) * falsePositive / subs;
 
-	int maxSkipPredicate = numPredicate - (avgSubSize - log(1 - falsePositive) / log(avgWidth)) * subs; // k2
+	maxSkipPredicate = numPredicate - (avgSubSize - log(1 - falsePositive) / log(avgWidth)) * subs; // k2
 
 #ifdef DEBUG
 	cout << "k2= " << maxSkipPredicate << "\n";
@@ -842,7 +858,7 @@ void AdaRein::static_succession_selection_crossed_width(double falsePositive, co
 
 	double falsePositiveRate_global = pow(avgWidth, avgSubSize) * subs / (1 - falsePositive) * falsePositive / subs;
 
-	int maxSkipPredicate = numPredicate - (avgSubSize - log(1 - falsePositive) / log(avgWidth)) * subs; // k2
+	maxSkipPredicate = numPredicate - (avgSubSize - log(1 - falsePositive) / log(avgWidth)) * subs; // k2
 
 #ifdef DEBUG
 	cout << "k2= " << maxSkipPredicate << "\n";
@@ -1074,6 +1090,152 @@ void AdaRein::approx_match_sss_c_w(const Pub &pub, int &matchSubs, const vector<
 		}
 
 	matchSubs = subs - bits.count();
+}
+
+void AdaRein::insert_dss_b(IntervalSub sub) {
+	Combo c;
+	c.subID = sub.id;
+	for (int i = 0; i < sub.size; i++) {
+		IntervalCnt cnt = sub.constraints[i];
+		attsPredicate[cnt.att]++; // Add this line to count the number of predicates defined in each attribute
+		c.val = cnt.lowValue;
+		data[0][cnt.att][c.val / buckStep].push_back(c);
+		c.val = cnt.highValue;
+		data[1][cnt.att][c.val / buckStep].push_back(c);
+	}
+	numSub++;
+}
+
+void AdaRein::dynamic_succession_selection_backward(double falsePositive, const vector<IntervalSub> &subList) {
+	int numPredicate = 0, numSkipPredicate = 0; // 谓词总数, 已过滤的谓词总数
+	double avgSubSize = 0, avgWidth = 0; // 平均每个订阅有多少个谓词, 谓词的平均宽度
+	for (auto &&iSub: subList) {
+		numPredicate += iSub.constraints.size();
+		for (auto &&iCnt: iSub.constraints) {
+			//++attsCounts[iCnt.att].count;
+			avgWidth += iCnt.highValue - iCnt.lowValue;
+		}
+	}
+	avgSubSize = (double) numPredicate / subList.size();
+	avgWidth /= (double) numPredicate * valDom;
+
+	// minPredicate 解释性代码
+	//double minK = log(pow(avgWidth, avgSubSize) + falsePositive) / log(avgWidth);
+	//inline auto valid = [&](double) {return (double)(numPredicate - numSkipPredicate) > minK * subs; };
+
+	double falsePositiveRate_global = pow(avgWidth, avgSubSize) * subs / (1 - falsePositive) * falsePositive / subs;
+
+	maxSkipPredicate = numPredicate - (avgSubSize - log(1 - falsePositive) / log(avgWidth)) * subs; // k2
+
+#ifdef DEBUG
+	cout << "k2= " << maxSkipPredicate << "\n";
+	maxSkipPredicate =
+		numPredicate - log(pow(avgWidth, avgSubSize) + falsePositiveRate_global) / log(avgWidth) *
+					   subs; // 至多可以过滤的谓词数, numSkipPredicate的最大值
+	cout << "k3_global= " << maxSkipPredicate << "\n";
+#endif
+
+	maxSkipPredicate =
+		numPredicate - log(pow(avgWidth, avgSubSize) / (1 - falsePositive)) / log(avgWidth) * subs;
+	//	maxSkipPredicate *= 6;
+	cout << "k3_local= " << maxSkipPredicate << "\n";
+}
+
+void AdaRein::approx_match_dss_b(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
+	bitset<subs> bits;
+	vector<bool> attExist(atts, false);
+	int numSkipPredicate = 0;
+	for (auto &&iPair: pub.pairs) {
+		int att = iPair.att;
+		attExist[att] = true;
+		if (numSkipPredicate + attsPredicate[att] <= maxSkipPredicate) {
+			numSkipPredicate += attsPredicate[att];
+#ifdef DEBUG
+			numSkipAttsInTotal += 1;
+#endif
+			continue;
+		}
+
+		int value = iPair.value, buck = value / buckStep;
+		if (numSkipPredicate + data[0][att][buck].size() <= maxSkipPredicate) {
+			numSkipPredicate += (data[0][att][buck].size()) >> 1;
+#ifdef DEBUG
+			numSkipBuckInTotal++;
+#endif
+		} else {
+			for (const auto &cb: data[0][att][buck]) {
+				if (cb.val > value)
+					bits[cb.subID] = true;
+			}
+		}
+
+		for (int j = buck + 1; j < buks; j++) {
+			if (numSkipPredicate + data[0][att][j].size() <= maxSkipPredicate) {
+				numSkipPredicate += (data[0][att][j].size() >> 1);
+#ifdef DEBUG
+				numSkipBuckInTotal++;
+#endif
+			} else {
+				for (const auto &cb: data[0][att][j])
+					bits[cb.subID] = true;
+			}
+		}
+
+		if (numSkipPredicate + data[1][att][buck].size() <= maxSkipPredicate) {
+			numSkipPredicate += (data[1][att][buck].size() >> 1);
+#ifdef DEBUG
+			numSkipBuckInTotal++;
+#endif
+		} else {
+			for (const auto &cb: data[1][att][buck])
+				if (cb.val < value)
+					bits[cb.subID] = true;
+		}
+
+		for (int j = buck - 1; j >= 0; j--) {
+			if (numSkipPredicate + data[1][att][j].size() <= maxSkipPredicate) {
+				numSkipPredicate += (data[1][att][j].size() >> 1);
+#ifdef DEBUG
+				numSkipBuckInTotal++;
+#endif
+			} else {
+				for (const auto &cb: data[1][att][j])
+					bits[cb.subID] = true;
+			}
+		}
+	}
+
+// 可以替换为1次位集或
+	for (int i = 0; i < atts; i++)
+		if (!attExist[i]) {
+			if (numSkipPredicate + attsPredicate[i] <= maxSkipPredicate) {
+				numSkipPredicate += attsPredicate[i];
+#ifdef DEBUG
+				numSkipAttsInTotal += 1;
+#endif
+				continue;
+			}
+			for (int j = 0; j < buks; j++){
+				if (numSkipPredicate + data[1][i][j].size() <= maxSkipPredicate) {
+					numSkipPredicate += (data[1][i][j].size() >> 1);
+#ifdef DEBUG
+					numSkipBuckInTotal++;
+#endif
+				} else {
+					for (const auto &cb: data[1][i][j])
+						bits[cb.subID] = true;
+				}
+			}
+		}
+
+#ifdef DEBUG
+	numSkipPredicateInTotal += numSkipPredicate;
+#endif
+	matchSubs = subs - bits.count();
+}
+
+void AdaRein::approx_match_dss_b_w(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
+
 }
 
 int AdaRein::calMemory() {

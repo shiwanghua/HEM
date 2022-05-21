@@ -1,44 +1,44 @@
 #include "constant.h"
-string expID = "1385";       // Record the experiment ID number
+string expID = "1433";       // Record the experiment ID number
 const bool display = false;  // whether to print the mapping relation, 有待逐步改成DEBUG宏定义判断
 const bool verifyID = false; // whether to verify Insertion and Deletion function
-const int interval = 100;    // after a interval of events is matched, print a log
+const int interval = 500;    // after a interval of events is matched, print a log
 const double subp = 0;       // subp比例的订阅的谓词定义在前cons个维度上 in order to make the number of matching subscriptions > 0		  
 double realMatchNum=-1;      // The correct matching number in an experiment (Recorded in Rein).
 //const int subs = 1000000;  // Number of subscriptions.
 const int pubs = 1000;       // Number of publications.
-int atts = 512;             // Total number of attributes, i.e. dimensions.
-int attrGroup = 16;           // The number of attribute group in #atts attributes.
-int cons = 10;               // Number of constraints(predicates) in one sub.
-int m = 32;                 // Number of attributes in one pub.
+int atts = 1000;             // Total number of attributes, i.e. dimensions.
+int attrGroup = 1;           // The number of attribute group in #atts attributes.
+int cons = 5;               // Number of constraints(predicates) in one sub.
+int m = 1000;                 // Number of attributes in one pub.
 const int attNumType = 0;    // 0: Fixed size of sub and pub. 1: Random size of sub and pub, <= $cons and $m.
-const int attDis = 0;        // The distribution of attributes in subs and pubs. 0:uniform distribution | 1:Zipf distribution | 2: sub Zipf, pub 满维
-const int valDis = 0;        // The distribution of values in subs and pubs. 0:uniform + fixed width | 1: random width >= $width + Uniform | 2: Zipf + fixed width | 3: Normal + fixed width | 4: Normal + two ends
+const int attDis = 2;        // The distribution of attributes in subs and pubs. 0:uniform distribution | 1:Zipf distribution | 2: sub Zipf, pub 满维
+const int valDis = 1;        // The distribution of values in subs and pubs. 0:uniform + fixed width | 1: random width >= $width + Uniform | 2: Zipf + fixed width | 3: Normal + fixed width | 4: Normal + two ends
 int valDom = 1000000;        // Cardinality of values.
-double alpha = 0;            // Parameter for Zipf distribution.
-double width = 0.4;          // Width of a predicate.
+double alpha = 2;            // Parameter for Zipf distribution.
+double width = 0;          // Width of a predicate.
 double mean = 0.5;           // Mean of Normal Distribution. For events it's ( 1 - mean ).
 double stddev = 1;           // Standard deviation: The square root of variance, representing the dispersion of values from the distribution mean. >0
 
 // Rein
-const int buks = 1000;       // Number of buckets.
+const int buks = 500;       // Number of buckets.
 const int awRein_Ppoint = 0.25 * valDom; // HybridRein
 //const int awRein_level=4; // The levels of the forward counting matching of HybridRein
 
 // AdaRein
 const double falsePositiveRate = 0.05;
-const int adarein_level = 3;
+const int adarein_level = 1;
 //const double divider=0.2;
 
 // pRein pHEM5DD pHEM5DD-avxOR pHEM5DD-RAS-avxOR
-int parallelDegree = 16;
+int parallelDegree = 1;
 
 // HEM
 int be = 4;                 // bit exponent. In each dimension, there are 2 * 2^{be} bitsets.
 int be2 = 50;                // When be=-1, be2 is adopted. In each dimension, there are 2 * be2 bitsets.
 const int lvls = 2;         // HEMSC number of levels
 int gs = 5;                 // HEMSR Group Size 一组有多少个维度
-const int blockSize = 512;  // 每次对256位做逻辑运算
+const int blockSize = 256;  // 每次对256位做逻辑运算
 const int ptrSize = 64;     // 每次只能加载__int64 64位
 const int blockNum = (subs + blockSize - 1) / blockSize; //  把做 subs 位的逻辑运算 简化为做 blockNum 次逻辑运算
 const int ptrIncrement = blockSize / ptrSize;       //  需要加载的次数

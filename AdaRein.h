@@ -34,9 +34,14 @@ class AdaRein {
 	//vector<vector<attAndCount>> attsCountsW;
 	vector<vector<vector<vector<vector<Combo>>>>> dataW; // SSS-C-PPH SSS-C-W: attr->level->low/high->bucketId->offset
 	vector<vector<pair<pair<int, int>, pair<int, int>>>> beBucketW; // attr->level-><low,high>-><begin,end>
+
+	vector<int> attsPredicate; // 每个属性上有多少个谓词
 public:
 	int numBucket;
 	int maxSkipPredicate;
+	long numSkipPredicateInTotal; // Used in DSS-B and DSS-B-W
+	long numSkipBuckInTotal; // 过滤的离散桶数（不含全过滤属性上的桶）
+	long numSkipAttsInTotal;
 	AdaRein(int);
 
 	void insert(IntervalSub sub);
@@ -63,6 +68,12 @@ public:
 	void insert_sss_c_w(IntervalSub sub);
 	void static_succession_selection_crossed_width(double falsePositive, const vector<IntervalSub>& subList);
 	void approx_match_sss_c_w(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
+
+	void insert_dss_b(IntervalSub sub);
+	void dynamic_succession_selection_backward(double falsePositive, const vector<IntervalSub>& subList);
+	void approx_match_dss_b(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
+
+	void approx_match_dss_b_w(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
 
 	int calMemory();      // 计算占用内存大小, 返回MB
 	//int calMemory_sss_c_pph();

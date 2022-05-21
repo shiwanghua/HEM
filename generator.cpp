@@ -284,7 +284,7 @@ Pub intervalGenerator::GenOnePub_g(int id) {
 	else
 		pub.size = m;
 
-	if (attDis == 0) // Uniform
+	if (attDis == 0||attDis == 2) // Uniform
 		GenUniformAtts_g(pub);
 	else if (attDis == 1)
 		GenZipfAtts_g(pub);

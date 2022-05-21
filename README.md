@@ -40,7 +40,7 @@
 5. sudo cpufreq-set -c 8 -u 4.9G
 6. Run command "ulimit -s unlimited; taskset -c 8 ./run" (20 指指定第 20 号核单独运行程序)
 
-- debug: g++ -g -o run *.h *.cpp -mavx2 -std=c++2a -lboost_system -lpthread; gdb run
+- debug: g++ -g -o derun *.h *.cpp -mavx2 -std=c++2a -lboost_system -lpthread; gdb derun
 
 #### 注意事项
 
