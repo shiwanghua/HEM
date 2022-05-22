@@ -78,8 +78,42 @@ AdaRein::AdaRein(int type) : numSub(0) {
 				}
 			}
 			break;
+		case pAdaRein_SSS_C_W:
+			TYPE = "pAdaRein_SSS_C_W" + to_string(adarein_level);
+			levelBuks = buks / adarein_level;
+			levelBuckStep = (valDom - 1) / levelBuks + 1; // 3 hour-bug: buckStep =
+			levelBuks = (valDom - 1) / levelBuckStep + 1; // bug: buckStep-levelBuckStep
+			widthStep = (valDom - 1) / adarein_level + 1;
+			attsCounts.resize(atts);
+			skippedW.resize(atts, vector<bool>(adarein_level, false));
+			dataW.resize(atts, vector<vector<vector<vector<Combo>>>>(
+				adarein_level, vector<vector<vector<Combo>>>(
+					2, vector<vector<Combo>>(levelBuks))));
+			beBucketW.resize(atts, vector<pair<pair<int, int>, pair<int, int>>>(adarein_level));
+			_for(i, 0, atts) {
+				_for(j, 0, adarein_level) {
+					beBucketW[i][j].first.first = 0; // low begin
+					beBucketW[i][j].first.second = levelBuks - 1; // low end
+					beBucketW[i][j].second.first = levelBuks - 1; // high begin
+					beBucketW[i][j].second.second = 0; // high end
+				}
+			}
+			threadPool.initThreadPool(parallelDegree);
+			break;
 		case AdaRein_SDS:
 			TYPE = "AdaRein_SDS";
+			break;
+		case AdaRein_DSS_W:
+			TYPE = "AdaRein_DSS_W" + to_string(adarein_level);
+			levelBuks = buks / adarein_level;
+			levelBuckStep = (valDom - 1) / levelBuks + 1;
+			levelBuks = (valDom - 1) / levelBuckStep + 1;
+			widthStep = (valDom - 1) / adarein_level + 1;
+			attsWidthPredicate.resize(atts, vector<int>(adarein_level));
+			numSkipPredicateInTotal = numSkipBuckInTotal = numSkipAttsInTotal = 0;
+			dataW.resize(atts, vector<vector<vector<vector<Combo>>>>(
+				adarein_level, vector<vector<vector<Combo>>>(
+					2, vector<vector<Combo>>(levelBuks))));
 			break;
 		case AdaRein_DSS_B:
 			TYPE = "AdaRein_DSS_B";
@@ -94,7 +128,8 @@ AdaRein::AdaRein(int type) : numSub(0) {
 			levelBuckStep = (valDom - 1) / levelBuks + 1;
 			levelBuks = (valDom - 1) / levelBuckStep + 1;
 			widthStep = (valDom - 1) / adarein_level + 1;
-			attsCounts.resize(atts);
+			attsWidthPredicate.resize(atts, vector<int>(adarein_level));
+			numSkipPredicateInTotal = numSkipBuckInTotal = numSkipAttsInTotal = 0;
 			dataW.resize(atts, vector<vector<vector<vector<Combo>>>>(
 				adarein_level, vector<vector<vector<Combo>>>(
 					2, vector<vector<Combo>>(levelBuks))));
@@ -826,9 +861,9 @@ void AdaRein::approx_match_sss_c(const Pub &pub, int &matchSubs, const vector<In
 
 void AdaRein::insert_sss_c_w(IntervalSub sub) {
 	Combo c;
+	c.subID = sub.id;
 	int levelId = -1;
 	for (const auto &cnt: sub.constraints) {
-		c.subID = sub.id;
 		c.val = cnt.lowValue;
 		levelId = (cnt.highValue - cnt.lowValue) / widthStep;
 		dataW[cnt.att][levelId][0][c.val / levelBuckStep].push_back(c);
@@ -1092,6 +1127,166 @@ void AdaRein::approx_match_sss_c_w(const Pub &pub, int &matchSubs, const vector<
 	matchSubs = subs - bits.count();
 }
 
+void AdaRein::parallel_approx_match_sss_c_w(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
+
+	vector<future<bitset<subs>>> threadResult;
+	int seg = pub.size / parallelDegree;
+	int remainder=pub.size%parallelDegree;
+	int tId=0,end;
+	for (int begin = 0; begin < pub.size; begin = end,tId++) {
+		if(tId<remainder)
+			end=begin+seg+1;
+		else end=begin+seg;
+		threadResult.emplace_back(threadPool.enqueue([this, &pub, begin, end] {
+//			printf("pub%d, begin=%d\n", pub.id, begin);
+			bitset<subs> b; //=new bitset<subs>;
+			for (int i = begin; i < end; i++) {
+				int value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / levelBuckStep;
+				_for(wi, 0, adarein_level) {
+					if (skippedW[att][wi])
+						continue;
+
+					for (auto cmb: dataW[att][wi][0][buck])
+						if (cmb.val > value)
+							b[cmb.subID] = true;
+					for (int j = max(buck + 1, beBucketW[att][wi].first.first);
+						 j <= beBucketW[att][wi].first.second; j++) // 和HEM系列的设计不同, 这里取闭括号
+						for (auto &&k: dataW[att][wi][0][j])
+							b[k.subID] = true;
+
+					for (auto cmb: dataW[att][wi][1][buck])
+						if (cmb.val < value)
+							b[cmb.subID] = true;
+					for (int j = min(buck - 1, beBucketW[att][wi].second.first);
+						 j >= beBucketW[att][wi].second.second; j--)
+						for (auto &&k: dataW[att][wi][1][j])
+							b[k.subID] = true;
+				}
+			}
+			return b;
+		}));
+	}
+
+	// 可以替换为1次位集或
+	bitset<subs> bits;
+	if (pub.size < atts) {
+		vector<bool> attExist(atts, false);
+		for (const auto item: pub.pairs)
+			attExist[item.att] = true;
+		for (int ai = 0; ai < atts; ai++)
+			if (!attExist[ai]) {
+				for (int wi = 0; wi < adarein_level; wi++) {
+					if (skippedW[ai][wi]) continue;
+					for (int j = beBucketW[ai][wi].second.first; j >= beBucketW[ai][wi].second.second; j--)
+						for (auto &&k: dataW[ai][wi][1][j])
+							bits[k.subID] = true;
+				}
+			}
+	}
+	for (int i = 0; i < threadResult.size(); i++)
+		bits |= threadResult[i].get();
+	matchSubs = subs - bits.count();
+}
+
+void AdaRein::insert_dss_w(IntervalSub sub) {
+	int levelId = -1;
+	Combo c;
+	c.subID = sub.id;
+	for (const auto &cnt: sub.constraints) {
+		levelId = (cnt.highValue - cnt.lowValue) / widthStep;
+		attsWidthPredicate[cnt.att][levelId]++; // Add this line to count the number of predicates defined in each attribute
+		c.val = cnt.lowValue;
+		dataW[cnt.att][levelId][0][c.val / levelBuckStep].push_back(c);
+		c.val = cnt.highValue;
+		dataW[cnt.att][levelId][1][c.val / levelBuckStep].push_back(c);
+	}
+}
+
+void AdaRein::dynamic_succession_selection_width(double falsePositive, const vector<IntervalSub> &subList) {
+	calMaxSkipPredicate(falsePositive, subList);
+}
+
+void AdaRein::approx_match_dss_w(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
+	bitset<subs> bits;
+	vector<bool> attExist(atts, false);
+	int numSkipPredicate = 0, att, value, buck;
+	for (auto &&iPair: pub.pairs) {
+		att = iPair.att, value = iPair.value, buck = value / levelBuckStep;
+		attExist[att] = true;
+
+		_for(wi, 0, adarein_level) {
+			if (numSkipPredicate + attsWidthPredicate[att][wi] <= maxSkipPredicate) {
+				numSkipPredicate += attsWidthPredicate[att][wi];
+#ifdef DEBUG
+				numSkipAttsInTotal += 1;
+#endif
+				continue;
+			}
+
+			for (const auto &cmb: dataW[att][wi][0][buck])
+				if (cmb.val > value)
+					bits[cmb.subID] = true;
+
+			for (int j = levelBuks - 1; j > buck; j--) {
+				if (numSkipPredicate + (dataW[att][wi][0][j].size() >> 1) <= maxSkipPredicate) {
+					numSkipPredicate += (dataW[att][wi][0][j].size() >> 1);
+#ifdef DEBUG
+					numSkipBuckInTotal++;
+#endif
+				} else {
+					for (auto &&k: dataW[att][wi][0][j])
+						bits[k.subID] = true;
+				}
+			}
+
+			for (auto cmb: dataW[att][wi][1][buck])
+				if (cmb.val < value)
+					bits[cmb.subID] = true;
+
+			for (int j = 0; j < buck; j++) {
+				if (numSkipPredicate + (dataW[att][wi][1][j].size() >> 1) <= maxSkipPredicate) {
+					numSkipPredicate += (dataW[att][wi][1][j].size() >> 1);
+#ifdef DEBUG
+					numSkipBuckInTotal++;
+#endif
+				} else {
+					for (auto &&k: dataW[att][wi][1][j])
+						bits[k.subID] = true;
+				}
+			}
+		} // width index
+	} // attribute index
+
+	for (int i = 0; i < atts; i++)
+		if (!attExist[i]) {
+			for (int wi = 0; wi < adarein_level; wi++) {
+				if (numSkipPredicate + (attsWidthPredicate[i][wi] >> 1) <= maxSkipPredicate) {
+					numSkipPredicate += (attsWidthPredicate[i][wi] >> 1);
+#ifdef DEBUG
+					numSkipAttsInTotal += 1;
+#endif
+					continue;
+				}
+				for (int j = 0; j < buks; j++) {
+					if (numSkipPredicate + (dataW[i][wi][1][j].size() >> 1) <= maxSkipPredicate) {
+						numSkipPredicate += (dataW[i][wi][1][j].size() >> 1);
+#ifdef DEBUG
+						numSkipBuckInTotal++;
+#endif
+					} else {
+						for (auto &&k: dataW[i][wi][1][j])
+							bits[k.subID] = true;
+					}
+				}
+			}
+		}
+
+#ifdef DEBUG
+	numSkipPredicateInTotal += numSkipPredicate;
+#endif
+	matchSubs = subs - bits.count();
+}
+
 void AdaRein::insert_dss_b(IntervalSub sub) {
 	Combo c;
 	c.subID = sub.id;
@@ -1107,6 +1302,107 @@ void AdaRein::insert_dss_b(IntervalSub sub) {
 }
 
 void AdaRein::dynamic_succession_selection_backward(double falsePositive, const vector<IntervalSub> &subList) {
+	calMaxSkipPredicate(falsePositive, subList);
+}
+
+void AdaRein::approx_match_dss_b(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
+	bitset<subs> bits;
+	vector<bool> attExist(atts, false);
+	int numSkipPredicate = 0, att, value, buck;
+	for (auto &&iPair: pub.pairs) {
+		att = iPair.att;
+		attExist[att] = true;
+		if (numSkipPredicate + attsPredicate[att] <= maxSkipPredicate) {
+			numSkipPredicate += attsPredicate[att];
+#ifdef DEBUG
+			numSkipAttsInTotal += 1;
+#endif
+			continue;
+		}
+
+		value = iPair.value, buck = value / buckStep;
+		if (numSkipPredicate + (data[0][att][buck].size() >> 1) <= maxSkipPredicate) {
+			numSkipPredicate += (data[0][att][buck].size() >> 1);
+#ifdef DEBUG
+			numSkipBuckInTotal++;
+#endif
+		} else {
+			for (const auto &cb: data[0][att][buck]) {
+				if (cb.val > value)
+					bits[cb.subID] = true;
+			}
+		}
+
+		for (int j = buck + 1; j < buks; j++) {
+			if (numSkipPredicate + (data[0][att][j].size() >> 1) <= maxSkipPredicate) {
+				numSkipPredicate += (data[0][att][j].size() >> 1);
+#ifdef DEBUG
+				numSkipBuckInTotal++;
+#endif
+			} else {
+				for (const auto &cb: data[0][att][j])
+					bits[cb.subID] = true;
+			}
+		}
+
+		if (numSkipPredicate + (data[1][att][buck].size() >> 1) <= maxSkipPredicate) {
+			numSkipPredicate += (data[1][att][buck].size() >> 1);
+#ifdef DEBUG
+			numSkipBuckInTotal++;
+#endif
+		} else {
+			for (const auto &cb: data[1][att][buck])
+				if (cb.val < value)
+					bits[cb.subID] = true;
+		}
+
+		for (int j = buck - 1; j >= 0; j--) {
+			if (numSkipPredicate + (data[1][att][j].size() >> 1) <= maxSkipPredicate) {
+				numSkipPredicate += (data[1][att][j].size() >> 1);
+#ifdef DEBUG
+				numSkipBuckInTotal++;
+#endif
+			} else {
+				for (const auto &cb: data[1][att][j])
+					bits[cb.subID] = true;
+			}
+		}
+	}
+
+// 可以替换为1次位集或
+	for (int i = 0; i < atts; i++)
+		if (!attExist[i]) {
+			if (numSkipPredicate + attsPredicate[i] <= maxSkipPredicate) {
+				numSkipPredicate += attsPredicate[i];
+#ifdef DEBUG
+				numSkipAttsInTotal += 1;
+#endif
+				continue;
+			}
+			for (int j = 0; j < buks; j++) {
+				if (numSkipPredicate + data[1][i][j].size() <= maxSkipPredicate) {
+					numSkipPredicate += (data[1][i][j].size() >> 1);
+#ifdef DEBUG
+					numSkipBuckInTotal++;
+#endif
+				} else {
+					for (const auto &cb: data[1][i][j])
+						bits[cb.subID] = true;
+				}
+			}
+		}
+
+#ifdef DEBUG
+	numSkipPredicateInTotal += numSkipPredicate;
+#endif
+	matchSubs = subs - bits.count();
+}
+
+void AdaRein::approx_match_dss_b_w(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
+
+}
+
+void AdaRein::calMaxSkipPredicate(double falsePositive, const vector<IntervalSub> &subList) {
 	int numPredicate = 0, numSkipPredicate = 0; // 谓词总数, 已过滤的谓词总数
 	double avgSubSize = 0, avgWidth = 0; // 平均每个订阅有多少个谓词, 谓词的平均宽度
 	for (auto &&iSub: subList) {
@@ -1141,103 +1437,6 @@ void AdaRein::dynamic_succession_selection_backward(double falsePositive, const 
 	cout << "k3_local= " << maxSkipPredicate << "\n";
 }
 
-void AdaRein::approx_match_dss_b(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
-	bitset<subs> bits;
-	vector<bool> attExist(atts, false);
-	int numSkipPredicate = 0;
-	for (auto &&iPair: pub.pairs) {
-		int att = iPair.att;
-		attExist[att] = true;
-		if (numSkipPredicate + attsPredicate[att] <= maxSkipPredicate) {
-			numSkipPredicate += attsPredicate[att];
-#ifdef DEBUG
-			numSkipAttsInTotal += 1;
-#endif
-			continue;
-		}
-
-		int value = iPair.value, buck = value / buckStep;
-		if (numSkipPredicate + data[0][att][buck].size() <= maxSkipPredicate) {
-			numSkipPredicate += (data[0][att][buck].size()) >> 1;
-#ifdef DEBUG
-			numSkipBuckInTotal++;
-#endif
-		} else {
-			for (const auto &cb: data[0][att][buck]) {
-				if (cb.val > value)
-					bits[cb.subID] = true;
-			}
-		}
-
-		for (int j = buck + 1; j < buks; j++) {
-			if (numSkipPredicate + data[0][att][j].size() <= maxSkipPredicate) {
-				numSkipPredicate += (data[0][att][j].size() >> 1);
-#ifdef DEBUG
-				numSkipBuckInTotal++;
-#endif
-			} else {
-				for (const auto &cb: data[0][att][j])
-					bits[cb.subID] = true;
-			}
-		}
-
-		if (numSkipPredicate + data[1][att][buck].size() <= maxSkipPredicate) {
-			numSkipPredicate += (data[1][att][buck].size() >> 1);
-#ifdef DEBUG
-			numSkipBuckInTotal++;
-#endif
-		} else {
-			for (const auto &cb: data[1][att][buck])
-				if (cb.val < value)
-					bits[cb.subID] = true;
-		}
-
-		for (int j = buck - 1; j >= 0; j--) {
-			if (numSkipPredicate + data[1][att][j].size() <= maxSkipPredicate) {
-				numSkipPredicate += (data[1][att][j].size() >> 1);
-#ifdef DEBUG
-				numSkipBuckInTotal++;
-#endif
-			} else {
-				for (const auto &cb: data[1][att][j])
-					bits[cb.subID] = true;
-			}
-		}
-	}
-
-// 可以替换为1次位集或
-	for (int i = 0; i < atts; i++)
-		if (!attExist[i]) {
-			if (numSkipPredicate + attsPredicate[i] <= maxSkipPredicate) {
-				numSkipPredicate += attsPredicate[i];
-#ifdef DEBUG
-				numSkipAttsInTotal += 1;
-#endif
-				continue;
-			}
-			for (int j = 0; j < buks; j++){
-				if (numSkipPredicate + data[1][i][j].size() <= maxSkipPredicate) {
-					numSkipPredicate += (data[1][i][j].size() >> 1);
-#ifdef DEBUG
-					numSkipBuckInTotal++;
-#endif
-				} else {
-					for (const auto &cb: data[1][i][j])
-						bits[cb.subID] = true;
-				}
-			}
-		}
-
-#ifdef DEBUG
-	numSkipPredicateInTotal += numSkipPredicate;
-#endif
-	matchSubs = subs - bits.count();
-}
-
-void AdaRein::approx_match_dss_b_w(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
-
-}
-
 int AdaRein::calMemory() {
 	long long size = 0; // Byte
 	_for(i, 0, atts) _for(j, 0, numBucket) size += sizeof(Combo) * (data[0][i][j].size() + data[1][i][j].size());
@@ -1254,6 +1453,22 @@ int AdaRein::calMemory_sss_c_w() {
 																				 dataW[ai][wi][1][bi].size());
 	size += sizeof(bool) * atts + sizeof(attAndCount) * atts;
 	//cout << "attAndCount size = " << sizeof(attAndCount) << endl; // 8
+	size = size / 1024 / 1024; // MB
+	return (int) size;
+}
+
+int AdaRein::calMemory_dss_w() {
+	long long size = 0; // Byte
+	_for(ai, 0, atts) {
+		_for(wi, 0, adarein_level) {
+			_for(bi, 0, levelBuks) {
+				size += sizeof(Combo) * (dataW[ai][wi][0][bi].size() + dataW[ai][wi][1][bi].size());
+			}
+		}
+		size += sizeof(bool) * atts;
+	}
+	size += sizeof(int) * atts * adarein_level;
+//cout << "attAndCount size = " << sizeof(attAndCount) << endl; // 8
 	size = size / 1024 / 1024; // MB
 	return (int) size;
 }

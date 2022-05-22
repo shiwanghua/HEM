@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
 			id = rand() % subs;
 			while (deleteNo.count(id))
 				id = rand() % subs;
-				deleteNo[id] = true;
+			deleteNo[id] = true;
 		}
 	}
 
@@ -53,13 +53,15 @@ int main(int argc, char **argv) {
 	////	run_rein_forward_CBOMP(gen, deleteNo);
 	////	run_rein_hybrid(gen, deleteNo);
 	////	run_rein_hybrid_CBOMP(gen, deleteNo);
-//	run_pRein(gen, deleteNo);
+	run_pRein(gen, deleteNo);
 	run_AdaRein_ORI(gen, deleteNo);
 	run_AdaRein_SSS(gen, deleteNo);
 	run_AdaRein_SSS_B(gen, deleteNo);
 	run_AdaRein_SSS_C(gen, deleteNo);
 	run_AdaRein_SSS_C_W(gen, deleteNo);
-	run_AdaRein_DSS_B(gen,deleteNo);
+	run_pAdaRein_SSS_C_W(gen, deleteNo);
+	run_AdaRein_DSS_W(gen, deleteNo);
+	run_AdaRein_DSS_B(gen, deleteNo);
 //	run_HEM(gen);
 	////	run_HEM1(gen);
 	////	run_HEM2(gen);
@@ -68,7 +70,7 @@ int main(int argc, char **argv) {
 //	run_HEM5(gen, deleteNo);
 //	run_HEM5_avxOR(gen, deleteNo);
 	// run_HEM5_parallel(gen, deleteNo);
-   	// run_HEM5_avxOR_parallel(gen, deleteNo);
+	// run_HEM5_avxOR_parallel(gen, deleteNo);
 //	run_HEM5_VAS(gen, deleteNo);
 //if(parallelDegree<5)
 //	run_HEM5_RAS(gen, deleteNo);

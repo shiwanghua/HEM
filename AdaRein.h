@@ -9,6 +9,8 @@
 #include "Util.h"
 #include "data_structure.h"
 #include "constant.h"
+#include "ThreadPool.h"
+
 
 //const int MAX_SUBS = 2000001;
 //const int MAX_ATTS = 3000;
@@ -36,6 +38,11 @@ class AdaRein {
 	vector<vector<pair<pair<int, int>, pair<int, int>>>> beBucketW; // attr->level-><low,high>-><begin,end>
 
 	vector<int> attsPredicate; // 每个属性上有多少个谓词
+	vector<vector<int>> attsWidthPredicate; // 每个属性的每个宽度上有多少个谓词
+
+	ThreadPool threadPool;
+
+	void calMaxSkipPredicate(double falsePositive, const vector<IntervalSub> &subList);
 public:
 	int numBucket;
 	int maxSkipPredicate;
@@ -68,6 +75,11 @@ public:
 	void insert_sss_c_w(IntervalSub sub);
 	void static_succession_selection_crossed_width(double falsePositive, const vector<IntervalSub>& subList);
 	void approx_match_sss_c_w(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
+	void parallel_approx_match_sss_c_w(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
+
+	void insert_dss_w(IntervalSub sub);
+	void dynamic_succession_selection_width(double falsePositive, const vector<IntervalSub>& subList);
+	void approx_match_dss_w(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
 
 	void insert_dss_b(IntervalSub sub);
 	void dynamic_succession_selection_backward(double falsePositive, const vector<IntervalSub>& subList);
@@ -78,6 +90,7 @@ public:
 	int calMemory();      // 计算占用内存大小, 返回MB
 	//int calMemory_sss_c_pph();
 	int calMemory_sss_c_w();
+	int calMemory_dss_w();
 };
 
 #endif //ADAREIN_H

@@ -59,9 +59,12 @@ enum {
 	AdaRein_SSS_C,     // Static Succession Selection Crossed
 	AdaRein_SSS_C_PPH, // PeePHole
 	AdaRein_SSS_C_W,   // Static Succession Selection Crossed WidthClassification
+	pAdaRein_SSS_C_W,  // parallel Static Succession Selection Crossed WidthClassification
 
 	AdaRein_SDS,       // Static Discretization Selection
 
+	AdaRein_DSS,       // Dynamic Succession Selection
+	AdaRein_DSS_W,     // Dynamic Succession Selection WidthClassification
 	AdaRein_DSS_B,     // Dynamic Succession Selection Backward
 	AdaRein_DSS_B_W,   // Dynamic Succession Selection Backward WidthClassification
 
