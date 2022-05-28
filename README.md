@@ -89,6 +89,19 @@
 | 2022-01 | 提出将 OpIndex、PS-Tree、C-BOMP、节点动态伸缩结合在一起的优化，提出多分割点优化(多叉树)，解剖 BG-Tree 做可视化分析，提出方向匹配基本定理 2，做支持正反匹配的数据结构详细设计 2.0 以及实现，基于此实现节点动态伸缩、正向事件匹配 |
 | 2022-02 | 基于第二版本的同一数据结构实现反向事件匹配；细化 BG-Tree-d-vsr 并开始实现                                                                                                                                                       |
 
+# 2022-HEM 扩展版开发周志
+
+| 周数 | 时间        | 进展情况                                                     |
+| ---- | ----------- | :----------------------------------------------------------- |
+| 1    | 3/1 - 3/2   | 细化虚实属性组优化方法，分析订阅是否跨属性组的4种情况。      |
+| 2    | 3/19 - 3/25 | Debug，把 $g=1$ 时桶组跨一半桶的情况改成跨所有桶的情况(即不再考虑这一特殊情况)；做HEM-PPT，写演讲稿，做演讲视频。 |
+| 3    | 3/26 - 3/29 | 实现 VAS 和 RAS 优化，做实验；代码重构，实现HEM系列10个版本自动切换是否测量组成时间。 |
+| 4    | 4/5 - 4/10  | 设计并执行实验；调期刊论文模板；分析虚实属性组优化性能，推导最优划分属性子集数公式；处理数据，画图。 |
+| 5    | 4/12 - 4/17 | 画图，贴图；写论文： DRO 及其理论分析，DGO动态分组优化。     |
+| 6    | 4/19 - 4/25 | 写论文：虚实属性子集优化和两条定理，复杂度-瓶颈分析，改图，改实验，写完初稿。 |
+| 7    | 5/4 - 5/10  | 实现pRein、pHEM5DD、pHEM5DD-avxOR，做实验，论文加入实现优化方面的内容和总结 |
+| 8    | 5/11 - 5/15 | 跑更多并行、SIMD、高负载 RAS 实验，处理数据，画图，写论文，加入扩展实验部分 |
+
 ## 2022 HEM 扩展版实验
 
 - Default Parameters: n = 1000000, d = 20, $\phi_s$ = 10, $\phi_e$ = 20, w = 0.4, attrSubsetNum = 1, valDom = 1000000, numPub = 1000, parallelDegree(pD) = 1 inform distribution.
@@ -120,15 +133,14 @@
 | 18   | pHEMDD-avxOR 组合实验（和HEMDD、pHEMDD 比较）          | $\psi_e=d=$ 512, pD = [1, 2, 4, 8, 16, 32, 64], blockSize=512 | 1402-1408                                  |
 | 19   | pHEMDD-RAS-avxOR 高负载高维度实验（和HEMDD-RAS比较）   | n = $2^{27}$, d=2048, attrSubset=32, $\psi_e$=64, pD = [1, 2, 4, 8, 16, 32, 64], $b_e$ = 1 | 1386-1392                                  |
 
-# 2022-HEM 扩展版开发周志
+## HEM 命名史
 
-| 周数 | 时间        | 进展情况                                                     |
-| ---- | ----------- | :----------------------------------------------------------- |
-| 1    | 3/1 - 3/2   | 细化虚实属性组优化方法，分析订阅是否跨属性组的4种情况。      |
-| 2    | 3/19 - 3/25 | Debug，把 $g=1$ 时桶组跨一半桶的情况改成跨所有桶的情况(即不再考虑这一特殊情况)；做HEM-PPT，写演讲稿，做演讲视频。 |
-| 3    | 3/26 - 3/29 | 实现 VAS 和 RAS 优化，做实验；代码重构，实现HEM系列10个版本自动切换是否测量组成时间。 |
-| 4    | 4/5 - 4/10  | 设计并执行实验；调期刊论文模板；分析虚实属性组优化性能，推导最优划分属性子集数公式；处理数据，画图。 |
-| 5    | 4/12 - 4/17 | 画图，贴图；写论文： DRO 及其理论分析，DGO动态分组优化。     |
-| 6    | 4/19 - 4/25 | 写论文：虚实属性子集优化和两条定理，复杂度-瓶颈分析，改图，改实验，写完初稿。 |
-| 7    | 5/4 - 5/10  | 实现pRein、pHEM5DD、pHEM5DD-avxOR，做实验，论文加入实现优化方面的内容和总结 |
-| 8    | 5/11 - 5/15 | 跑更多并行、SIMD、高负载 RAS 实验，处理数据，画图，写论文，加入扩展实验部分 |
+* ReinBits (RB) ~ BIOP ~ HEM
+* Double Reverse Optimization ~ Dual Reverse Optimization (DRO) ~ Group Selection Optimization (GSO)
+* Dynamic Group Optimization (DGO) ~ Group Partitioning Optimization (GPO)
+* Pure Static HEM (HEMPS) ~ HEM with  Equal **C**ell-number Tolerance GPO (HEM-C)
+* Static Static HEM (HEMSS) ~ HEM with  Equal **C**ell-number Tolerance GPO and **C**ell Number GSO (HEM-CC)
+* Static Dynamic HEM (HEMSD) ~ HEM with  Equal **C**ell-number Tolerance GPO and **W**orkload GSO (HEM-CW)
+* Pure Dynamic HEM (HEMPD) ~ HEM with Equal **P**redicate-number Tolerance GPO (HEM-P)
+* Dynamic Static HEM (HEMSD) ~ HEM with Equal **P**redicate-number Tolerance GPO and **C**ell Number GSO (HEM-PC)
+* Dynamic Dynamic HEM (HEMDD) ~ HEM with Equal **P**redicate-number Tolerance GPO and **W**orkload GSO (HEM-PW)
