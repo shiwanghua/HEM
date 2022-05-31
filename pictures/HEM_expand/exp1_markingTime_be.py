@@ -36,7 +36,7 @@ HEM2SD = [
 
 Memory = [157, 159, 169, 188, 226, 302, 455, 760, 1370, 2591]
 
-Name = ["Rein", "HEMPS", "HEMSS", "HEMSD", "HEMPD", "HEMDS", "HEMDD"]
+Name = ["Rein", "HEM-C", "HEM-CC", "HEM-CW", "HEM-P", "HEM-PC", "HEM-PW"]
 
 plt.figure(figsize=(14, 6))
 # plt.subplot()
