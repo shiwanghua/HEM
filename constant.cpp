@@ -1,5 +1,5 @@
 #include "constant.h"
-string expID = "1442";       // Record the experiment ID number
+string expID = "1453";       // Record the experiment ID number
 const bool display = false;  // whether to print the mapping relation, 有待逐步改成DEBUG宏定义判断
 const bool verifyID = false; // whether to verify Insertion and Deletion function
 const int interval = 500;    // after a interval of events is matched, print a log
@@ -15,7 +15,7 @@ const int attNumType = 0;    // 0: Fixed size of sub and pub. 1: Random size of 
 const int attDis = 2;        // The distribution of attributes in subs and pubs. 0:uniform distribution | 1:Zipf distribution | 2: sub Zipf, pub 满维
 const int valDis = 1;        // The distribution of values in subs and pubs. 0:uniform + fixed width | 1: random width >= $width + Uniform | 2: Zipf + fixed width | 3: Normal + fixed width | 4: Normal + two ends
 int valDom = 1000000;        // Cardinality of values.
-double alpha = 2;            // Parameter for Zipf distribution.
+double alpha = 1;            // Parameter for Zipf distribution.
 double width = 0;            // Width of a predicate.
 double mean = 0.5;           // Mean of Normal Distribution. For events it's ( 1 - mean ).
 double stddev = 1;           // Standard deviation: The square root of variance, representing the dispersion of values from the distribution mean. >0
@@ -27,7 +27,7 @@ const int awRein_Ppoint = 0.25 * valDom; // HybridRein
 
 // AdaRein
 const double falsePositiveRate = 0.05;
-const int adarein_level = 4;
+const int adarein_level = 5;
 //const double divider=0.2;
 
 // pRein pHEM5DD pHEM5DD-avxOR pHEM5DD-RAS-avxOR

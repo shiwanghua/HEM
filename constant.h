@@ -14,7 +14,7 @@ extern const bool verifyID;// whether to verify Insertion and Deletion function
 extern const int interval; // 每匹配这么多个事件输出一条日志信息
 extern const double subp;  // subp比例的订阅和事件的谓词定义在前cons个维度上
 extern double realMatchNum;
-const int subs = 1000000;  //1048576;//134217728;  // Number of subscriptions.
+const int subs = 1048576;  //1048576;//134217728;  // Number of subscriptions.
 extern const int pubs;     // Number of publications.
 extern int atts;           // Total number of attributes, i.e. dimensions.
 extern int attrGroup;          // The number of attribute group in #atts attributes.
@@ -60,6 +60,7 @@ enum {
 	AdaRein_SSS_C_PPH, // PeePHole
 	AdaRein_SSS_C_W,   // Static Succession Selection Crossed WidthClassification
 	pAdaRein_SSS_C_W,  // parallel Static Succession Selection Crossed WidthClassification
+	p2AdaRein_SSS_C_W,  // The second parallel Static Succession Selection Crossed WidthClassification
 
 	AdaRein_SDS,       // Static Discretization Selection
 
@@ -117,4 +118,3 @@ extern const int awbTree_branch;
 
 
 #endif
-

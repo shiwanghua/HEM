@@ -71,9 +71,9 @@ AdaRein::AdaRein(int type) : numSub(0) {
 			beBucketW.resize(atts, vector<pair<pair<int, int>, pair<int, int>>>(adarein_level));
 			_for(i, 0, atts) {
 				_for(j, 0, adarein_level) {
-					beBucketW[i][j].first.first = 0; // low begin
+					beBucketW[i][j].first.first = 1; // low begin
 					beBucketW[i][j].first.second = levelBuks - 1; // low end
-					beBucketW[i][j].second.first = levelBuks - 1; // high begin
+					beBucketW[i][j].second.first = levelBuks - 2; // high begin
 					beBucketW[i][j].second.second = 0; // high end
 				}
 			}
@@ -92,13 +92,37 @@ AdaRein::AdaRein(int type) : numSub(0) {
 			beBucketW.resize(atts, vector<pair<pair<int, int>, pair<int, int>>>(adarein_level));
 			_for(i, 0, atts) {
 				_for(j, 0, adarein_level) {
-					beBucketW[i][j].first.first = 0; // low begin
+					beBucketW[i][j].first.first = 1; // low begin
 					beBucketW[i][j].first.second = levelBuks - 1; // low end
-					beBucketW[i][j].second.first = levelBuks - 1; // high begin
+					beBucketW[i][j].second.first = levelBuks - 2; // high begin
 					beBucketW[i][j].second.second = 0; // high end
 				}
 			}
 			threadPool.initThreadPool(parallelDegree);
+			break;
+		case p2AdaRein_SSS_C_W:
+			TYPE = "p2AdaRein_SSS_C_W" + to_string(adarein_level);
+			levelBuks = buks / adarein_level;
+			levelBuckStep = (valDom - 1) / levelBuks + 1; // 3 hour-bug: buckStep =
+			levelBuks = (valDom - 1) / levelBuckStep + 1; // bug: buckStep-levelBuckStep
+			widthStep = (valDom - 1) / adarein_level + 1;
+			attsCounts.resize(atts); // will be replaced by attsWidthPredicate
+			attsWidthPredicate.resize(atts, vector<int>(adarein_level));
+			skippedW.resize(atts, vector<bool>(adarein_level, false));
+			dataW.resize(atts, vector<vector<vector<vector<Combo>>>>(
+				adarein_level, vector<vector<vector<Combo>>>(
+					2, vector<vector<Combo>>(levelBuks))));
+			beBucketW.resize(atts, vector<pair<pair<int, int>, pair<int, int>>>(adarein_level));
+			_for(i, 0, atts) {
+				_for(j, 0, adarein_level) {
+					beBucketW[i][j].first.first = 1; // low begin
+					beBucketW[i][j].first.second = levelBuks - 1; // low end
+					beBucketW[i][j].second.first = levelBuks - 2; // high begin
+					beBucketW[i][j].second.second = 0; // high end
+				}
+			}
+			threadPool.initThreadPool(parallelDegree);
+			threadTaskSet.resize(parallelDegree, vector<pair<int, int>>());
 			break;
 		case AdaRein_SDS:
 			TYPE = "AdaRein_SDS";
@@ -1131,12 +1155,12 @@ void AdaRein::parallel_approx_match_sss_c_w(const Pub &pub, int &matchSubs, cons
 
 	vector<future<bitset<subs>>> threadResult;
 	int seg = pub.size / parallelDegree;
-	int remainder=pub.size%parallelDegree;
-	int tId=0,end;
-	for (int begin = 0; begin < pub.size; begin = end,tId++) {
-		if(tId<remainder)
-			end=begin+seg+1;
-		else end=begin+seg;
+	int remainder = pub.size % parallelDegree;
+	int tId = 0, end;
+	for (int begin = 0; begin < pub.size; begin = end, tId++) {
+		if (tId < remainder)
+			end = begin + seg + 1;
+		else end = begin + seg;
 		threadResult.emplace_back(threadPool.enqueue([this, &pub, begin, end] {
 //			printf("pub%d, begin=%d\n", pub.id, begin);
 			bitset<subs> b; //=new bitset<subs>;
@@ -1162,6 +1186,313 @@ void AdaRein::parallel_approx_match_sss_c_w(const Pub &pub, int &matchSubs, cons
 						for (auto &&k: dataW[att][wi][1][j])
 							b[k.subID] = true;
 				}
+			}
+			return b;
+		}));
+	}
+
+	// 可以替换为1次位集或
+	bitset<subs> bits;
+	if (pub.size < atts) {
+		vector<bool> attExist(atts, false);
+		for (const auto item: pub.pairs)
+			attExist[item.att] = true;
+		for (int ai = 0; ai < atts; ai++)
+			if (!attExist[ai]) {
+				for (int wi = 0; wi < adarein_level; wi++) {
+					if (skippedW[ai][wi]) continue;
+					for (int j = beBucketW[ai][wi].second.first; j >= beBucketW[ai][wi].second.second; j--)
+						for (auto &&k: dataW[ai][wi][1][j])
+							bits[k.subID] = true;
+				}
+			}
+	}
+	for (int i = 0; i < threadResult.size(); i++)
+		bits |= threadResult[i].get();
+	matchSubs = subs - bits.count();
+}
+
+void
+AdaRein::parallel2_static_succession_selection_crossed_width(double falsePositive, const vector<IntervalSub> &subList) {
+	int numPredicate = 0, numSkipPredicate = 0; // 谓词总数, 已过滤的谓词总数
+	double avgSubSize = 0, avgWidth = 0; // 平均每个订阅有多少个谓词, 谓词的平均宽度
+	for (auto &&iSub: subList) {
+		numPredicate += iSub.constraints.size();
+		for (auto &&iCnt: iSub.constraints) {
+			//++attsCounts[iCnt.att].count;
+			avgWidth += iCnt.highValue - iCnt.lowValue;
+		}
+	}
+	avgSubSize = (double) numPredicate / subList.size();
+	avgWidth /= (double) numPredicate * valDom;
+
+	// minPredicate 解释性代码
+	//double minK = log(pow(avgWidth, avgSubSize) + falsePositive) / log(avgWidth);
+	//inline auto valid = [&](double) {return (double)(numPredicate - numSkipPredicate) > minK * subs; };
+
+	double falsePositiveRate_global = pow(avgWidth, avgSubSize) * subs / (1 - falsePositive) * falsePositive / subs;
+
+	maxSkipPredicate = numPredicate - (avgSubSize - log(1 - falsePositive) / log(avgWidth)) * subs; // k2
+
+#ifdef DEBUG
+	cout << "k2= " << maxSkipPredicate << "\n";
+	maxSkipPredicate =
+		numPredicate - log(pow(avgWidth, avgSubSize) + falsePositiveRate_global) / log(avgWidth) *
+					   subs; // 至多可以过滤的谓词数, numSkipPredicate的最大值
+	cout << "k3_global= " << maxSkipPredicate << "\n";
+	int numSkipAttr = 0;
+	int numSkipBkt = 0;
+#endif
+
+	maxSkipPredicate =
+		numPredicate - log(pow(avgWidth, avgSubSize) / (1 - falsePositive)) / log(avgWidth) * subs;
+	//	maxSkipPredicate *= 6;
+	cout << "k3_local= " << maxSkipPredicate << "\n";
+
+	int skipWidthIndex = adarein_level - 1; // 从最大概率层开始过滤
+	while (skipWidthIndex >= 0) {
+		// 统计这层上的各属性上的谓词数量
+		for (int i = 0; i < atts; i++) {
+			attsCounts[i].att = i;
+			attsCounts[i].count = 0;
+		}
+		for (int i = 0; i < atts; i++) {
+			for (int j = 0; j < levelBuks; j++)
+				attsCounts[i].count += dataW[i][skipWidthIndex][0][j].size();
+		}
+		sort(attsCounts.begin(), attsCounts.end());
+
+		// 静态连续地找该层上的全过滤属性
+		int skipIndex = 0;
+		for (skipIndex = 0; skipIndex < atts; skipIndex++) {
+//			cout << "s= " << skipIndex << "\n";
+			if (numSkipPredicate + attsCounts[skipIndex].count <= maxSkipPredicate) {
+//				cout << "Skip Attribute " << attsCounts[skipIndex].att<<" on widthIndex "<<skipWidthIndex<<"\n"; // could output in finding order.
+				numSkipPredicate = numSkipPredicate + attsCounts[skipIndex].count;
+				skippedW[attsCounts[skipIndex].att][skipWidthIndex] = true;
+#ifdef DEBUG
+				numSkipAttr++; // 过滤不同宽度上的同一属性会计多次
+#endif // DEBUG
+			} else {
+				break;
+			}
+		}
+
+		// 过滤每一层上的空桶
+		for (int i = skipIndex; i < atts; i++) {
+			auto &beBW = beBucketW[i][skipWidthIndex];
+			const auto &dataw = dataW[i][skipWidthIndex];
+			// 因为这个属性的这个层不可能为全过滤属性了，如果相等了，说明还剩最后一个桶，这个桶不可能被过滤调了，所以不需要取等号
+			while (beBW.first.first < beBW.first.second && dataw[0][beBW.first.first].size() == 0)beBW.first.first++;
+			while (beBW.first.first < beBW.first.second && dataw[0][beBW.first.second].size() == 0)
+				beBW.first.second--;
+			while (beBW.second.first > beBW.second.second && dataw[1][beBW.second.first].size() == 0)
+				beBW.second.first--;
+			while (beBW.second.first > beBW.second.second && dataw[1][beBW.second.second].size() == 0)
+				beBW.second.second++;
+#ifdef DEBUG
+			numSkipBkt += beBW.first.first + levelBuks - 1 - beBW.first.second + beBW.second.second + levelBuks - 1 -
+						  beBW.second.first;
+#endif
+		}
+
+		// 对其他端桶建堆
+		// <low0/high1, AttributeId, bucketId, sizeOfBucket>
+		auto cmp = [&](const auto &a, const auto &b) {
+			return get<3>(a) > get<3>(b); // a桶小, 返回false, 就把a作为根, 即实现小根堆
+		};
+		priority_queue<tuple<int, int, int, int>, vector<tuple<int, int, int, int>>, decltype(cmp)> minHeap(cmp);
+		vector<bool> end[2];    // 记录交叉端是小号桶端还是大号桶端: low/high -> att -> 0: 过滤小号桶端；1：过滤大号桶端
+		end[0].resize(atts, true);  // 低值端从大号桶端(结束端)开始过滤
+		end[1].resize(atts, false); // 高值端从小号桶端(结束端)开始过滤
+		while (skipIndex < atts) {
+			const int &att = attsCounts[skipIndex].att;
+			auto &beBW = beBucketW[att][skipWidthIndex];
+			const auto &dataw = dataW[att][skipWidthIndex];
+			if (beBW.first.first <= beBW.first.second) // 低值端还有过滤空间(must have)
+				minHeap.push(
+					make_tuple(0, att, beBW.first.second,
+							   dataw[0][beBW.first.second].size()));
+			if (beBW.second.first >= beBW.second.second) // 高值端还有过滤空间(must have)
+				minHeap.push(
+					make_tuple(1, att, beBW.second.second,
+							   dataw[1][beBW.second.second].size()));
+			skipIndex++;
+		}
+
+		// 处理该宽度层上的部分过滤属性, 过滤堆里的端桶
+		while (!minHeap.empty()) {
+			auto item = minHeap.top();
+			minHeap.pop();
+			if (numSkipPredicate + get<3>(item) / 2 > maxSkipPredicate) {
+				break;
+			}
+			numSkipPredicate = numSkipPredicate + get<3>(item) / 2;
+#ifdef DEBUG
+			numSkipBkt++;
+#endif
+			const int &att = get<1>(item);
+			int &bktId = get<2>(item);
+			auto &beBW = beBucketW[att][skipWidthIndex];
+			const auto &dataw = dataW[att][skipWidthIndex];
+			if (get<0>(item) == 0) { // low
+				if (end[0][att]) { // 大号桶端 endBucket
+					bktId -= 1;
+					beBW.first.second = bktId; // 过滤掉这个桶
+					if (bktId > beBW.first.first) {
+						bktId = beBW.first.first; // 转端
+						get<3>(item) = dataw[0][bktId].size();
+						minHeap.push(item);
+					}
+				} else { // 小号桶端 beginBucket
+					bktId += 1;
+					beBW.first.first = bktId; // 过滤掉这个桶
+					if (bktId < beBW.first.second) { // 还有剩余的桶可以被过滤
+						bktId = beBW.first.second; // 转端
+						get<3>(item) = dataw[0][bktId].size();
+						minHeap.push(item);
+					}
+				}
+				end[0][att] = !end[0][att];
+			} else { // high
+				if (end[1][att]) { // 大号桶 beginBucket
+					bktId -= 1;
+					beBW.second.first = bktId; // 过滤掉这个大号桶
+					if (bktId > beBW.second.second) { // 还有剩余的桶可以被过滤
+						bktId = beBW.second.second; // 转端
+						get<3>(item) = dataw[1][bktId].size(); // 更新桶大小
+						minHeap.push(item);
+					}
+				} else { // 小号桶 endBucket
+					bktId += 1; // 过滤掉这个桶
+					beBW.second.second = bktId; // 过滤掉这个小号桶
+					if (bktId < beBW.second.first) { // 还有剩余的桶可以被过滤
+						bktId = beBW.second.first; // 转端
+						get<3>(item) = dataw[1][bktId].size();
+						minHeap.push(item);
+					}
+				}
+				end[1][att] = !end[1][att];
+			} // high
+		} // 堆
+		skipWidthIndex--;
+	} // 宽度层
+
+//	// 如果离散的端桶连起来构成了全过滤属性, 就标记到sekippedW上
+//	_for(i, 0, atts) {
+//		_for(j, 0, adarein_level) {
+//			if (beBucketW[i][j].first.first > beBucketW[i][j].first.second &&
+//				beBucketW[i][j].second.first < beBucketW[i][j].second.second) {
+//				printf(
+//					"Error: if %d is a full-skipped attribute on width level %d, it would already be skipped before discretization selection.\n",
+//					i, j);
+//				skippedW[i][j] = true;
+//#ifdef DEBUG
+//				numSkipAttr++; // 这里加上的话, numSkipBkt就不准确了
+//#endif // DEBUG
+//			}
+//		}
+//	}
+
+#ifdef DEBUG
+	cout << "In theory, rightMatchNum= " << pow(width, avgSubSize) * (double) subs << ", wrongMatchNum= "
+		 << pow(width, avgSubSize) * (double) subs / (1 - falsePositive) * falsePositive
+		 << ", falsePositiveRate_local= "
+		 << falsePositive
+		 << ", falsePositiveRate_global= " << falsePositiveRate_global << ".\n";
+	cout << "avgSubSize= " << avgSubSize << ", " << "avgWidth= " << avgWidth << ", numPredicate= " << numPredicate
+		 << ", maxSkipPredicate= " << maxSkipPredicate << ", numSkipPredicate= " << numSkipPredicate << ".\n";
+	cout << "Total skipped attribute on all widths: " << numSkipAttr << " among " << adarein_level << " widths of "
+		 << atts << " attributes.\n";
+	cout << "Total skipped bucket: " << numSkipAttr << "*2*" << levelBuks << " + " << numSkipBkt << " = "
+		 << numSkipAttr * 2 * levelBuks + numSkipBkt << " among " << atts * adarein_level * 2 * levelBuks
+		 << " buckets.\n";
+	cout << "Skip attribute:";
+	_for(i, 0, atts) {
+		_for(j, 0, adarein_level) {
+			if (skippedW[i][j]) {
+				cout << " a" << i << "w" << j;
+			}
+		}
+		cout << ";  ";
+	}
+	cout << "\n";
+#endif
+
+	// <AttributeId, widthId, numPredicateNotSkipped>
+	auto cmp = [&](const auto &a, const auto &b) {
+		return get<2>(a) < get<2>(b);
+	};
+	vector<tuple<int, int, int>> attrLayerLoad;
+	_for(ai, 0, atts) {
+		_for(wj, 0, adarein_level) {
+			if (!skippedW[ai][wj]) {
+				int numPredicateNotSkipped = 0;
+				__for(bk, beBucketW[ai][wj].first.first, beBucketW[ai][wj].first.second) {
+					numPredicateNotSkipped += dataW[ai][wj][0][bk].size();
+				}
+				__for(bk, beBucketW[ai][wj].second.second, beBucketW[ai][wj].second.first) {
+					numPredicateNotSkipped += dataW[ai][wj][1][bk].size();
+				}
+				attrLayerLoad.emplace_back(ai, wj, numPredicateNotSkipped >> 1);
+			}
+		}
+	}
+
+	vector<int> threadWorkload(parallelDegree, 0);
+	sort(attrLayerLoad.begin(), attrLayerLoad.end(),
+		 [](const auto &a, const auto &b) { return get<2>(a) > get<2>(b); });
+	for (int li = 0; li < attrLayerLoad.size(); li++) {
+		int minThreadNo = 0;
+		_for(ti, 1, parallelDegree) {
+			if (threadWorkload[ti] < threadWorkload[minThreadNo]) {
+				minThreadNo = ti;
+			}
+		}
+		threadTaskSet[minThreadNo].emplace_back(get<0>(attrLayerLoad[li]), get<1>(attrLayerLoad[li]));
+		threadWorkload[minThreadNo] += get<2>(attrLayerLoad[li]);
+	}
+	cout << "\nThreadNo Workload\n";
+	_for(i, 0, parallelDegree) {
+		cout << "T" << i << "\t" << threadWorkload[i] << "\n";
+	}
+	cout << "\n";
+
+	_for(ti, 0, parallelDegree) {
+		sort(threadTaskSet[ti].begin(), threadTaskSet[ti].end()); // Increasing by ai and wj
+	}
+}
+
+void AdaRein::parallel2_approx_match_sss_c_w(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
+
+	vector<future<bitset<subs>>> threadResult;
+	int tId = 0;
+	for (int tId = 0; tId < parallelDegree; tId++) {
+		threadResult.emplace_back(threadPool.enqueue([this, &pub, tId] {
+			Pub pub_c; // 满维，属性按属性号排列时不需要做这一步 copy
+			pub_c.pairs.resize(pub.pairs.size());
+			for (int pi = 0; pi < pub.pairs.size(); pi++) {
+				pub_c.pairs[pub.pairs[pi].att].value = pub.pairs[pi].value;
+			}
+			bitset<subs> b; //=new bitset<subs>;
+			for (int taskId = 0; taskId < threadTaskSet[tId].size(); taskId++) {
+				int ai = threadTaskSet[tId][taskId].first, wj = threadTaskSet[tId][taskId].second;
+				int value = pub_c.pairs[ai].value, buck = value / levelBuckStep;
+				for (auto cmb: dataW[ai][wj][0][buck])
+					if (cmb.val > value)
+						b[cmb.subID] = true;
+				for (int j = max(buck + 1, beBucketW[ai][wj].first.first);
+					 j <= beBucketW[ai][wj].first.second; j++) // 和HEM系列的设计不同, 这里取闭括号
+					for (auto &&k: dataW[ai][wj][0][j])
+						b[k.subID] = true;
+
+				for (auto cmb: dataW[ai][wj][1][buck])
+					if (cmb.val < value)
+						b[cmb.subID] = true;
+				for (int j = min(buck - 1, beBucketW[ai][wj].second.first);
+					 j >= beBucketW[ai][wj].second.second; j--)
+					for (auto &&k: dataW[ai][wj][1][j])
+						b[k.subID] = true;
 			}
 			return b;
 		}));
@@ -1403,7 +1734,7 @@ void AdaRein::approx_match_dss_b_w(const Pub &pub, int &matchSubs, const vector<
 }
 
 void AdaRein::calMaxSkipPredicate(double falsePositive, const vector<IntervalSub> &subList) {
-	int numPredicate = 0, numSkipPredicate = 0; // 谓词总数, 已过滤的谓词总数
+	int numPredicate = 0; // 谓词总数, numSkipPredicate 已过滤的谓词总数
 	double avgSubSize = 0, avgWidth = 0; // 平均每个订阅有多少个谓词, 谓词的平均宽度
 	for (auto &&iSub: subList) {
 		numPredicate += iSub.constraints.size();

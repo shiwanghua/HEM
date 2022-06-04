@@ -60,6 +60,7 @@ int main(int argc, char **argv) {
 	run_AdaRein_SSS_C(gen, deleteNo);
 	run_AdaRein_SSS_C_W(gen, deleteNo);
 	run_pAdaRein_SSS_C_W(gen, deleteNo);
+	run_p2AdaRein_SSS_C_W(gen, deleteNo);
 	run_AdaRein_DSS_W(gen, deleteNo);
 	run_AdaRein_DSS_B(gen, deleteNo);
 //	run_HEM(gen);

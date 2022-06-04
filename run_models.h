@@ -51,6 +51,7 @@ void run_AdaRein_SSS_B(const intervalGenerator& gen, unordered_map<int, bool> de
 void run_AdaRein_SSS_C(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 void run_AdaRein_SSS_C_W(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 void run_pAdaRein_SSS_C_W(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
+void run_p2AdaRein_SSS_C_W(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 void run_AdaRein_DSS_W(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 void run_AdaRein_DSS_B(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 //void run_AdaRein_DSS_B_W(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);

@@ -37,9 +37,10 @@ class AdaRein {
 	vector<vector<vector<vector<vector<Combo>>>>> dataW; // SSS-C-PPH SSS-C-W: attr->level->low/high->bucketId->offset
 	vector<vector<pair<pair<int, int>, pair<int, int>>>> beBucketW; // attr->level-><low,high>-><begin,end>
 
-	vector<int> attsPredicate; // 每个属性上有多少个谓词
-	vector<vector<int>> attsWidthPredicate; // 每个属性的每个宽度上有多少个谓词
+	vector<int> attsPredicate; // 每个属性上有多少个谓词  DSS_B
+	vector<vector<int>> attsWidthPredicate; // In DSS_W: 每个属性的每个宽度上有多少个谓词; In p2-SSS-C-W: 每个属性的每个宽度上有多少个未过滤的谓词
 
+	vector<vector<pair<int,int>>> threadTaskSet;
 	ThreadPool threadPool;
 
 	void calMaxSkipPredicate(double falsePositive, const vector<IntervalSub> &subList);
@@ -76,6 +77,9 @@ public:
 	void static_succession_selection_crossed_width(double falsePositive, const vector<IntervalSub>& subList);
 	void approx_match_sss_c_w(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
 	void parallel_approx_match_sss_c_w(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
+
+	void parallel2_static_succession_selection_crossed_width(double falsePositive, const vector<IntervalSub>& subList);
+	void parallel2_approx_match_sss_c_w(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
 
 	void insert_dss_w(IntervalSub sub);
 	void dynamic_succession_selection_width(double falsePositive, const vector<IntervalSub>& subList);
