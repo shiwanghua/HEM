@@ -11,7 +11,7 @@ plt.rcParams['axes.unicode_minus'] = False
 g = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]
 x = np.arange(10)  # x轴刻度标签位置
 Name = [
-    "Rein", "HEMPS", "HEMSS", "HEMSD", "HEMPD", "HEMDS", "HEMDD", "Simple",
+    "Rein", "HEM-B", "HEMSS", "HEMSD", "HEMPD", "HEMDS", "HEM-LD", "Simple",
     "Simple2"
 ]
 
@@ -29,16 +29,16 @@ fig = plt.figure(figsize=(5, 4))
 ax = fig.add_subplot(111)
 
 # ax.plot(be, Rein, marker='o', color='r', label=Name[0])
-ax.plot(x, HEM0PS, marker='x', color='DODGERBLUE', label=Name[1])
+ax.plot(x, HEM0PS, marker='x', color='DEEPPINK', label=Name[1])
 # ax.plot(be, BIOP1SS, marker='+', color='g', label=Name[2])
 # ax.plot(be, BIOP2SD, marker='*', color='b', label=Name[3])
 # ax.plot(be, BIOP3PD, marker='^', color='m', label=Name[4])
 # ax.plot(be, BIOP4DS, marker='s', color='y', label=Name[5])
-ax.plot(x, HEM5DD, marker='.', color='DEEPPINK', label=Name[6])
+ax.plot(x, HEM5DD, marker='.', color='DODGERBLUE', label=Name[6])
 # ax.plot(be, Simple, marker='D',  color='lightseagreen', label=Name[7])
 lgdsize = 15
 lsize = 18
-ax.legend(loc=(2.7 / 10, 3.7 / 5), fontsize=lgdsize)
+ax.legend(loc=(2.8 / 10, 3.7 / 5), fontsize=lgdsize)
 ax.grid()
 ax.set_xlabel('Number of Groups', fontsize=lsize)
 ax.set_ylabel('Matching Time (ms)', fontsize=lsize)
@@ -54,10 +54,10 @@ for size in ax.get_xticklabels():  #获取x轴上所有坐标，并设置字号
 plt.tick_params(labelsize=18)
 # plt.tick_params(direction='out', labelsize=18, length=4, width=1)
 ax2 = ax.twinx()
-ax2.bar(x, Memory, color='lightsteelblue', label='Memory')  # alpha=0.7,
-ax2.set_ylabel(r"Memory Size (MB)", fontsize=lsize)
+ax2.bar(x, Memory, color='lightsteelblue', label='Footprint')  # alpha=0.7,
+ax2.set_ylabel(r"Footprint (MB)", fontsize=lsize)
 ax2.set_ylim(0, 2700)
-ax2.legend(loc=(2.7 / 10, 2.5 / 5), fontsize=lgdsize, ncol=1)
+ax2.legend(loc=(2.8 / 10, 2.5 / 5), fontsize=lgdsize, ncol=1)
 ax2.set_zorder(1)
 ax2.set_yticklabels(['0', '1k', '2k'])
 # for size in ax2.get_xticklabels():   #获取x轴上所有坐标，并设置字号

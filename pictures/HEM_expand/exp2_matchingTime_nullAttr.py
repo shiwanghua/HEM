@@ -26,10 +26,10 @@ OpIndex2 = [61.273606, 40.896958, 25.819700, 16.657835, 8.618768, 1.331137]
 
 # 11: 22607/1024
 Name = [
-    "REIN", "HEMPS", "HEMSS", "BIOP2SD", "BIOP3PD", "BIOP4DS", "HEMDD",
+    "REIN", "HEM-B", "HEMSS", "BIOP2SD", "BIOP3PD", "BIOP4DS", "HEM-LD",
     "Simple", "Simple2"
 ]
-x = np.arange(6)  # x��̶ȱ�ǩλ??
+x = np.arange(6)
 width = 0.25
 lsize = 24
 
@@ -37,12 +37,12 @@ plt.figure(figsize=(5, 4))
 
 plt.bar(x - width, Rein, width, color='r',
         label=Name[0])  # r"$HEM0PS\_20S_e$" 'limegreen'
-plt.bar(x, HEM0, width, color='DODGERBLUE',
+plt.bar(x, HEM0, width, color='DEEPPINK',
         label=Name[1])  # r"$BIOP3PD\_10S_e$"
-plt.bar(x + width, HEM5, width, color='DEEPPINK',
+plt.bar(x + width, HEM5, width, color='DODGERBLUE',
         label=Name[6])  # limegreen brown DEEPPINK r"$HEM5DD\_10S_e$"
 
-plt.tick_params(labelsize=18)
+plt.tick_params(labelsize=20)
 # plt.tick_params(direction='out', labelsize=24, length=5.5, width=1)
 plt.xlabel('Proportion of Null Attributes', fontsize=lsize)
 plt.ylabel('Matching Time (ms)', fontsize=lsize)
