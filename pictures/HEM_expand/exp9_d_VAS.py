@@ -28,7 +28,7 @@ OpIndex.reverse()
 lsize = 24
 fig = plt.figure(figsize=(5, 4))
 ax = fig.add_subplot(111)
-ax.set_xlabel('Number of Dimensions', fontsize=lsize)
+ax.set_xlabel('Number of Attributes', fontsize=lsize)
 ax.set_ylabel('Matching Time (ms)', fontsize=lsize)
 # plt.xticks(range(0,10))
 ax.plot(x, Rein, marker='v', color='r', label=Name[0])

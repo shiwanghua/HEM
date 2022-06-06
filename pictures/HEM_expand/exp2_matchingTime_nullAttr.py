@@ -26,7 +26,7 @@ OpIndex2 = [61.273606, 40.896958, 25.819700, 16.657835, 8.618768, 1.331137]
 
 # 11: 22607/1024
 Name = [
-    "REIN", "HEM-B", "HEMSS", "BIOP2SD", "BIOP3PD", "BIOP4DS", "HEM-LD",
+    "REIN", "HEM-B", "HEMSS", "BIOP2SD", "BIOP3PD", "BIOP4DS", "HEM-LDA",
     "Simple", "Simple2"
 ]
 x = np.arange(6)
@@ -37,7 +37,7 @@ plt.figure(figsize=(5, 4))
 
 plt.bar(x - width, Rein, width, color='r',
         label=Name[0])  # r"$HEM0PS\_20S_e$" 'limegreen'
-plt.bar(x, HEM0, width, color='DEEPPINK',
+plt.bar(x, HEM0, width, color='#FFC0CB',
         label=Name[1])  # r"$BIOP3PD\_10S_e$"
 plt.bar(x + width, HEM5, width, color='DODGERBLUE',
         label=Name[6])  # limegreen brown DEEPPINK r"$HEM5DD\_10S_e$"
