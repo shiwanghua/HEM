@@ -20,11 +20,11 @@ class HEM5 {
 private:
 	int numSub, numDimension, buckStep, numBits;
 	vector<vector<vector<Combo>>> data[2];  // 0:left parenthesis, 1:right parenthesis
-	vector<vector<bitset<subs>>> bits[2];   // 需要提前知道订阅个数...
+	vector<vector<bitset<subs>>> bits[2];   // low/high -> attrNo -> bktID -> bitsetID for direct or reverse match process
 	vector<vector<int>> fix[2];             // 0是low上的后缀和，1是high上的前缀和，可以用于计算任务量
 	vector<bitset<subs>> fullBits;          // 全覆盖的bits单独存，因为只要存一次
 	int **endBucket[2], **bitsID[2];       // 落入这个bucket的事件在标记时终止于哪一个bucket、用到的bits数组的下标
-	bool **doubleReverse[2];                // 为true时是把1标成0
+	bool **doubleReverse[2];                // 为true时是把1标成0, DSS
 	ThreadPool threadPool;
 public:
 	int numBucket;

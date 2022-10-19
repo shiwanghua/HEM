@@ -71,10 +71,10 @@ int main(int argc, char **argv) {
 	run_HEM5(gen, deleteNo);
 //	run_HEM5_avxOR(gen, deleteNo);
 	// run_HEM5_parallel(gen, deleteNo);
-	// run_HEM5_avxOR_parallel(gen, deleteNo);
+//	 run_HEM5_avxOR_parallel(gen, deleteNo);
 	run_HEM5_VAS(gen, deleteNo);
 //if(parallelDegree<5)
-//	run_HEM5_RAS(gen, deleteNo);
+	run_HEM5_RAS(gen, deleteNo);
 //	run_HEM5_RAS_avxOR_parallel(gen, deleteNo);
 	////	run_HEMSC(gen);
 	////	run_HEMSR(gen);
@@ -82,7 +82,7 @@ int main(int argc, char **argv) {
 	//run_Simple(gen, deleteNo);
 	//	run_Simple2(gen, deleteNo);
 	//
-	run_tama(gen, deleteNo);
+//	run_tama(gen, deleteNo);
 	//	run_btama_forward_C_BOMP(gen, deleteNo); // bTAMA6
 	//	run_btama_backward1_C_BOMP(gen, deleteNo);// bTAMA7
 	//	run_btama_backward2_CBOMP(gen, deleteNo); // bTAMA8
@@ -94,7 +94,7 @@ int main(int argc, char **argv) {
 	//	run_BGTREE_d_backward_native(gen, deleteNo);
 	//	run_BGTREE_d_vrs_backward_native(gen, deleteNo);
 	//
-	run_OpIndex(gen, deleteNo);
+//	run_OpIndex(gen, deleteNo);
 	//	run_bOpIndex2(gen, deleteNo);
 	//	run_PSTREE(gen, deleteNo);
 	//	run_AWBTREE(gen, deleteNo);

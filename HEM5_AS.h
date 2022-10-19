@@ -8,7 +8,7 @@
 #include <bitset>
 #include "ThreadPool.h"
 
-// Virtual/Real Attribute Group Mode
+// Virtual/Real Attribute Subset/Class Mode
 class HEM5_AS {
 private:
 	int numSub, numDimension, buckStep, numBits, numAttrGroup, attrGroupSize;

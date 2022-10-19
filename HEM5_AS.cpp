@@ -271,7 +271,9 @@ void HEM5_AS::initBits() {
 
 	// 前缀和数组(不包括本身)、后缀和数组(包括本身)
 	_for(i, 0, numDimension) {
+		fix[0][i][numBucket]=0;
 		fix[0][i][numBucket - 1] = data[0][i][numBucket - 1].size();
+		fix[1][i][0]=0;
 		_for(j, 1, numBucket) {
 			fix[0][i][numBucket - j - 1] = fix[0][i][numBucket - j] + data[0][i][numBucket - j - 1].size();
 			fix[1][i][j] = fix[1][i][j - 1] + data[1][i][j - 1].size();
@@ -414,10 +416,10 @@ void HEM5_AS::initBits() {
 			// Bug: 提前满了, 最后几个桶为空, 此时highBid=numBits-1, hi=numBits+1, 越界了, 直接用fullBL
 			if (fix[1][i][lj] == fix[1][i][numBucket]) {
 				bitsID[1][i][lj] = numBits - 1;
-				endBucket[1][i][lj] = lj + 1; // 如果是第一次进来, j号桶非空, 需要二重反向标记, 否则是空桶, 可以兼容这种情况
+				endBucket[1][i][lj] = lj; // bkt lj does not need to be marked
 				doubleReverse[1][i][lj] = true;
-			} else if (fix[1][i][lj] - fix[1][i][highBktId] <=
-					   fix[1][i][highContain[hi]] - fix[1][i][lj]) { // Bug: 没有减highBktId
+			} else if (fix[1][i][lj] - fix[1][i][highBktId] <
+					   fix[1][i][highContain[hi]] - fix[1][i][lj+1]) { // Bug: 没有减highBktId
 				bitsID[1][i][lj] = highBid; // hi - 2
 				endBucket[1][i][lj] = highBktId; // 遍历到大于等于endBucket[1][i][j]
 				doubleReverse[1][i][lj] = false;
@@ -432,10 +434,10 @@ void HEM5_AS::initBits() {
 			// Bug: 提前满了, 序号小的几个桶为空, 单独考虑, 直接用二重反向
 			if (fix[0][i][hj] == fix[0][i][0]) {
 				bitsID[0][i][hj] = numBits - 1;
-				endBucket[0][i][hj] = hj;
+				endBucket[0][i][hj] = hj+1;
 				doubleReverse[0][i][hj] = true;
-			} else if (fix[0][i][hj + 1] - fix[0][i][lowBktId] <=
-					   fix[0][i][lowContain[li]] - fix[0][i][hj + 1]) {
+			} else if (fix[0][i][hj + 1] - fix[0][i][lowBktId] <
+					   fix[0][i][lowContain[li]] - fix[0][i][hj]) {
 				bitsID[0][i][hj] = lowBid;
 				endBucket[0][i][hj] = lowBktId;
 				doubleReverse[0][i][hj] = false;
@@ -514,7 +516,7 @@ void HEM5_AS::match_VAS(const Pub &pub, int &matchSubs) {
 				bLocal = fullBits[att];
 			else
 				bLocal = bits[0][att][bitsID[0][att][buck]];
-			_for(j, endBucket[0][att][buck], buck + 1) for (auto &&iCob: data[0][att][j])
+			_for(j, endBucket[0][att][buck], buck) for (auto &&iCob: data[0][att][j])
 					bLocal[iCob.subID] = 0;
 #ifdef DEBUG
 			markTime += (double)markStart.elapsed_nano();
@@ -549,7 +551,7 @@ void HEM5_AS::match_VAS(const Pub &pub, int &matchSubs) {
 				bLocal = fullBits[att];
 			else
 				bLocal = bits[1][att][bitsID[1][att][buck]];
-			_for(j, buck, endBucket[1][att][buck]) for (auto &&iCob: data[1][att][j])
+			_for(j, buck+1, endBucket[1][att][buck]) for (auto &&iCob: data[1][att][j])
 					bLocal[iCob.subID] = 0;
 #ifdef DEBUG
 			markTime += (double)markStart.elapsed_nano();
@@ -649,7 +651,7 @@ void HEM5_AS::match_RAS(const Pub &pub, int &matchSubs) {
 				bLocal = fullBits[att];
 			else
 				bLocal = bits[0][att][bitsID[0][att][buck]];
-			_for(j, endBucket[0][att][buck], buck + 1) for (auto &&iCob: data[0][att][j])
+			_for(j, endBucket[0][att][buck], buck) for (auto &&iCob: data[0][att][j])
 					bLocal[iCob.subID] = 0;
 #ifdef DEBUG
 			markTime += (double)markStart.elapsed_nano();
@@ -684,7 +686,7 @@ void HEM5_AS::match_RAS(const Pub &pub, int &matchSubs) {
 				bLocal = fullBits[att];
 			else
 				bLocal = bits[1][att][bitsID[1][att][buck]];
-			_for(j, buck, endBucket[1][att][buck]) for (auto &&iCob: data[1][att][j])
+			_for(j, buck+1, endBucket[1][att][buck]) for (auto &&iCob: data[1][att][j])
 					bLocal[iCob.subID] = 0;
 #ifdef DEBUG
 			markTime += (double)markStart.elapsed_nano();
@@ -779,7 +781,7 @@ void HEM5_AS::match_RAS_avxOR_parallel(const Pub &pub, int &matchSubs) {
 						bLocal = fullBits[att];
 					else
 						bLocal = bits[0][att][bitsID[0][att][buck]];
-					_for(j, endBucket[0][att][buck], buck + 1) 
+					_for(j, endBucket[0][att][buck], buck)
 					for (auto &&iCob: data[0][att][j])
 							bLocal[iCob.subID] = 0;
 					Util::bitsetOr(b, bLocal);
@@ -796,7 +798,7 @@ void HEM5_AS::match_RAS_avxOR_parallel(const Pub &pub, int &matchSubs) {
 						bLocal = fullBits[att];
 					else
 						bLocal = bits[1][att][bitsID[1][att][buck]];
-					_for(j, buck, endBucket[1][att][buck]) 
+					_for(j, buck+1, endBucket[1][att][buck])
 					for (auto &&iCob: data[1][att][j])
 							bLocal[iCob.subID] = 0;
 					Util::bitsetOr(b, bLocal);
