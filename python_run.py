@@ -5,7 +5,7 @@ import os
 import sys
 
 expID = int(sys.argv[1])
-coreId = '8'
+coreId = '10'
 
 os.system('ulimit -s unlimited;sudo chmod 777 run')
 os.system('sudo chmod 777 *.txt')
@@ -16,10 +16,10 @@ os.system("sudo cpufreq-set -c " + coreId + " -u 4.9G")
 
 # Exp 1: be
 # need to #define DEBUG in constant.h file
-# for be in range(9, -1, -1):
-#     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 20 10 20 0.0 0.4 ' + str(be)+' 1 1000000 1')
-#     print('Experiment', str(expID), ': atts= 20, k= 10, m= 20, alpha= 0.0, w= 0.4, be= ', str(be), 'attrGroup= 1, valDom= 1000000, pD= 1 done.\n\n')
-#     expID += 1
+for be in range(9, -1, -1):
+    os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 20 10 20 0.0 0.4 ' + str(be)+' 1 1000000 1')
+    print('Experiment', str(expID), ': atts= 20, k= 10, m= 20, alpha= 0.0, w= 0.4, be= ', str(be), ', attrGroup= 1, valDom= 1000000, pD= 1 done.\n\n')
+    expID += 1
 
 # be2=[1,3,6,9,12,15,18,21,24,27]
 # need to set be to -1
@@ -174,11 +174,11 @@ os.system("sudo cpufreq-set -c " + coreId + " -u 4.9G")
 #    expID += 1
 
 # Exp 16: SIMD 4096维度
-dimen=[16, 32, 64, 128, 256, 512, 1024, 2048, 4096] # =\psi_e
-for d in dimen:
-    os.system(' ./run ' + str(expID) + ' '+str(d)+' 10 '+str(d)+' 0.0 0.4 4 1 1000000 1')
-    print('Experiment', str(expID), ': atts= '+str(d)+', k= 10, m= '+str(d)+', alpha= 0.0, w= 0.4, be= 4, attrGroup= 1, valDom= 1000000, pD= 1 done.\n\n')
-    expID += 1
+# dimen=[16, 32, 64, 128, 256, 512, 1024, 2048, 4096] # =\psi_e
+# for d in dimen:
+#     os.system(' ./run ' + str(expID) + ' '+str(d)+' 10 '+str(d)+' 0.0 0.4 4 1 1000000 1')
+#     print('Experiment', str(expID), ': atts= '+str(d)+', k= 10, m= '+str(d)+', alpha= 0.0, w= 0.4, be= 4, attrGroup= 1, valDom= 1000000, pD= 1 done.\n\n')
+#     expID += 1
 
 # Exp 17: parallel degree       4096维度
 # Exp 18: pHEMDD-avxOR 组合实验 4096维度

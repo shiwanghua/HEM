@@ -492,21 +492,10 @@ void HEM5_AS::match_VAS(const Pub &pub, int &matchSubs) {
 	int value, att, buck;
 
 	_for(i, 0, pub.size) {
-#ifdef DEBUG
-		Timer compareStart;
-#endif // DEBUG
+
 		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 		attExist[att] = true;
 		attGroupExist[att / attrGroupSize] = true;
-		for (auto &&iCob: data[0][att][buck])
-			if (iCob.val > value)
-				b[iCob.subID] = 1;
-		for (auto &&iCob: data[1][att][buck])
-			if (iCob.val < value)
-				b[iCob.subID] = 1;
-#ifdef DEBUG
-		compareTime += (double)compareStart.elapsed_nano();
-#endif // DEBUG
 
 		if (doubleReverse[0][att][buck]) {
 #ifdef DEBUG
@@ -520,6 +509,13 @@ void HEM5_AS::match_VAS(const Pub &pub, int &matchSubs) {
 					bLocal[iCob.subID] = 0;
 #ifdef DEBUG
 			markTime += (double)markStart.elapsed_nano();
+			Timer compareStart;
+#endif // DEBUG
+			for (auto &&iCob: data[0][att][buck])
+				if (iCob.val <= value)
+					bLocal[iCob.subID] = 0;
+#ifdef DEBUG
+			compareTime += (double)compareStart.elapsed_nano();
 			Timer orStart;
 #endif // DEBUG
 			b = b | bLocal;
@@ -534,6 +530,13 @@ void HEM5_AS::match_VAS(const Pub &pub, int &matchSubs) {
 					b[iCob.subID] = 1;
 #ifdef DEBUG
 			markTime += (double)markStart.elapsed_nano();
+			Timer compareStart;
+#endif // DEBUG
+			for (auto &&iCob: data[0][att][buck])
+				if (iCob.val > value)
+					b[iCob.subID] = 1;
+#ifdef DEBUG
+			compareTime += (double)compareStart.elapsed_nano();
 			Timer orStart;
 #endif // DEBUG
 			if (bitsID[0][att][buck] != -1)
@@ -555,6 +558,13 @@ void HEM5_AS::match_VAS(const Pub &pub, int &matchSubs) {
 					bLocal[iCob.subID] = 0;
 #ifdef DEBUG
 			markTime += (double)markStart.elapsed_nano();
+			Timer compareStart;
+#endif // DEBUG
+			for (auto &&iCob: data[1][att][buck])
+				if (iCob.val >= value)
+					bLocal[iCob.subID] = 0;
+#ifdef DEBUG
+			compareTime += (double)compareStart.elapsed_nano();
 			Timer orStart;
 #endif // DEBUG
 			b = b | bLocal;
@@ -569,6 +579,13 @@ void HEM5_AS::match_VAS(const Pub &pub, int &matchSubs) {
 					b[iCob.subID] = 1;
 #ifdef DEBUG
 			markTime += (double)markStart.elapsed_nano();
+			Timer compareStart;
+#endif // DEBUG
+			for (auto &&iCob: data[1][att][buck])
+				if (iCob.val < value)
+					b[iCob.subID] = 1;
+#ifdef DEBUG
+			compareTime += (double)compareStart.elapsed_nano();
 			Timer orStart;
 #endif // DEBUG
 			if (bitsID[1][att][buck] != -1)
@@ -630,18 +647,9 @@ void HEM5_AS::match_RAS(const Pub &pub, int &matchSubs) {
 	int value, att, buck;
 
 	_for(i, 0, pub.size) {
-#ifdef DEBUG
-		Timer compareStart;
-#endif // DEBUG
+
 		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 		attExist[att] = true;
-		_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
-				b[data[0][att][buck][k].subID] = 1;
-		_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
-				b[data[1][att][buck][k].subID] = 1;
-#ifdef DEBUG
-		compareTime += (double)compareStart.elapsed_nano();
-#endif // DEBUG
 
 		if (doubleReverse[0][att][buck]) {
 #ifdef DEBUG
@@ -655,6 +663,13 @@ void HEM5_AS::match_RAS(const Pub &pub, int &matchSubs) {
 					bLocal[iCob.subID] = 0;
 #ifdef DEBUG
 			markTime += (double)markStart.elapsed_nano();
+			Timer compareStart;
+#endif // DEBUG
+			for (auto &&iCob: data[0][att][buck])
+				if (iCob.val <= value)
+					bLocal[iCob.subID] = 0;
+#ifdef DEBUG
+			compareTime += (double)compareStart.elapsed_nano();
 			Timer orStart;
 #endif // DEBUG
 			b = b | bLocal;
@@ -669,6 +684,13 @@ void HEM5_AS::match_RAS(const Pub &pub, int &matchSubs) {
 					b[iCob.subID] = 1;
 #ifdef DEBUG
 			markTime += (double)markStart.elapsed_nano();
+			Timer compareStart;
+#endif // DEBUG
+			for (auto &&iCob: data[0][att][buck])
+				if (iCob.val > value)
+					b[iCob.subID] = 1;
+#ifdef DEBUG
+			compareTime += (double)compareStart.elapsed_nano();
 			Timer orStart;
 #endif // DEBUG
 			if (bitsID[0][att][buck] != -1)
@@ -690,6 +712,13 @@ void HEM5_AS::match_RAS(const Pub &pub, int &matchSubs) {
 					bLocal[iCob.subID] = 0;
 #ifdef DEBUG
 			markTime += (double)markStart.elapsed_nano();
+			Timer compareStart;
+#endif // DEBUG
+			for (auto &&iCob: data[1][att][buck])
+				if (iCob.val >= value)
+					bLocal[iCob.subID] = 0;
+#ifdef DEBUG
+			compareTime += (double)compareStart.elapsed_nano();
 			Timer orStart;
 #endif // DEBUG
 			b = b | bLocal;
@@ -704,6 +733,13 @@ void HEM5_AS::match_RAS(const Pub &pub, int &matchSubs) {
 					b[iCob.subID] = 1;
 #ifdef DEBUG
 			markTime += (double)markStart.elapsed_nano();
+			Timer compareStart;
+#endif // DEBUG
+			for (auto &&iCob: data[1][att][buck])
+				if (iCob.val < value)
+					b[iCob.subID] = 1;
+#ifdef DEBUG
+			compareTime += (double)compareStart.elapsed_nano();
 			Timer orStart;
 #endif // DEBUG
 			if (bitsID[1][att][buck] != -1)
@@ -771,10 +807,6 @@ void HEM5_AS::match_RAS_avxOR_parallel(const Pub &pub, int &matchSubs) {
 			int value, att, buck;
 			for (int i = begin; i < end; i++) {
 				value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
-				_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
-						b[data[0][att][buck][k].subID] = 1;
-				_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
-						b[data[1][att][buck][k].subID] = 1;
 
 				if (doubleReverse[0][att][buck]) {
 					if (bitsID[0][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
@@ -784,11 +816,15 @@ void HEM5_AS::match_RAS_avxOR_parallel(const Pub &pub, int &matchSubs) {
 					_for(j, endBucket[0][att][buck], buck)
 					for (auto &&iCob: data[0][att][j])
 							bLocal[iCob.subID] = 0;
+					_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val <= value)
+							bLocal[data[0][att][buck][k].subID] = 0;
 					Util::bitsetOr(b, bLocal);
 				} else {
 					_for(j, buck + 1, endBucket[0][att][buck]) 
 					for (auto &&iCob: data[0][att][j])
 							b[iCob.subID] = 1;
+					_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
+							b[data[0][att][buck][k].subID] = 1;
 					if (bitsID[0][att][buck] != -1)
 						Util::bitsetOr(b,bits[0][att][bitsID[0][att][buck]]);
 				}
@@ -801,11 +837,15 @@ void HEM5_AS::match_RAS_avxOR_parallel(const Pub &pub, int &matchSubs) {
 					_for(j, buck+1, endBucket[1][att][buck])
 					for (auto &&iCob: data[1][att][j])
 							bLocal[iCob.subID] = 0;
+					_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val >= value)
+							bLocal[data[1][att][buck][k].subID] = 0;
 					Util::bitsetOr(b, bLocal);
 				} else {
 					_for(j, endBucket[1][att][buck], buck) 
 					for (auto &&iCob: data[1][att][j])
 							b[iCob.subID] = 1;
+					_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
+							b[data[1][att][buck][k].subID] = 1;
 					if (bitsID[1][att][buck] != -1)
 						Util::bitsetOr(b, bits[1][att][bitsID[1][att][buck]]);//b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
 				}

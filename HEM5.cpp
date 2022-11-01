@@ -171,8 +171,7 @@ void HEM5::initBits()
 
 	// 如果有多次初始化
 	_for(i, 0,
-		numDimension)
-	delete[] doubleReverse[0][i], doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
+		numDimension) delete[] doubleReverse[0][i], doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1], doubleReverse[0], doubleReverse[1];
 	doubleReverse[0] = new bool* [numDimension];
 	doubleReverse[1] = new bool* [numDimension];
@@ -426,8 +425,7 @@ void HEM5::initBits()
 			{
 				subID = data[0][i][j][k].subID;
 				fullBits[i][subID] = 1; // numBits-1号bits每次必须标记
-				_for(q, b, numBits - 1)
-				bits[0][i][q][subID] = 1;
+				_for(q, b, numBits - 1) bits[0][i][q][subID] = 1;
 			}
 
 			if (doubleReverse[1][i][j])
@@ -437,8 +435,7 @@ void HEM5::initBits()
 			_for(k, 0, data[1][i][j].size())
 			{ // 桶里每个订阅
 				subID = data[1][i][j][k].subID;
-				_for(q, b, numBits - 1)
-				bits[1][i][q][subID] = 1;
+				_for(q, b, numBits - 1) bits[1][i][q][subID] = 1;
 			}
 		}
 	}
@@ -458,10 +455,6 @@ void HEM5::match(const Pub& pub, int& matchSubs)
 //	{
 //		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 //		attExist[att] = true;
-//		_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
-//			(*b)[data[0][att][buck][k].subID] = 1;
-//		_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
-//			(*b)[data[1][att][buck][k].subID] = 1;
 //
 //		if (doubleReverse[0][att][buck])
 //		{
@@ -473,6 +466,9 @@ void HEM5::match(const Pub& pub, int& matchSubs)
 //				_for(k, 0, data[0][att][j].size())
 //				(*bLocal)[data[0][att][j][k].subID] = 0;
 //
+//			_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val <= value)
+//					(*bLocal)[data[0][att][buck][k].subID] = 0;
+//
 //			*b = *b | *bLocal;
 //		}
 //		else
@@ -480,6 +476,9 @@ void HEM5::match(const Pub& pub, int& matchSubs)
 //			_for(j, buck + 1, endBucket[0][att][buck])
 //				_for(k, 0, data[0][att][j].size())
 //				(*b)[data[0][att][j][k].subID] = 1;
+//
+//			_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
+//					(*b)[data[0][att][buck][k].subID] = 1;
 //
 //			if (bitsID[0][att][buck] != -1)
 //				*b = *b | bits[0][att][bitsID[0][att][buck]];
@@ -496,6 +495,9 @@ void HEM5::match(const Pub& pub, int& matchSubs)
 //				_for(k, 0, data[1][att][j].size())
 //				(*bLocal)[data[1][att][j][k].subID] = 0;
 //
+//			_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val >= value)
+//					(*bLocal)[data[1][att][buck][k].subID] = 0;
+//
 //			*b = *b | *bLocal;
 //		}
 //		else
@@ -503,6 +505,9 @@ void HEM5::match(const Pub& pub, int& matchSubs)
 //			_for(j, endBucket[1][att][buck], buck)
 //				_for(k, 0, data[1][att][j].size())
 //				(*b)[data[1][att][j][k].subID] = 1;
+//
+//			_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
+//					(*b)[data[1][att][buck][k].subID] = 1;
 //
 //			if (bitsID[1][att][buck] != -1)
 //				*b = *b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
@@ -612,11 +617,6 @@ void HEM5::match_debug(const Pub& pub, int& matchSubs)
 		Timer compareStart;
 		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 		attExist[att] = true;
-		_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
-				b[data[0][att][buck][k].subID] = 1;
-		_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
-				b[data[1][att][buck][k].subID] = 1;
-		compareTime += (double)compareStart.elapsed_nano();
 
 		if (doubleReverse[0][att][buck])
 		{
@@ -629,6 +629,11 @@ void HEM5::match_debug(const Pub& pub, int& matchSubs)
 					data[0][att][j].size()) bLocal[data[0][att][j][k].subID] = 0;
 			markTime += (double)markStart.elapsed_nano();
 
+			Timer compareStart;
+			_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val <= value)
+					bLocal[data[0][att][buck][k].subID] = 0;
+			compareTime += (double)compareStart.elapsed_nano();
+
 			Timer orStart;
 			b = b | bLocal;
 			orTime += (double)orStart.elapsed_nano();
@@ -639,6 +644,12 @@ void HEM5::match_debug(const Pub& pub, int& matchSubs)
 			_for(j, buck + 1, endBucket[0][att][buck]) _for(k, 0,
 					data[0][att][j].size()) b[data[0][att][j][k].subID] = 1;
 			markTime += (double)markStart.elapsed_nano();
+
+			Timer compareStart;
+			_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
+					b[data[0][att][buck][k].subID] = 1;
+			compareTime += (double)compareStart.elapsed_nano();
+
 			Timer orStart;
 			if (bitsID[0][att][buck] != -1)
 				b = b | bits[0][att][bitsID[0][att][buck]];
@@ -655,6 +666,12 @@ void HEM5::match_debug(const Pub& pub, int& matchSubs)
 			_for(j, buck + 1, endBucket[1][att][buck]) _for(k, 0,
 					data[1][att][j].size()) bLocal[data[1][att][j][k].subID] = 0;
 			markTime += (double)markStart.elapsed_nano();
+
+			Timer compareStart;
+			_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val >= value)
+					bLocal[data[1][att][buck][k].subID] = 0;
+			compareTime += (double)compareStart.elapsed_nano();
+
 			Timer orStart;
 			b = b | bLocal;
 			orTime += (double)orStart.elapsed_nano();
@@ -664,6 +681,12 @@ void HEM5::match_debug(const Pub& pub, int& matchSubs)
 			Timer markStart;
 			_for(j, endBucket[1][att][buck], buck) _for(k, 0, data[1][att][j].size()) b[data[1][att][j][k].subID] = 1;
 			markTime += (double)markStart.elapsed_nano();
+
+			Timer compareStart;
+			_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
+					b[data[1][att][buck][k].subID] = 1;
+			compareTime += (double)compareStart.elapsed_nano();
+
 			Timer orStart;
 			if (bitsID[1][att][buck] != -1)
 				b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
@@ -689,11 +712,11 @@ void HEM5::match_debug(const Pub& pub, int& matchSubs)
 	//	}
 
 	Timer bitStart;
-	//	_for(i, 0, subs) if (!b[i]) {
-	//			++matchSubs;
-	//			//cout << "HEM5 matches sub: " << i << endl;
-	//		}
-	matchSubs = subs - b.count();
+		_for(i, 0, subs) if (!b[i]) {
+				++matchSubs;
+				//cout << "HEM5 matches sub: " << i << endl;
+			}
+//	matchSubs = subs - b.count();
 	bitTime += (double)bitStart.elapsed_nano();
 }
 
@@ -718,11 +741,6 @@ void HEM5::match_parallel(const Pub& pub, int& matchSubs)
 		  {
 			  value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 
-			  _for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
-					  b[data[0][att][buck][k].subID] = 1;
-			  _for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
-					  b[data[1][att][buck][k].subID] = 1;
-
 			  if (doubleReverse[0][att][buck])
 			  {
 				  if (bitsID[0][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
@@ -732,12 +750,18 @@ void HEM5::match_parallel(const Pub& pub, int& matchSubs)
 				  _for(j, endBucket[0][att][buck], buck) _for(k, 0,
 						  data[0][att][j].size()) bLocal[data[0][att][j][k].subID] = 0;
 
+				  _for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val <= value)
+						  bLocal[data[0][att][buck][k].subID] = 0;
+
 				  b = b | bLocal;
 			  }
 			  else
 			  {
 				  _for(j, buck + 1, endBucket[0][att][buck]) _for(k, 0,
 						  data[0][att][j].size()) b[data[0][att][j][k].subID] = 1;
+
+				  _for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
+						  b[data[0][att][buck][k].subID] = 1;
 
 				  if (bitsID[0][att][buck] != -1)
 					  b = b | bits[0][att][bitsID[0][att][buck]];
@@ -753,12 +777,18 @@ void HEM5::match_parallel(const Pub& pub, int& matchSubs)
 				  _for(j, buck + 1, endBucket[1][att][buck]) _for(k, 0,
 						  data[1][att][j].size()) bLocal[data[1][att][j][k].subID] = 0;
 
+				  _for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val >= value)
+						  bLocal[data[1][att][buck][k].subID] = 0;
+
 				  b = b | bLocal;
 			  }
 			  else
 			  {
 				  _for(j, endBucket[1][att][buck], buck) _for(k, 0,
 						  data[1][att][j].size()) b[data[1][att][j][k].subID] = 1;
+
+				  _for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
+						  b[data[1][att][buck][k].subID] = 1;
 
 				  if (bitsID[1][att][buck] != -1)
 					  b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
@@ -862,11 +892,6 @@ void HEM5::match_avxOR_parallel(const Pub& pub, int& matchSubs)
 		  {
 			  value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 
-			  _for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
-					  b[data[0][att][buck][k].subID] = 1;
-			  _for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
-					  b[data[1][att][buck][k].subID] = 1;
-
 			  if (doubleReverse[0][att][buck])
 			  {
 				  if (bitsID[0][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
@@ -875,18 +900,18 @@ void HEM5::match_avxOR_parallel(const Pub& pub, int& matchSubs)
 					  bLocal = bits[0][att][bitsID[0][att][buck]];
 				  _for(j, endBucket[0][att][buck], buck) for (auto&& iCob : data[0][att][j])
 						  bLocal[iCob.subID] = 0;
-				  // printf("a0\n");
-				  // fflush(stdout);
+				  _for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val <= value)
+						  bLocal[data[0][att][buck][k].subID] = 0;
 				  Util::bitsetOr(b, bLocal);//b = b | bLocal;
 			  }
 			  else
 			  {
 				  _for(j, buck + 1, endBucket[0][att][buck]) for (auto&& iCob : data[0][att][j])
 						  b[iCob.subID] = 1;
-				  // printf("b0\n");
-				  // fflush(stdout);
-				  if (bitsID[0][att][buck] != -1)
-					  Util::bitsetOr(b, bits[0][att][bitsID[0][att][buck]]);//b = b | bits[0][att][bitsID[0][att][buck]];
+				  _for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
+						  b[data[0][att][buck][k].subID] = 1;
+//				  if (bitsID[0][att][buck] != -1)
+//					  Util::bitsetOr(b, bits[0][att][bitsID[0][att][buck]]);//b = b | bits[0][att][bitsID[0][att][buck]];
 			  }
 
 			  if (doubleReverse[1][att][buck])
@@ -895,17 +920,20 @@ void HEM5::match_avxOR_parallel(const Pub& pub, int& matchSubs)
 					  bLocal = fullBits[att];
 				  else
 					  bLocal = bits[1][att][bitsID[1][att][buck]];
-
 				  _for(j, buck + 1, endBucket[1][att][buck]) for (auto&& iCob : data[1][att][j])
 						  bLocal[iCob.subID] = 0;
+				  _for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val >= value)
+						  bLocal[data[1][att][buck][k].subID] = 0;
 				  Util::bitsetOr(b, bLocal);//b = b | bLocal;
 			  }
 			  else
 			  {
 				  _for(j, endBucket[1][att][buck], buck) for (auto&& iCob : data[1][att][j])
 						  b[iCob.subID] = 1;
-				  if (bitsID[1][att][buck] != -1)
-					  Util::bitsetOr(b, bits[1][att][bitsID[1][att][buck]]);//b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
+				  _for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
+						  b[data[1][att][buck][k].subID] = 1;
+//				  if (bitsID[1][att][buck] != -1)
+//					  Util::bitsetOr(b, bits[1][att][bitsID[1][att][buck]]);//b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
 			  }
 		  }
 		  return b;

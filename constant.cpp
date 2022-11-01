@@ -1,12 +1,12 @@
 #include "constant.h"
-string expID = "1462";       // Record the experiment ID number
+string expID = "1467";       // Record the experiment ID number
 const bool display = false;  // whether to print the mapping relation, 有待逐步改成DEBUG宏定义判断
 const bool verifyID = false; // whether to verify Insertion and Deletion function
 const int interval = 500;    // after a interval of events is matched, print a log
 const double subp = 0;       // subp比例的订阅的谓词定义在前cons个维度上 in order to make the number of matching subscriptions > 0		  
 double realMatchNum=-1;      // The correct matching number in an experiment (Recorded in Rein).
 //const int subs = 1000000;  // Number of subscriptions.
-const int pubs = 1024;       // Number of publications.
+const int pubs = 1000;       // Number of publications.
 int atts = 20;             // Total number of attributes, i.e. dimensions.
 int attrGroup = 1;           // The number of attribute group in #atts attributes.
 int cons = 10;                // Number of constraints(predicates) in one sub.

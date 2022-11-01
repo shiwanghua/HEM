@@ -138,9 +138,11 @@ public:
  		b2_256 = _mm256_maskload_epi64(begin2, mask);
 
  		b1_256 = _mm256_or_si256(b1_256, b2_256);
-
+//		printf("1");
+//		fflush(stdout);
  		_mm256_maskstore_epi64(begin1, mask, b1_256);
-
+//		printf("2");
+//		fflush(stdout);
  		begin1 += ptrIncrement;
  		begin2 += ptrIncrement;
  	}

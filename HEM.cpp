@@ -370,13 +370,13 @@ void HEM::match_debug(const Pub& pub, int& matchSubs)
 	//	}
 
 	Timer bitStart;
-	//	_for(i, 0, subs)
-	//		if (!b[i])
-	//		{
-	//			++matchSubs;
-	//			//cout << "HEM matches sub: : " << i << endl;
-	//		}
-	matchSubs = subs - b.count();
+		_for(i, 0, subs)
+			if (!b[i])
+			{
+				++matchSubs;
+				//cout << "HEM matches sub: : " << i << endl;
+			}
+//	matchSubs = subs - b.count();
 	bitTime += (double)bitStart.elapsed_nano();
 }
 

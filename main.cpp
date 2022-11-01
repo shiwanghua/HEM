@@ -63,14 +63,14 @@ int main(int argc, char **argv) {
 //	run_p2AdaRein_SSS_C_W(gen, deleteNo);
 //	run_AdaRein_DSS_W(gen, deleteNo);
 //	run_AdaRein_DSS_B(gen, deleteNo);
-//	run_HEM(gen);
+	run_HEM(gen);
 	////	run_HEM1(gen);
 	////	run_HEM2(gen);
 	////	run_HEM3(gen);
 	////	run_HEM4(gen);
 	run_HEM5(gen, deleteNo);
 //	run_HEM5_avxOR(gen, deleteNo);
-	// run_HEM5_parallel(gen, deleteNo);
+//	 run_HEM5_parallel(gen, deleteNo);
 //	 run_HEM5_avxOR_parallel(gen, deleteNo);
 	run_HEM5_VAS(gen, deleteNo);
 //if(parallelDegree<5)
