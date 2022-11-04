@@ -13,11 +13,11 @@ int cons = 10;                // Number of constraints(predicates) in one sub.
 int m = 20;                // Number of attributes in one pub.
 const int attNumType = 0;    // 0: Fixed size of sub and pub. 1: Random size of sub and pub, <= $cons and $m.
 const int attDis = 0;        // The distribution of attributes in subs and pubs. 0:uniform distribution | 1:Zipf distribution | 2: sub Zipf, pub 满维
-const int valDis = 2;        // The distribution of values in subs and pubs. 0:uniform + fixed width | 1: random width >= $width + Uniform | 2: Zipf + fixed width | 3: Normal + fixed width | 4: Normal + two ends
+const int valDis = 3;        // The distribution of values in subs and pubs. 0:uniform + fixed width | 1: random width >= $width + Uniform | 2: Zipf + fixed width | 3: Normal + fixed width | 4: Normal + two ends
 int valDom = 1000000;        // Cardinality of values.
-double alpha = 3;            // Parameter for Zipf distribution.
+double alpha = 0;            // Parameter for Zipf distribution.
 double width = 0.4;            // Width of a predicate.
-double mean = 0.5;           // Mean of Normal Distribution. For events it's ( 1 - mean ).
+double mean = 0.2;           // Mean of Normal Distribution. For events it's ( 1 - mean ).
 double stddev = 1;           // Standard deviation: The square root of variance, representing the dispersion of values from the distribution mean. >0
 
 // Rein
