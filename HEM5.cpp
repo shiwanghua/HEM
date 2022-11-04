@@ -1086,28 +1086,28 @@ void HEM5::printRelation(int dimension_i)
 vector<int> HEM5::calMarkNumForBuckets()
 {
 	vector<int> numMarking(numBucket, 0);
-	_for(i, 0, numBucket)
+	_for(i, 0, numDimension)
 	{
-		_for(j, 0, numDimension)
+		_for(j, 0, numBucket)
 		{
-			numMarking[i] += data[0][j][i].size() + data[1][j][i].size(); // 比较
+			numMarking[j] += data[0][i][j].size() + data[1][i][j].size(); // 比较
 
-			if (doubleReverse[0][j][i])
+			if (doubleReverse[0][i][j])
 			{
-				_for(k, endBucket[0][j][i], i + 1) numMarking[i] += data[0][j][k].size();
+				_for(k, endBucket[0][i][j], j) numMarking[j] += data[0][i][k].size();
 			}
 			else
 			{
-				_for(k, i + 1, endBucket[0][j][i]) numMarking[i] += data[0][j][k].size();
+				_for(k, j+1, endBucket[0][i][j]) numMarking[j] += data[0][i][k].size();
 			}
 
-			if (doubleReverse[1][j][i])
+			if (doubleReverse[1][i][j])
 			{
-				_for(k, i, endBucket[1][j][i]) numMarking[i] += data[0][j][k].size();
+				_for(k, j+1, endBucket[1][i][j]) numMarking[j] += data[1][i][k].size(); // Bug: not 0 but 1.
 			}
 			else
 			{
-				_for(k, endBucket[1][j][i], i) numMarking[i] += data[1][j][k].size();
+				_for(k, endBucket[1][i][j], j) numMarking[j] += data[1][i][k].size();
 			}
 		}
 	}
