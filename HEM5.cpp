@@ -17,8 +17,8 @@ HEM5::HEM5(int type)
 		threadPool.initThreadPool(parallelDegree);
 		TYPE += "-avxOR" + to_string(blockSize) + "-Parallel" + to_string(parallelDegree);
 	}
-	cout << "ExpID = " << expID << ". " + TYPE + ": bit exponent = " << be << ", bucketStep = " << buckStep
-		 << ", numBucket = " << numBucket << endl;
+//	cout << "ExpID = " << expID << ". " + TYPE + ": bit exponent = " << be << ", bucketStep = " << buckStep
+//		 << ", numBucket = " << numBucket << endl;
 
 	//bucketSub.resize(numBucket);
 	data[0].resize(numDimension, vector<vector<Combo>>(numBucket));

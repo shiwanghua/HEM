@@ -1,12 +1,13 @@
 #include "HEM.h"
 
-HEM::HEM() {
+HEM::HEM()
+{
 	numSub = 0;
 	numDimension = atts;
 	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
-	cout << "ExpID = " << expID << ". HEMPS: bit exponent = " << be << ", bucketStep = " << buckStep << ", numBucket = "
-		<< numBucket << endl;
+//	cout << "ExpID = " << expID << ". HEMPS: bit exponent = " << be << ", bucketStep = " << buckStep << ", numBucket = "
+//		<< numBucket << endl;
 
 	//bucketSub.resize(numBucket);
 	data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
@@ -32,13 +33,16 @@ HEM::HEM() {
 	//fix[1].resize(numDimension, vector<int>(numBucket));
 }
 
-HEM::~HEM() {
+HEM::~HEM()
+{
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1];
 	//delete[] endBucket, bitsID; // 不是new出来的
 }
 
-void HEM::insert(IntervalSub sub) {
-	for (int i = 0; i < sub.size; i++) {
+void HEM::insert(IntervalSub sub)
+{
+	for (int i = 0; i < sub.size; i++)
+	{
 		IntervalCnt cnt = sub.constraints[i];
 		Combo c;
 		// int bucketID = cnt.lowValue / buckStep; // Bug: 这里被坑了
@@ -52,7 +56,8 @@ void HEM::insert(IntervalSub sub) {
 }
 
 // fullBits单独存储的版本
-void HEM::initBits() {
+void HEM::initBits()
+{
 
 	// 如果有多次初始化
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1];
@@ -116,7 +121,8 @@ void HEM::initBits() {
 	//		return;
 	//	}
 
-	_for(i, 0, numBucket) {
+	_for(i, 0, numBucket)
+	{
 		//bitsID[0][i] = (numBucket - i - 1) / bitStep - 1; // (1000-499-1)/500=1, (1000-749-1)/250=1, (1000-936-1)/63=1, (1000-873-1)/63=2, (1000-54-1)/63=15 // 这个映射关系可以兼容numBits为1的情况，numBits为1时bitStep为500
 		bitsID[1][i] = i / bitStep - 1; // 750/250=3, 63/63=1
 		bitsID[0][i] = numBits - 3 - bitsID[1][i]; // 保证共用同一套cell
@@ -127,10 +133,13 @@ void HEM::initBits() {
 	}
 
 	int subID, b;   // 起始标记数组的下标
-	_for(i, 0, numDimension) {      // 每个维度
-		_for(j, 0, numBucket) {     // 每个桶
+	_for(i, 0, numDimension)
+	{      // 每个维度
+		_for(j, 0, numBucket)
+		{     // 每个桶
 			b = bitsID[0][j] + 1;
-			_for(k, 0, data[0][i][j].size()) {
+			_for(k, 0, data[0][i][j].size())
+			{
 				subID = data[0][i][j][k].subID;
 				fullBits[i][subID] = 1;            // 0号bits每次必须标记
 				//bits[0][i][0][subID] = 1;        
@@ -139,11 +148,11 @@ void HEM::initBits() {
 			}
 
 			b = bitsID[1][j] + 1; // 除了0号外最小的需要插入的bits数组的ID
-			_for(k, 0, data[1][i][j].size()) {     // 桶里每个订阅
+			_for(k, 0, data[1][i][j].size())
+			{     // 桶里每个订阅
 				subID = data[1][i][j][k].subID;
 				//bits[1][i][0][subID] = 1;        // 0号bits每次必须标记
-				_for(q, b, numBits - 1)
-					bits[1][i][q][subID] = 1;
+				_for(q, b, numBits - 1) bits[1][i][q][subID] = 1;
 			}
 		}
 	}
@@ -269,11 +278,13 @@ void HEM::initBits() {
 //}
 
 // 不计算时间组成
-void HEM::match(const Pub &pub, int &matchSubs) {
+void HEM::match(const Pub& pub, int& matchSubs)
+{
 	bitset<subs> b;
 	vector<bool> attExist(numDimension, false);
 	int value, att, buck;
-	_for(i, 0, pub.size) {
+	_for(i, 0, pub.size)
+	{
 		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 		attExist[att] = true;
 		_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
@@ -291,8 +302,8 @@ void HEM::match(const Pub &pub, int &matchSubs) {
 	}
 
 //	if (numBits > 1) {
-		_for(i, 0, numDimension) if (!attExist[i])
-				b = b | fullBits[i];
+	_for(i, 0, numDimension) if (!attExist[i])
+			b = b | fullBits[i];
 //	} else {
 //		_for(i, 0, numDimension) if (!attExist[i])
 //				_for(j, 0, bitStep) _for(k, 0, data[0][i][j].size()) b[data[0][i][j][k].subID] = 1;
@@ -321,21 +332,15 @@ void HEM::match_debug(const Pub& pub, int& matchSubs)
 		Timer compareStart;
 		value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 		attExist[att] = true;
-		_for(k, 0, data[0][att][buck].size())
-			if (data[0][att][buck][k].val > value)
+		_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
 				b[data[0][att][buck][k].subID] = 1;
-		_for(k, 0, data[1][att][buck].size())
-			if (data[1][att][buck][k].val < value)
+		_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
 				b[data[1][att][buck][k].subID] = 1;
 		compareTime += (double)compareStart.elapsed_nano();
 
 		Timer markStart;
-		_for(j, buck + 1, endBucket[0][buck])
-			_for(k, 0, data[0][att][j].size())
-			b[data[0][att][j][k].subID] = 1;
-		mmfor(j, buck - 1, endBucket[1][buck])
-			_for(k, 0, data[1][att][j].size())
-			b[data[1][att][j][k].subID] = 1;
+		_for(j, buck + 1, endBucket[0][buck]) _for(k, 0, data[0][att][j].size()) b[data[0][att][j][k].subID] = 1;
+		mmfor(j, buck - 1, endBucket[1][buck]) _for(k, 0, data[1][att][j].size()) b[data[1][att][j][k].subID] = 1;
 		markTime += (double)markStart.elapsed_nano();
 
 		Timer orStart;
@@ -348,8 +353,7 @@ void HEM::match_debug(const Pub& pub, int& matchSubs)
 
 	//	if (numBits > 1) {
 	Timer orStart;
-	_for(i, 0, numDimension)
-		if (!attExist[i])
+	_for(i, 0, numDimension) if (!attExist[i])
 			b = b | fullBits[i];
 	orTime += (double)orStart.elapsed_nano();
 	//	}
@@ -370,12 +374,11 @@ void HEM::match_debug(const Pub& pub, int& matchSubs)
 	//	}
 
 	Timer bitStart;
-		_for(i, 0, subs)
-			if (!b[i])
-			{
-				++matchSubs;
-				//cout << "HEM matches sub: : " << i << endl;
-			}
+	_for(i, 0, subs) if (!b[i])
+		{
+			++matchSubs;
+			//cout << "HEM matches sub: : " << i << endl;
+		}
 //	matchSubs = subs - b.count();
 	bitTime += (double)bitStart.elapsed_nano();
 }
@@ -393,9 +396,11 @@ void HEM::match_debug(const Pub& pub, int& matchSubs)
 //		}
 //}
 
-int HEM::calMemory() {
+int HEM::calMemory()
+{
 	long long size = 0; // Byte
-	_for(i, 0, numDimension) {
+	_for(i, 0, numDimension)
+	{
 		// 若每个维度上bits数组个数一样就是 2*numDimension*numBits*sizeof(bitset<subs>)
 		//if (numBits > 1)
 		size += sizeof(bitset<subs>) * (bits[0][i].size() + bits[1][i].size());
@@ -411,16 +416,34 @@ int HEM::calMemory() {
 	return (int)size;
 }
 
-void HEM::printRelation() {
+void HEM::printRelation()
+{
 	cout << "\n\nHEMPSMap LowBucket\n";
-	_for(i, 0, numBucket) {
+	_for(i, 0, numBucket)
+	{
 		cout << "LBkt" << i << ": bID=" << bitsID[0][i] << ", eBkt=" << endBucket[0][i] << "; ";
 		if (i % 5 == 0 && i > 0)cout << "\n";
 	}
 	cout << "\n\nHEMPSMap HighBucket\n";
-	_for(i, 0, numBucket) {
+	_for(i, 0, numBucket)
+	{
 		cout << "HBkt" << i << ": bID=" << bitsID[1][i] << ", eBkt=" << endBucket[1][i] << "; ";
 		if (i % 5 == 0 && i > 0)cout << "\n";
 	}
 	cout << "\n\n";
+}
+
+vector<int> HEM::calMarkNumForBuckets()
+{
+	vector<int> numMarking(numBucket, 0);
+	_for(i, 0, numDimension)
+	{
+		_for(j, 0, numBucket)
+		{
+			numMarking[j] += data[0][i][j].size() + data[1][i][j].size(); // 比较
+			_for(k, j + 1, endBucket[0][j]) numMarking[j] += data[0][i][k].size();
+			_for(k, endBucket[1][j], j) numMarking[j] += data[1][i][k].size();
+		}
+	}
+	return numMarking;
 }

@@ -45,6 +45,7 @@ public:
 	//void calBucketSize(); // 计算bucketSize
 	int calMemory();      // 计算占用内存大小
 	void printRelation(); // 打印映射关系
+	vector<int> calMarkNumForBuckets(); // 计算事件落到每个属性的同一个桶里时需要标记和比较的谓词个数
 };
 
 #endif

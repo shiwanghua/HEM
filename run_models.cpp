@@ -4656,20 +4656,24 @@ void measure_numMark(const intervalGenerator& gen)
 	{
 		Rein rein(OriginalRein);
 		HEM5 hem5(HEM5_DD);
-
+		HEM hem0;
 		for (int i = 0; i < subs; i++)
 		{
 			if (be == 0)
 				rein.insert_backward_original(gen.subList[i]);
 			hem5.insert(gen.subList[i]);
+			hem0.insert(gen.subList[i]);
 		}
 
 		hem5.initBits();
+		hem0.initBits();
 
 		vector<int> reinMarkNum = rein.calMarkNumForBuckets();
 		vector<int> hem5MarkNum = hem5.calMarkNumForBuckets();
+		vector<int> hem0MarkNum = hem0.calMarkNumForBuckets();
 
-		if(be==0){
+		if (be == 0)
+		{
 			cout << "rein=[";
 			for (int i = 0; i < reinMarkNum.size() - 1; i++)
 				cout << reinMarkNum[i] << ", ";
@@ -4680,5 +4684,10 @@ void measure_numMark(const intervalGenerator& gen)
 		for (int i = 0; i < hem5MarkNum.size() - 1; i++)
 			cout << hem5MarkNum[i] << ", ";
 		cout << hem5MarkNum.back() << "]\n";
+
+		cout << "hem0be" << be << "=[";
+		for (int i = 0; i < hem5MarkNum.size() - 1; i++)
+			cout << hem0MarkNum[i] << ", ";
+		cout << hem0MarkNum.back() << "]\n";
 	}
 }

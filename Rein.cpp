@@ -7,7 +7,7 @@ Rein::Rein(int type) : numSub(0), numDimension(atts)
 	bucketSub.resize(numBucket);
 	if (type == OriginalRein)
 	{ // Original Rein
-		cout << "ExpID = " << expID << ". Rein: bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
+//		cout << "ExpID = " << expID << ". Rein: bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
 		data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
 		data[1].resize(numDimension, vector<vector<Combo>>(numBucket));
 	}
