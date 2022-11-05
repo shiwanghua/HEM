@@ -228,7 +228,7 @@ IntervalSub intervalGenerator::GenOneSub(int id, int size, int atts, int attDis,
 		GenUniformValues(sub);
 	else if (valDis == 1) // Random width + Uniform >= width   还有一种两端都服从均匀分布的情况，等价于width=0
 		GenUniformValues_w(sub);
-	else if (valDis == 2) // Random width + Zipf >= width
+	else if (valDis == 2) // Fixed width + Zipf
 		GenZipfValues(sub);
 	else if (valDis == 3) // Normal Distribution + fixed width
 		GenNormalValues(sub);
@@ -595,7 +595,7 @@ void intervalGenerator::GenUniformValues_w(IntervalSub& sub)
 	}
 }
 
-// Random width + Zipf, >=width
+// Random width + Zipf, random width
 void intervalGenerator::GenZipfValues(IntervalSub& sub)
 {
 	int w, x, y;
@@ -603,7 +603,7 @@ void intervalGenerator::GenZipfValues(IntervalSub& sub)
 	int maxVal = valDom - minRange;
 	_for(i, 0, sub.size)
 	{
-		w = random(maxVal) + minRange;
+		w = minRange+random(maxVal);
 		x = zipfDistribution(valDom - w, alpha);
 		y = x + w;
 		sub.constraints[i].lowValue = x;
