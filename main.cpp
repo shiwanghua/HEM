@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
 		m = atoi(argv[4]);
 		alpha = atof(argv[5]);
 		width = atof(argv[6]);
-		be = atoi(argv[7]); // ÊäÈëÒ»¸öbitsÖ¸Êý
+		be = atoi(argv[7]); // ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½bitsÖ¸ï¿½ï¿½
 		attrGroup = atoi(argv[8]);
 		valDom = atoi(argv[9]);
 		parallelDegree = atoi(argv[10]);
@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
 		}
 	}
 
-//	run_rein(gen, deleteNo);
+	run_rein(gen, deleteNo);
 	////	run_rein_forward_native(gen, deleteNo);
 	////	run_rein_forward_CBOMP(gen, deleteNo);
 	////	run_rein_hybrid(gen, deleteNo);
@@ -68,8 +68,8 @@ int main(int argc, char **argv) {
 	////	run_HEM2(gen);
 	////	run_HEM3(gen);
 	////	run_HEM4(gen);
-//	run_HEM5(gen, deleteNo);
-//	run_HEM5_avxOR(gen, deleteNo);
+	run_HEM5(gen, deleteNo);
+	run_HEM5_avxOR(gen, deleteNo);
 //	 run_HEM5_parallel(gen, deleteNo);
 //	 run_HEM5_avxOR_parallel(gen, deleteNo);
 //	run_HEM5_VAS(gen, deleteNo);
@@ -98,7 +98,7 @@ int main(int argc, char **argv) {
 	//	run_bOpIndex2(gen, deleteNo);
 	//	run_PSTREE(gen, deleteNo);
 	//	run_AWBTREE(gen, deleteNo);
-		measure_numMark(gen);
+		// measure_numMark(gen);
 
 	cout << "Done.\n";
 	std::system("pause");

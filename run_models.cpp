@@ -2117,6 +2117,11 @@ void run_HEM5(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 		hem5.printRelation(1);
 	cout << endl;
 
+#ifdef DEBUG
+	cout << "HEM5DD: matchNum= " << Util::Average(matchSubList) << ", matchTime= " << Util::Double2String(Util::Average(matchTimeList))
+		 << " ms\n";
+#endif
+
 	// output
 	string outputFileName = "HEM5.txt";
 	string content = expID
@@ -2235,6 +2240,11 @@ void run_HEM5_avxOR(const intervalGenerator& gen, unordered_map<int, bool> delet
 		hem5_avxor.printRelation(1);
 	cout << endl;
 
+#ifdef DEBUG
+	cout << "HEM5DD_avxOR: matchNum= " << Util::Average(matchSubList) << ", matchTime= " << Util::Double2String(Util::Average(matchTimeList))
+		 << " ms\n";
+#endif
+
 	// output
 	string outputFileName = "HEM5_avxOR.txt";
 	string content = expID
@@ -2349,6 +2359,11 @@ void run_HEM5_parallel(const intervalGenerator& gen, unordered_map<int, bool> de
 		hem5_p.printRelation(1);
 	cout << endl;
 
+#ifdef DEBUG
+	cout << "HEM5DD-Parallel: matchNum= " << Util::Average(matchSubList) << ", matchTime= " << Util::Double2String(Util::Average(matchTimeList))
+		 << " ms\n";
+#endif
+
 	// output
 	string outputFileName = "pHEM5.txt";
 	string content = expID
@@ -2452,6 +2467,11 @@ void run_HEM5_avxOR_parallel(const intervalGenerator& gen, unordered_map<int, bo
 	if (display)
 		hem5_avxOR_p.printRelation(1);
 	cout << endl;
+
+#ifdef DEBUG
+	cout << "HEM5DD-avxOR-Parallel: matchNum= " << Util::Average(matchSubList) << ", matchTime= " << Util::Double2String(Util::Average(matchTimeList))
+		 << " ms\n";
+#endif
 
 	// output
 	string outputFileName = "pHEM5_avxOR.txt";
@@ -2559,6 +2579,11 @@ void run_HEM5_VAS(const intervalGenerator& gen, unordered_map<int, bool> deleteN
 		hem5_vas.printRelation(1);
 	cout << endl;
 
+#ifdef DEBUG
+	cout << "HEM5DD_VAS: matchNum= " << Util::Average(matchSubList) << ", matchTime= " << Util::Double2String(Util::Average(matchTimeList))
+		 << " ms\n";
+#endif
+
 	// output
 	string outputFileName = "HEM5_VAS.txt";
 	string content = expID
@@ -2665,6 +2690,11 @@ void run_HEM5_RAS(const intervalGenerator& gen, unordered_map<int, bool> deleteN
 		hem5_ras.printRelation(1);
 	cout << endl;
 
+#ifdef DEBUG
+	cout << "HEM5DD_RAS: matchNum= " << Util::Average(matchSubList) << ", matchTime= " << Util::Double2String(Util::Average(matchTimeList))
+		 << " ms\n";
+#endif
+
 	// output
 	string outputFileName = "HEM5_RAS.txt";
 	string content = expID
@@ -2727,7 +2757,7 @@ void run_HEM5_RAS_avxOR_parallel(const intervalGenerator& gen, unordered_map<int
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
 	}
-	cout << "HEM5DD_RAS Insertion Finishes.\n";
+	cout << "HEM5DD_RAS_avxOR_Parallel Insertion Finishes.\n";
 
 	double initTime;
 	Timer initStart;
@@ -2741,10 +2771,10 @@ void run_HEM5_RAS_avxOR_parallel(const intervalGenerator& gen, unordered_map<int
 		{
 			Timer deleteStart;
 			if (!hem5_ras_a_p.deleteSubscription_RAS(gen.subList[kv.first]))
-				cout << "HEM5DD_RAS: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+				cout << "HEM5DD_RAS_avxOR_Parallel: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
 			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
 		}
-		cout << "HEM5DD_RAS Deletion Finishes.\n";
+		cout << "HEM5DD_RAS_avxOR_Parallel Deletion Finishes.\n";
 		for (auto kv : deleteNo)
 		{
 			hem5_ras_a_p.insert_online_RAS(
@@ -2764,12 +2794,17 @@ void run_HEM5_RAS_avxOR_parallel(const intervalGenerator& gen, unordered_map<int
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "HEM5DD-RAS-avxOR" + to_string(blockSize) + "-Parallel: Event " << i << " is matched.\n";
+			cout << "HEM5DD_RAS_avxOR_Parallel" + to_string(blockSize) + "-Parallel: Event " << i << " is matched.\n";
 	}
 
 	if (display)
 		hem5_ras_a_p.printRelation(1);
 	cout << endl;
+
+#ifdef DEBUG
+	cout << "HEM5DD_RAS_avxOR_Parallel: matchNum= " << Util::Average(matchSubList) << ", matchTime= " << Util::Double2String(Util::Average(matchTimeList))
+		 << " ms\n";
+#endif
 
 	// output
 	string outputFileName = "pHEM5_RAS_avxOR.txt";

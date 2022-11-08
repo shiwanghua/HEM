@@ -5,7 +5,7 @@ import os
 import sys
 
 expID = int(sys.argv[1])
-coreId = '10'
+coreId = '5'
 
 os.system('ulimit -s unlimited;sudo chmod 777 run')
 os.system('sudo chmod 777 *.txt')

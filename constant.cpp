@@ -1,5 +1,5 @@
 #include "constant.h"
-string expID = "1488";       // Record the experiment ID number
+string expID = "1510";       // Record the experiment ID number
 const bool display = false;  // whether to print the mapping relation, 有待逐步改成DEBUG宏定义判断
 const bool verifyID = false; // whether to verify Insertion and Deletion function
 const int interval = 500;    // after a interval of events is matched, print a log
@@ -13,7 +13,7 @@ int cons = 10;                // Number of constraints(predicates) in one sub.
 int m = 20;                // Number of attributes in one pub.
 const int attNumType = 0;    // 0: Fixed size of sub and pub. 1: Random size of sub and pub, <= $cons and $m.
 const int attDis = 0;        // The distribution of attributes in subs and pubs. 0:uniform distribution | 1:Zipf distribution | 2: sub Zipf, pub 满维
-const int valDis = 3;        // The distribution of values in subs and pubs. 0:uniform + fixed width | 1: random width >= $width + Uniform | 2: Zipf + random >=$width | 3: Normal + fixed width | 4: Normal + two ends
+const int valDis = 0;        // The distribution of values in subs and pubs. 0:uniform + fixed width | 1: random width >= $width + Uniform | 2: Zipf + random >=$width | 3: Normal + fixed width | 4: Normal + two ends
 int valDom = 1000000;        // Cardinality of values.
 double alpha = 0;            // Parameter for Zipf distribution.
 double width = 0.4;            // Width of a predicate.
@@ -38,7 +38,7 @@ int be = 4;                 // bit exponent. In each dimension, there are 2 * 2^
 int be2 = 50;                // When be=-1, be2 is adopted. In each dimension, there are 2 * be2 bitsets.
 const int lvls = 2;         // HEMSC number of levels
 int gs = 5;                 // HEMSR Group Size 一组有多少个维度
-const int blockSize = 256;  // 每次对256位做逻辑运算
+const int blockSize = 512;  // 每次对256位做逻辑运算
 const int ptrSize = 64;     // 每次只能加载__int64 64位
 const int blockNum = (subs + blockSize - 1) / blockSize; //  把做 subs 位的逻辑运算 简化为做 blockNum 次逻辑运算
 const int ptrIncrement = blockSize / ptrSize;       //  需要加载的次数
