@@ -8,11 +8,11 @@
 
 using namespace std;
 
-extern string expID;       // ¼ÇÂ¼ÊµÑéid
-extern const bool display; // ÊÇ·ñ´òÓ¡Ó³Éä¹ØÏµ
+extern string expID;       // ï¿½ï¿½Â¼Êµï¿½ï¿½id
+extern const bool display; // ï¿½Ç·ï¿½ï¿½Ó¡Ó³ï¿½ï¿½ï¿½Ïµ
 extern const bool verifyID;// whether to verify Insertion and Deletion function
-extern const int interval; // Ã¿Æ¥ÅäÕâÃ´¶à¸öÊÂ¼şÊä³öÒ»ÌõÈÕÖ¾ĞÅÏ¢
-extern const double subp;  // subp±ÈÀıµÄ¶©ÔÄºÍÊÂ¼şµÄÎ½´Ê¶¨ÒåÔÚÇ°cons¸öÎ¬¶ÈÉÏ
+extern const int interval; // Ã¿Æ¥ï¿½ï¿½ï¿½ï¿½Ã´ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ö¾ï¿½ï¿½Ï¢
+extern const double subp;  // subpï¿½ï¿½ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½Äºï¿½ï¿½Â¼ï¿½ï¿½ï¿½Î½ï¿½Ê¶ï¿½ï¿½ï¿½ï¿½ï¿½Ç°consï¿½ï¿½Î¬ï¿½ï¿½ï¿½ï¿½
 extern double realMatchNum;
 const int subs = 1000000;  //1048576;//134217728;  // Number of subscriptions.
 extern const int pubs;     // Number of publications.
@@ -78,13 +78,14 @@ enum {
 extern int parallelDegree;
 
 // HEM bRein
-extern int be;             // Ã¿¸öÎ¬¶ÈÉÏ 2 * 2^bits¸öbitsÊı×é
-extern int be2;            // be=-1Ê±Ã¿¸öÎ¬¶ÈÉÏ 2 * be2 ¸öbitsÊı×é
-extern const int lvls;     // HEMSC ²ãÊı
-extern int gs;             // HEMSR Ò»×éÓĞ¶àÉÙ¸öÎ¬¶È
-extern const int blockSize;
+extern int be;             // Ã¿ï¿½ï¿½Î¬ï¿½ï¿½ï¿½ï¿½ 2 * 2^bitsï¿½ï¿½bitsï¿½ï¿½ï¿½ï¿½
+extern int be2;            // be=-1Ê±Ã¿ï¿½ï¿½Î¬ï¿½ï¿½ï¿½ï¿½ 2 * be2 ï¿½ï¿½bitsï¿½ï¿½ï¿½ï¿½
+extern const int lvls;     // HEMSC ï¿½ï¿½ï¿½ï¿½
+extern int gs;             // HEMSR Ò»ï¿½ï¿½ï¿½Ğ¶ï¿½ï¿½Ù¸ï¿½Î¬ï¿½ï¿½
+// extern const int blockSize;
+#define blockSize 256
 extern const int ptrSize;
-extern const int blockNum; // »òÔËËã´ÎÊı
+extern const int blockNum; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 extern const int ptrIncrement;
 extern const __m256i mask;
 enum {
