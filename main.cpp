@@ -1,11 +1,13 @@
 #include "run_models.h"
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv)
+{
 	//freopen("paras.txt", "r", stdin);
 	//cin >> subs >> pubs >> atts >> cons>> buks >> m >> attDis >> valDis >> valDom >> alpha >> width;
 	//m = atts; // Note that Rein requires m == atts.
 
-	if (argc == 11) {
+	if (argc == 11)
+	{
 		expID = to_string(atoi(argv[1]));
 		atts = atoi(argv[2]);
 		cons = atoi(argv[3]);
@@ -37,10 +39,12 @@ int main(int argc, char **argv) {
 //	gen.GenPubList_g();
 
 	unordered_map<int, bool> deleteNo;
-	if (verifyID) {
+	if (verifyID)
+	{
 		srand(time(NULL));
 		int id;
-		while (deleteNo.size() < 5000) {
+		while (deleteNo.size() < 5000)
+		{
 			id = rand() % subs;
 			while (deleteNo.count(id))
 				id = rand() % subs;
@@ -68,8 +72,8 @@ int main(int argc, char **argv) {
 	////	run_HEM2(gen);
 	////	run_HEM3(gen);
 	////	run_HEM4(gen);
-	run_HEM5(gen, deleteNo);
-	run_HEM5_avxOR(gen, deleteNo);
+//	run_HEM5(gen, deleteNo);
+//	run_HEM5_avxOR(gen, deleteNo);
 //	 run_HEM5_parallel(gen, deleteNo);
 //	 run_HEM5_avxOR_parallel(gen, deleteNo);
 //	run_HEM5_VAS(gen, deleteNo);
@@ -82,10 +86,13 @@ int main(int argc, char **argv) {
 	//run_Simple(gen, deleteNo);
 	//	run_Simple2(gen, deleteNo);
 	//
-//	run_tama(gen, deleteNo);
-	//	run_btama_forward_C_BOMP(gen, deleteNo); // bTAMA6
-	//	run_btama_backward1_C_BOMP(gen, deleteNo);// bTAMA7
-	//	run_btama_backward2_CBOMP(gen, deleteNo); // bTAMA8
+	run_tama(gen, deleteNo);
+//	run_tama_parallel_lock(gen,deleteNo); // pTAMA-lock very slow
+	run_tama_parallel_reduce(gen,deleteNo); // pTAMA-reduce
+	run_btama_forward_C_BOMP(gen, deleteNo); // bTAMA6
+	run_btama_forward_C_BOMP_parallel(gen,deleteNo); // bTAMA6 parallel
+//	run_btama_backward1_C_BOMP(gen, deleteNo);// bTAMA7
+//	run_btama_backward2_CBOMP(gen, deleteNo); // bTAMA8
 	//
 	//	run_BGTREE_forward_native(gen, deleteNo);
 	//	run_BGTREE_forward_C_BOMP(gen, deleteNo);
@@ -98,7 +105,7 @@ int main(int argc, char **argv) {
 	//	run_bOpIndex2(gen, deleteNo);
 	//	run_PSTREE(gen, deleteNo);
 	//	run_AWBTREE(gen, deleteNo);
-		// measure_numMark(gen);
+	// measure_numMark(gen);
 
 	cout << "Done.\n";
 	std::system("pause");

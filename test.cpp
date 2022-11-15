@@ -50,14 +50,24 @@ void my_task()
 	printf("%d\n", gl);
 }
 
-int mainss() {
+int mainss()
+{
 	// Launch the pool with four threads.
 //	boost::asio::thread_pool pool(2);
-	printf("%d\n", gl);
+//	printf("%d\n", gl);
 	// Submit a function to the pool.
 //	boost::asio::post(pool, my_task);
 //	pool.wait();
-	printf("%d\n", gl);
+//	printf("%d\n", gl);
+	array<int32_t, subs> pCounter;
+	for (int i = 0; i < subs; i++)
+		if (pCounter[i] != 0)
+			cout << pCounter[i] << "\n";
+	pCounter.fill(0);
+	cout<<"----------------------\n";
+	for (int i = 0; i < subs; i++)
+		if (pCounter[i] != 0)
+			cout << pCounter[i] << "\n";
 	system("pause");
 	return 0;
 }

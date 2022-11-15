@@ -74,7 +74,7 @@ enum {
 	AdaRein_IBU        // Independent Bucket Unit (Static)
 };
 
-// pRein
+// pRein pTama
 extern int parallelDegree;
 
 // HEM bRein
@@ -99,6 +99,18 @@ enum {
 
 // Tama
 extern const int level;
+enum {
+	TAMA,
+	TAMA_PARALLEL_LOCK,
+	TAMA_PARALLEL_REDUCE,
+	bTAMA6_PARALLEL
+};
+enum {
+	bTAMA_FORWARD,
+	bTAMA_BACKWARD1,
+	bTAMA_BACKWARD2,
+	bTAMA_FORWARD_PARALLEL
+};
 
 // OpIndex
 const int SEGMENTS = 32;

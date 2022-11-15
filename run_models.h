@@ -76,7 +76,10 @@ void run_Simple(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 void run_Simple2(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 
 void run_tama(const intervalGenerator& gen,unordered_map<int,bool> deleteNo); // Original forward TANA
+void run_tama_parallel_lock(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
+void run_tama_parallel_reduce(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 void run_btama_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);   // bTAMA6
+void run_btama_forward_C_BOMP_parallel(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);   // bTAMA6
 void run_btama_backward1_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);  // bTAMA7
 void run_btama_backward2_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo); // bTAMA8
 
