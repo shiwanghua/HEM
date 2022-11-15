@@ -31,6 +31,9 @@ bTama::bTama(int32_t type)
 	{
 		threadPool.initThreadPool(parallelDegree);
 		TYPE += "-Forward-Parallel" + to_string(parallelDegree);
+	}else if(type==bTAMA_BACKWARD2_PARALLEL){
+		threadPool.initThreadPool(parallelDegree);
+		TYPE += "-Backward2-Parallel" + to_string(parallelDegree);
 	}
 	cout << "ExpID = " << expID << ". " << TYPE << ": level = " << level << "\n";
 }
@@ -175,26 +178,24 @@ void bTama::forward_match_parallel(const Pub& pub, int& matchSubs, const vector<
 		else end = begin + seg;
 		threadResult.emplace_back(threadPool.enqueue([this, &pub, begin, end, &subList]
 		{
-		  bitset<subs> localB,mB;
+		  bitset<subs> localB, mB;
 		  localB.set();
 		  for (int i = begin; i < end; i++)
 		  {
 			  mB = nB[pub.pairs[i].att];
 			  forward_match_accurate(0, pub.pairs[i].att, 0, valDom - 1, pub.pairs[i].value, 1, subList, mB);
-			  localB=localB&mB;
+			  localB = localB & mB;
 		  }
 		  return localB;
 		}));
 	}
-	for (auto& pa:pub.pairs)
+	for (auto& pa : pub.pairs)
 		attExist[pa.att] = true;
 	_for(i, 0, atts) if (!attExist[i])
 			gB = gB & nB[i];
 
 	for (int i = 0; i < threadResult.size(); i++)
-	{
-		gB = gB&threadResult[i].get();
-	}
+		gB = gB & threadResult[i].get();
 
 	matchSubs = gB.count();
 }
@@ -252,24 +253,8 @@ bTama::forward_match_accurate(int p, int att, int l, int r, const int value, int
 }
 
 // bTAMA8
-	void bTama::backward2_match_accurate(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
-	{
-		bitset<subs> gB, mB; // register
-		vector<bool> attExist(atts, false);
-		for (auto&& pi : pub.pairs)
-		{
-			mB = nnB[pi.att]; // based on a non null bitset/def bitset
-			attExist[pi.att] = true;
-			backward2_match_accurate(0, pi.att, 0, valDom - 1, pi.value, 1, subList, mB);
-			gB = gB | mB;
-		}
-		_for(i, 0, atts) if (!attExist[i])
-				gB = gB | nnB[i];
-
-		matchSubs = numSub - gB.count();
-	}
-
-void bTama::backward2_match_parallel(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList){
+void bTama::backward2_match_accurate(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
+{
 	bitset<subs> gB, mB; // register
 	vector<bool> attExist(atts, false);
 	for (auto&& pi : pub.pairs)
@@ -282,9 +267,12 @@ void bTama::backward2_match_parallel(const Pub& pub, int& matchSubs, const vecto
 	_for(i, 0, atts) if (!attExist[i])
 			gB = gB | nnB[i];
 
+	matchSubs = numSub - gB.count();
+}
 
+void bTama::backward2_match_parallel(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
+{
 	bitset<subs> gB; // global bitset
-	gB.set();
 	vector<bool> attExist(atts, false);
 	vector<future<bitset<subs>>> threadResult;
 	int seg = pub.size / parallelDegree;
@@ -297,63 +285,60 @@ void bTama::backward2_match_parallel(const Pub& pub, int& matchSubs, const vecto
 		else end = begin + seg;
 		threadResult.emplace_back(threadPool.enqueue([this, &pub, begin, end, &subList]
 		{
-		  bitset<subs> localB,mB;
-		  localB.set();
+		  bitset<subs> localB, mB;
 		  for (int i = begin; i < end; i++)
 		  {
-			  mB = nB[pub.pairs[i].att];
-			  forward_match_accurate(0, pub.pairs[i].att, 0, valDom - 1, pub.pairs[i].value, 1, subList, mB);
-			  localB=localB&mB;
+			  mB = nnB[pub.pairs[i].att]; // based on a non null bitset/def bitset
+			  backward2_match_accurate(0, pub.pairs[i].att, 0, valDom - 1, pub.pairs[i].value, 1, subList, mB);
+			  localB = localB | mB;
 		  }
 		  return localB;
 		}));
 	}
-	for (auto& pa:pub.pairs)
+	for (auto& pa : pub.pairs)
 		attExist[pa.att] = true;
 	_for(i, 0, atts) if (!attExist[i])
-			gB = gB & nB[i];
+			gB = gB | nnB[i];
 
 	for (int i = 0; i < threadResult.size(); i++)
-	{
-		gB = gB&threadResult[i].get();
-	}
+		gB = gB | threadResult[i].get();
 
 	matchSubs = numSub - gB.count();
 }
 
 void
-	bTama::backward2_match_accurate(int p, int att, int l, int r, const int value, int lvl, const vector<IntervalSub>& subList, bitset<
-		subs>& mB)
+bTama::backward2_match_accurate(int p, int att, int l, int r, const int value, int lvl, const vector<IntervalSub>& subList, bitset<
+	subs>& mB)
+{
+	if (level == lvl)
 	{
-		if (level == lvl)
-		{
-			for (auto& id : data[att][p])
-			{
-				for (auto& predicate : subList[id].constraints)
-					if (att == predicate.att)
-					{
-						if (predicate.lowValue <= value && value <= predicate.highValue)
-							mB[id] = 0;
-						break;
-					}
-			}
-			return;
-		}
 		for (auto& id : data[att][p])
-			mB[id] = 0;
-		if (l == r) // 这里l有可能等于r吗？当取值范围比较小, 层数很高时会等于; 当事件值刚好等于边界时也会等于!
-			return;
-		else if (value <= mid[p])
-			backward2_match_accurate(lchild[p], att, l, mid[p], value, lvl + 1, subList, mB);
-		else
-			backward2_match_accurate(rchild[p], att, mid[p] + 1, r, value, lvl + 1, subList, mB);
+		{
+			for (auto& predicate : subList[id].constraints)
+				if (att == predicate.att)
+				{
+					if (predicate.lowValue <= value && value <= predicate.highValue)
+						mB[id] = 0;
+					break;
+				}
+		}
+		return;
 	}
+	for (auto& id : data[att][p])
+		mB[id] = 0;
+	if (l == r) // 这里l有可能等于r吗？当取值范围比较小, 层数很高时会等于; 当事件值刚好等于边界时也会等于!
+		return;
+	else if (value <= mid[p])
+		backward2_match_accurate(lchild[p], att, l, mid[p], value, lvl + 1, subList, mB);
+	else
+		backward2_match_accurate(rchild[p], att, mid[p] + 1, r, value, lvl + 1, subList, mB);
+}
 
-	int bTama::calMemory()
-	{
-		long long size = 0; // Byte
-		size += 3 * sizeof(int) * (1 << level);
-		_for(i, 0, atts) _for(j, 0, 1 << level) size += sizeof(int) * data[i][j].size();
-		size = size / 1024 / 1024; // MB
-		return (int)size;
-	}
+int bTama::calMemory()
+{
+	long long size = 0; // Byte
+	size += 3 * sizeof(int) * (1 << level);
+	_for(i, 0, atts) _for(j, 0, 1 << level) size += sizeof(int) * data[i][j].size();
+	size = size / 1024 / 1024; // MB
+	return (int)size;
+}
