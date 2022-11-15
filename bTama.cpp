@@ -265,16 +265,63 @@ bTama::forward_match_accurate(int p, int att, int l, int r, const int value, int
 		}
 		_for(i, 0, atts) if (!attExist[i])
 				gB = gB | nnB[i];
-		//_for(i, 0, subs)
-		//	if (gB[i])
-		//{
-		//	++matchSubs;
-		//	//cout << "bTama matches sub: " << i << endl;
-		//}
+
 		matchSubs = numSub - gB.count();
 	}
 
-	void
+void bTama::backward2_match_parallel(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList){
+	bitset<subs> gB, mB; // register
+	vector<bool> attExist(atts, false);
+	for (auto&& pi : pub.pairs)
+	{
+		mB = nnB[pi.att]; // based on a non null bitset/def bitset
+		attExist[pi.att] = true;
+		backward2_match_accurate(0, pi.att, 0, valDom - 1, pi.value, 1, subList, mB);
+		gB = gB | mB;
+	}
+	_for(i, 0, atts) if (!attExist[i])
+			gB = gB | nnB[i];
+
+
+	bitset<subs> gB; // global bitset
+	gB.set();
+	vector<bool> attExist(atts, false);
+	vector<future<bitset<subs>>> threadResult;
+	int seg = pub.size / parallelDegree;
+	int remainder = pub.size % parallelDegree;
+	int tId = 0, end;
+	for (int begin = 0; begin < pub.size; begin = end, tId++)
+	{
+		if (tId < remainder)
+			end = begin + seg + 1;
+		else end = begin + seg;
+		threadResult.emplace_back(threadPool.enqueue([this, &pub, begin, end, &subList]
+		{
+		  bitset<subs> localB,mB;
+		  localB.set();
+		  for (int i = begin; i < end; i++)
+		  {
+			  mB = nB[pub.pairs[i].att];
+			  forward_match_accurate(0, pub.pairs[i].att, 0, valDom - 1, pub.pairs[i].value, 1, subList, mB);
+			  localB=localB&mB;
+		  }
+		  return localB;
+		}));
+	}
+	for (auto& pa:pub.pairs)
+		attExist[pa.att] = true;
+	_for(i, 0, atts) if (!attExist[i])
+			gB = gB & nB[i];
+
+	for (int i = 0; i < threadResult.size(); i++)
+	{
+		gB = gB&threadResult[i].get();
+	}
+
+	matchSubs = numSub - gB.count();
+}
+
+void
 	bTama::backward2_match_accurate(int p, int att, int l, int r, const int value, int lvl, const vector<IntervalSub>& subList, bitset<
 		subs>& mB)
 	{

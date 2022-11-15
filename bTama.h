@@ -55,6 +55,7 @@ class bTama
 
 	// bTAMA8
 	void backward2_match_accurate(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
+	void backward2_match_parallel(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
 
 	//void match_vague(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList);
 	int calMemory();
