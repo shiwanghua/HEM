@@ -5030,7 +5030,7 @@ void run_PSTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 
 void run_AWBTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
-	AWBTree awbTree;
+	AWBTree awbTree(AWBPTREE);
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -5047,6 +5047,7 @@ void run_AWBTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
 	}
+	awbTree.setbits();
 	cout << "AWB+Tree Hybrid_opt Insertion Finishes.\n";
 
 	// 验证插入删除正确性
@@ -5071,7 +5072,7 @@ void run_AWBTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo
 
 		Timer matchStart;
 
-		awbTree.hybrid_opt(gen.pubList[i], matchSubs, gen.subList, awbTree_Ppoint);
+		awbTree.hybrid(gen.pubList[i], matchSubs);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
@@ -5117,6 +5118,106 @@ void run_AWBTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo
 #ifdef DEBUG
 	outputFileName = "ComprehensiveExpTime.txt";
 	content = "AWBTree= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif
+
+	outputFileName = "tmpData/AWBTree.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
+}
+
+void run_AWBTREE_parallel(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+{
+	AWBTree awbTree_p(AWBPTREE_PARALLEL);
+
+	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchSubList;
+
+	// insert
+	for (auto&& sub : gen.subList)
+	{
+		Timer insertStart;
+
+		awbTree_p.insert(sub); // Insert sub[i] into data structure.
+
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double)insertTime / 1000000);
+	}
+	awbTree_p.setbits();
+	cout << "AWB+Tree parallel: Insertion Finishes.\n";
+
+	// 验证插入删除正确性
+	if (verifyID)
+	{
+//		for (auto kv : deleteNo) {
+//			Timer deleteStart;
+//			if (!awbTree_p.deleteSubscription(gen.subList[kv.first]))
+//				cout << "AWB+Tree Hybrid_opt: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+//			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+//		}
+//		cout << "AWB+Tree Hybrid_opt Deletion Finishes.\n";
+//		for (auto kv : deleteNo) {
+//			awbTree_p.insert(gen.subList[kv.first]);
+//		}
+	}
+
+	// match
+	for (int i = 0; i < pubs; i++)
+	{
+		int matchSubs = 0; // Record the number of matched subscriptions.
+
+		Timer matchStart;
+
+		awbTree_p.hybrid_p(gen.pubList[i], matchSubs);
+
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double)eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "AWB+Tree parallel: Event " << i << " is matched.\n";
+	}
+#ifdef DEBUG
+	cout << "AWB+Tree parallel: AvgMatchNum= " << Util::Average(matchSubList) << ", matchTime= "
+		 << Util::Double2String(Util::Average(matchTimeList))
+		 << " ms\n";
+#endif
+	cout << endl;
+
+	// output
+	string outputFileName = "AWBTree_p.txt";
+	string content = expID
+					 + " memory= " + Util::Int2String(awbTree_p.calMemory())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms awbTree_Ppoint = " + Util::Double2String(awbTree_Ppoint)
+					 + " WCsize = " + Util::Int2String(WCsize)
+					 + " branch = " + Util::Int2String(awbTree_branch)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts)
+					 + " attGroup= " + Util::Int2String(attrGroup)
+					 + " attNumType= " + Util::Int2String(attNumType)
+					 + " attDis= " + Util::Int2String(attDis)
+					 + " valDis= " + Util::Int2String(valDis)
+					 + " width= " + Util::Double2String(width)
+					 + " alpha= " + Util::Double2String(alpha)
+					 + " subp= " + Util::Double2String(subp)
+					 + " mean= " + Util::Double2String(mean)
+					 + " stddev= " + Util::Double2String(stddev)
+					 + " valDom= " + Util::Double2String(valDom);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+#ifdef DEBUG
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "AWBTree_p= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
 	Util::WriteData2Begin(outputFileName.c_str(), content);

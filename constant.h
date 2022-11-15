@@ -128,6 +128,9 @@ extern const int PSTree_level;
 extern const float awbTree_Ppoint;//partition point HybridRein(AWRein)
 extern const unsigned short WCsize; //width cell size
 extern const int awbTree_branch;
-
+enum {
+	AWBPTREE,
+	AWBPTREE_PARALLEL
+};
 
 #endif

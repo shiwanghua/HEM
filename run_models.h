@@ -97,6 +97,7 @@ void run_BGTREE_d_vrs_backward_native(const intervalGenerator& gen, unordered_ma
 
 void run_PSTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 void run_AWBTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
+void run_AWBTREE_parallel(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 
 void measure_numMark(const intervalGenerator& gen);
 #endif

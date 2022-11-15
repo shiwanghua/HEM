@@ -109,9 +109,14 @@ typedef struct InnerNode
 
 
 // AWB+Tree
-struct lowTreeValue {
-    int subId;
-    int high;
+struct lowTreeEle
+{
+	int highVal;
+	int subID;
+	bool operator!=(const lowTreeEle b) const
+	{
+		return this->subID != b.subID;
+	}
 };
 
 #endif //_DATA_STRUCTURE_H

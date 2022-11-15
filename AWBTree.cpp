@@ -1,474 +1,813 @@
 #include "AWBTree.h"
-#include <xmmintrin.h>
-#include <emmintrin.h>
+#include <math.h>
+//mutex m;
+//atomic_flag flag = ATOMIC_FLAG_INIT;
 
-void AWBTree::insert(IntervalSub sub)
+bool AWBTree::readSubs(string file)
 {
-	float PWid = WCsize * Ppoint;
-	for (auto pred : sub.constraints) {
-		lowTreeValue v = { sub.id, pred.highValue };
-		unsigned short Wid = (pred.highValue - pred.lowValue) / Wsize;
-		if (Wid < PWid)PDR[sub.id]++;
-		sigs[Wid] = true;
-
-		lTree[pred.att][Wid]->insert(pred.lowValue, v);
-		hTree[pred.att][Wid]->insert(pred.highValue, sub.id);
+	ifstream infile(file, ios::in);
+	if (!infile)
+	{
+		cout << "error opening source file." << endl;
+		return false;
 	}
-}
-
-bool AWBTree::deleteSubscription(IntervalSub sub)
-{
-	for (auto pred : sub.constraints) {
-		lowTreeValue v = { sub.id, pred.highValue };
-		unsigned short Wid = (pred.highValue - pred.lowValue) / Wsize;
-		lTree[pred.att][Wid]->erase(pred.lowValue, v);
-		hTree[pred.att][Wid]->erase(pred.highValue, sub.id);
+	double tmp;
+	for (int i = 0; i < 9; ++i)infile >> tmp;
+	subList.resize(subs);
+	for (auto& sub : subList)
+	{
+		infile >> sub.id;
+		infile >> sub.size;
+		sub.constraints.resize(sub.size);
+		for (auto& pred : sub.constraints)
+		{
+			infile >> pred.att;
+			infile >> pred.lowValue;
+			infile >> pred.highValue;
+		}
 	}
+	infile.close();
 	return true;
 }
 
-void AWBTree::forward(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList, const int widthId)
+bool AWBTree::readPus(string file)
 {
-
-	for (int i = 0; i < subList.size(); i++)counter[i] = 0;
-	for (auto pred : pub.pairs) {
-		int i;
-		for (i = 0; i < widthId; i++) {
-			if (sigs[i]) {
-				double Wmin = i * Wsize;
-				double Wmax = (i + 1) * Wsize;
-				Lowtree::iterator start = lTree[pred.att][i]->upper_bound(pred.value - Wmax);
-				Lowtree::iterator mid = lTree[pred.att][i]->lower_bound(pred.value - Wmin);
-				Lowtree::iterator end = lTree[pred.att][i]->upper_bound(pred.value);
-				Lowtree::iterator cur;
-				for (cur = start; cur != mid; cur++)
-					if (pred.value <= cur.get_val().high)++counter[cur.get_val().subId];
-				for (cur; cur != end; cur++)
-					++counter[cur.get_val().subId];
-			}
+	ifstream infile(file, ios::in);
+	if (!infile)
+	{
+		cout << "error opening source file." << endl;
+		return false;
+	}
+	double tmp;
+	for (int i = 0; i < 8; ++i)infile >> tmp;
+	pubList.resize(pubs);
+	for (auto& pub : pubList)
+	{
+		infile >> pub.size;
+		pub.pairs.resize(pub.size);
+		for (auto& pred : pub.pairs)
+		{
+			infile >> pred.att;
+			infile >> pred.value;
 		}
 	}
+	infile.close();
+	return true;
+}
 
-	//after process
-	for (int i = 0; i < subList.size(); i++) {
-		if (counter[i] == subList[i].size)++matchSubs;
+void AWBTree::insert(IntervalSub sub)
+{
+	int id = sub.id;
+	counter[id] = sub.size;
+	//atomic_counter[id] = sub.size;
+	for (auto pred : sub.constraints)
+	{
+		int pred_att = pred.att;
+		int lowVal = pred.lowValue;
+		int highVal = pred.highValue;
+		//Element ele = { lowVal, highVal, id };
+		lowTreeEle ele = { highVal, id };
+		uint16_t w_id = (highVal - lowVal) / width;
+		if (!(w_id > dPoint))++pdr[id];
+		sig[pred_att][w_id] = true;
+		ltree[pred.att][w_id]->insert(lowVal, ele);
+		htree[pred.att][w_id]->insert(highVal, id);
 	}
 }
 
-void AWBTree::forward_opt(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList, const int& widthId)
+void AWBTree::setbits()
 {
-	for (auto pred : pub.pairs) {
+	for (int i = 0; i < pdr.size(); i++)
+		if (pdr[i] == 0)bit_forward.set(i);
+}
+
+void AWBTree::forward(const Pub& pub, int& matchSubs)
+{
+	vector<uint16_t> c(counter);
+	bitset<subs> bits;
+	for (auto& pred : pub.pairs)
+	{
+		int pred_att = pred.att;
+		double val = pred.value;
+		for (int i = 0; i < width_size; ++i)
+		{
+			if (sig[pred_att][i])
+			{
+				double w_min = i * width;
+				ltree_iter it = ltree[pred_att][i]->upper_bound(val - w_min - width);
+				ltree_iter sPoint = ltree[pred_att][i]->lower_bound(val - w_min);
+				ltree_iter end = ltree[pred_att][i]->upper_bound(val);
+				for (; it != sPoint; ++it)
+				{
+					lowTreeEle ele = it.get_val();
+					if (!(val > ele.highVal))
+						if (!(--c[ele.subID]))bits[ele.subID] = true;
+				}
+				for (; it != end; ++it)
+				{
+					lowTreeEle ele = it.get_val();
+					if (!(--c[ele.subID]))bits[ele.subID] = true;
+				}
+			}
+		}
+	}
+	matchSubs = bits.count();
+}
+
+void AWBTree::forward_o(const Pub& pub, int& matchSubs)
+{
+	vector<uint16_t> c(counter);
+	bitset<subs> bits;
+	Timer start;
+	for (auto& pred : pub.pairs)
+	{
+		int pred_att = pred.att;
+		int val = pred.value;
 		int i = 0;
-
-		for (; i < WCsize / 2; i++) {
-			if (sigs[i]) {
-				double Wmin = i * Wsize;
-				double Wmax = (i + 1) * Wsize;
-				double Vmax = valDom - Wmin;
-				Lowtree::iterator start = lTree[pred.att][i]->upper_bound(pred.value - Wmax);
-				Lowtree::iterator mid = lTree[pred.att][i]->lower_bound(pred.value - Wmin);
-				Lowtree::iterator end;
-				if (pred.value < Vmax)end = lTree[pred.att][i]->upper_bound(pred.value);
-				else end = lTree[pred.att][i]->end();
-				Lowtree::iterator cur;
-				for (cur = start; cur != mid; cur++)
-					if (pred.value <= cur.get_val().high) {
-						++counter[cur.get_val().subId];
-					}
-				for (cur; cur != end; cur++) {
-					++counter[cur.get_val().subId];
+		for (; i < width_size >> 1; ++i)
+		{
+			if (sig[pred_att][i])
+			{
+				double w_min = i * width;
+				ltree_iter it = ltree[pred_att][i]->upper_bound(val - w_min - width);
+				ltree_iter sPoint = ltree[pred_att][i]->lower_bound(val - w_min);
+				ltree_iter end =
+					val < (valDom - w_min) ? ltree[pred_att][i]->upper_bound(val) : ltree[pred_att][i]->end();
+				for (; it != sPoint; ++it)
+				{
+					lowTreeEle ele = it.get_val();
+					if (!(val > ele.highVal))
+						if (!(--c[ele.subID]))bits[ele.subID] = true;
+				}
+				for (; it != end; ++it)
+				{
+					lowTreeEle ele = it.get_val();
+					if (!(--c[ele.subID]))bits[ele.subID] = true;
 				}
 			}
 		}
+		for (; i < width_size; ++i)
+		{
+			if (sig[pred_att][i])
+			{
+				double w_min = i * width;
+				double w_max = w_min + width;
+				double v_max = valDom - w_min;
+				if (val > w_min)
+				{
+					ltree_iter it = ltree[pred_att][i]->upper_bound(val - w_min - width);
+					ltree_iter sPoint = ltree[pred_att][i]->lower_bound(val - w_min);
+					ltree_iter end = ltree[pred_att][i]->end();
+					for (; it != sPoint; ++it)
+					{
+						lowTreeEle ele = it.get_val();
+						if (!(val > ele.highVal))
+							if (!(--c[ele.subID]))bits[ele.subID] = true;
+					}
+					for (; it != end; ++it)
+					{
+						lowTreeEle ele = it.get_val();
+						if (!(--c[ele.subID]))bits[ele.subID] = true;
+					}
+				}
+				else if (val > v_max)
+				{
+					ltree_iter it = ltree[pred_att][i]->begin();
+					ltree_iter end = ltree[pred_att][i]->end();
+					for (; it != end; ++it)
+					{
+						lowTreeEle ele = it.get_val();
+						if (!(--c[ele.subID]))bits[ele.subID] = true;
+					}
+				}
+				else
+				{
+					ltree_iter it = ltree[pred_att][i]->begin();
+					ltree_iter end = ltree[pred_att][i]->upper_bound(val);
+					for (; it != end; ++it)
+					{
+						lowTreeEle ele = it.get_val();
+						if (!(--c[ele.subID]))bits[ele.subID] = true;
+					}
+				}
+			}
+		}
+	}
+	int64_t end = start.elapsed_nano();
+	cout << (double)end / 1000000 << " ms\n";
+	matchSubs = bits.count();
+}
 
-		for (i; i < widthId; i++) {
-			if (sigs[i]) {
+void AWBTree::forward_p(const Pub& pub, int& matchSubs)
+{
+	vector<uint16_t> c(counter);
+	//for (int i = 0; i < subs; i++)c[i] = counter[i];
+	//c.assign(counter.begin(), counter.end());
+	bitset<subs> bits;
 
-				double Wmin = i * Wsize;
-				double Wmax = (i + 1) * Wsize;
-				double Vmax = valDom - Wmin;
+	vector<std::future<vector<uint16_t>>> results;
+	//size_t step = (pub.size / pdegree);
 
+	for (int j = 0; j < parallelDegree; ++j)
+	{
+		results.emplace_back(
+			pool.enqueue(
+				[&](int _step, int tid, int _dim, uint16_t _width_size, double _width)
+				{
+				  //bitset<subs> _b;
+				  vector<uint16_t> _c(subs, 0);
+				  for (int x = tid; x < _dim; x += _step)
+				  {
+					  int pred_att = pub.pairs[x].att;
+					  double val = pub.pairs[x].value;
+					  for (int i = 0; i < _width_size; ++i)
+					  {
+						  if (sig[pred_att][i])
+						  {
+							  double w_min = i * _width;
+							  ltree_iter it = ltree[pred_att][i]->upper_bound(val - w_min - _width);
+							  ltree_iter sPoint = ltree[pred_att][i]->lower_bound(val - w_min);
+							  ltree_iter end = ltree[pred_att][i]->upper_bound(val);
+							  for (; it != sPoint; ++it)
+							  {
+								  lowTreeEle ele = it.get_val();
+								  if (!(val > ele.highVal))
+									  ++_c[ele.subID];
+								  //if (!(--c[ele.subID]))_b[ele.subID] = true;
+							  }
+							  for (; it != end; ++it)
+							  {
+								  lowTreeEle ele = it.get_val();
+								  ++_c[ele.subID];
+								  //if (!(--c[ele.subID]))_b[ele.subID] = true;
+							  }
+						  }
+					  }
+				  }
+				  return _c;
+				}, parallelDegree, j, dim, width_size, width
+			)
+		);
+	}
 
-				Lowtree::iterator start;
-				Lowtree::iterator mid;
-				Lowtree::iterator end;
-				Lowtree::iterator cur;
+	//vector<lbptree_node*> nodes;
+	//vector<bool> node_type;
+	//vector<uint16_t> node_begin;
+	//vector<uint16_t> node_end;
+	//for (auto& pred : pub.pairs) {
+	//    int pred_att = pred.att; double val = pred.value;
+	//    for (int i = 0; i < width_size; ++i) {
+	//        if (sig[pred_att][i]) {
+	//            double w_min = i * width;
+	//            ltree_iter it = ltree[pred_att][i]->upper_bound(val - w_min - width);
+	//            ltree_iter sPoint = ltree[pred_att][i]->lower_bound(val - w_min);
+	//            ltree_iter end = ltree[pred_att][i]->upper_bound(val);
+	//            if (it != sPoint) {
+	//                lbptree_node* n = it.node;
+	//                nodes.emplace_back(n); node_type.emplace_back(0); node_begin.emplace_back(it.idx);
+	//                if (n == sPoint.node)node_end.emplace_back(sPoint.idx);
+	//                else {
+	//                    node_end.emplace_back(0xFFFF); n = n->next_leaf;
+	//                    while (n != sPoint.node) {
+	//                        nodes.emplace_back(n);
+	//                        node_type.emplace_back(0);
+	//                        node_begin.emplace_back(0);
+	//                        node_end.emplace_back(0xFFFF);
+	//                        n = n->next_leaf;
+	//                    }
+	//                    if (sPoint.idx != 0) {
+	//                        nodes.emplace_back(n); node_type.emplace_back(0);
+	//                        node_begin.emplace_back(0); node_end.emplace_back(sPoint.idx);
+	//                    }
+	//                }
+	//            }
+	//            if (sPoint != end) {
+	//                lbptree_node* n = sPoint.node;
+	//                nodes.emplace_back(n); node_type.emplace_back(1); node_begin.emplace_back(sPoint.idx);
+	//                if (n == end.node)node_end.emplace_back(end.idx);
+	//                else {
+	//                    node_end.emplace_back(0xFFFF); n = n->next_leaf;
+	//                    while (n != end.node) {
+	//                        nodes.emplace_back(n); node_type.emplace_back(1);
+	//                        node_begin.emplace_back(0); node_end.emplace_back(0xFFFF);
+	//                        n = n->next_leaf;
+	//                    }
+	//                    if (end.idx != 0) {
+	//                        nodes.emplace_back(n); node_type.emplace_back(1);
+	//                        node_begin.emplace_back(0); node_end.emplace_back(end.idx);
+	//                    }
+	//                }
+	//            }
+	//        }
+	//    }
+	//}
+	//vector<std::future<bitset<subs>>> results;
+	//size_t step = (nodes.size() / pdegree) + 1;
+	//for (int i = 0; i < pdegree; i++) {
+	//    results.emplace_back(
+	//        pool.enqueue([](size_t start, size_t end, vector<lbptree_node*>& _nodes, vector<uint16_t>& _node_begin, vector<uint16_t>& _node_end, vector<uint16_t>& _node_type, vector<atomic_uint16_t> _c) {
+	//            bitset<subs> _b;
+	//            for (size_t x = start; x < end; ++x) {
+	//                lbptree_node* _n = _nodes[x];
+	//                if (_node_type[x]) {
+	//                    for (int nid = _node_begin[x]; nid < _node_end[x]; ++nid)
+	//                        if (!(--_c[_n->vals[nid].subID]))_b[_n->vals[nid].subID] = true;
+	//                }
+	//                else {
+	//                    for (int nid = _node_begin[x]; nid < _node_end[x]; ++nid)
+	//                        if (!(--_c[_n->vals[nid].subID]))_b[_n->vals[nid].subID] = true;
+	//                }
+	//            }
+	//            return _b;
+	//            }, (size_t)i * step, (((size_t)i + 1) * step) >= nodes.size() ? nodes.size() : (((size_t)i + 1) * step), nodes, offset, node_type));
+	//}
+	//for (auto&& res : results)bits |= res.get();
+	for (int j = 0; j < results.size(); ++j)
+	{
+		vector<uint16_t>&& _cc = results[j].get();
+		for (int i = 0; i < subs; ++i)
+			c[i] -= _cc[i];
+		//if (!(c[i] -= _cc[i]))
+		//++matchSubs;
+		//bits[i] = true;
+	}
+	for (int i = 0; i < subs; ++i)if (!c[i])++matchSubs;
+	//matchSubs = bits.count();
+}
 
-				if (pred.value > Wmin) {
-					start = lTree[pred.att][i]->upper_bound(pred.value - Wmax);
-					mid = lTree[pred.att][i]->lower_bound(pred.value - Wmin);
-					end = lTree[pred.att][i]->end();
-					for (cur = start; cur != mid; cur++)
-						if (pred.value <= cur.get_val().high) {
-							++counter[cur.get_val().subId];
+void AWBTree::backward(const Pub& pub, int& matchSubs)
+{
+	bitset<subs> bits;
+	//Timer start;
+	for (auto& pred : pub.pairs)
+	{
+		int pred_att = pred.att;
+		int val = pred.value;
+		for (int i = 0; i < width_size; ++i)
+		{
+			if (sig[pred_att][i])
+			{
+				ltree_iter itlow = ltree[pred_att][i]->upper_bound(val);
+				htree_iter ithigh = htree[pred_att][i]->lower_bound(val);
+				for (; itlow != ltree[pred_att][i]->end(); ++itlow)
+				{
+					//bits.set(itlow.get_val().subID);
+					bits[itlow.get_val().subID] = true;
+				}
+				for (htree_iter it = htree[pred_att][i]->begin(); it != ithigh; ++it)
+				{
+					//bits.set(it.get_val());
+					bits[it.get_val()] = true;
+				}
+			}
+		}
+	}
+	//int64_t end = start.elapsed_nano();
+	//cout << (double)end / 1000000 << " ms\n";
+	//Timer start;
+	matchSubs = subs - bits.count();
+	//int64_t end = start.elapsed_nano();
+	//cout << (double)end / 1000 << "um\n";
+}
+
+void AWBTree::backward_o(const Pub& pub, int& matchSubs)
+{
+	bitset<subs> bits;
+	for (auto& pred : pub.pairs)
+	{
+		int pred_att = pred.att;
+		int val = pred.value;
+		int i = 0;
+		for (; i < width_size >> 1; ++i)
+		{
+			if (sig[pred_att][i])
+			{
+				ltree_iter itlow = ltree[pred_att][i]->upper_bound(val);
+				htree_iter ithigh = htree[pred_att][i]->lower_bound(val);
+				for (; itlow != ltree[pred_att][i]->end(); ++itlow)
+					bits[itlow.get_val().subID] = true;
+				for (htree_iter it = htree[pred_att][i]->begin(); it != ithigh; ++it)
+					bits[it.get_val()] = true;
+			}
+		}
+		for (; i < width_size; ++i)
+		{
+			if (sig[pred_att][i])
+			{
+				double v_min = i * width;
+				double v_max = valDom - v_min;
+				if (!(val > v_max))
+				{
+					ltree_iter itlow = ltree[pred_att][i]->upper_bound(val);
+					for (; itlow != ltree[pred_att][i]->end(); ++itlow)
+						bits[itlow.get_val().subID] = true;
+				}
+				else if (!(val < v_min))
+				{
+					htree_iter ithigh = htree[pred_att][i]->lower_bound(val);
+					for (htree_iter it = htree[pred_att][i]->begin(); it != ithigh; ++it)
+						bits[it.get_val()] = true;
+				}
+			}
+		}
+	}
+	matchSubs = subs - bits.count();
+}
+
+void AWBTree::backward_p(const Pub& pub, int& matchSubs)
+{
+	vector<void*> nodes;
+	vector<uint16_t> offset;
+	vector<uint16_t> node_type;
+	bitset<subs> bits;
+	for (auto& pred : pub.pairs)
+	{
+		int pred_att = pred.att;
+		int val = pred.value;
+		int i = 0;
+		for (; i < width_size >> 1; ++i)
+		{
+			if (sig[pred_att][i])
+			{
+				int pre_id = nodes.size();
+				ltree_iter itlow = ltree[pred_att][i]->parallel_upper_bound(val, nodes);
+				if (pre_id < nodes.size())
+				{
+					offset.emplace_back(itlow.idx);
+					node_type.emplace_back(1);
+					for (++pre_id; pre_id < nodes.size(); ++pre_id)
+					{
+						offset.emplace_back(0xFFFF);
+						node_type.emplace_back(1);
+					}
+				}
+				htree_iter ithigh = htree[pred_att][i]->parallel_lower_bound(val, nodes);
+				if (pre_id < nodes.size())
+				{
+					if (ithigh == htree[pred_att][i]->end())offset.emplace_back(0xFFFF);
+					else offset.emplace_back(ithigh.idx);
+					node_type.emplace_back(0);
+					for (++pre_id; pre_id < nodes.size(); ++pre_id)
+					{
+						offset.emplace_back(0xFFFF);
+						node_type.emplace_back(0);
+					}
+				}
+			}
+		}
+		for (; i < width_size; ++i)
+		{
+			if (sig[pred_att][i])
+			{
+				double v_min = i * width;
+				double v_max = valDom - v_min;
+				if (!(val > v_max))
+				{
+					int pre_id = nodes.size();
+					ltree_iter itlow = ltree[pred_att][i]->parallel_upper_bound(val, nodes);
+					if (pre_id < nodes.size())
+					{
+						offset.emplace_back(itlow.idx);
+						node_type.emplace_back(1);
+						for (++pre_id; pre_id < nodes.size(); ++pre_id)
+						{
+							offset.emplace_back(0xFFFF);
+							node_type.emplace_back(1);
 						}
-					for (cur; cur != end; cur++) {
-						++counter[cur.get_val().subId];
 					}
 				}
-				else if (pred.value > Vmax) {
-					start = lTree[pred.att][i]->begin();
-					end = lTree[pred.att][i]->end();
-					for (cur = start; cur != end; cur++) {
-						++counter[cur.get_val().subId];
-					}
-				}
-				else {
-					start = lTree[pred.att][i]->begin();
-					end = lTree[pred.att][i]->upper_bound(pred.value);
-					for (cur = start; cur != end; cur++) {
-						++counter[cur.get_val().subId];
-					}
-				}
-			}
-		}
-	}
-
-	//after process
-	for (int i = 0; i < subList.size(); i++) {
-		if (counter[i] == subList[i].size)++matchSubs;
-		counter[i] = 0;
-	}
-}
-
-void AWBTree::forward_a(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList, const int widthId)
-{
-	for (auto pred : pub.pairs) {
-		int i;
-		for (i = 0; i < WCsize / 2; i++) {
-			if (sigs[i]) {
-				double Wmin = i * Wsize;
-				double Wmax = (i + 1) * Wsize;
-				Lowtree::iterator start = lTree[pred.att][i]->lower_bound(pred.value - Wmin);
-				Lowtree::iterator end = lTree[pred.att][i]->upper_bound(pred.value);
-				Lowtree::iterator cur;
-
-				for (cur = start; cur != end; cur++)
-					++counter[cur.get_val().subId];
-			}
-		}
-		for (i; i < 18 * widthId / 25; i++) {
-			if (sigs[i]) {
-
-				double Wmin = i * Wsize;
-				double Wmax = (i + 1) * Wsize;
-				double Vmax = valDom - Wmin;
-
-				Lowtree::iterator start;
-				Lowtree::iterator mid;
-				Lowtree::iterator end;
-				Lowtree::iterator cur;
-
-				if (pred.value > Wmin) {
-					start = lTree[pred.att][i]->upper_bound(pred.value - Wmax);
-					mid = lTree[pred.att][i]->lower_bound(pred.value - Wmin);
-					end = lTree[pred.att][i]->end();
-					for (cur = start; cur != mid; cur++)
-						if (pred.value <= cur.get_val().high) {
-							++counter[cur.get_val().subId];
+				else if (!(val < v_min))
+				{
+					int pre_id = nodes.size();
+					htree_iter ithigh = htree[pred_att][i]->parallel_lower_bound(val, nodes);
+					if (pre_id < nodes.size())
+					{
+						if (ithigh == htree[pred_att][i]->end())offset.emplace_back(0xFFFF);
+						else offset.emplace_back(ithigh.idx);
+						node_type.emplace_back(0);
+						for (++pre_id; pre_id < nodes.size(); ++pre_id)
+						{
+							offset.emplace_back(0xFFFF);
+							node_type.emplace_back(0);
 						}
-					for (cur; cur != end; cur++)
-						++counter[cur.get_val().subId];
-				}
-				else if (pred.value > Vmax) {
-					start = lTree[pred.att][i]->begin();
-					end = lTree[pred.att][i]->end();
-					for (cur = start; cur != end; cur++)
-						++counter[cur.get_val().subId];
-				}
-				else {
-					start = lTree[pred.att][i]->begin();
-					end = lTree[pred.att][i]->upper_bound(pred.value);
-					for (cur = start; cur != end; cur++)
-						++counter[cur.get_val().subId];
-				}
-			}
-		}
-		for (i; i < widthId; i++) {
-			if (sigs[i]) {
-
-				double Wmin = i * Wsize;
-				double Wmax = (i + 1) * Wsize;
-				double Vmax = valDom - Wmin;
-
-				Lowtree::iterator start;
-				Lowtree::iterator end;
-				Lowtree::iterator cur;
-
-				if (pred.value > Wmin) {
-					start = lTree[pred.att][i]->lower_bound(pred.value - Wmin);
-					end = lTree[pred.att][i]->end();
-					for (cur = start; cur != end; cur++)
-						++counter[cur.get_val().subId];
-				}
-				else if (pred.value > Vmax) {
-					start = lTree[pred.att][i]->begin();
-					end = lTree[pred.att][i]->end();
-					for (cur = start; cur != end; cur++)
-						++counter[cur.get_val().subId];
-				}
-				else {
-					start = lTree[pred.att][i]->begin();
-					end = lTree[pred.att][i]->upper_bound(pred.value);
-					for (cur = start; cur != end; cur++)
-						++counter[cur.get_val().subId];
-				}
-			}
-		}
-	}
-
-	//after process
-	for (int i = 0; i < subList.size(); i++) {
-		if (counter[i] == subList[i].size)++matchSubs;
-		counter[i] = 0;
-	}
-}
-
-
-
-void AWBTree::backward(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList, const int widthId)
-{
-	vector<bool> bits(subList.size() + 1, false);
-	for (auto pred : pub.pairs) {
-		for (int i = widthId; i < WCsize; i++) {
-			if (sigs[i]) {
-				Lowtree::iterator itlow = lTree[pred.att][i]->upper_bound(pred.value);
-				Hightree::iterator ithigh = hTree[pred.att][i]->lower_bound(pred.value);
-				for (itlow; itlow != lTree[pred.att][i]->end(); itlow++)
-					bits[itlow.get_val().subId] = true;
-				for (Hightree::iterator cur = hTree[pred.att][i]->begin(); cur != ithigh; cur++)
-					bits[cur.get_val()] = true;
-			}
-		}
-	}
-
-	//after process
-	for (int i = 0; i < subList.size(); i++) {
-		if (!bits[i])++matchSubs;
-	}
-}
-
-void AWBTree::backward_opt(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList, const int widthId)
-{
-
-	//Timer t;
-	//int64_t backTime = 0;
-	//int64_t travelTime = 0;
-	vector<bool> bits(subList.size(), false);
-	//memset(bitsets, 0, sizeof(bitsets));
-	for (auto pred : pub.pairs) {
-		int i;
-		Lowtree::iterator itlow;
-		Hightree::iterator ithigh;
-		for (i = widthId; i < WCsize / 2; i++) {
-			if (sigs[i]) {
-				itlow = lTree[pred.att][i]->upper_bound(pred.value);
-				ithigh = hTree[pred.att][i]->lower_bound(pred.value);
-				for (itlow; itlow != lTree[pred.att][i]->end(); itlow++) {
-					//bitsets[itlow.get_val().subId] = true;
-					bits[itlow.get_val().subId] = true;
-				}
-				for (Hightree::iterator cur = hTree[pred.att][i]->begin(); cur != ithigh; cur++) {
-					//bitsets[cur.get_val()] = true;
-					bits[cur.get_val()] = true;
-				}
-			}
-		}
-		for (i; i < WCsize; i++) {
-			if (sigs[i]) {
-				double Vmin = i * Wsize;
-				double Vmax = valDom - Vmin;
-				if (pred.value <= Vmax) {
-					itlow = lTree[pred.att][i]->upper_bound(pred.value);
-					for (itlow; itlow != lTree[pred.att][i]->end(); itlow++)
-					{	//bitsets[itlow.get_val().subId] = true;
-						bits[itlow.get_val().subId] = true;
-					}
-				}
-				else if (pred.value >= Vmin) {
-					ithigh = hTree[pred.att][i]->lower_bound(pred.value);
-					for (Hightree::iterator cur = hTree[pred.att][i]->begin(); cur != ithigh; cur++)
-					{	//bitsets[cur.get_val()] = true;
-						bits[cur.get_val()] = true;
 					}
 				}
 			}
 		}
 	}
-	//backTime += t.elapsed_nano();
-	//t.reset();
-	//after process
-	for (int i = 0; i < subList.size(); i++) {
-		//if (!bitsets[i])++matchSubs;
-		//else bitsets[i] = false;
-		if (!bits[i])++matchSubs;
+
+	vector<std::future<bitset<subs>>> results;
+	size_t step = (nodes.size() / parallelDegree) + 1;
+
+	for (int i = 0; i < parallelDegree; i++)
+	{
+		results.emplace_back(
+			pool.enqueue([](size_t start, size_t end, vector<void*> _nodes, vector<uint16_t> _offset, vector<uint16_t> _node_type)
+			{
+			  //cout << start << endl;
+			  bitset<subs> _b;
+			  for (size_t x = start; x < end; ++x)
+			  {
+				  if (_node_type[x])
+				  {
+					  lbptree_node* _node = (lbptree_node*)(_nodes[x]);
+					  if (_offset[x] != 0xFFFF)
+					  {
+						  for (int nid = _offset[x]; nid < _node->vals.size(); ++nid)
+							  _b[_node->vals[nid].subID] = true;
+					  }
+					  else
+					  {
+						  for (auto&& val : _node->vals)
+							  _b[val.subID] = true;
+					  }
+				  }
+				  else
+				  {
+					  hbptree_node* _node = (hbptree_node*)(_nodes[x]);
+					  if (_offset[x] != 0xFFFF)
+					  {
+						  for (int nid = 0; nid < _offset[x]; ++nid)
+							  _b[_node->vals[nid]] = true;
+					  }
+					  else
+					  {
+						  for (auto&& val : _node->vals)
+							  _b[val] = true;
+					  }
+				  }
+			  }
+			  //while (flag.test_and_set());
+			  //_bits |= _b;
+			  //flag.clear();
+			  return _b;
+			}, (size_t)i * step, (((size_t)i + 1) * step) >= nodes.size() ? nodes.size() : (((size_t)i + 1)
+																							* step), nodes, offset, node_type));
 	}
-	//travelTime = t.elapsed_nano();
-	//cout << "back time: " << (double)backTime / 1000000 << "  travel time: " << (double)travelTime / 1000000 << endl;
+	for (auto&& res : results)bits |= res.get();
+	matchSubs = subs - bits.count();
 }
 
-void AWBTree::hybrid_opt(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList, const float& Ppoint)
+void AWBTree::hybrid(const Pub& pub, int& matchSubs)
 {
-	//Timer t;
-	//int64_t backTime = 0;
-	//int64_t forwardTime = 0;
-	//int64_t travelTime = 0;
-	vector<bool> bits(subList.size(), false);
-	for (auto pred : pub.pairs) {
-		int i;
-		//forward
-		//t.reset();
-		for (i = 0; i < WCsize * Ppoint; i++) {
-			if (sigs[i]) {
-				double Wmin = i * Wsize;
-				double Wmax = (i + 1) * Wsize;
-				double Vmax = valDom - Wmin;
-				Lowtree::iterator start = lTree[pred.att][i]->upper_bound(pred.value - Wmax);
-				Lowtree::iterator mid = lTree[pred.att][i]->lower_bound(pred.value - Wmin);
-				Lowtree::iterator end;
-				if (pred.value < Vmax) end = lTree[pred.att][i]->upper_bound(pred.value);
-				else end = lTree[pred.att][i]->end();
-				Lowtree::iterator cur;
-				for (cur = start; cur != mid; cur++)
-					//if (pred.value <= cur->second.high)++counter[cur->second.subId];
-					if (pred.value <= cur.get_val().high)++counter[cur.get_val().subId];
-				for (cur; cur != end; cur++)
-					//++counter[cur->second.subId];
-					++counter[cur.get_val().subId];
-			}
-		}
-		//forwardTime += t.elapsed_nano();
-		//t.reset();
-		//backward
-		Lowtree::iterator itlow;
-		Hightree::iterator ithigh;
-		for (i; i < WCsize / 2; i++) {
-			if (sigs[i]) {
-				itlow = lTree[pred.att][i]->upper_bound(pred.value);
-				ithigh = hTree[pred.att][i]->lower_bound(pred.value);
-				for (itlow; itlow != lTree[pred.att][i]->end(); itlow++)
-					bits[itlow.get_val().subId] = true;
-				for (Hightree::iterator cur = hTree[pred.att][i]->begin(); cur != ithigh; cur++)
-					bits[cur.get_val()] = true;
-			}
-		}
-		for (i; i < WCsize; i++) {
-			if (sigs[i]) {
-				double Vmin = i * Wsize;
-				double Vmax = valDom - Vmin;
-				if (pred.value <= Vmax) {
-					itlow = lTree[pred.att][i]->upper_bound(pred.value);
-					for (itlow; itlow != lTree[pred.att][i]->end(); itlow++)
-						bits[itlow.get_val().subId] = true;
+	//Timer start;
+	vector<uint16_t> c(pdr);
+	bitset<subs> bits_f(bit_forward);
+	bitset<subs> bits_b;
+	//int64_t end = start.elapsed_nano();
+	//cout << (double)end / 1000 << "um\n";
+	for (auto& pred : pub.pairs)
+	{
+		int pred_att = pred.att;
+		int val = pred.value;
+		int i = 0;
+		// forward
+		for (; i <= dPoint; ++i)
+		{
+			if (sig[pred_att][i])
+			{
+				double w_min = i * width;
+				ltree_iter it = ltree[pred_att][i]->upper_bound(val - w_min - width);
+				ltree_iter sPoint = ltree[pred_att][i]->lower_bound(val - w_min);
+				ltree_iter end =
+					val < (valDom - w_min) ? ltree[pred_att][i]->upper_bound(val) : ltree[pred_att][i]->end();
+				for (; it != sPoint; ++it)
+				{
+					lowTreeEle ele = it.get_val();
+					if (!(val > ele.highVal))
+						if (!(--c[ele.subID]))bits_f[ele.subID] = true;
 				}
-				else if (pred.value >= Vmin) {
-					ithigh = hTree[pred.att][i]->lower_bound(pred.value);
-					for (Hightree::iterator cur = hTree[pred.att][i]->begin(); cur != ithigh; cur++)
-						bits[cur.get_val()] = true;
-				}
-			}
-		}
-		//backTime += t.elapsed_nano();
-	}
-	//t.reset();
-	//after process
-	for (int i = 0; i < subList.size(); i++) {
-		if (!((PDR[i] - counter[i]) | bits[i])) {
-			//if(counter[i] == PDR[i])++matchSubs;
-			++matchSubs;
-		}
-		counter[i] = 0;
-	}
-	//travelTime += t.elapsed_nano();
-	//cout << "forward time: " << (double)forwardTime / 1000000 << "  back time: " << (double)backTime / 1000000 << "  travel time: " << (double)travelTime / 1000000 << endl;
-}
-
-void AWBTree::hybrid_a(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList, const float& Ppoint)
-{
-	//Timer t;
-	//int64_t backTime = 0;
-	//int64_t forwardTime = 0;
-	//int64_t travelTime = 0;
-	vector<bool> bits(subList.size(), false);
-	for (auto pred : pub.pairs) {
-		int i;
-		//forward
-		//t.reset();
-		for (i = 0; i < WCsize * Ppoint; i++) {
-			if (sigs[i]) {
-				double Wmin = i * Wsize;
-				double Wmax = (i + 1) * Wsize;
-				double Vmax = valDom - Wmin;
-				//Lowtree::iterator start = lTree[pred.att][i]->lower_bound(pred.value - Wmin);
-				Lowtree::iterator start = lTree[pred.att][i]->upper_bound(pred.value - Wmax);
-				Lowtree::iterator end;
-				if (pred.value < Vmax) end = lTree[pred.att][i]->upper_bound(pred.value);
-				else end = lTree[pred.att][i]->end();
-				Lowtree::iterator cur;
-				for (cur = start; cur != end; cur++)
-					++counter[cur.get_val().subId];
-			}
-		}
-		//backward
-		Lowtree::iterator itlow;
-		Hightree::iterator ithigh;
-		for (i; i < WCsize / 2; i++) {
-			if (sigs[i]) {
-				itlow = lTree[pred.att][i]->upper_bound(pred.value);
-				ithigh = hTree[pred.att][i]->lower_bound(pred.value);
-				for (itlow; itlow != lTree[pred.att][i]->end(); itlow++)
-					bits[itlow.get_val().subId] = true;
-				for (Hightree::iterator cur = hTree[pred.att][i]->begin(); cur != ithigh; cur++)
-					bits[cur.get_val()] = true;
-			}
-		}
-		for (i; i < WCsize; i++) {
-			if (sigs[i]) {
-				double Vmin = i * Wsize;
-				double Vmax = valDom - Vmin;
-				if (pred.value <= Vmax) {
-					itlow = lTree[pred.att][i]->upper_bound(pred.value);
-					for (itlow; itlow != lTree[pred.att][i]->end(); itlow++)
-						bits[itlow.get_val().subId] = true;
-				}
-				else if (pred.value >= Vmin) {
-					ithigh = hTree[pred.att][i]->lower_bound(pred.value);
-					for (Hightree::iterator cur = hTree[pred.att][i]->begin(); cur != ithigh; cur++)
-						bits[cur.get_val()] = true;
+				for (; it != end; ++it)
+				{
+					lowTreeEle ele = it.get_val();
+					if (!(--c[ele.subID]))bits_f[ele.subID] = true;
 				}
 			}
 		}
-		//backTime += t.elapsed_nano();
-	}
-	//t.reset();
-	//after process
-	for (int i = 0; i < subList.size(); i++) {
-		if (!(bits[i] | (PDR[i] - counter[i]))) {
-			++matchSubs;
+		// backward
+		for (; i < width_size >> 1; ++i)
+		{
+			if (sig[pred_att][i])
+			{
+				ltree_iter itlow = ltree[pred_att][i]->upper_bound(val);
+				htree_iter ithigh = htree[pred_att][i]->lower_bound(val);
+				for (; itlow != ltree[pred_att][i]->end(); ++itlow)
+					bits_b[itlow.get_val().subID] = true;
+				for (htree_iter it = htree[pred_att][i]->begin(); it != ithigh; ++it)
+					bits_b[it.get_val()] = true;
+			}
 		}
-		counter[i] = 0;
+		for (; i < width_size; ++i)
+		{
+			if (sig[pred_att][i])
+			{
+				double v_min = i * width;
+				double v_max = valDom - v_min;
+				if (!(val > v_max))
+				{
+					ltree_iter itlow = ltree[pred_att][i]->upper_bound(val);
+					for (; itlow != ltree[pred_att][i]->end(); ++itlow)
+						bits_b[itlow.get_val().subID] = true;
+				}
+				else if (!(val < v_min))
+				{
+					htree_iter ithigh = htree[pred_att][i]->lower_bound(val);
+					for (htree_iter it = htree[pred_att][i]->begin(); it != ithigh; ++it)
+						bits_b[it.get_val()] = true;
+				}
+			}
+		}
 	}
-	//travelTime += t.elapsed_nano();
-	//cout << "forward time: " << (double)forwardTime / 1000000 << "  back time: " << (double)backTime / 1000000 << "  travel time: " << (double)travelTime / 1000000 << endl;
+	//Timer start;
+	matchSubs = (bits_f & bits_b.flip()).count();
+	/*int64_t end = start.elapsed_nano();
+	cout << (double)end / 1000 << "um\n";*/
 }
 
-int AWBTree::calMemory()
+void AWBTree::hybrid_a(const Pub& pub, int& matchSubs)
 {
-	size_t sum = 0;
-	for (int i = 0; i < dim; i++) {
-		sum += calMemoryInAttri(i);
-	}
-	return int(sum/1024/1024);
 }
 
-size_t AWBTree::calMemoryInAttri(int i)
+void AWBTree::hybrid_p(const Pub& pub, int& matchSubs)
 {
-	size_t sum = (sizeof(Lowtree*) + sizeof(Hightree*)) * WCsize;
-	for (int j = 0; j < WCsize; j++) {
-		sum += lTree[i][j]->mem_size();
-		sum += hTree[i][j]->mem_size();
+	//Timer start;
+	vector<uint16_t> c(pdr);
+	bitset<subs> bits_f(bit_forward);
+	bitset<subs> bits;
+	//int64_t end = start.elapsed_nano();
+	//cout << (double)end / 1000 << "um\n";
+
+	vector<std::future<pair<vector<uint16_t>, bitset<subs>>>> results;
+	size_t step = ceil((float)dim / (float)parallelDegree);
+
+	for (int x = 0; x < parallelDegree; ++x)
+	{
+		results.emplace_back(pool.enqueue([&](int start, int end)
+		{
+		  //Timer time_rec;
+		  vector<uint16_t> _c(subs, 0);
+		  bitset<subs> _b;
+		  for (int j = start; j < end; ++j)
+		  {
+			  int pred_att = pub.pairs[j].att;
+			  int val = pub.pairs[j].value;
+			  int i = 0;
+			  // forward
+			  for (; i <= dPoint; ++i)
+			  {
+				  if (sig[pred_att][i])
+				  {
+					  double w_min = i * width;
+					  ltree_iter it = ltree[pred_att][i]->upper_bound(val - w_min - width);
+					  ltree_iter sPoint = ltree[pred_att][i]->lower_bound(val - w_min);
+					  ltree_iter end =
+						  val < (valDom - w_min) ? ltree[pred_att][i]->upper_bound(val) : ltree[pred_att][i]->end();
+					  for (; it != sPoint; ++it)
+					  {
+						  lowTreeEle ele = it.get_val();
+						  if (!(val > ele.highVal))
+							  //if (!(--c[ele.subID]))bits_f[ele.subID] = true;
+							  ++_c[ele.subID];
+					  }
+					  for (; it != end; ++it)
+					  {
+						  lowTreeEle ele = it.get_val();
+						  //if (!(--c[ele.subID]))bits_f[ele.subID] = true;
+						  ++_c[ele.subID];
+					  }
+				  }
+			  }
+			  // backward
+			  for (; i < width_size >> 1; ++i)
+			  {
+				  if (sig[pred_att][i])
+				  {
+					  ltree_iter itlow = ltree[pred_att][i]->upper_bound(val);
+					  htree_iter ithigh = htree[pred_att][i]->lower_bound(val);
+					  for (; itlow != ltree[pred_att][i]->end(); ++itlow)
+						  _b[itlow.get_val().subID] = true;
+					  for (htree_iter it = htree[pred_att][i]->begin(); it != ithigh; ++it)
+						  _b[it.get_val()] = true;
+				  }
+			  }
+			  for (; i < width_size; ++i)
+			  {
+				  if (sig[pred_att][i])
+				  {
+					  double v_min = i * width;
+					  double v_max = valDom - v_min;
+					  if (!(val > v_max))
+					  {
+						  ltree_iter itlow = ltree[pred_att][i]->upper_bound(val);
+						  for (; itlow != ltree[pred_att][i]->end(); ++itlow)
+							  _b[itlow.get_val().subID] = true;
+					  }
+					  else if (!(val < v_min))
+					  {
+						  htree_iter ithigh = htree[pred_att][i]->lower_bound(val);
+						  for (htree_iter it = htree[pred_att][i]->begin(); it != ithigh; ++it)
+							  _b[it.get_val()] = true;
+					  }
+				  }
+			  }
+		  }
+		  //int64_t time_end = time_rec.elapsed_nano();
+		  //cout << start << " " << (double)time_end / 1000000 << "ms\n";
+		  return pair<vector<uint16_t>, bitset<subs>>(_c, _b);
+		}, x * step, ((x + 1) * step > dim) ? dim : (x + 1) * step));
 	}
-	return sum;
+	//double converge_time = 0;
+	step = ceil((float)subs / (float)parallelDegree);
+	//cout << step << endl;
+	vector<pair<vector<uint16_t>, bitset<subs>>> pp(parallelDegree);
+	for (int i = 0; i < parallelDegree; ++i)pp[i] = results[i].get();
+	vector<std::future<void>> rresults;
+	for (int x = 0; x < parallelDegree; ++x)
+	{
+		rresults.emplace_back(pool.enqueue([&](size_t _step, int _start, int _end, int tid)
+		{
+		  vector<uint16_t> _c(_step, 0);
+		  //cout << _start << " " << _end << endl;
+		  for (auto&& _p : pp)
+		  {
+			  //cout << _p.first[0] << endl;
+			  int j = 0;
+			  for (int i = _start; i < _end; ++i)
+			  {
+				  //cout << i << " " << j << endl;
+				  _c[j++] += _p.first[i];
+			  }
+		  }
+		  int j = 0;
+		  for (int i = _start; i < _end; ++i)if (!(c[i] -= _c[j++]))bits_f[i] = true;
+		  /*j = pdegree / 2;
+		  vector<bitset<subs>> _bits(j);
+		  while (tid < j) {
+			  for (int i = 0; i < j; ++i)
+		  }*/
+		}, step, x * step, ((x + 1) * step > subs) ? subs : (x + 1) * step, x));
+	}
+
+	for (auto&& _p : pp)
+	{
+		//pair<vector<uint16_t>, bitset<subs>>&& _p = res.get();
+		//Timer time_rec;
+		//for (int i = 0; i < subs; ++i)c[i] -= _p.first[i];
+		bits |= _p.second;
+		//converge_time += (time_rec.elapsed_nano() / 1000000.0);
+	}
+	for (auto&& res : rresults)res.get();
+	//Timer time_rec;
+	//int totalnum = 0;
+	//for (int i = 0; i < subs; ++i)if (!(bits[i] || c[i]))++totalnum;
+	matchSubs = (bits_f & bits.flip()).count();
+	//converge_time += (time_rec.elapsed_nano() / 1000000.0);
+	//cout << "converge time " << converge_time << endl;
 }
 
+size_t AWBTree::calMemory()
+{
+	size_t mem = sizeof(lbptree*) * dim * width_size * 2;
+	for (int i = 0; i < dim; i++)
+	{
+		for (int j = 0; j < width_size; j++)
+		{
+			mem += ltree[i][j]->mem_size();
+			mem += htree[i][j]->mem_size();
+		}
+	}
+	return mem/1024/1024;
+}
 
+bool AWBTree::check(vector<uint32_t>& matchSubList)
+{
+	cout << "check start...\n";
+	int i = 0;
+	for (auto& pub : pubList)
+	{
+		int n = 0;
+		vector<int> index(dim, 0);
+		for (int j = 0; j < pub.pairs.size(); j++)index[pub.pairs[j].att] = j + 1;
+		for (auto& sub : subList)
+		{
+			int match = 0;
+			for (auto& spred : sub.constraints)
+			{
+				int pid = index[spred.att];
+				if (index[spred.att] == 0)continue;
+				if (pub.pairs[--pid].value < spred.lowValue || pub.pairs[pid].value > spred.highValue)break;
+				++match;
+			}
+			if (match == sub.size)++n;
+		}
+		if (n != matchSubList[i])
+		{
+			cout << "pub " << i << " match error. " << "True match is " << n << ", but result is " << matchSubList[i]
+				 << endl;
+			return false;
+		}
+		++i;
+	}
+	cout << "result is correct.\n";
+	return true;
+}
