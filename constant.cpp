@@ -1,5 +1,5 @@
 #include "constant.h"
-string expID = "1519";       // Record the experiment ID number
+string expID = "1520";       // Record the experiment ID number
 const bool display = false;  // whether to print the mapping relation, 有待逐步改成DEBUG宏定义判断
 const bool verifyID = false; // whether to verify Insertion and Deletion function
 const int interval = 500;    // after a interval of events is matched, print a log
@@ -61,3 +61,10 @@ const float awbTree_Ppoint = 0.2;//partition point 0.2
 const unsigned short WCsize = 40; //width cell size 40
 const int awbTree_branch = 2000; // 2000
 
+// bTama7 = [5.962530, 5.188889, 4.421234, 3.829108, 3.161978, 2.493683, 2.012853, 1.563810, 1.119772]
+// HEM5 = [3.960543, 4.013972, 2.726451, 1.981608, 1.643803, 1.528571, 1.578585, 1.660534, 1.779366]
+// Rein = [5.025923, 5.445188, 5.008369, 4.830441, 5.290256, 6.064501, 7.165692, 8.204872, 9.425269]
+// BGTree = [10.565614, 10.538955, 10.069476, 9.347731, 8.632596, 8.655023, 7.426536, 5.927116, 3.962853]
+// bTama8 = [6.113363, 5.373554, 4.564207, 3.944776, 3.405798, 2.530594, 2.038193, 1.550895, 1.087566]
+// Tama = [11.757325, 11.762547, 11.377197, 10.758907, 10.113908, 10.192658, 9.143969, 7.671799, 5.662435]
+// bTama6 = [5.882992, 5.331468, 4.392576, 3.734359, 3.120649, 2.447185, 1.979264, 1.512233, 1.066858]

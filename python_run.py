@@ -16,10 +16,10 @@ os.system("sudo cpufreq-set -c " + coreId + " -u 4.9G")
 
 # Exp 1: be
 # need to #define DEBUG in constant.h file
-for be in range(9, -1, -1):
-    os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 20 10 20 0.0 0.4 ' + str(be)+' 1 1000000 1')
-    print('Experiment', str(expID), ': atts= 20, k= 10, m= 20, alpha= 0.0, w= 0.4, be= ', str(be), ', attrGroup= 1, valDom= 1000000, pD= 1 done.\n\n')
-    expID += 1
+# for be in range(9, -1, -1):
+#     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 20 10 20 0.0 0.4 ' + str(be)+' 1 1000000 1')
+#     print('Experiment', str(expID), ': atts= 20, k= 10, m= 20, alpha= 0.0, w= 0.4, be= ', str(be), ', attrGroup= 1, valDom= 1000000, pD= 1 done.\n\n')
+#     expID += 1
 
 # be2=[1,3,6,9,12,15,18,21,24,27]
 # need to set be to -1
@@ -87,12 +87,12 @@ for be in range(9, -1, -1):
 
 # # Exp 8: width 0.1-0.7
 # need to use GenPubList2 function to generate data!
-# width = 0.9
-# for i in range(9):
-#     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 20 5 20 0.0 ' + str(width) + ' 4 1 1000000 1')
-#     print('Experiment', str(expID), ': atts= 20, k= 5, m= 20, alpha= 0.0, w= ' + str(width) + ', be= 4, attrGroup= 1, valDom= 1000000, pD= 1 done.\n\n')
-#     expID += 1
-#     width -= 0.1
+width = 0.9
+for i in range(9):
+    os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 20 5 20 0.0 ' + str(width) + ' 4 1 1000000 1')
+    print('Experiment', str(expID), ': atts= 20, k= 5, m= 20, alpha= 0.0, w= ' + str(width) + ', be= 4, attrGroup= 1, valDom= 1000000, pD= 1 done.\n\n')
+    expID += 1
+    width -= 0.1
 
 # # Exp 9: virtual attr group
 # attr = [10000, 3000, 1000, 300, 100, 30]
