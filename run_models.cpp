@@ -2115,13 +2115,13 @@ void run_HEM5(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 
 	if (display)
 		hem5.printRelation(1);
-	cout << endl;
 
 #ifdef DEBUG
 	cout << "HEM5DD: matchNum= " << Util::Average(matchSubList) << ", matchTime= "
 		 << Util::Double2String(Util::Average(matchTimeList))
 		 << " ms\n";
 #endif
+	cout << endl;
 
 	// output
 	string outputFileName = "HEM5.txt";
