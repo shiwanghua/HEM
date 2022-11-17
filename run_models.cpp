@@ -1,6 +1,6 @@
 #include "run_models.h"
 
-// Ô­Ê¼·´ÏòRein
+// Ô­Ê¼ï¿½ï¿½ï¿½ï¿½Rein
 void run_rein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
 	Rein rein(OriginalRein);
@@ -22,7 +22,7 @@ void run_rein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 	}
 	cout << "Rein Insertion Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto&& kv : deleteNo)
@@ -116,7 +116,7 @@ void run_rein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-// ÕýÏò¼ÆÊýfRein
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½fRein
 void run_rein_forward_native(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
 	Rein fRein(ForwardRein);
@@ -138,7 +138,7 @@ void run_rein_forward_native(const intervalGenerator& gen, unordered_map<int, bo
 	}
 	cout << "fRein Insertion Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -224,7 +224,7 @@ void run_rein_forward_native(const intervalGenerator& gen, unordered_map<int, bo
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-// ÕýÏòÎ»¼¯fRein
+// ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½fRein
 void run_rein_forward_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
 	Rein fRein_c(ForwardRein_CBOMP);
@@ -246,7 +246,7 @@ void run_rein_forward_CBOMP(const intervalGenerator& gen, unordered_map<int, boo
 	}
 	cout << "fRein_c CBOMP Insertion Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -343,7 +343,7 @@ void run_rein_hybrid(const intervalGenerator& gen, unordered_map<int, bool> dele
 	}
 	cout << "HybridRein (hRein) Insertion Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -441,7 +441,7 @@ void run_rein_hybrid_CBOMP(const intervalGenerator& gen, unordered_map<int, bool
 	}
 	cout << "HybridRein (HRein) with CBOMP Insertion Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -519,7 +519,7 @@ void run_rein_hybrid_CBOMP(const intervalGenerator& gen, unordered_map<int, bool
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-// ²¢ÐÐRein
+// ï¿½ï¿½ï¿½ï¿½Rein
 void run_pRein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
 	pRein prein;
@@ -541,7 +541,7 @@ void run_pRein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 	}
 	cout << "pRein Insertion Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -619,7 +619,7 @@ void run_pRein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-// ×ÔÊÊÓ¦Rein
+// ï¿½ï¿½ï¿½ï¿½Ó¦Rein
 void run_AdaRein_ORI(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
 	AdaRein adarein(AdaRein_ORI);
@@ -647,7 +647,7 @@ void run_AdaRein_ORI(const intervalGenerator& gen, unordered_map<int, bool> dele
 	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 	cout << "AdaRein Skipping Task Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -749,7 +749,7 @@ void run_AdaRein_SSS(const intervalGenerator& gen, unordered_map<int, bool> dele
 	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 	cout << "AdaRein_SSS Skipping Task Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -851,7 +851,7 @@ void run_AdaRein_SSS_B(const intervalGenerator& gen, unordered_map<int, bool> de
 	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 	cout << "AdaRein_SSS_B Skipping Task Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -953,7 +953,7 @@ void run_AdaRein_SSS_C(const intervalGenerator& gen, unordered_map<int, bool> de
 	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 	cout << "AdaRein_SSS_C Skipping Task Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -1055,7 +1055,7 @@ void run_AdaRein_SSS_C_W(const intervalGenerator& gen, unordered_map<int, bool> 
 	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 	cout << "AdaRein_SSS_C_W Skipping Task Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -1160,7 +1160,7 @@ void run_pAdaRein_SSS_C_W(const intervalGenerator& gen, unordered_map<int, bool>
 	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 	cout << "pAdaRein_SSS_C_W Skipping Task Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -1266,7 +1266,7 @@ void run_p2AdaRein_SSS_C_W(const intervalGenerator& gen, unordered_map<int, bool
 	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 	cout << "p2AdaRein_SSS_C_W Skipping Task Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -1372,7 +1372,7 @@ void run_AdaRein_DSS_W(const intervalGenerator& gen, unordered_map<int, bool> de
 	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 	cout << "AdaRein_DSS_W Skipping Task Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -1485,7 +1485,7 @@ void run_AdaRein_DSS_B(const intervalGenerator& gen, unordered_map<int, bool> de
 	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 	cout << "AdaRein_DSS_B Skipping Task Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -1570,7 +1570,7 @@ void run_AdaRein_DSS_B(const intervalGenerator& gen, unordered_map<int, bool> de
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-// ´¿¾²Ä£Ê½
+// ï¿½ï¿½ï¿½ï¿½Ä£Ê½
 void run_HEM(const intervalGenerator& gen)
 {
 	HEM hem;
@@ -1665,7 +1665,7 @@ void run_HEM(const intervalGenerator& gen)
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-// ¾²¾²Ä£Ê½
+// ï¿½ï¿½ï¿½ï¿½Ä£Ê½
 void run_HEM1(const intervalGenerator& gen)
 {
 	HEM1 hem1;
@@ -1761,7 +1761,7 @@ void run_HEM1(const intervalGenerator& gen)
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-// ¾²¶¯Ä£Ê½
+// ï¿½ï¿½ï¿½ï¿½Ä£Ê½
 void run_HEM2(const intervalGenerator& gen)
 {
 	HEM2 hem2;
@@ -1857,7 +1857,7 @@ void run_HEM2(const intervalGenerator& gen)
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-// ´¿¶¯Ä£Ê½
+// ï¿½ï¿½ï¿½ï¿½Ä£Ê½
 void run_HEM3(const intervalGenerator& gen)
 {
 	HEM3 hem3;
@@ -1953,7 +1953,7 @@ void run_HEM3(const intervalGenerator& gen)
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-// ¶¯¾²Ä£Ê½
+// ï¿½ï¿½ï¿½ï¿½Ä£Ê½
 void run_HEM4(const intervalGenerator& gen)
 {
 	HEM4 hem4;
@@ -2049,7 +2049,7 @@ void run_HEM4(const intervalGenerator& gen)
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-// ¶¯¶¯Ä£Ê½
+// ï¿½ï¿½ï¿½ï¿½Ä£Ê½
 void run_HEM5(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
 	HEM5 hem5(HEM5_DD);
@@ -2077,7 +2077,7 @@ void run_HEM5(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 	hem5.initBits();
 	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -2175,7 +2175,7 @@ void run_HEM5(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-// ¶¯¶¯Ä£Ê½ + avxÖ¸Áî
+// ï¿½ï¿½ï¿½ï¿½Ä£Ê½ + avxÖ¸ï¿½ï¿½
 void run_HEM5_avxOR(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
 	HEM5_avxOR hem5_avxor;
@@ -2202,7 +2202,7 @@ void run_HEM5_avxOR(const intervalGenerator& gen, unordered_map<int, bool> delet
 	hem5_avxor.initBits();
 	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -2325,7 +2325,7 @@ void run_HEM5_parallel(const intervalGenerator& gen, unordered_map<int, bool> de
 	hem5_p.initBits();
 	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -2434,7 +2434,7 @@ void run_HEM5_avxOR_parallel(const intervalGenerator& gen, unordered_map<int, bo
 	hem5_avxOR_p.initBits();
 	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -2518,7 +2518,7 @@ void run_HEM5_avxOR_parallel(const intervalGenerator& gen, unordered_map<int, bo
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-// ¶¯¶¯Ä£Ê½ + ÐéÊôÐÔ×é(ÊÂ¼þ¶©ÔÄÊôÐÔ·Ö²¼ÎÞÏÞÖÆ)°æ±¾
+// ï¿½ï¿½ï¿½ï¿½Ä£Ê½ + ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô·Ö²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)ï¿½æ±¾
 void run_HEM5_VAS(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
 	HEM5_AS hem5_vas(HEM5_DD_VAS);
@@ -2546,7 +2546,7 @@ void run_HEM5_VAS(const intervalGenerator& gen, unordered_map<int, bool> deleteN
 	hem5_vas.initBits();
 	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -2630,7 +2630,7 @@ void run_HEM5_VAS(const intervalGenerator& gen, unordered_map<int, bool> deleteN
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-// ¶¯¶¯Ä£Ê½ + ÊµÊôÐÔ×é(µ¥¸öÊÂ¼þ¡¢¶©ÔÄµÄÊôÐÔÏÞÖÆÔÚÄ³¸öÊôÐÔ×éÖÐ)°æ±¾
+// ï¿½ï¿½ï¿½ï¿½Ä£Ê½ + Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)ï¿½æ±¾
 void run_HEM5_RAS(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
 	HEM5_AS hem5_ras(HEM5_DD_RAS);
@@ -2658,7 +2658,7 @@ void run_HEM5_RAS(const intervalGenerator& gen, unordered_map<int, bool> deleteN
 	hem5_ras.initBits();
 	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -2742,7 +2742,7 @@ void run_HEM5_RAS(const intervalGenerator& gen, unordered_map<int, bool> deleteN
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-// ¶¯¶¯Ä£Ê½ + ÊµÊôÐÔ×Ó¼¯ + avx2 + ²¢ÐÐ
+// ï¿½ï¿½ï¿½ï¿½Ä£Ê½ + Êµï¿½ï¿½ï¿½ï¿½ï¿½Ó¼ï¿½ + avx2 + ï¿½ï¿½ï¿½ï¿½
 void run_HEM5_RAS_avxOR_parallel(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
 	HEM5_AS hem5_ras_a_p(HEM5_DD_RAS_AVXOR_PARALLEL);
@@ -2770,7 +2770,7 @@ void run_HEM5_RAS_avxOR_parallel(const intervalGenerator& gen, unordered_map<int
 	hem5_ras_a_p.initBits();
 	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -2854,7 +2854,7 @@ void run_HEM5_RAS_avxOR_parallel(const intervalGenerator& gen, unordered_map<int
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-// HEM ¶¯¶¯Ä£Ê½ + ¸ù¾Ý¿í¶È·Ö²ã
+// HEM ï¿½ï¿½ï¿½ï¿½Ä£Ê½ + ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½È·Ö²ï¿½
 void run_HEMSC(const intervalGenerator& gen)
 {
 	HEMSC hem_sc;
@@ -2951,7 +2951,7 @@ void run_HEMSC(const intervalGenerator& gen)
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-// ×´Ì¬Ñ¹Ëõ
+// ×´Ì¬Ñ¹ï¿½ï¿½
 void run_HEMSR(const intervalGenerator& gen)
 {
 	HEMSR hem_sr;
@@ -3038,7 +3038,7 @@ void run_HEMSR(const intervalGenerator& gen)
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-// ±©Á¦ÅÐ¶Ï
+// ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½
 void run_Simple(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
 	Simple simple;
@@ -3060,7 +3060,7 @@ void run_Simple(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 	}
 	cout << "Simple Insertion Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -3127,7 +3127,7 @@ void run_Simple(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-// °´Î½´Ê¿í¶ÈÔöÐòÅÅÁÐ+±©Á¦ÅÐ¶Ï
+// ï¿½ï¿½Î½ï¿½Ê¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½+ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½
 void run_Simple2(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
 	Simple2 simple2;
@@ -3149,7 +3149,7 @@ void run_Simple2(const intervalGenerator& gen, unordered_map<int, bool> deleteNo
 	}
 	cout << "Simple2 Insertion Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -3240,7 +3240,7 @@ void run_tama(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 	}
 	cout << "Tama Insertion Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -3334,7 +3334,7 @@ void run_tama_parallel_lock(const intervalGenerator& gen, unordered_map<int, boo
 	}
 	cout << "Tama-Parallel-" << parallelDegree << "-Lock: Insertion Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -3429,7 +3429,7 @@ void run_tama_parallel_reduce(const intervalGenerator& gen, unordered_map<int, b
 	}
 	cout << "Tama-Parallel-" << parallelDegree << "-Reduce: Insertion Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -3524,7 +3524,7 @@ void run_btama_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, b
 	}
 	cout << "bTama_forward Insertion Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -3618,7 +3618,7 @@ void run_btama_forward_C_BOMP_parallel(const intervalGenerator& gen, unordered_m
 	}
 	cout << "bTama_forward parallel" << parallelDegree << " Insertion Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -3714,7 +3714,7 @@ void run_btama_backward1_C_BOMP(const intervalGenerator& gen, unordered_map<int,
 	}
 	cout << "bTama_backward1 Insertion Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -3807,7 +3807,7 @@ void run_btama_backward2_CBOMP(const intervalGenerator& gen, unordered_map<int, 
 	}
 	cout << "bTama_backward2 Insertion Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -3902,7 +3902,7 @@ void run_btama_backward2_CBOMP_parallel(const intervalGenerator& gen, unordered_
 	}
 	cout << "bTama_backward2_parallel: Insertion Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -4016,7 +4016,7 @@ void run_OpIndex(const intervalGenerator& gen, unordered_map<int, bool> deleteNo
 		cout << "\nTotal pivot attribute: " << counter << endl;
 	}
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -4128,7 +4128,7 @@ void run_bOpIndex2(const intervalGenerator& gen, unordered_map<int, bool> delete
 		cout << "\nTotal pivot attribute: " << counter << endl;
 	}
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -4221,7 +4221,7 @@ void run_BGTREE_forward_native(const intervalGenerator& gen, unordered_map<int, 
 	}
 	cout << "BG-Tree Forward Insertion Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -4325,7 +4325,7 @@ void run_BGTREE_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, 
 	}
 	cout << "BG-Tree(C-BOMP) Forward Insertion Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -4427,7 +4427,7 @@ void run_BGTREE_backward_C_BOMP(const intervalGenerator& gen, unordered_map<int,
 	}
 	cout << "BG-Tree(C-BOMP) Backward Insertion Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -4529,7 +4529,7 @@ void run_BGTREE_d_forward_native(const intervalGenerator& gen, unordered_map<int
 	}
 	cout << "BG-Tree_d Forward Insertion Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -4633,7 +4633,7 @@ void run_BGTREE_d_backward_native(const intervalGenerator& gen, unordered_map<in
 	}
 	cout << "BG-Tree_d Backward Insertion Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -4737,7 +4737,7 @@ void run_BGTREE_d_vrs_forward_native(const intervalGenerator& gen, unordered_map
 	//	}
 	//	cout << "BG-Tree_d_vrs Forward Insertion Finishes.\n";
 	//
-	//	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	//	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	//	if (verifyID) {
 	//		for (auto kv: deleteNo) {
 	//			Timer deleteStart;
@@ -4831,7 +4831,7 @@ void run_BGTREE_d_vrs_backward_native(const intervalGenerator& gen, unordered_ma
 	//	}
 	//	cout << "BG-Tree_d_vrs Backward Insertion Finishes.\n";
 	//
-	//	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	//	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	//	if (verifyID) {
 	//		for (auto kv: deleteNo) {
 	//			Timer deleteStart;
@@ -4915,7 +4915,7 @@ void run_PSTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 	vector<double> matchTimeList;
 	vector<double> matchSubList;
 
-	Sub2 sub; // ÐèÒª×ª»»Ò»ÏÂ
+	Sub2 sub; // ï¿½ï¿½Òª×ªï¿½ï¿½Ò»ï¿½ï¿½
 	Cnt2 cnt2;
 	cnt2.op = 3;
 	vector<Sub2> subList;
@@ -4951,7 +4951,7 @@ void run_PSTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 	}
 	cout << "PS-Tree Insertion Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 		//for (auto kv : deleteNo) {
@@ -5050,7 +5050,7 @@ void run_AWBTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo
 	awbTree.setbits();
 	cout << "AWB+Tree Hybrid_opt Insertion Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 //		for (auto kv : deleteNo) {
@@ -5150,7 +5150,7 @@ void run_AWBTREE_parallel(const intervalGenerator& gen, unordered_map<int, bool>
 	awbTree_p.setbits();
 	cout << "AWB+Tree parallel: Insertion Finishes.\n";
 
-	// ÑéÖ¤²åÈëÉ¾³ýÕýÈ·ÐÔ
+	// ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
 	if (verifyID)
 	{
 //		for (auto kv : deleteNo) {
@@ -5223,7 +5223,7 @@ void run_AWBTREE_parallel(const intervalGenerator& gen, unordered_map<int, bool>
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 #endif
 
-	outputFileName = "tmpData/AWBTree.txt";
+	outputFileName = "tmpData/AWBTree_p.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
