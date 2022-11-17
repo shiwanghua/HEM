@@ -2239,13 +2239,13 @@ void run_HEM5_avxOR(const intervalGenerator& gen, unordered_map<int, bool> delet
 
 	if (display)
 		hem5_avxor.printRelation(1);
-	cout << endl;
 
 #ifdef DEBUG
 	cout << "HEM5DD_avxOR: matchNum= " << Util::Average(matchSubList) << ", matchTime= "
 		 << Util::Double2String(Util::Average(matchTimeList))
 		 << " ms\n";
 #endif
+	cout << endl;
 
 	// output
 	string outputFileName = "HEM5_avxOR.txt";
@@ -2359,13 +2359,13 @@ void run_HEM5_parallel(const intervalGenerator& gen, unordered_map<int, bool> de
 
 	if (display)
 		hem5_p.printRelation(1);
-	cout << endl;
 
 #ifdef DEBUG
 	cout << "HEM5DD-Parallel: matchNum= " << Util::Average(matchSubList) << ", matchTime= "
 		 << Util::Double2String(Util::Average(matchTimeList))
 		 << " ms\n";
 #endif
+	cout << endl;
 
 	// output
 	string outputFileName = "pHEM5.txt";
