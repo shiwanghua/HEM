@@ -41,7 +41,11 @@ enum {
 	HybridRein, // HRein, AWRein
 	HybridRein_CBOMP,  // AWRein with C-BOMP
 	SharedHybridRein,  // SHRein
-	SharedHybridRein_CBOMP // SHRein_c
+	SharedHybridRein_CBOMP, // SHRein_c
+	ForwardRein_PGWO,
+	ForwardRein_PGWO_CBOMP,
+	HybridRein_PGWO,
+	HybridRein_PGWO_CBOMP
 };
 
 // AdaRein

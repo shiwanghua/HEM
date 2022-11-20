@@ -15,7 +15,7 @@
 //const int MAX_ATTS = 101;
 //const int MAX_BUCKS = 500;
 
-// 01ÔÚµÚÒ»Î¬
+// 01ï¿½Úµï¿½Ò»Î¬
 class Rein {
 	int numSub, numDimension, buckStep;
 	vector<vector<vector<Combo>>> data[2];    // original Rein and AWRein 0:left parenthesis, 1:right parenthesis
@@ -25,13 +25,14 @@ class Rein {
 	int counter[subs]; // forward Rein
 	vector<bitset<subs>> nB; // null bitset for forward Rein with C-BOMP
 	vector<bitset<subs>> nnB; // non-null bitset for backward matching, same as HEM
+	vector<vector<int32_t>> fix[2]; // For each attribute, LVEä¸Šå‰ç¼€æ¡¶å¤§å°å’Œï¼ŒHVEä¸Šåç¼€æ¡¶å¤§å°å’Œï¼Œç›¸å½“äºHEMçš„åŠ¨æ€åˆ†ç»„ä¼˜åŒ–LGS
 
 public:
 	int numBucket;
-	double compareTime = 0.0; // ËùÓĞÎ¬¶ÈÉÏÊÂ¼şÖµÂäÈëµÄÄÇ¸öcellÀïÖğ¸ö¾«È·±È½ÏµÄÊ±¼ä
-	double markTime = 0.0;    // ±ê¼ÇÊ±¼ä
-	double bitTime = 0.0;     // ±éÀúbitsÊı×éµÃµ½½á¹ûËùĞèµÄÊ±¼ä
-	vector<unordered_set<int>> bucketSub;   // idÏàÍ¬µÄÍ°´æ´¢µÄ²»Í¬¶©ÔÄ¸öÊıµÄºÍ
+	double compareTime = 0.0; // ï¿½ï¿½ï¿½ï¿½Î¬ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¸ï¿½cellï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½È½Ïµï¿½Ê±ï¿½ï¿½
+	double markTime = 0.0;    // ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+	double bitTime = 0.0;     // ï¿½ï¿½ï¿½ï¿½bitsï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+	vector<unordered_set<int>> bucketSub;   // idï¿½ï¿½Í¬ï¿½ï¿½Í°ï¿½æ´¢ï¿½Ä²ï¿½Í¬ï¿½ï¿½ï¿½Ä¸ï¿½ï¿½ï¿½ï¿½Äºï¿½
 
 	Rein(int);
 
@@ -41,9 +42,9 @@ public:
 	//void match(const Pub& pub, int& matchSubs, const vector<Sub>& subList);
 	void match_backward_original(const Pub& pub, int& matchSubs);
 	bool deleteSubscription_backward_original(IntervalSub sub);
-	int calMemory_backward_original();     // ¼ÆËãÕ¼ÓÃÄÚ´æ´óĞ¡, ·µ»ØMB
+	int calMemory_backward_original();     // ï¿½ï¿½ï¿½ï¿½Õ¼ï¿½ï¿½ï¿½Ú´ï¿½ï¿½Ğ¡, ï¿½ï¿½ï¿½ï¿½MB
 
-	// Forward Rein
+	// FBMAD: Forward Rein
 	void insert_forward_native(IntervalSub sub);
 	void match_forward_native(const Pub& pub, int& matchSubs);
 	bool deleteSubscription_forward_native(IntervalSub sub);
@@ -55,7 +56,7 @@ public:
 	bool deleteSubscription_forward_CBOMP(IntervalSub sub);
 	int calMemory_forward_CBOMP();
 
-	// HybridRein (AWRein)
+	// FBCMOPï¼šHybridRein (AWRein)
 	void insert_hybrid_native(IntervalSub sub);
 	void match_hybrid_native(const Pub& pub, int& matchSubs);
 	bool deleteSubscription_hybrid_native(IntervalSub sub);
@@ -67,13 +68,40 @@ public:
 	bool deleteSubscription_hybrid_CBOMP(IntervalSub sub);
 	int calMemory_hybrid_CBOMP();
 
-	void calBucketSize(); // ¼ÆËãbucketSize
-	vector<int> calMarkNumForBuckets(); // ¼ÆËãÊÂ¼şÂäµ½Ã¿¸öÍ°ÀïÊ±ĞèÒª±ê¼ÇºÍ±È½ÏµÄÎ½´Ê¸öÊı
+	// LGS è°“è¯ç²’åº¦è´Ÿè½½ä¼˜åŒ– PGWO ----------------------------------------------------------- 
+	void initFix(); 
+
+	// FBMAD: Forward Rein with PGWO
+	void insert_forward_PGWO(IntervalSub sub);
+	void match_forward_PGWO(const Pub& pub, int& matchSubs);
+	bool deleteSubscription_forward_PGWO(IntervalSub sub);
+	int calMemory_forward_PGWO(){return -1;}
+
+	// Forward Rein with PGWO and C-BOMP
+	void insert_forward_PGWO_CBOMP(IntervalSub sub);
+	void match_forward_PGWO_CBOMP(const Pub& pub, int& matchSubs);
+	bool deleteSubscription_forward_PGWO_CBOMP(IntervalSub sub){return false;}
+	int calMemory_forward_PGWO_CBOMP(){return -1;}
+
+	// FBCMOPï¼šHybridRein (AWRein) with PGWO
+	void insert_hybrid_PGWO(IntervalSub sub);
+	void match_hybrid_PGWO(const Pub& pub, int& matchSubs);
+	bool deleteSubscription_hybrid_PGWO(IntervalSub sub){return false;}
+	int calMemory_hybrid_PGWO(){return -1;}
+
+	// HybridRein (AWRein) with PGWO and C-BOMP
+	void insert_hybrid_PGWO_CBOMP(IntervalSub sub);
+	void match_hybrid_PGWO_CBOMP(const Pub& pub, int& matchSubs);
+	bool deleteSubscription_hybrid_PGWO_CBOMP(IntervalSub sub){return false;}
+	int calMemory_hybrid_PGWO_CBOMP(){return -1;}
+
+	void calBucketSize(); // ï¿½ï¿½ï¿½ï¿½bucketSize
+	vector<int> calMarkNumForBuckets(); // ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½äµ½Ã¿ï¿½ï¿½Í°ï¿½ï¿½Ê±ï¿½ï¿½Òªï¿½ï¿½ÇºÍ±È½Ïµï¿½Î½ï¿½Ê¸ï¿½ï¿½ï¿½
 };
 
-// 01ÔÚµÚ¶şÎ¬£¬È«¶¯Ì¬
+// 01ï¿½ÚµÚ¶ï¿½Î¬ï¿½ï¿½È«ï¿½ï¿½Ì¬
 //class Rein {
-//	int numSub, numDimension, buckStep, numBucket; // Î¬¶È£¬Í°³¤¶È£¬Í°Êı
+//	int numSub, numDimension, buckStep, numBucket; // Î¬ï¿½È£ï¿½Í°ï¿½ï¿½ï¿½È£ï¿½Í°ï¿½ï¿½
 //	vector<vector<vector<vector<Combo>>>> data;    // 0:left parenthesis, 1:right parenthesis
 //
 //public:
@@ -89,9 +117,9 @@ public:
 //	void match(const Pub& pub, int& matchSubs);
 //};
 
-// 01ÔÚµÚÒ»Î¬£¬Ğ´ËÀ
+// 01ï¿½Úµï¿½Ò»Î¬ï¿½ï¿½Ğ´ï¿½ï¿½
 //class Rein {
-//	int numSub, numDimension, buckStep, numBucket; // Î¬¶È£¬Í°³¤¶È£¬Í°Êı
+//	int numSub, numDimension, buckStep, numBucket; // Î¬ï¿½È£ï¿½Í°ï¿½ï¿½ï¿½È£ï¿½Í°ï¿½ï¿½
 //	vector<Combo> data[MAX_ATTS][2][MAX_BUCKS];
 //
 //public:
