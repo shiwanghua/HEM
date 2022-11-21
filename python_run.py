@@ -5,7 +5,7 @@ import os
 import sys
 
 expID = int(sys.argv[1])
-coreId = '5'
+coreId = '7'
 
 os.system('ulimit -s unlimited;sudo chmod 777 run')
 os.system('sudo chmod 777 *.txt')
@@ -85,14 +85,14 @@ os.system("sudo cpufreq-set -c " + coreId + " -u 4.9G")
 #     print('Experiment', str(expID), ': atts= 80, k= 5, m= ' + str(Se) + ', alpha= 0.0, w= 0.4, be= 4, attrGroup= 1, valDom= 1000000, pD= 1 done.\n\n')
 #     expID += 1
 
-# # Exp 8: width 0.1-0.7
+# # Exp 8: width 0.1-0.9
 # need to use GenPubList2 function to generate data!
-# width = 0.9
-# for i in range(9):
-#     os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 20 5 20 0.0 ' + str(width) + ' 4 1 1000000 1')
-#     print('Experiment', str(expID), ': atts= 20, k= 5, m= 20, alpha= 0.0, w= ' + str(width) + ', be= 4, attrGroup= 1, valDom= 1000000, pD= 1 done.\n\n')
-#     expID += 1
-#     width -= 0.1
+width = 0.9
+for i in range(9):
+    os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 20 5 20 0.0 ' + str(width) + ' 4 1 1000000 1')
+    print('Experiment', str(expID), ': atts= 20, k= 5, m= 20, alpha= 0.0, w= ' + str(width) + ', be= 4, attrGroup= 1, valDom= 1000000, pD= 1 done.\n\n')
+    expID += 1
+    width -= 0.1
 
 # # Exp 9: virtual attr group
 # attr = [10000, 3000, 1000, 300, 100, 30]
@@ -169,10 +169,10 @@ os.system("sudo cpufreq-set -c " + coreId + " -u 4.9G")
 # Exp 17: parallel degree 
 # Exp 18: pHEMDD-avxOR 组合实验
 #for pD in [1,2,4,8,16,32,64]:
-for pD in range(1,13):
-   os.system(' ./run ' + str(expID) + ' 512 10 512 0.0 0.4 4 1 1000000 ' + str(pD))
-   print('Experiment', str(expID), ': atts= 512, k= 10, m= 512, alpha= 0.0, w= 0.4, be= 4, attrGroup= 1, valDom= 1000000, pD= ' + str(pD) + ' done.\n\n')
-   expID += 1
+# for pD in range(1,13):
+#    os.system(' ./run ' + str(expID) + ' 512 10 512 0.0 0.4 4 1 1000000 ' + str(pD))
+#    print('Experiment', str(expID), ': atts= 512, k= 10, m= 512, alpha= 0.0, w= 0.4, be= 4, attrGroup= 1, valDom= 1000000, pD= ' + str(pD) + ' done.\n\n')
+#    expID += 1
 
 # Exp 16: SIMD 4096维度
 # dimen=[16, 32, 64, 128, 256, 512, 1024, 2048, 4096] # =\psi_e

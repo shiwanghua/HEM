@@ -116,7 +116,6 @@ void run_rein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-// �������fRein
 void run_rein_forward_native(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
 	Rein fRein(ForwardRein);
@@ -170,6 +169,11 @@ void run_rein_forward_native(const intervalGenerator& gen, unordered_map<int, bo
 		if (i % interval == 0)
 			cout << "fRein: Event " << i << " is matched.\n";
 	}
+#ifdef DEBUG
+	cout << "fRein: MatchNum= " << Util::Average(matchSubList) << ", matchTime= "
+		 << Util::Double2String(Util::Average(matchTimeList))
+		 << " ms\n";
+#endif
 	cout << endl;
 
 	// output
@@ -224,7 +228,6 @@ void run_rein_forward_native(const intervalGenerator& gen, unordered_map<int, bo
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-// ����λ��fRein
 void run_rein_forward_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
 	Rein fRein_c(ForwardRein_CBOMP);
@@ -278,6 +281,11 @@ void run_rein_forward_CBOMP(const intervalGenerator& gen, unordered_map<int, boo
 		if (i % interval == 0)
 			cout << "forward Rein CBOMP Event " << i << " is matched.\n";
 	}
+#ifdef DEBUG
+	cout << "fRein-CBOMP: MatchNum= " << Util::Average(matchSubList) << ", matchTime= "
+		 << Util::Double2String(Util::Average(matchTimeList))
+		 << " ms\n";
+#endif
 	cout << endl;
 
 	// output
@@ -343,7 +351,6 @@ void run_rein_hybrid(const intervalGenerator& gen, unordered_map<int, bool> dele
 	}
 	cout << "HybridRein (hRein) Insertion Finishes.\n";
 
-	// ��֤����ɾ����ȷ��
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -375,6 +382,10 @@ void run_rein_hybrid(const intervalGenerator& gen, unordered_map<int, bool> dele
 		if (i % interval == 0)
 			cout << "HybridRein (hRein): Event " << i << " is matched.\n";
 	}
+#ifdef DEBUG
+	cout << "hRein: MatchNum= " << Util::Average(matchSubList) << ", matchTime= "
+		 << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
+#endif
 	cout << endl;
 
 	// output
@@ -474,6 +485,10 @@ void run_rein_hybrid_CBOMP(const intervalGenerator& gen, unordered_map<int, bool
 		if (i % interval == 0)
 			cout << "HybridRein (HRein) with CBOMP: Event " << i << " is matched.\n";
 	}
+#ifdef DEBUG
+	cout << "hRein_c: MatchNum= " << Util::Average(matchSubList) << ", matchTime= "
+		 << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
+#endif
 	cout << endl;
 
 	// output
@@ -519,7 +534,412 @@ void run_rein_hybrid_CBOMP(const intervalGenerator& gen, unordered_map<int, bool
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-// ����Rein
+void run_rein_forward_PGWO(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+{
+	Rein fRein_pgwo(ForwardRein_PGWO);
+
+	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchSubList;
+
+	// insert
+	for (int i = 0; i < subs; i++)
+	{
+		Timer insertStart;
+
+		fRein_pgwo.insert_forward_PGWO(gen.subList[i]); // Insert sub[i] into data structure.
+
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double)insertTime / 1000000);
+	}
+	cout << "fRein_pgwo Insertion Finishes.\n";
+
+	// ��֤����ɾ����ȷ��
+	if (verifyID)
+	{
+		for (auto kv : deleteNo)
+		{
+			Timer deleteStart;
+			if (!fRein_pgwo.deleteSubscription_forward_PGWO(gen.subList[kv.first]))
+				cout << "fRein_pgwo: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+		}
+		cout << "fRein_pgwo Deletion Finishes.\n";
+		for (auto kv : deleteNo)
+		{
+			fRein_pgwo.insert_forward_PGWO(gen.subList[kv.first]);
+		}
+	}
+	fRein_pgwo.initFix();
+	// match
+	for (int i = 0; i < pubs; i++)
+	{
+		int matchSubs = 0; // Record the number of matched subscriptions.
+
+		Timer matchStart;
+
+		fRein_pgwo.match_forward_PGWO(gen.pubList[i], matchSubs);
+
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double)eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "fRein_pgwo: Event " << i << " is matched.\n";
+	}
+#ifdef DEBUG
+	cout << "fRein_pgwo: MatchNum= " << Util::Average(matchSubList) << ", matchTime= "
+		 << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
+#endif
+	cout << endl;
+
+	// output
+	string outputFileName = "fRein_pgwo.txt";
+	string content = expID
+					 + " memory= " + Util::Int2String(fRein_pgwo.calMemory_forward_native())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms AvgCmpTime= " + to_string(fRein_pgwo.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(fRein_pgwo.markTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(fRein_pgwo.bitTime / pubs / 1000000)
+					 + " ms numBuk= " + Util::Int2String(fRein_pgwo.numBucket)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts)
+					 + " attGroup= " + Util::Int2String(attrGroup)
+					 + " attNumType= " + Util::Int2String(attNumType)
+					 + " attDis= " + Util::Int2String(attDis)
+					 + " valDis= " + Util::Int2String(valDis)
+					 + " width= " + Util::Double2String(width)
+					 + " alpha= " + Util::Double2String(alpha)
+					 + " subp= " + Util::Double2String(subp)
+					 + " mean= " + Util::Double2String(mean)
+					 + " stddev= " + Util::Double2String(stddev)
+					 + " valDom= " + Util::Double2String(valDom);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+#ifdef DEBUG
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "fRein_pgwo= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif
+
+	outputFileName = "tmpData/fRein_pgwo.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
+}
+
+void run_rein_forward_PGWO_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+{
+	Rein fRein_pgwo_c(ForwardRein_PGWO_CBOMP);
+
+	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchSubList;
+
+	// insert
+	for (int i = 0; i < subs; i++)
+	{
+		Timer insertStart;
+
+		fRein_pgwo_c.insert_forward_PGWO_CBOMP(gen.subList[i]); // Insert sub[i] into data structure.
+
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double)insertTime / 1000000);
+	}
+	cout << "fRein_pgwo C-BOMP Insertion Finishes.\n";
+
+	if (verifyID)
+	{
+		for (auto kv : deleteNo)
+		{
+			Timer deleteStart;
+			if (!fRein_pgwo_c.deleteSubscription_forward_PGWO_CBOMP(gen.subList[kv.first]))
+				cout << "fRein_pgwo C-BOMP: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+		}
+		cout << "fRein_pgwo  C-BOMP Deletion Finishes.\n";
+		for (auto kv : deleteNo)
+		{
+			fRein_pgwo_c.insert_forward_PGWO_CBOMP(gen.subList[kv.first]);
+		}
+	}
+	fRein_pgwo_c.initFix();
+	// match
+	for (int i = 0; i < pubs; i++)
+	{
+		int matchSubs = 0; // Record the number of matched subscriptions.
+
+		Timer matchStart;
+
+		fRein_pgwo_c.match_forward_PGWO_CBOMP(gen.pubList[i], matchSubs);
+
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double)eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "forward Rein_pgwo C-BOMP Event " << i << " is matched.\n";
+	}
+#ifdef DEBUG
+	cout << "fRein_pgwo C-BOMP: MatchNum= " << Util::Average(matchSubList) << ", matchTime= "
+		 << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
+#endif
+	cout << endl;
+
+	// output
+	string outputFileName = "fRein_pgwo_c.txt";
+	string content = expID
+					 + " memory= " + Util::Int2String(fRein_pgwo_c.calMemory_forward_CBOMP())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms AvgCmpTime= " + to_string(fRein_pgwo_c.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(fRein_pgwo_c.markTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(fRein_pgwo_c.bitTime / pubs / 1000000)
+					 + " ms numBuk= " + Util::Int2String(fRein_pgwo_c.numBucket)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts)
+					 + " attGroup= " + Util::Int2String(attrGroup)
+					 + " attNumType= " + Util::Int2String(attNumType)
+					 + " attDis= " + Util::Int2String(attDis)
+					 + " valDis= " + Util::Int2String(valDis)
+					 + " width= " + Util::Double2String(width)
+					 + " alpha= " + Util::Double2String(alpha)
+					 + " subp= " + Util::Double2String(subp)
+					 + " mean= " + Util::Double2String(mean)
+					 + " stddev= " + Util::Double2String(stddev)
+					 + " valDom= " + Util::Double2String(valDom);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+#ifdef DEBUG
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "fRein_pgwo_c= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif
+
+	outputFileName = "tmpData/fRein_pgwo_c.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
+}
+
+void run_rein_hybrid_PGWO(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+{
+	Rein hRein_pgwo(HybridRein_PGWO);
+
+	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchSubList;
+
+	// insert
+	for (int i = 0; i < subs; i++)
+	{
+		Timer insertStart;
+
+		hRein_pgwo.insert_hybrid_PGWO(gen.subList[i]); // Insert sub[i] into data structure.
+
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double)insertTime / 1000000);
+	}
+	cout << "HybridRein-PGWO (hRein_pgwo) Insertion Finishes.\n";
+
+	if (verifyID)
+	{
+		for (auto kv : deleteNo)
+		{
+			Timer deleteStart;
+			if (!hRein_pgwo.deleteSubscription_hybrid_PGWO(gen.subList[kv.first]))
+				cout << "HybridRein-PGWO (hRein_pgwo): sub" << gen.subList[kv.first].id
+					 << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+		}
+		cout << "HybridRein-PGWO (hRein_pgwo) Deletion Finishes.\n";
+		for (auto kv : deleteNo)
+		{
+			hRein_pgwo.insert_hybrid_PGWO(gen.subList[kv.first]);
+		}
+	}
+	hRein_pgwo.initFix();
+	// match
+	for (int i = 0; i < pubs; i++)
+	{
+		int matchSubs = 0; // Record the number of matched subscriptions.
+
+		Timer matchStart;
+
+		hRein_pgwo.match_hybrid_PGWO(gen.pubList[i], matchSubs);
+
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double)eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "HybridRein (hRein_pgwo): Event " << i << " is matched.\n";
+	}
+#ifdef DEBUG
+	cout << "hRein_pgwo: MatchNum= " << Util::Average(matchSubList) << ", matchTime= "
+		 << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
+#endif
+	cout << endl;
+
+	// output
+	string outputFileName = "hRein_pgwo.txt";
+	string content = expID
+					 + " memory= " + Util::Int2String(hRein_pgwo.calMemory_hybrid_native())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms AvgCmpTime= " + to_string(hRein_pgwo.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(hRein_pgwo.markTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(hRein_pgwo.bitTime / pubs / 1000000)
+					 + " ms Ppoint= " + to_string(awRein_Ppoint)
+					 + " numBuk= " + Util::Int2String(hRein_pgwo.numBucket)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts)
+					 + " attGroup= " + Util::Int2String(attrGroup)
+					 + " attNumType= " + Util::Int2String(attNumType)
+					 + " attDis= " + Util::Int2String(attDis)
+					 + " valDis= " + Util::Int2String(valDis)
+					 + " width= " + Util::Double2String(width)
+					 + " alpha= " + Util::Double2String(alpha)
+					 + " subp= " + Util::Double2String(subp)
+					 + " mean= " + Util::Double2String(mean)
+					 + " stddev= " + Util::Double2String(stddev)
+					 + " valDom= " + Util::Double2String(valDom);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+#ifdef DEBUG
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "hRein_pgwo= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif
+
+	outputFileName = "tmpData/hRein_pgwo.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
+}
+
+void run_rein_hybrid_PGWO_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+{
+	Rein hRein_pgwo_c(HybridRein_PGWO_CBOMP);
+
+	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchSubList;
+
+	// insert
+	for (int i = 0; i < subs; i++)
+	{
+		Timer insertStart;
+
+		hRein_pgwo_c.insert_hybrid_PGWO_CBOMP(gen.subList[i]); // Insert sub[i] into data structure.
+
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double)insertTime / 1000000);
+	}
+	cout << "HybridRein_PGWO_CBOMP (HRein-PGWO-C) Insertion Finishes.\n";
+
+	if (verifyID)
+	{
+		for (auto kv : deleteNo)
+		{
+			Timer deleteStart;
+			if (!hRein_pgwo_c.deleteSubscription_hybrid_PGWO_CBOMP(gen.subList[kv.first]))
+				cout << "HybridRein_PGWO_CBOMP (HRein-PGWO-C): sub" << gen.subList[kv.first].id
+					 << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+		}
+		cout << "HybridRein_PGWO_CBOMP (HRein-PGWO-C) Deletion Finishes.\n";
+		for (auto kv : deleteNo)
+		{
+			hRein_pgwo_c.insert_hybrid_PGWO_CBOMP(gen.subList[kv.first]);
+		}
+	}
+	hRein_pgwo_c.initFix();
+	// match
+	for (int i = 0; i < pubs; i++)
+	{
+		int matchSubs = 0; // Record the number of matched subscriptions.
+
+		Timer matchStart;
+
+		hRein_pgwo_c.match_hybrid_PGWO_CBOMP(gen.pubList[i], matchSubs);
+
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double)eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "HybridRein_PGWO_CBOMP (HRein-PGWO-C): Event " << i << " is matched.\n";
+	}
+#ifdef DEBUG
+	cout << "hRein_pgwo_cbomp: MatchNum= " << Util::Average(matchSubList) << ", matchTime= "
+		 << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
+#endif
+	cout << endl;
+
+	// output
+	string outputFileName = "hRein_pgwo_c.txt";
+	string content = expID
+					 + " memory= " + Util::Int2String(hRein_pgwo_c.calMemory_hybrid_CBOMP())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms AvgCmpTime= " + to_string(hRein_pgwo_c.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(hRein_pgwo_c.markTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(hRein_pgwo_c.bitTime / pubs / 1000000)
+					 + " ms Ppoint= " + to_string(awRein_Ppoint)
+					 + " numBuk= " + Util::Int2String(hRein_pgwo_c.numBucket)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts)
+					 + " attGroup= " + Util::Int2String(attrGroup)
+					 + " attNumType= " + Util::Int2String(attNumType)
+					 + " attDis= " + Util::Int2String(attDis)
+					 + " valDis= " + Util::Int2String(valDis)
+					 + " width= " + Util::Double2String(width)
+					 + " alpha= " + Util::Double2String(alpha)
+					 + " subp= " + Util::Double2String(subp)
+					 + " mean= " + Util::Double2String(mean)
+					 + " stddev= " + Util::Double2String(stddev)
+					 + " valDom= " + Util::Double2String(valDom);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+#ifdef DEBUG
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "hRein_pgwo_c= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif
+
+	outputFileName = "tmpData/hRein_pgwo_c.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
+}
+
+// parallel Rein
 void run_pRein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
 	pRein prein;
