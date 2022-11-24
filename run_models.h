@@ -33,15 +33,17 @@
 #include <numeric> 
 #include<algorithm>
 
-void run_rein(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
-void run_rein_forward_native(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
-void run_rein_forward_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
-void run_rein_hybrid(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
-void run_rein_hybrid_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
-void run_rein_forward_PGWO(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
-void run_rein_forward_PGWO_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
-void run_rein_hybrid_PGWO(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
-void run_rein_hybrid_PGWO_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
+void run_rein(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);                                            // REIN
+void run_rein_forward_native(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);               // fREIN
+void run_rein_forward_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);              // fREIN-C
+void run_rein_hybrid(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);                               // hREIN
+void run_rein_hybrid_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);                  // hREIN-C
+void run_rein_forward_PGWO(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);               // fREIN-PGWO
+void run_rein_forward_PGWO_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);  // fREIN-C-PGWO
+void run_rein_hybrid_PGWO(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);                   // hREIN-PGWO
+void run_rein_hybrid_PGWO_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);      // hREIN-C-PGWO
+void run_rein_forward_DMFT(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);                 // REIN-F
+void run_rein_backward_DMFT(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);               // fREIN-C-B
 void run_pRein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 
 void run_AdaRein_ORI(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);

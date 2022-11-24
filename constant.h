@@ -45,7 +45,9 @@ enum {
 	ForwardRein_PGWO,
 	ForwardRein_PGWO_CBOMP,
 	HybridRein_PGWO,
-	HybridRein_PGWO_CBOMP
+	HybridRein_PGWO_CBOMP,
+	Forward_DMFT_REIN, // REIN-F
+	Backward_DMFT_fREIN_CBOMP // fREIN-C-B
 };
 
 // AdaRein

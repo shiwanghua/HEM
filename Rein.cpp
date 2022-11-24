@@ -5,11 +5,14 @@ Rein::Rein(int type) : numSub(0), numDimension(atts)
 	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
 	bucketSub.resize(numBucket);
-	if (type == OriginalRein)
+	if (type == OriginalRein||type==Forward_DMFT_REIN)
 	{ // Original Rein
-		//		cout << "ExpID = " << expID << ". Rein: bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
 		data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
 		data[1].resize(numDimension, vector<vector<Combo>>(numBucket));
+		if(type==OriginalRein)
+				cout << "ExpID = " << expID << ". Rein: bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
+		else if(type==Forward_DMFT_REIN)
+			cout << "ExpID = " << expID << ". Rein-F (DMFT): bucketStep = " << buckStep << ", numBucket = " << numBucket << endl;
 	}
 	else
 	{
@@ -21,7 +24,6 @@ Rein::Rein(int type) : numSub(0), numDimension(atts)
 		{
 			cout << "ExpID = " << expID << ". Forward Rein (fRein): bucketStep = " << buckStep << ", numBucket = "
 				 << numBucket << endl;
-			// nnB.resize(atts); // fRein_to_bRein
 		}
 		else if (type == ForwardRein_CBOMP)
 		{
@@ -40,6 +42,11 @@ Rein::Rein(int type) : numSub(0), numDimension(atts)
 			cout << "ExpID = " << expID << ". Forward Rein-PGWO (fRein-PGWO-C) with C-BOMP: bucketStep = " << buckStep
 				 << ", numBucket = " << numBucket << endl;
 			nB.resize(atts);
+		}
+		else if(type==Backward_DMFT_fREIN_CBOMP){ // fREIN-C-B
+			cout << "ExpID = " << expID << ". Forward Rein CBOMP DMFT to Backward (fRein-C-B): bucketStep = " << buckStep << ", numBucket = "
+				 << numBucket << endl;
+			 nnB.resize(atts); // fRein_to_bRein
 		}
 		else
 		{
@@ -1546,6 +1553,166 @@ void Rein::match_hybrid_PGWO_CBOMP(const Pub& pub, int& matchSubs)
 		}
 	matchSubs = subs - backwardBits.count();
 }
+
+void Rein::insert_forward_DMFT_REIN(IntervalSub sub){
+	insert_backward_original(sub);
+}
+void Rein::match_forward_DMFT_REIN(const Pub& pub, int& matchSubs){
+	vector<bool> bits(numSub, true);
+	vector<bool> attExist(numDimension, false);
+	for (int i = 0; i < pub.size; i++)
+	{
+#ifdef DEBUG
+		Timer compareStart;
+#endif // DEBUG
+		int value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
+		attExist[att] = true;
+		for (int k = 0; k < data[0][att][buck].size(); k++)
+			if (data[0][att][buck][k].val > value)
+				bits[data[0][att][buck][k].subID] = false;
+		for (int k = 0; k < data[1][att][buck].size(); k++)
+			if (data[1][att][buck][k].val < value)
+				bits[data[1][att][buck][k].subID] = false;
+#ifdef DEBUG
+		compareTime += (double)compareStart.elapsed_nano();
+		Timer markStart;
+#endif // DEBUG
+		for (int j = buck + 1; j < numBucket; j++)
+			for (int k = 0; k < data[0][att][j].size(); k++)
+				bits[data[0][att][j][k].subID] = false;
+		for (int j = buck - 1; j >= 0; j--)
+			for (int k = 0; k < data[1][att][j].size(); k++)
+				bits[data[1][att][j][k].subID] = false;
+#ifdef DEBUG
+		markTime += (double)markStart.elapsed_nano();
+#endif // DEBUG
+	}
+#ifdef DEBUG
+	Timer markStart;
+#endif // DEBUG
+	for (int i = 0; i < numDimension; i++)
+		if (!attExist[i])
+			for (int j = 0; j < numBucket; j++)
+				for (int k = 0; k < data[0][i][j].size(); k++)
+					bits[data[0][i][j][k].subID] = false;
+#ifdef DEBUG
+	markTime += (double)markStart.elapsed_nano();
+	Timer bitStart;
+#endif // DEBUG
+	for (int i = 0; i < subs; i++)
+		if (bits[i])
+		{
+			++matchSubs;
+			// cout << "rein matches sub: " << i << endl;
+		}
+#ifdef DEBUG
+	bitTime += (double)bitStart.elapsed_nano();
+#endif // DEBUG
+}
+
+void Rein::insert_backward_DMFT_fREIN_CBOMP(IntervalSub sub){
+//	vector<bool> attrExist(atts, false);
+	int bucketID;
+	IntervalCombo c;
+	c.subID = sub.id;
+	subPredicate[sub.id] = sub.size;
+	for (auto&& cnt : sub.constraints)
+	{
+//		attrExist[cnt.att] = true;
+		 nnB[cnt.att][sub.id] = 1;
+		c.lowValue = cnt.lowValue;
+		c.highValue = cnt.highValue;
+		bucketID = cnt.lowValue / buckStep; // upper_bound probably is also OK!
+		fData[0][cnt.att][bucketID].insert(
+			lower_bound(fData[0][cnt.att][bucketID].begin(), fData[0][cnt.att][bucketID].end(), c,
+				[&](const IntervalCombo& c1, const IntervalCombo& c2)
+				{
+				  return c1.highValue == c2.highValue ? c1.lowValue < c2.lowValue : c1.highValue < c2.highValue;
+				}),
+			c); // insert ��������ǰ��!
+		bucketID = cnt.highValue / buckStep;
+		fData[1][cnt.att][bucketID].insert(
+			lower_bound(fData[1][cnt.att][bucketID].begin(), fData[1][cnt.att][bucketID].end(), c,
+				[&](const IntervalCombo& c1, const IntervalCombo& c2)
+				{
+				  return c1.lowValue == c2.lowValue ? c1.highValue < c2.highValue : c1.lowValue < c2.lowValue;
+				}),
+			c);
+	}
+//	_for(i, 0, atts) if (!attrExist[i])
+//			nB[i][sub.id] = 1;
+	numSub++;
+}
+void Rein::match_backward_DMFT_fREIN_CBOMP(const Pub& pub, int& matchSubs){
+	bitset<subs> gB, mB; // global bitset
+	vector<bool> attExist(atts, false);
+	int att, buck, midBuck = buks >> 1;
+	IntervalCombo pubPredicateTmp;
+	for (auto&& pair : pub.pairs)
+	{
+		mB = nnB[pair.att];
+		attExist[pair.att] = true;
+		pubPredicateTmp.lowValue = pubPredicateTmp.highValue = pair.value, att = pair.att, buck = pair.value / buckStep;
+		// cout<<"pubid= "<<pub.id<<" att= "<<att<<" value= "<<value<<endl;
+		if (buck < midBuck)
+		{ // Use low bucket list.
+			const auto&& lowerBoundIterator = lower_bound(fData[0][att][buck].begin(), fData[0][att][buck].end(),
+				pubPredicateTmp,
+				[&](const IntervalCombo& c1, const IntervalCombo& c2)
+				{
+				  return c1.highValue < c2.highValue;
+				});
+			for_each(lowerBoundIterator, fData[0][att][buck].end(), [&](const IntervalCombo& c)
+			{
+			  if (c.lowValue <= pair.value) mB[c.subID] = 0;
+			});
+
+			for_each(fData[0][att].begin(), fData[0][att].begin() + buck, [&](const vector<IntervalCombo>& bucketList)
+			{
+			  const auto&& lowerBoundIterator = lower_bound(bucketList.begin(), bucketList.end(), pubPredicateTmp,
+				  [&](const IntervalCombo& c1, const IntervalCombo& c2)
+				  {
+					return c1.highValue < c2.highValue;
+				  });
+			  for_each(lowerBoundIterator, bucketList.end(), [&](const IntervalCombo& c)
+			  { mB[c.subID] = 0; });
+			});
+		}
+		else
+		{ // Use high bucket list.
+			const auto&& upperBoundIterator = upper_bound(fData[1][att][buck].begin(), fData[1][att][buck].end(),
+				pubPredicateTmp,
+				[&](const IntervalCombo& c1, const IntervalCombo& c2)
+				{
+				  return c1.lowValue < c2.lowValue;
+				});
+			for_each(fData[1][att][buck].begin(), upperBoundIterator, [&](const IntervalCombo& c)
+			{
+			  if (c.highValue >= pair.value) mB[c.subID] = 0;
+			});
+
+			for_each(fData[1][att].begin() + buck + 1, fData[1][att].end(),
+				[&](const vector<IntervalCombo>& bucketList)
+				{
+				  const auto&& upperBoundIterator = upper_bound(bucketList.begin(), bucketList.end(),
+					  pubPredicateTmp,
+					  [&](const IntervalCombo& c1,
+						  const IntervalCombo& c2)
+					  {
+						return c1.lowValue < c2.lowValue;
+					  });
+				  for_each(bucketList.begin(), upperBoundIterator,
+					  [&](const IntervalCombo& c)
+					  { mB[c.subID] = 0; });
+				});
+		}
+		gB = gB | mB;
+	}
+	_for(i, 0, atts) if (!attExist[i])
+			gB = gB | nnB[i];
+	matchSubs = numSub-gB.count();
+}
+
 
 // Measurement/Visualization function
 

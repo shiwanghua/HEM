@@ -30,9 +30,9 @@ class Rein {
 public:
 	int numBucket;
 	double compareTime = 0.0; // ����ά�����¼�ֵ������Ǹ�cell�������ȷ�Ƚϵ�ʱ��
-	double markTime = 0.0;    // ���ʱ��
-	double bitTime = 0.0;     // ����bits����õ���������ʱ��
-	vector<unordered_set<int>> bucketSub;   // id��ͬ��Ͱ�洢�Ĳ�ͬ���ĸ����ĺ�
+	double markTime = 0.0;
+	double bitTime = 0.0;
+	vector<unordered_set<int>> bucketSub;   //  同一桶号的所有桶的元素集合
 
 	Rein(int);
 
@@ -97,6 +97,18 @@ public:
 
 	void calBucketSize(); // ����bucketSize
 	vector<int> calMarkNumForBuckets(); // �����¼��䵽ÿ��Ͱ��ʱ��Ҫ��ǺͱȽϵ�ν�ʸ���
+
+	// DMFT 方向匹配基本定理，把反向 REIN 转正向 REIN-F，把正向 REIN-C-BOMP 转反向 REIN-C-B
+	void insert_forward_DMFT_REIN(IntervalSub sub);
+	void match_forward_DMFT_REIN(const Pub& pub, int& matchSubs); // Original Rein to REIN-Forward
+	bool deleteSubscription_forward_DMFT_REIN(IntervalSub sub){return false;}
+	int calMemory_forward_DMFT_REIN(){return calMemory_backward_original();}
+
+	void insert_backward_DMFT_fREIN_CBOMP(IntervalSub sub);
+	void match_backward_DMFT_fREIN_CBOMP(const Pub& pub, int& matchSubs);
+	bool deleteSubscription_backward_DMFT_fREIN_CBOMP(IntervalSub sub){return false;}
+	int calMemory_backward_DMFT_fREIN_CBOMP(){return calMemory_forward_CBOMP();}
+
 };
 
 // 01�ڵڶ�ά��ȫ��̬

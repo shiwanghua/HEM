@@ -289,7 +289,7 @@ void run_rein_forward_CBOMP(const intervalGenerator& gen, unordered_map<int, boo
 	cout << endl;
 
 	// output
-	string outputFileName = "fRein_c.txt";
+	string outputFileName = "fRein_C.txt";
 	string content = expID
 					 + " memory= " + Util::Int2String(fRein_c.calMemory_forward_CBOMP())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
@@ -319,13 +319,13 @@ void run_rein_forward_CBOMP(const intervalGenerator& gen, unordered_map<int, boo
 
 #ifdef DEBUG
 	outputFileName = "ComprehensiveExpTime.txt";
-	content = "fRein_c= [";
+	content = "fRein_C= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 #endif
 
-	outputFileName = "tmpData/fRein_c.txt";
+	outputFileName = "tmpData/fRein_C.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
@@ -935,6 +935,209 @@ void run_rein_hybrid_PGWO_CBOMP(const intervalGenerator& gen, unordered_map<int,
 #endif
 
 	outputFileName = "tmpData/hRein_pgwo_c.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
+}
+
+void run_rein_forward_DMFT(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+{                 // REIN-F
+	Rein rein_F(Forward_DMFT_REIN);
+
+	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchSubList;
+
+	// insert
+	for (int i = 0; i < subs; i++)
+	{
+		Timer insertStart;
+
+		rein_F.insert_forward_DMFT_REIN(gen.subList[i]); // Insert sub[i] into original rein_F data structure.
+
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double)insertTime / 1000000);
+	}
+	cout << "Rein-F (DMFT) Insertion Finishes.\n";
+
+	if (verifyID)
+	{
+		for (auto&& kv : deleteNo)
+		{
+			Timer deleteStart;
+			if (!rein_F.deleteSubscription_forward_DMFT_REIN(gen.subList[kv.first]))
+				cout << "Rein-F (DMFT): sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+		}
+		cout << "Rein-F (DMFT) Deletion Finishes.\n";
+		for (auto kv : deleteNo)
+		{
+			rein_F.insert_forward_DMFT_REIN(gen.subList[kv.first]);
+		}
+	}
+
+	// match
+	for (int i = 0; i < pubs; i++)
+	{
+		int matchSubs = 0; // Record the number of matched subscriptions.
+
+		Timer matchStart;
+
+		rein_F.match_forward_DMFT_REIN(gen.pubList[i], matchSubs);
+
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double)eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "Rein-F (DMFT) Event " << i << " is matched.\n";
+	}
+
+#ifdef DEBUG
+	cout << " Rein-F (DMFT): MatchNum= " << Util::Average(matchSubList) << ", matchTime= "
+		 << Util::Double2String(Util::Average(matchTimeList))
+		 << " ms\n";
+#endif
+	cout << endl;
+
+	// output
+	string outputFileName = "Rein_F_DMFT.txt";
+	string content = expID
+					 + " memory= " + Util::Int2String(rein_F.calMemory_forward_DMFT_REIN())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms AvgCmpTime= " + to_string(rein_F.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(rein_F.markTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(rein_F.bitTime / pubs / 1000000)
+					 + " ms numBuk= " + Util::Int2String(rein_F.numBucket)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts)
+					 + " attGroup= " + Util::Int2String(attrGroup)
+					 + " attNumType= " + Util::Int2String(attNumType)
+					 + " attDis= " + Util::Int2String(attDis)
+					 + " valDis= " + Util::Int2String(valDis)
+					 + " width= " + Util::Double2String(width)
+					 + " alpha= " + Util::Double2String(alpha)
+					 + " subp= " + Util::Double2String(subp)
+					 + " mean= " + Util::Double2String(mean)
+					 + " stddev= " + Util::Double2String(stddev)
+					 + " valDom= " + Util::Double2String(valDom);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+#ifdef DEBUG
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "Rein_F_DMFT= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif
+
+	outputFileName = "tmpData/Rein_F_DMFT.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
+}
+
+void run_rein_backward_DMFT(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+{            // fREIN-C-B
+	Rein fRein_c_b(Backward_DMFT_fREIN_CBOMP);
+
+	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchSubList;
+
+	// insert
+	for (int i = 0; i < subs; i++)
+	{
+		Timer insertStart;
+
+		fRein_c_b.insert_backward_DMFT_fREIN_CBOMP(gen.subList[i]); // Insert sub[i] into data structure.
+
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double)insertTime / 1000000);
+	}
+	cout << "fRein_c_b (DMFT) Insertion Finishes.\n";
+
+	if (verifyID)
+	{
+		for (auto kv : deleteNo)
+		{
+			Timer deleteStart;
+			if (!fRein_c_b.deleteSubscription_backward_DMFT_fREIN_CBOMP(gen.subList[kv.first]))
+				cout << "fRein_c_b (DMFT): sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+		}
+		cout << "fRein_c_b (DMFT) Deletion Finishes.\n";
+		for (auto kv : deleteNo)
+		{
+			fRein_c_b.insert_backward_DMFT_fREIN_CBOMP(gen.subList[kv.first]);
+		}
+	}
+
+	// match
+	for (int i = 0; i < pubs; i++)
+	{
+		int matchSubs = 0; // Record the number of matched subscriptions.
+
+		Timer matchStart;
+
+		fRein_c_b.match_backward_DMFT_fREIN_CBOMP(gen.pubList[i], matchSubs);
+
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double)eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "fRein_c_b (DMFT) Event " << i << " is matched.\n";
+	}
+#ifdef DEBUG
+	cout << "fRein_c_b (DMFT): MatchNum= " << Util::Average(matchSubList) << ", matchTime= "
+		 << Util::Double2String(Util::Average(matchTimeList))
+		 << " ms\n";
+#endif
+	cout << endl;
+
+	// output
+	string outputFileName = "fRein_C_B.txt";
+	string content = expID
+					 + " memory= " + Util::Int2String(fRein_c_b.calMemory_forward_CBOMP())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms AvgCmpTime= " + to_string(fRein_c_b.compareTime / pubs / 1000000)
+					 + " ms AvgMarkTime= " + to_string(fRein_c_b.markTime / pubs / 1000000)
+					 + " ms AvgBitTime= " + to_string(fRein_c_b.bitTime / pubs / 1000000)
+					 + " ms numBuk= " + Util::Int2String(fRein_c_b.numBucket)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts)
+					 + " attGroup= " + Util::Int2String(attrGroup)
+					 + " attNumType= " + Util::Int2String(attNumType)
+					 + " attDis= " + Util::Int2String(attDis)
+					 + " valDis= " + Util::Int2String(valDis)
+					 + " width= " + Util::Double2String(width)
+					 + " alpha= " + Util::Double2String(alpha)
+					 + " subp= " + Util::Double2String(subp)
+					 + " mean= " + Util::Double2String(mean)
+					 + " stddev= " + Util::Double2String(stddev)
+					 + " valDom= " + Util::Double2String(valDom);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+#ifdef DEBUG
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "fRein_C_B= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif
+
+	outputFileName = "tmpData/fRein_C_B.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }

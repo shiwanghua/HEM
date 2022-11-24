@@ -14,7 +14,7 @@ int main(int argc, char** argv)
 		m = atoi(argv[4]);
 		alpha = atof(argv[5]);
 		width = atof(argv[6]);
-		be = atoi(argv[7]); // ����һ��bitsָ��
+		be = atoi(argv[7]);
 		attrGroup = atoi(argv[8]);
 		valDom = atoi(argv[9]);
 		parallelDegree = atoi(argv[10]);
@@ -61,6 +61,8 @@ int main(int argc, char** argv)
 	run_rein_forward_PGWO_CBOMP(gen, deleteNo);
 	run_rein_hybrid_PGWO(gen, deleteNo);
 	run_rein_hybrid_PGWO_CBOMP(gen, deleteNo);
+	run_rein_forward_DMFT(gen,deleteNo);
+	run_rein_backward_DMFT(gen,deleteNo);
 //	run_pRein(gen, deleteNo);
 
 //	run_AdaRein_ORI(gen, deleteNo);
