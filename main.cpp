@@ -94,13 +94,13 @@ int main(int argc, char** argv)
 	//run_Simple(gen, deleteNo);
 	//	run_Simple2(gen, deleteNo);
 
-		run_tama(gen, deleteNo);
+//		run_tama(gen, deleteNo);
 //	 run_tama_parallel_lock(gen,deleteNo); // parallel TAMA-lock very slow
 //	 run_tama_parallel_reduce(gen,deleteNo); // parallel TAMA-reduce
 //	run_btama_forward_C_BOMP(gen, deleteNo); // bTAMA6
 //	 run_btama_forward_C_BOMP_parallel(gen,deleteNo); // bTAMA6 parallel
 //	run_btama_backward1_C_BOMP(gen, deleteNo);// bTAMA7
-	run_btama_backward2_CBOMP(gen, deleteNo); // bTAMA8
+//	run_btama_backward2_CBOMP(gen, deleteNo); // bTAMA8
 //	 run_btama_backward2_CBOMP_parallel(gen,deleteNo); // bTAMA8 parallel
 
 //	run_BGTREE_forward_native(gen, deleteNo);
@@ -113,7 +113,7 @@ int main(int argc, char** argv)
 //	run_OpIndex(gen, deleteNo);
 	//	run_bOpIndex2(gen, deleteNo);
 	//	run_PSTREE(gen, deleteNo);
-	run_AWBTREE(gen, deleteNo);
+//	run_AWBTREE(gen, deleteNo);
 //	run_AWBTREE_parallel(gen, deleteNo);
 	// measure_numMark(gen);
 
