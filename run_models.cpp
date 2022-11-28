@@ -4886,7 +4886,7 @@ void run_BGTREE_forward_native(const intervalGenerator& gen, unordered_map<int, 
 	if (display)
 		bgTree.printBGTree();
 	// output
-	string outputFileName = "BGTree.txt";
+	string outputFileName = "fBGTree.txt";
 	string content = expID
 					 + " memory= " + Util::Int2String(bgTree.calMemory())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
@@ -4916,20 +4916,20 @@ void run_BGTREE_forward_native(const intervalGenerator& gen, unordered_map<int, 
 
 #ifdef DEBUG
 	outputFileName = "ComprehensiveExpTime.txt";
-	content = "BGTree= [";
+	content = "fBGTree= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 #endif
 
-	outputFileName = "tmpData/BGTree.txt";
+	outputFileName = "tmpData/fBGTree.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
 void run_BGTREE_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
-	BGTree bgTree;
+	BGTree bgTree_c;
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -4941,7 +4941,7 @@ void run_BGTREE_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, 
 	{
 		Timer insertStart;
 
-		bgTree.insert(gen.subList[i]); // Insert sub[i] into data structure.
+		bgTree_c.insert(gen.subList[i]); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
@@ -4954,14 +4954,14 @@ void run_BGTREE_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, 
 		for (auto kv : deleteNo)
 		{
 			Timer deleteStart;
-			if (!bgTree.deleteSubscription(gen.subList[kv.first]))
+			if (!bgTree_c.deleteSubscription(gen.subList[kv.first]))
 				cout << "BG-Tree(C-BOMP) forward: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
 			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "BG-Tree(C-BOMP) Forward Deletion Finishes.\n";
 		for (auto kv : deleteNo)
 		{
-			bgTree.insert(gen.subList[kv.first]);
+			bgTree_c.insert(gen.subList[kv.first]);
 		}
 	}
 
@@ -4972,7 +4972,7 @@ void run_BGTREE_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, 
 
 		Timer matchStart;
 
-		bgTree.match_forward_CBOMP(gen.pubList[i], matchSubs, gen.subList);
+		bgTree_c.match_forward_CBOMP(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
@@ -4988,17 +4988,17 @@ void run_BGTREE_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, 
 	cout << endl;
 
 	// output
-	string outputFileName = "BGTree1.txt";
+	string outputFileName = "fBGTree_C.txt";
 	string content = expID
-					 + " memory= " + Util::Int2String(bgTree.calMemory())
+					 + " memory= " + Util::Int2String(bgTree_c.calMemory())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
 					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms height = " + Util::Int2String(bgTree.getHeight())
-					 + " numNode = " + Util::Int2String(bgTree.getNumNode())
-					 + " BNS = " + Util::Int2String(bgTree.getBoundaryNumSub())
-					 + " AvgHit = " + Util::Int2String(bgTree.hit / pubs)
+					 + " ms height = " + Util::Int2String(bgTree_c.getHeight())
+					 + " numNode = " + Util::Int2String(bgTree_c.getNumNode())
+					 + " BNS = " + Util::Int2String(bgTree_c.getBoundaryNumSub())
+					 + " AvgHit = " + Util::Int2String(bgTree_c.hit / pubs)
 					 + " numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
 					 + " numPub= " + Util::Int2String(pubs)
@@ -5018,20 +5018,20 @@ void run_BGTREE_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, 
 
 #ifdef DEBUG
 	outputFileName = "ComprehensiveExpTime.txt";
-	content = "BGTree1= [";
+	content = "fBGTree_C= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 #endif
 
-	outputFileName = "tmpData/BGTree1.txt";
+	outputFileName = "tmpData/fBGTree_C.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
 void run_BGTREE_backward_DMFT_fBGTree_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
-	BGTree bgTree;
+	BGTree fBGTree_cb;
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -5043,7 +5043,7 @@ void run_BGTREE_backward_DMFT_fBGTree_CBOMP(const intervalGenerator& gen, unorde
 	{
 		Timer insertStart;
 
-		bgTree.insert(sub); // Insert sub[i] into data structure.
+		fBGTree_cb.insert(sub); // Insert sub[i] into data structure.
 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
@@ -5056,14 +5056,14 @@ void run_BGTREE_backward_DMFT_fBGTree_CBOMP(const intervalGenerator& gen, unorde
 		for (auto kv : deleteNo)
 		{
 			Timer deleteStart;
-			if (!bgTree.deleteSubscription(gen.subList[kv.first]))
+			if (!fBGTree_cb.deleteSubscription(gen.subList[kv.first]))
 				cout << "BG-Tree(C-BOMP) Backward: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
 			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
 		}
 		cout << "BG-Tree(C-BOMP) Backward Deletion Finishes.\n";
 		for (auto kv : deleteNo)
 		{
-			bgTree.insert(gen.subList[kv.first]);
+			fBGTree_cb.insert(gen.subList[kv.first]);
 		}
 	}
 
@@ -5074,7 +5074,7 @@ void run_BGTREE_backward_DMFT_fBGTree_CBOMP(const intervalGenerator& gen, unorde
 
 		Timer matchStart;
 
-		bgTree.match_backward_DMFT_fBGTree_CBOMP(gen.pubList[i], matchSubs, gen.subList);
+		fBGTree_cb.match_backward_DMFT_fBGTree_CBOMP(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
@@ -5090,17 +5090,17 @@ void run_BGTREE_backward_DMFT_fBGTree_CBOMP(const intervalGenerator& gen, unorde
 	cout << endl;
 
 	// output
-	string outputFileName = "BGTree2.txt";
+	string outputFileName = "fBGTree_CB.txt";
 	string content = expID
-					 + " memory= " + Util::Int2String(bgTree.calMemory())
+					 + " memory= " + Util::Int2String(fBGTree_cb.calMemory())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
 					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
 					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
 					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms height = " + Util::Int2String(bgTree.getHeight())
-					 + " numNode = " + Util::Int2String(bgTree.getNumNode())
-					 + " BNS = " + Util::Int2String(bgTree.getBoundaryNumSub())
-					 + " AvgHit = " + Util::Int2String(bgTree.hit / pubs)
+					 + " ms height = " + Util::Int2String(fBGTree_cb.getHeight())
+					 + " numNode = " + Util::Int2String(fBGTree_cb.getNumNode())
+					 + " BNS = " + Util::Int2String(fBGTree_cb.getBoundaryNumSub())
+					 + " AvgHit = " + Util::Int2String(fBGTree_cb.hit / pubs)
 					 + " numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
 					 + " numPub= " + Util::Int2String(pubs)
@@ -5120,13 +5120,13 @@ void run_BGTREE_backward_DMFT_fBGTree_CBOMP(const intervalGenerator& gen, unorde
 
 #ifdef DEBUG
 	outputFileName = "ComprehensiveExpTime.txt";
-	content = "BGTree2= [";
+	content = "fBGTree_CB= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 #endif
 
-	outputFileName = "tmpData/BGTree2.txt";
+	outputFileName = "tmpData/fBGTree_CB.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
@@ -5194,7 +5194,7 @@ void run_BGTREE_d_forward_native(const intervalGenerator& gen, unordered_map<int
 	if (display)
 		bgTree_d.printBGTree();
 	// output
-	string outputFileName = "BGTree_d_f.txt";
+	string outputFileName = "fBGTree_d.txt";
 	string content = expID
 					 + " memory= " + Util::Int2String(bgTree_d.calMemory())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
@@ -5224,13 +5224,13 @@ void run_BGTREE_d_forward_native(const intervalGenerator& gen, unordered_map<int
 
 #ifdef DEBUG
 	outputFileName = "ComprehensiveExpTime.txt";
-	content = "BGTree_d_f= [";
+	content = "fBGTree_d= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 #endif
 
-	outputFileName = "tmpData/BGTree_d_f.txt";
+	outputFileName = "tmpData/fBGTree_d.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
@@ -5298,7 +5298,7 @@ void run_BGTREE_d_backward_native(const intervalGenerator& gen, unordered_map<in
 	if (display)
 		bgTree_d.printBGTree();
 	// output
-	string outputFileName = "BGTree_d_b.txt";
+	string outputFileName = "bBGTree_d.txt";
 	string content = expID
 					 + " memory= " + Util::Int2String(bgTree_d.calMemory())
 					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
@@ -5329,13 +5329,13 @@ void run_BGTREE_d_backward_native(const intervalGenerator& gen, unordered_map<in
 
 #ifdef DEBUG
 	outputFileName = "ComprehensiveExpTime.txt";
-	content = "BGTree_d_b= [";
+	content = "bBGTree_d= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 #endif
 
-	outputFileName = "tmpData/BGTree_d_b.txt";
+	outputFileName = "tmpData/bBGTree_d.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
