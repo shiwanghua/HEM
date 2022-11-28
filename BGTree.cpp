@@ -271,10 +271,10 @@ void BGTree::bitsetToVector(bitset<subs> *&b, vector<int> &v) {
 	delete b;
 }
 
-void BGTree::forward_match_native(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
+void BGTree::match_forward_native(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
 	memcpy(counter, subPredicate, sizeof(subPredicate));
 	for (auto &&pi: pub.pairs)
-		forward_match_blueNode(roots[pi.att], pi.att, pi.value, subList);
+		match_forward_blueNode(roots[pi.att], pi.att, pi.value, subList);
 	for (int i = 0; i < subs; i++)
 		if (counter[i] == 0) {
 #ifdef DEBUG
@@ -285,7 +285,7 @@ void BGTree::forward_match_native(const Pub &pub, int &matchSubs, const vector<I
 		}
 }
 void
-BGTree::forward_match_blueNode(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList) {
+BGTree::match_forward_blueNode(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList) {
 	if (r->mid == value) { // 1.等于中点, 直接得到匹配结果
 #ifdef DEBUG
 		hit++;
@@ -319,15 +319,15 @@ BGTree::forward_match_blueNode(bluenode *&r, const int &att, const int &value, c
 						}
 		}
 	} else if (value < r->mid) { // 3.检索蓝绿左子节点
-		forward_match_blueNode(r->leftBlueChild, att, value, subList);
-		forward_match_lgreenNode(r->leftGreenChild, att, value, subList);
+		match_forward_blueNode(r->leftBlueChild, att, value, subList);
+		match_forward_lgreenNode(r->leftGreenChild, att, value, subList);
 	} else { // value > r->mid 4.检索蓝绿右子节点
-		forward_match_blueNode(r->rightBlueChild, att, value, subList);
-		forward_match_rgreenNode(r->rightGreenChild, att, value, subList);
+		match_forward_blueNode(r->rightBlueChild, att, value, subList);
+		match_forward_rgreenNode(r->rightGreenChild, att, value, subList);
 	}
 }
 void
-BGTree::forward_match_lgreenNode(lgreennode *&l, const int &att, const int &value, const vector<IntervalSub> &subList) {
+BGTree::match_forward_lgreenNode(lgreennode *&l, const int &att, const int &value, const vector<IntervalSub> &subList) {
 	if (l->leftChild == nullptr) { // 1.叶子节点, 暴力匹配
 		if (l->bst == nullptr) {
 #ifdef DEBUG
@@ -369,9 +369,9 @@ BGTree::forward_match_lgreenNode(lgreennode *&l, const int &att, const int &valu
 					counter[i]--;
 		}
 	} else if (value < l->mid) { // 3. 检索左绿左子节点, 左绿右子节点全部不匹配
-		forward_match_lgreenNode(l->leftChild, att, value, subList);
+		match_forward_lgreenNode(l->leftChild, att, value, subList);
 	} else { // value > l->mid  4. 检索左绿右子节点, 左子节点全部匹配
-		forward_match_lgreenNode(l->rightChild, att, value, subList);
+		match_forward_lgreenNode(l->rightChild, att, value, subList);
 		if (l->leftChild->bst == nullptr) {
 #ifdef DEBUG
 			numProcessExactNode++;
@@ -387,7 +387,7 @@ BGTree::forward_match_lgreenNode(lgreennode *&l, const int &att, const int &valu
 	}
 }
 void
-BGTree::forward_match_rgreenNode(rgreennode *&r, const int &att, const int &value, const vector<IntervalSub> &subList) {
+BGTree::match_forward_rgreenNode(rgreennode *&r, const int &att, const int &value, const vector<IntervalSub> &subList) {
 	if (r->leftChild == nullptr) { // 1.叶子节点, 暴力匹配
 		if (r->bst == nullptr) {
 #ifdef DEBUG
@@ -429,9 +429,9 @@ BGTree::forward_match_rgreenNode(rgreennode *&r, const int &att, const int &valu
 					counter[i]--;
 		}
 	} else if (value > r->mid) { // 3. 检索右绿右子节点, 右绿左子节点全部不匹配
-		forward_match_rgreenNode(r->rightChild, att, value, subList);
+		match_forward_rgreenNode(r->rightChild, att, value, subList);
 	} else { // value < r->mid  4. 检索右绿左子节点, 右绿右子节点全部匹配
-		forward_match_rgreenNode(r->leftChild, att, value, subList);
+		match_forward_rgreenNode(r->leftChild, att, value, subList);
 		if (r->rightChild->bst == nullptr) {
 #ifdef DEBUG
 			numProcessExactNode++;
@@ -447,21 +447,21 @@ BGTree::forward_match_rgreenNode(rgreennode *&r, const int &att, const int &valu
 	}
 }
 
-void BGTree::forward_match_C_BOMP(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
+void BGTree::match_forward_CBOMP(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
 	bitset<subs> gB, mB; // global bitset
 	gB.set(); // 全设为1, 假设都是匹配的
 	vector<bool> attExist(atts, false);
 	for (auto &&pi: pub.pairs) {
 		mB = nB[pi.att];
 		attExist[pi.att] = true;
-		forward_match_blueNode_C_BOMP(roots[pi.att], pi.att, pi.value, subList, mB);
+		match_forward_CBOMP_blueNode(roots[pi.att], pi.att, pi.value, subList, mB);
 		gB = gB & mB;
 	}
 	_for(i, 0, atts) if (!attExist[i])
 			gB = gB & nB[i];
 	matchSubs = gB.count();
 }
-void BGTree::forward_match_blueNode_C_BOMP(bluenode *&r, const int &att, const int &value,
+void BGTree::match_forward_CBOMP_blueNode(bluenode *&r, const int &att, const int &value,
 										   const vector<IntervalSub> &subList, bitset<subs> &mB) {
 	if (r->mid == value) { // 1.等于中点, 直接得到匹配结果
 #ifdef DEBUG
@@ -490,14 +490,14 @@ void BGTree::forward_match_blueNode_C_BOMP(bluenode *&r, const int &att, const i
 						}
 		}
 	} else if (value < r->mid) { // 3.检索蓝绿左子节点
-		forward_match_blueNode_C_BOMP(r->leftBlueChild, att, value, subList, mB);
-		forward_match_lgreenNode_C_BOMP(r->leftGreenChild, att, value, subList, mB);
+		match_forward_CBOMP_blueNode(r->leftBlueChild, att, value, subList, mB);
+		match_forward_CBOMP_lgreenNode(r->leftGreenChild, att, value, subList, mB);
 	} else { // value > r->mid 4.检索蓝绿右子节点
-		forward_match_blueNode_C_BOMP(r->rightBlueChild, att, value, subList, mB);
-		forward_match_rgreenNode_C_BOMP(r->rightGreenChild, att, value, subList, mB);
+		match_forward_CBOMP_blueNode(r->rightBlueChild, att, value, subList, mB);
+		match_forward_CBOMP_rgreenNode(r->rightGreenChild, att, value, subList, mB);
 	}
 }
-void BGTree::forward_match_lgreenNode_C_BOMP(lgreennode *&l, const int &att, const int &value,
+void BGTree::match_forward_CBOMP_lgreenNode(lgreennode *&l, const int &att, const int &value,
 											 const vector<IntervalSub> &subList, bitset<subs> &mB) {
 	if (l->leftChild == nullptr) { // 1.叶子节点, 暴力匹配
 		if (l->bst == nullptr) {
@@ -531,9 +531,9 @@ void BGTree::forward_match_lgreenNode_C_BOMP(lgreennode *&l, const int &att, con
 					mB[i] = 1;
 		}
 	} else if (value < l->mid) { // 3. 检索左绿左子节点, 左绿右子节点全部不匹配
-		forward_match_lgreenNode_C_BOMP(l->leftChild, att, value, subList, mB);
+		match_forward_CBOMP_lgreenNode(l->leftChild, att, value, subList, mB);
 	} else { // value > l->mid  4. 检索左绿右子节点, 左子节点全部匹配
-		forward_match_lgreenNode_C_BOMP(l->rightChild, att, value, subList, mB);
+		match_forward_CBOMP_lgreenNode(l->rightChild, att, value, subList, mB);
 		if (l->leftChild->bst == nullptr) {
 			for (auto &&i: l->leftChild->subids) {
 				mB[i] = 1;
@@ -544,7 +544,7 @@ void BGTree::forward_match_lgreenNode_C_BOMP(lgreennode *&l, const int &att, con
 		}
 	}
 }
-void BGTree::forward_match_rgreenNode_C_BOMP(rgreennode *&r, const int &att, const int &value,
+void BGTree::match_forward_CBOMP_rgreenNode(rgreennode *&r, const int &att, const int &value,
 											 const vector<IntervalSub> &subList, bitset<subs> &mB) {
 	if (r->leftChild == nullptr) { // 1.叶子节点, 暴力匹配
 		if (r->bst == nullptr) {
@@ -578,9 +578,9 @@ void BGTree::forward_match_rgreenNode_C_BOMP(rgreennode *&r, const int &att, con
 					mB[i] = 1;
 		}
 	} else if (value > r->mid) { // 3. 检索右绿右子节点, 右绿左子节点全部不匹配
-		forward_match_rgreenNode_C_BOMP(r->rightChild, att, value, subList, mB);
+		match_forward_CBOMP_rgreenNode(r->rightChild, att, value, subList, mB);
 	} else { // value < r->mid  4. 检索右绿左子节点, 右绿右子节点全部匹配
-		forward_match_rgreenNode_C_BOMP(r->leftChild, att, value, subList, mB);
+		match_forward_CBOMP_rgreenNode(r->leftChild, att, value, subList, mB);
 		if (r->rightChild->bst == nullptr) {
 			for (auto &&i: r->rightChild->subids) {
 				mB[i] = 1;
@@ -592,20 +592,20 @@ void BGTree::forward_match_rgreenNode_C_BOMP(rgreennode *&r, const int &att, con
 	}
 }
 
-void BGTree::backward_match_C_BOMP(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
+void BGTree::match_backward_DMFT_fBGTree_CBOMP(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
 	bitset<subs> gB, mB; // global bitset
 	vector<bool> attExist(atts, false);
 	for (auto &&pi: pub.pairs) {
 		mB = nnB[pi.att]; // Assume all having definitions is mismatching and marked
 		attExist[pi.att] = true;
-		backward_match_blueNode_C_BOMP(roots[pi.att], pi.att, pi.value, subList, mB);
+		match_backward_DMFT_fBGTree_CBOMP_blueNode(roots[pi.att], pi.att, pi.value, subList, mB);
 		gB = gB | mB;
 	}
 	_for(i, 0, atts) if (!attExist[i])
 			gB = gB | nnB[i];
 	matchSubs = numSub - gB.count();
 }
-void BGTree::backward_match_blueNode_C_BOMP(bluenode *&r, const int &att, const int &value,
+void BGTree::match_backward_DMFT_fBGTree_CBOMP_blueNode(bluenode *&r, const int &att, const int &value,
 											const vector<IntervalSub> &subList, bitset<subs> &mB) {
 	if (r->mid == value) { // 1.等于中点, 直接得到匹配结果
 #ifdef DEBUG
@@ -634,14 +634,14 @@ void BGTree::backward_match_blueNode_C_BOMP(bluenode *&r, const int &att, const 
 						}
 		}
 	} else if (value < r->mid) { // 3.检索蓝绿左子节点
-		backward_match_blueNode_C_BOMP(r->leftBlueChild, att, value, subList, mB);
-		backward_match_lgreenNode_C_BOMP(r->leftGreenChild, att, value, subList, mB);
+		match_backward_DMFT_fBGTree_CBOMP_blueNode(r->leftBlueChild, att, value, subList, mB);
+		match_backward_DMFT_fBGTree_CBOMP_lgreenNode(r->leftGreenChild, att, value, subList, mB);
 	} else { // value > r->mid 4.检索蓝绿右子节点
-		backward_match_blueNode_C_BOMP(r->rightBlueChild, att, value, subList, mB);
-		backward_match_rgreenNode_C_BOMP(r->rightGreenChild, att, value, subList, mB);
+		match_backward_DMFT_fBGTree_CBOMP_blueNode(r->rightBlueChild, att, value, subList, mB);
+		match_backward_DMFT_fBGTree_CBOMP_rgreenNode(r->rightGreenChild, att, value, subList, mB);
 	}
 }
-void BGTree::backward_match_lgreenNode_C_BOMP(lgreennode *&l, const int &att, const int &value,
+void BGTree::match_backward_DMFT_fBGTree_CBOMP_lgreenNode(lgreennode *&l, const int &att, const int &value,
 											  const vector<IntervalSub> &subList, bitset<subs> &mB) {
 	if (l->leftChild == nullptr) { // 1.叶子节点, 暴力匹配
 		if (l->bst == nullptr) {
@@ -675,9 +675,9 @@ void BGTree::backward_match_lgreenNode_C_BOMP(lgreennode *&l, const int &att, co
 					mB[i] = 0;
 		}
 	} else if (value < l->mid) { // 3. 检索左绿左子节点, 左绿右子节点全部不匹配
-		backward_match_lgreenNode_C_BOMP(l->leftChild, att, value, subList, mB);
+		match_backward_DMFT_fBGTree_CBOMP_lgreenNode(l->leftChild, att, value, subList, mB);
 	} else { // value > l->mid  4. 检索左绿右子节点, 左子节点全部匹配
-		backward_match_lgreenNode_C_BOMP(l->rightChild, att, value, subList, mB);
+		match_backward_DMFT_fBGTree_CBOMP_lgreenNode(l->rightChild, att, value, subList, mB);
 		if (l->leftChild->bst == nullptr) {
 			for (auto &&i: l->leftChild->subids) {
 				mB[i] = 0;
@@ -688,7 +688,7 @@ void BGTree::backward_match_lgreenNode_C_BOMP(lgreennode *&l, const int &att, co
 		}
 	}
 }
-void BGTree::backward_match_rgreenNode_C_BOMP(rgreennode *&r, const int &att, const int &value,
+void BGTree::match_backward_DMFT_fBGTree_CBOMP_rgreenNode(rgreennode *&r, const int &att, const int &value,
 											  const vector<IntervalSub> &subList, bitset<subs> &mB) {
 	if (r->leftChild == nullptr) { // 1.叶子节点, 暴力匹配
 		if (r->bst == nullptr) {
@@ -722,9 +722,9 @@ void BGTree::backward_match_rgreenNode_C_BOMP(rgreennode *&r, const int &att, co
 					mB[i] = 0;
 		}
 	} else if (value > r->mid) { // 3. 检索右绿右子节点, 右绿左子节点全部不匹配
-		backward_match_rgreenNode_C_BOMP(r->rightChild, att, value, subList, mB);
+		match_backward_DMFT_fBGTree_CBOMP_rgreenNode(r->rightChild, att, value, subList, mB);
 	} else { // value < r->mid  4. 检索右绿左子节点, 右绿右子节点全部匹配
-		backward_match_rgreenNode_C_BOMP(r->leftChild, att, value, subList, mB);
+		match_backward_DMFT_fBGTree_CBOMP_rgreenNode(r->leftChild, att, value, subList, mB);
 		if (r->rightChild->bst == nullptr) {
 			for (auto &&i: r->rightChild->subids) {
 				mB[i] = 0;
@@ -736,26 +736,26 @@ void BGTree::backward_match_rgreenNode_C_BOMP(rgreennode *&r, const int &att, co
 	}
 }
 
-void BGTree::backward_match_native(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
+void BGTree::match_backward_native(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
 	bitset<subs> gB; // global bitset
 	vector<bool> attExist(atts, false);
 	for (auto &&pi: pub.pairs) {
 		attExist[pi.att] = true;
-		backward_match_blueNode_native(roots[pi.att], pi.att, pi.value, subList, gB);
+		match_backward_blueNode(roots[pi.att], pi.att, pi.value, subList, gB);
 	}
 	_for(i, 0, atts) if (!attExist[i])
 		gB = gB | nnB[i];
 	matchSubs = numSub - gB.count();
 }
-void BGTree::backward_match_blueNode_native(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList, bitset<subs> &mB){
+void BGTree::match_backward_blueNode(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList, bitset<subs> &mB){
 //	if(r->)
 }
 void
-BGTree::backward_match_lgreenNode_native(lgreennode *&l, const int &att, const int &value, const vector<IntervalSub> &subList, bitset<subs> &mB){
+BGTree::match_backward_lgreenNode(lgreennode *&l, const int &att, const int &value, const vector<IntervalSub> &subList, bitset<subs> &mB){
 
 }
 void
-BGTree::backward_match_rgreenNode_native(rgreennode *&r, const int &att, const int &value, const vector<IntervalSub> &subList, bitset<subs> &mB){
+BGTree::match_backward_rgreenNode(rgreennode *&r, const int &att, const int &value, const vector<IntervalSub> &subList, bitset<subs> &mB){
 
 }
 

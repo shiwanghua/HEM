@@ -4868,7 +4868,7 @@ void run_BGTREE_forward_native(const intervalGenerator& gen, unordered_map<int, 
 
 		Timer matchStart;
 
-		bgTree.forward_match_native(gen.pubList[i], matchSubs, gen.subList);
+		bgTree.match_forward_native(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
@@ -4972,7 +4972,7 @@ void run_BGTREE_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, 
 
 		Timer matchStart;
 
-		bgTree.forward_match_C_BOMP(gen.pubList[i], matchSubs, gen.subList);
+		bgTree.match_forward_CBOMP(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
@@ -5074,7 +5074,7 @@ void run_BGTREE_backward_C_BOMP(const intervalGenerator& gen, unordered_map<int,
 
 		Timer matchStart;
 
-		bgTree.backward_match_C_BOMP(gen.pubList[i], matchSubs, gen.subList);
+		bgTree.match_backward_DMFT_fBGTree_CBOMP(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
@@ -5380,7 +5380,7 @@ void run_BGTREE_d_vrs_forward_native(const intervalGenerator& gen, unordered_map
 	//
 	//		Timer matchStart;
 	//
-	//		bgTree_d_vrs.forward_match_native(gen.pubList[i], matchSubs, gen.subList);
+	//		bgTree_d_vrs.match_forward_native(gen.pubList[i], matchSubs, gen.subList);
 	//
 	//		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 	//		matchTimeList.push_back((double) eventTime / 1000000);
@@ -5474,7 +5474,7 @@ void run_BGTREE_d_vrs_backward_native(const intervalGenerator& gen, unordered_ma
 	//
 	//		Timer matchStart;
 	//
-	//		bgTree_d_vrs.backward_match_native(gen.pubList[i], matchSubs, gen.subList);
+	//		bgTree_d_vrs.match_backward_native(gen.pubList[i], matchSubs, gen.subList);
 	//
 	//		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 	//		matchTimeList.push_back((double) eventTime / 1000000);

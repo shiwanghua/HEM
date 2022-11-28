@@ -508,10 +508,10 @@ bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 //	return find;
 //}
 //
-//void BGTree_d_vrs::forward_match_native(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
+//void BGTree_d_vrs::match_forward_native(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
 //	memcpy(counter, subPredicate, sizeof(subPredicate));
 //	for (auto &&pi: pub.pairs)
-//		forward_match_blueNode(roots[pi.att], pi.att, pi.value, subList);
+//		match_forward_blueNode(roots[pi.att], pi.att, pi.value, subList);
 //	for (int i = 0; i < subs; i++)
 //		if (counter[i] == 0) {
 //#ifdef DEBUG
@@ -523,7 +523,7 @@ bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 //}
 //
 //void
-//BGTree_d_vrs::forward_match_blueNode(bluenode_d_vrs *&r, const int &att, const int &value,
+//BGTree_d_vrs::match_forward_blueNode(bluenode_d_vrs *&r, const int &att, const int &value,
 //									 const vector<IntervalSub> &subList) {
 //	if (r->leftBlueChild == nullptr) { // 1. 叶子节点暴力处理
 //#ifdef DEBUG
@@ -539,8 +539,8 @@ bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 //				}
 //		}
 //	} else if (value < r->mid) { // 2. 小于左中点, 检索两个子节点
-//		forward_match_blueNode(r->leftBlueChild, att, value, subList);
-//		forward_match_lgreenNode(r->lowGreenChild, att, value, subList);
+//		match_forward_blueNode(r->leftBlueChild, att, value, subList);
+//		match_forward_lgreenNode(r->lowGreenChild, att, value, subList);
 //	} else if (value == r->mid) { // 3. 等于左中点, 直接得到匹配结果
 //#ifdef DEBUG
 //		hit++;
@@ -566,12 +566,12 @@ bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 //			counter[id]--;
 //		}
 //	} else { // 5. value > r->mid + 1 大于右中节点, 检索两个子节点
-//		forward_match_blueNode(r->rightBlueChild, att, value, subList);
+//		match_forward_blueNode(r->rightBlueChild, att, value, subList);
 //		forward_match_hgreenNode(r->highGreenChild, att, value, subList);
 //	}
 //}
 //
-//void BGTree_d_vrs::forward_match_lgreenNode(lgreennode_d_vrs *&r, const int &att, const int &value,
+//void BGTree_d_vrs::match_forward_lgreenNode(lgreennode_d_vrs *&r, const int &att, const int &value,
 //											const vector<IntervalSub> &subList) {
 //	// 把最有可能出现的放前面
 //	if (r->leftChild == nullptr) { // 1. 叶子节点暴力处理
@@ -588,7 +588,7 @@ bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 //				}
 //		}
 //	} else if (value < r->mid) { // 2. 小于左中点, 检索左子节点
-//		forward_match_lgreenNode(r->leftChild, att, value, subList);
+//		match_forward_lgreenNode(r->leftChild, att, value, subList);
 //	} else if (value > r->mid + 1) { // 5. 大于右中点, 左子节点完全匹配, 检索右子节点
 //#ifdef DEBUG
 //		numProcessExactNode++;
@@ -597,7 +597,7 @@ bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 //		for (auto &&id: r->leftChild->subids) {
 //			counter[id]--;
 //		}
-//		forward_match_lgreenNode(r->rightChild, att, value, subList);
+//		match_forward_lgreenNode(r->rightChild, att, value, subList);
 //	} else if (value == r->mid) { // 3. 等于左中点, 左子节点全部匹配
 //#ifdef DEBUG
 //		numProcessExactNode++;
@@ -669,12 +669,12 @@ bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 //	}
 //}
 //
-//void BGTree_d_vrs::backward_match_native(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
+//void BGTree_d_vrs::match_backward_native(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList) {
 //	bitset<subs> gB; // global bitset
 //	vector<bool> attExist(atts, false);
 //	for (auto &&pi: pub.pairs) {
 //		attExist[pi.att] = true;
-//		backward_match_blueNode_native(roots[pi.att], pi.att, pi.value, subList, gB);
+//		match_backward_blueNode(roots[pi.att], pi.att, pi.value, subList, gB);
 //	}
 //	_for(i, 0, atts) if (!attExist[i])
 //			gB = gB | nnB[i];
@@ -686,7 +686,7 @@ bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 //#endif
 //}
 //
-//void BGTree_d_vrs::backward_match_blueNode_native(bluenode_d_vrs *&r, const int &att, const int &value,
+//void BGTree_d_vrs::match_backward_blueNode(bluenode_d_vrs *&r, const int &att, const int &value,
 //												  const vector<IntervalSub> &subList, bitset<subs> &gB) {
 //	if (r->leftBlueChild == nullptr) {
 //#ifdef DEBUG
@@ -729,8 +729,8 @@ bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 //				bst_c[id] = 0;
 //			gB = gB | bst_c;
 //		} else {
-//			backward_match_blueNode_native(r->leftBlueChild, att, value, subList, gB);
-//			backward_match_lgreenNode_native(r->lowGreenChild, att, value, subList, gB);
+//			match_backward_blueNode(r->leftBlueChild, att, value, subList, gB);
+//			match_backward_lgreenNode(r->lowGreenChild, att, value, subList, gB);
 //		}
 //	} else {
 //		if (r->leftBlueChild->realBstPtr == nullptr) {
@@ -760,14 +760,14 @@ bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 //				bst_c[id] = 0;
 //			gB = gB | bst_c;
 //		} else {
-//			backward_match_blueNode_native(r->rightBlueChild, att, value, subList, gB);
+//			match_backward_blueNode(r->rightBlueChild, att, value, subList, gB);
 //			backward_match_hgreenNode_native(r->highGreenChild, att, value, subList, gB);
 //		}
 //	}
 //}
 //
 //void
-//BGTree_d_vrs::backward_match_lgreenNode_native(lgreennode_d_vrs *&l, const int &att, const int &value,
+//BGTree_d_vrs::match_backward_lgreenNode(lgreennode_d_vrs *&l, const int &att, const int &value,
 //											   const vector<IntervalSub> &subList, bitset<subs> &gB) {
 //	// 把最有可能出现的放前面
 //	if (l->leftChild == nullptr) { // 1. 叶子节点暴力处理
@@ -800,7 +800,7 @@ bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 //			gB = gB | *l->rightChild->realBstPtr;
 //		}
 //		if (value < l->mid)
-//			backward_match_lgreenNode_native(l->leftChild, att, value, subList, gB);
+//			match_backward_lgreenNode(l->leftChild, att, value, subList, gB);
 //#ifdef DEBUG
 //		if (value == l->mid)
 //			hit++;
@@ -818,7 +818,7 @@ bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 //				bst_c[id] = 0;
 //			gB = gB | bst_c;
 //		} else {
-//			backward_match_lgreenNode_native(l->rightChild, att, value, subList, gB);
+//			match_backward_lgreenNode(l->rightChild, att, value, subList, gB);
 //		}
 //	}
 //}

@@ -92,31 +92,37 @@ private:
 	void vectorToBitset(vector<int> &v, bitset<subs> *&);
 	void bitsetToVector(bitset<subs> *&b, vector<int> &);
 
-	void forward_match_blueNode(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList);
-	void forward_match_lgreenNode(lgreennode *&l, const int &att, const int &value, const vector<IntervalSub> &subList);
-	void forward_match_rgreenNode(rgreennode *&r, const int &att, const int &value, const vector<IntervalSub> &subList);
+	void match_forward_blueNode(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList);
+	void match_forward_lgreenNode(lgreennode *&l, const int &att, const int &value, const vector<IntervalSub> &subList);
+	void match_forward_rgreenNode(rgreennode *&r, const int &att, const int &value, const vector<IntervalSub> &subList);
 
 	void
-	forward_match_blueNode_C_BOMP(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList,
+	match_forward_CBOMP_blueNode(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList,
 								  bitset<subs> &mB);
-	void forward_match_lgreenNode_C_BOMP(lgreennode *&l, const int &att, const int &value,
+	void match_forward_CBOMP_lgreenNode(lgreennode *&l, const int &att, const int &value,
 										 const vector<IntervalSub> &subList, bitset<subs> &mB);
-	void forward_match_rgreenNode_C_BOMP(rgreennode *&r, const int &att, const int &value,
+	void match_forward_CBOMP_rgreenNode(rgreennode *&r, const int &att, const int &value,
 										 const vector<IntervalSub> &subList, bitset<subs> &mB);
 
 	void
-	backward_match_blueNode_C_BOMP(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList,
-								   bitset<subs> &mB);
-	void backward_match_lgreenNode_C_BOMP(lgreennode *&l, const int &att, const int &value,
-										  const vector<IntervalSub> &subList, bitset<subs> &mB);
-	void backward_match_rgreenNode_C_BOMP(rgreennode *&r, const int &att, const int &value,
-										  const vector<IntervalSub> &subList, bitset<subs> &mB);
+	match_backward_DMFT_fBGTree_CBOMP_blueNode(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList,
+		bitset<subs> &mB);
+	void match_backward_DMFT_fBGTree_CBOMP_lgreenNode(lgreennode *&l, const int &att, const int &value,
+		const vector<IntervalSub> &subList, bitset<subs> &mB);
+	void match_backward_DMFT_fBGTree_CBOMP_rgreenNode(rgreennode *&r, const int &att, const int &value,
+		const vector<IntervalSub> &subList, bitset<subs> &mB);
 
-	void backward_match_blueNode_native(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
+	void match_backward_blueNode(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
 	void
-	backward_match_lgreenNode_native(lgreennode *&l, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
+	match_backward_lgreenNode(lgreennode *&l, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
 	void
-	backward_match_rgreenNode_native(rgreennode *&r, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
+	match_backward_rgreenNode(rgreennode *&r, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
+
+	void match_backward_DMFT_bBGTree_blueNode(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
+	void
+	match_backward_DMFT_bBGTree_lgreenNode(lgreennode *&l, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
+	void
+	match_backward_DMFT_bBGTree_rgreenNode(rgreennode *&r, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
 
 	double calBlueNodeMemory(bluenode *&r);
 	double calLGreenNodeMemory(lgreennode *&r);
@@ -129,20 +135,17 @@ public:
 	int numEffectivePredicate=0;
 
 	BGTree();
-
 	~BGTree();
 
 	void insert(IntervalSub sub);
-
 	bool deleteSubscription(IntervalSub sub);
 
-	void forward_match_native(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList);
-	// Similar to bTama6
-	void forward_match_C_BOMP(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList);
-	// Similar to bTama8
-	void backward_match_C_BOMP(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList);
+	void match_forward_native(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList); // fBG-Tree
+	void match_forward_CBOMP(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList); // fBG-Tree-C, Similar to bTama6
+	void match_backward_DMFT_fBGTree_CBOMP(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList); // fBG-Tree-CB, Similar to bTama8
 
-	void backward_match_native(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList);
+	void match_backward_native(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList); // bBG-Tree
+	void match_forward_DMFT_bBGTree(const Pub &pub, int &matchSubs, const vector<IntervalSub> &subList); // bBG-Tree-F
 
 	int calMemory();      // 计算占用内存大小
 
