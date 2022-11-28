@@ -105,7 +105,7 @@ int main(int argc, char** argv)
 
 //	run_BGTREE_forward_native(gen, deleteNo);
 //	run_BGTREE_forward_C_BOMP(gen, deleteNo);
-//	run_BGTREE_backward_C_BOMP(gen, deleteNo);
+//	run_BGTREE_backward_DMFT_fBGTree_CBOMP(gen, deleteNo);
 //	run_BGTREE_d_forward_native(gen, deleteNo);
 //	run_BGTREE_d_backward_native(gen, deleteNo);
 	// run_BGTREE_d_vrs_backward_native(gen, deleteNo);

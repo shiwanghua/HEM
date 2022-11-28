@@ -95,9 +95,16 @@ void run_bOpIndex2(const intervalGenerator &gen, unordered_map<int, bool> delete
 
 void run_BGTREE_forward_native(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 void run_BGTREE_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
-void run_BGTREE_backward_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
+void run_BGTREE_backward_DMFT_fBGTree_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
+void run_BGTREE_backward_native(const intervalGenerator& gen, unordered_map<int, bool> deleteNo); // unimplemented
+void run_BGTREE_forward_DMFT_bBGTree(const intervalGenerator& gen, unordered_map<int, bool> deleteNo); // unimplemented
+
 void run_BGTREE_d_forward_native(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
+void run_BGTREE_d_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo); // unimplemented
+void run_BGTREE_d_backward_DMFT_fBGTree_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo); // unimplemented
 void run_BGTREE_d_backward_native(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
+void run_BGTREE_d_forward_DMFT_bBGTree(const intervalGenerator& gen, unordered_map<int, bool> deleteNo); // unimplemented
+
 void run_BGTREE_d_vrs_forward_native(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 void run_BGTREE_d_vrs_backward_native(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);
 
