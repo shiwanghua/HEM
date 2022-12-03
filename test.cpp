@@ -50,6 +50,26 @@ void my_task()
 	printf("%d\n", gl);
 }
 
+//struct node{
+//	node* left, *right;
+//	int v;
+//};
+//
+//void func2(const int& v){
+//	if(v==0) return;
+//	node* r = new node;
+//	func2(r->v);
+//	delete r;
+//}
+//
+//void func(const node*& r){
+//	if(r== nullptr) return;
+//	func(r->left);
+//	func(r->right);
+//}
+
+
+
 int mainss()
 {
 	// Launch the pool with four threads.

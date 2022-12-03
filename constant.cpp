@@ -1,5 +1,5 @@
 #include "constant.h"
-string expID = "1587";             // Record the experiment ID number
+string expID = "1594";             // Record the experiment ID number
 const bool display = false;    // whether to print the mapping relation, 有待逐步改成DEBUG宏定义判断
 const bool verifyID = false;   // whether to verify Insertion and Deletion function
 const int interval = 500;        // after a interval of events is matched, print a log
@@ -49,9 +49,8 @@ const int level = 13;
 
 // BG-Tree
 const int initH = 10;           // Initial height
-const int MAXNodeSIZE = 2000;
-const int boundary = subs * 0.01; // BoundaryNumSub BNS
-// boundary>>MAXNodeSIZE
+const int MAXNodeSIZE = 500;
+const int BoundaryNumSub = subs * 0.5; // BoundaryNumSub BNS  BoundaryNumSub>>MAXNodeSIZE
 
 // PS-Tree
 const int PSTree_level = 4;

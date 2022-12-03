@@ -260,7 +260,7 @@ void BGTree_d_vrs::insertVAttrIntoGreenNode(lgreennode_d_vrs *&r, const int &sub
 void BGTree_d_vrs::insertRAttrIntoGreenNode(lgreennode_d_vrs *&r, const int &subID, const int &l, const int &attrId,
 											const vector<IntervalSub> &subList) {
 	r->rSubids.push_back(subID);
-	if (r->rSubids.size() > boundary) {
+	if (r->rSubids.size() > BoundaryNumSub) {
 		if (r->realBstPtr == nullptr) {
 			r->realBstPtr = new bitset<subs>;
 			for (auto &&id: r->rSubids)
@@ -336,7 +336,7 @@ void BGTree_d_vrs::insertVAttrIntoGreenNode(hgreennode_d_vrs *&r, const int &sub
 void BGTree_d_vrs::insertRAttrIntoGreenNode(hgreennode_d_vrs *&r, const int &subID, const int &h, const int &attrId,
 											const vector<IntervalSub> &subList) {
 	r->rSubids.push_back(subID);
-	if (r->rSubids.size() > boundary) {
+	if (r->rSubids.size() > BoundaryNumSub) {
 		if (r->realBstPtr == nullptr) {
 			r->realBstPtr = new bitset<subs>;
 			for (auto &&id: r->rSubids)
@@ -386,7 +386,7 @@ bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 //	bool find = false;
 //	if (r->realBstPtr != nullptr) {
 //		(*(r->realBstPtr))[subID] = 0;
-//		if (r->subids.size() < boundary)
+//		if (r->subids.size() < BoundaryNumSub)
 //			delete r->realBstPtr;
 //	}
 //	for (vector<int>::const_iterator it = r->subids.cbegin(); it != r->subids.cend(); it++) {
@@ -437,7 +437,7 @@ bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 //	bool find = false;
 //	if (r->realBstPtr != nullptr) {
 //		(*(r->realBstPtr))[subID] = 0;
-//		if (r->subids.size() < boundary)
+//		if (r->subids.size() < BoundaryNumSub)
 //			delete r->realBstPtr;
 //	}
 //	for (vector<int>::const_iterator it = r->subids.cbegin(); it != r->subids.cend(); it++) {
@@ -474,7 +474,7 @@ bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 //	bool find = false;
 //	if (r->realBstPtr != nullptr) {
 //		(*(r->realBstPtr))[subID] = 0;
-//		if (r->subids.size() < boundary)
+//		if (r->subids.size() < BoundaryNumSub)
 //			delete r->realBstPtr;
 //	}
 //	for (vector<int>::const_iterator it = r->subids.cbegin(); it != r->subids.cend(); it++) {

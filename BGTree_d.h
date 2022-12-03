@@ -59,7 +59,7 @@ struct bluenode_d {
 	}
 };
 
-// Version2: expand node (boundary), forward&backward, vector&bitset
+// Version2: expand node (BoundaryNumSub), forward&backward, vector&bitset
 class BGTree_d {
 private:
 	int numSub;         // Number of inserted subscriptions

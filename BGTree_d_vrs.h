@@ -62,7 +62,7 @@ struct bluenode_d_vrs {
 };
 
 // Version3: virtual&&real shared
-// expand node (boundary), forward&backward, vector&bitset
+// expand node (BoundaryNumSub), forward&backward, vector&bitset
 class BGTree_d_vrs {
 private:
 	int numSub;         // Number of inserted subscriptions

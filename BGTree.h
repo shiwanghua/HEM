@@ -13,48 +13,43 @@
 
 //#define DEBUG
 
-struct lgreennode {
-	// low/high boundary
-	int l, h, mid, nodeid, levelid, numNodeSub = 0;
+struct greennode{
+	int l, h, mid, nodeid, levelid;
 	bitset<subs> *bst;
 	vector<int> subids; // Either realBstPtr is nullptr or subids.size()==0
-	//vector<int> midequal; // Record subID with predicate including mid
-	lgreennode *leftChild, *rightChild; // 2个节点指针要么都是空的, 要么都是非空
-
-	lgreennode(int low, int high, int nid, int lid, vector<int> subIDs, bitset<subs> *bits, lgreennode *lc,
-			   lgreennode *rc)
+	greennode *leftChild, *rightChild; // 2个节点指针要么都是空的, 要么都是非空
+	greennode(int low, int high, int nid, int lid, vector<int> subIDs, bitset<subs> *bits, greennode *lc,
+		greennode *rc)
 		: l(low), h(high), nodeid(nid), levelid(lid), subids(subIDs), bst(bits), leftChild(lc), rightChild(rc) {
 		mid = (l + h) >> 1;
 	}
 };
-
-struct rgreennode {
-	int l, h, mid, nodeid, levelid, numNodeSub = 0;
-	bitset<subs> *bst;
-	vector<int> subids;
-	//vector<int> midEqual; // Record subID with predicate including mid
-	rgreennode *leftChild, *rightChild;
-
-	rgreennode(int low, int high, int nid, int lid, vector<int> subIDs, bitset<subs> *bits, rgreennode *lc,
-			   rgreennode *rc)
-		: l(low), h(high), nodeid(nid), levelid(lid), subids(subIDs), bst(bits), leftChild(lc), rightChild(rc) {
-		mid = (l + h) >> 1;
+struct lgreennode:public greennode {
+	lgreennode(int low, int high, int nid, int lid, vector<int> subIDs, bitset<subs> *bits, lgreennode *lc,
+			   lgreennode *rc)
+		: greennode(low,high,nid,lid,subIDs,bits,lc,rc) {
+	}
+};
+struct hgreennode:public greennode  {
+	hgreennode(int low, int high, int nid, int lid, vector<int> subIDs, bitset<subs> *bits, hgreennode *lc,
+			   hgreennode *rc)
+		:greennode(low,high,nid,lid,subIDs,bits,lc,rc) {
 	}
 };
 
 struct bluenode {
-	int l, h, mid, nodeid, levelid, numNodeSub = 0;
+	int l, h, mid, nodeid, levelid;
 	bitset<subs> *bst;
 	vector<int> subids;         // 对于内部节点, 只能用于反向标记
 	vector<int> midEqual;       // Record subID with predicate including mid
-	lgreennode *leftGreenChild; // 4个节点指针要么都是空的, 要么都是非空
-	rgreennode *rightGreenChild;
+	lgreennode *lowGreenChild; // 4个节点指针要么都是空的, 要么都是非空
+	hgreennode *highGreenChild;
 	bluenode *leftBlueChild, *rightBlueChild;
 
 	bluenode(int low, int high, int nid, int lid, vector<int> subIDs, bitset<subs> *bits, lgreennode *lc,
-			 rgreennode *rc, bluenode *lbc, bluenode *rbc)
-		: l(low), h(high), nodeid(nid), levelid(lid), subids(subIDs), bst(bits), leftGreenChild(lc),
-		  rightGreenChild(rc), leftBlueChild(lbc), rightBlueChild(rbc) {
+			 hgreennode *rc, bluenode *lbc, bluenode *rbc)
+		: l(low), h(high), nodeid(nid), levelid(lid), subids(subIDs), bst(bits), lowGreenChild(lc),
+		  highGreenChild(rc), leftBlueChild(lbc), rightBlueChild(rbc) {
 		mid = (l + h) >> 1;
 	}
 };
@@ -74,59 +69,54 @@ private:
 	vector<bitset<subs>> nnB; // non-null bitset for backward matching, same as HEM
 
 	void initBlueNode(bluenode *&r);
-	void initGreenNode(lgreennode *&r);
-	void initGreenNode(rgreennode *&r);
+	void initGreenNode(greennode *r);
 
 	void releaseBlueNode(bluenode *&r);
-	void releaseGreenNode(lgreennode *&r);
-	void releaseGreenNode(rgreennode *&r);
+	void releaseGreenNode(greennode *r);
 
 	void insertIntoBlueNode(bluenode *&r, const int &subID, const int &l, const int &h);
-	void insertIntoGreenNode(lgreennode *&r, const int &subID, const int &l);
-	void insertIntoGreenNode(rgreennode *&r, const int &subID, const int &h);
+	void insertIntoGreenNode(greennode *r, const int &subID, const int &v);
 
 	bool deleteFromBlueNode(bluenode *&r, const int &subID, const int &l, const int &h);
-	bool deleteFromGreenNode(lgreennode *&r, const int &subID, const int &l);
-	bool deleteFromGreenNode(rgreennode *&r, const int &subID, const int &h);
+	bool deleteFromGreenNode(greennode *r, const int &subID, const int &v);
 
 	void vectorToBitset(vector<int> &v, bitset<subs> *&);
 	void bitsetToVector(bitset<subs> *&b, vector<int> &);
 
-	void match_forward_blueNode(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList);
-	void match_forward_lgreenNode(lgreennode *&l, const int &att, const int &value, const vector<IntervalSub> &subList);
-	void match_forward_rgreenNode(rgreennode *&r, const int &att, const int &value, const vector<IntervalSub> &subList);
+	void match_forward_blueNode(bluenode *const& r, const int &att, const int &value, const vector<IntervalSub> &subList);
+	void match_forward_lgreenNode(greennode *const& l, const int &att, const int &value, const vector<IntervalSub> &subList);
+	void match_forward_hgreenNode(greennode *const& h, const int &att, const int &value, const vector<IntervalSub> &subList);
 
 	void
-	match_forward_CBOMP_blueNode(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList,
+	match_forward_CBOMP_blueNode(bluenode *const&r, const int &att, const int &value, const vector<IntervalSub> &subList,
 								  bitset<subs> &mB);
-	void match_forward_CBOMP_lgreenNode(lgreennode *&l, const int &att, const int &value,
+	void match_forward_CBOMP_lgreenNode(greennode *const&l, const int &att, const int &value,
 										 const vector<IntervalSub> &subList, bitset<subs> &mB);
-	void match_forward_CBOMP_rgreenNode(rgreennode *&r, const int &att, const int &value,
+	void match_forward_CBOMP_hgreenNode(greennode *const&r, const int &att, const int &value,
 										 const vector<IntervalSub> &subList, bitset<subs> &mB);
 
 	void
-	match_backward_DMFT_fBGTree_CBOMP_blueNode(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList,
+	match_backward_DMFT_fBGTree_CBOMP_blueNode(bluenode *const&r, const int &att, const int &value, const vector<IntervalSub> &subList,
 		bitset<subs> &mB);
-	void match_backward_DMFT_fBGTree_CBOMP_lgreenNode(lgreennode *&l, const int &att, const int &value,
+	void match_backward_DMFT_fBGTree_CBOMP_lgreenNode(greennode *const&l, const int &att, const int &value,
 		const vector<IntervalSub> &subList, bitset<subs> &mB);
-	void match_backward_DMFT_fBGTree_CBOMP_rgreenNode(rgreennode *&r, const int &att, const int &value,
+	void match_backward_DMFT_fBGTree_CBOMP_hgreenNode(greennode *const&r, const int &att, const int &value,
 		const vector<IntervalSub> &subList, bitset<subs> &mB);
 
-	void match_backward_blueNode(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
+	void match_backward_blueNode(bluenode *const&r, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
 	void
-	match_backward_lgreenNode(lgreennode *&l, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
+	match_backward_lgreenNode(greennode *const&l, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
 	void
-	match_backward_rgreenNode(rgreennode *&r, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
+	match_backward_hgreenNode(greennode *const&r, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
 
-	void match_backward_DMFT_bBGTree_blueNode(bluenode *&r, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
+	void match_backward_DMFT_bBGTree_blueNode(bluenode *const&r, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
 	void
-	match_backward_DMFT_bBGTree_lgreenNode(lgreennode *&l, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
+	match_backward_DMFT_bBGTree_lgreenNode(greennode *const&l, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
 	void
-	match_backward_DMFT_bBGTree_rgreenNode(rgreennode *&r, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
+	match_backward_DMFT_bBGTree_hgreenNode(greennode *const&r, const int &att, const int &value, const vector<IntervalSub> &subList,bitset<subs> &mB);
 
-	double calBlueNodeMemory(bluenode *&r);
-	double calLGreenNodeMemory(lgreennode *&r);
-	double calRGreenNodeMemory(rgreennode *&r);
+	double calBlueNodeMemory(const bluenode *const&r);
+	double calGreenNodeMemory(greennode *const&r);
 
 public:
 	int hit = 0; // mid 命中次数
