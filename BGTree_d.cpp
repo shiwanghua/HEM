@@ -19,7 +19,8 @@ BGTree_d::BGTree_d()
 	nB.resize(atts);
 	nnB.resize(atts);
 
-	cout << "ExpID = " << expID << ". BGTree_d: maxNodeSize = " << maxNodeSize << ", BoundaryNumSub = " << BoundaryNumSub << "\n";
+	cout << "ExpID = " << expID << ". BGTree_d: maxNodeSize = " << maxNodeSize << ", BoundaryNumSub = "
+		 << BoundaryNumSub << "\n";
 }
 
 BGTree_d::~BGTree_d()
@@ -281,7 +282,7 @@ bool BGTree_d::deleteFromBlueNode(bluenode_d*& r, const int& subID, const int& l
 		if (r->subids.size() < BoundaryNumSub)
 			delete r->bst;
 	}
-	for (vector<int>::const_iterator it = r->subids.cbegin(); it != r->subids.cend(); it++)
+	for (vector<int32_t>::const_iterator it = r->subids.cbegin(); it != r->subids.cend(); it++)
 	{
 		if (*it == subID)
 		{
@@ -293,7 +294,7 @@ bool BGTree_d::deleteFromBlueNode(bluenode_d*& r, const int& subID, const int& l
 	if (r->mid == h)
 	{
 		find = false;
-		for (vector<int>::const_iterator it = r->lMidv.cbegin(); it != r->lMidv.cend(); it++)
+		for (vector<int32_t>::const_iterator it = r->lMidv.cbegin(); it != r->lMidv.cend(); it++)
 		{
 			if (*it == subID)
 			{
@@ -306,7 +307,7 @@ bool BGTree_d::deleteFromBlueNode(bluenode_d*& r, const int& subID, const int& l
 	else if (r->mid + 1 == l)
 	{
 		find = false;
-		for (vector<int>::const_iterator it = r->rMidv.cbegin(); it != r->rMidv.cend(); it++)
+		for (vector<int32_t>::const_iterator it = r->rMidv.cbegin(); it != r->rMidv.cend(); it++)
 		{
 			if (*it == subID)
 			{
@@ -350,7 +351,7 @@ bool BGTree_d::deleteFromGreenNode(lgreennode_d*& r, const int& subID, const int
 		if (r->subids.size() < BoundaryNumSub)
 			delete r->bst;
 	}
-	for (vector<int>::const_iterator it = r->subids.cbegin(); it != r->subids.cend(); it++)
+	for (vector<int32_t>::const_iterator it = r->subids.cbegin(); it != r->subids.cend(); it++)
 	{
 		if (*it == subID)
 		{
@@ -362,7 +363,7 @@ bool BGTree_d::deleteFromGreenNode(lgreennode_d*& r, const int& subID, const int
 	if (r->mid + 1 == l)
 	{
 		find = false;
-		for (vector<int>::const_iterator it = r->midv.cbegin(); it != r->midv.cend(); it++)
+		for (vector<int32_t>::const_iterator it = r->midv.cbegin(); it != r->midv.cend(); it++)
 		{
 			if (*it == subID)
 			{
@@ -399,7 +400,7 @@ bool BGTree_d::deleteFromGreenNode(hgreennode_d*& r, const int& subID, const int
 		if (r->subids.size() < BoundaryNumSub)
 			delete r->bst;
 	}
-	for (vector<int>::const_iterator it = r->subids.cbegin(); it != r->subids.cend(); it++)
+	for (vector<int32_t>::const_iterator it = r->subids.cbegin(); it != r->subids.cend(); it++)
 	{
 		if (*it == subID)
 		{
@@ -411,7 +412,7 @@ bool BGTree_d::deleteFromGreenNode(hgreennode_d*& r, const int& subID, const int
 	if (r->mid - 1 == h)
 	{
 		find = false;
-		for (vector<int>::const_iterator it = r->midv.cbegin(); it != r->midv.cend(); it++)
+		for (vector<int32_t>::const_iterator it = r->midv.cbegin(); it != r->midv.cend(); it++)
 		{
 			if (*it == subID)
 			{
@@ -465,13 +466,13 @@ BGTree_d::forward_match_blueNode(bluenode_d*& r, const int& att, const int& valu
 		numProcessTwoCmpNode++;
 		numProcessTwoCmpPredicate += r->subids.size();
 #endif
-		for (auto&& i : r->subids)
+		for (auto&& id : r->subids)
 		{
-			for (auto&& pi : subList[i].constraints)
+			for (auto&& pi : subList[id].constraints)
 				if (att == pi.att)
 				{
 					if (pi.lowValue <= value && value <= pi.highValue)
-						counter[i]--;
+						counter[id]--;
 					break;
 				}
 		}
@@ -481,56 +482,41 @@ BGTree_d::forward_match_blueNode(bluenode_d*& r, const int& att, const int& valu
 		forward_match_blueNode(r->leftBlueChild, att, value, subList);
 		forward_match_lgreenNode(r->lowGreenChild, att, value, subList);
 	}
-	else if (value == r->mid)
-	{ // 3. 等于左中点, 直接得到匹配结果
-#ifdef DEBUG
-		hit++;
-		numProcessExactNode++;
-		numProcessExactPredicate += r->lMidv.size() + r->lowGreenChild->subids.size();
-#endif
-		for (auto&& id : r->lMidv)
-		{
-			counter[id]--;
-		}
-		for (auto&& id : r->lowGreenChild->subids)
-		{
-			counter[id]--;
-		}
-	}
-	else if (value == r->mid + 1)
-	{ // 4. 等于右中点, 直接得到匹配结果
-#ifdef DEBUG
-		hit++;
-		numProcessExactNode++;
-		numProcessExactPredicate += r->rMidv.size() + r->highGreenChild->subids.size();
-#endif
-		for (auto&& id : r->rMidv)
-		{
-			counter[id]--;
-		}
-		for (auto&& id : r->highGreenChild->subids)
-		{
-			counter[id]--;
-		}
-	}
-	else
+	else if (value > r->mid + 1)
 	{ // 5. value > r->mid + 1 大于右中节点, 检索两个子节点
 		forward_match_blueNode(r->rightBlueChild, att, value, subList);
 		forward_match_hgreenNode(r->highGreenChild, att, value, subList);
 	}
+	else
+	{ // 3、4. 等于左中点或右中点, 直接得到匹配结果
+#ifdef DEBUG
+		hit++;
+		numProcessExactNode++;
+		if (value == r->mid)
+			numProcessExactPredicate += r->lMidv.size() + r->lowGreenChild->subids.size();
+		else numProcessExactPredicate += r->rMidv.size() + r->highGreenChild->subids.size();
+#endif
+		if (value == r->mid)
+			for (auto&& id : r->lMidv)
+				counter[id]--;
+		else
+			for (auto&& id : r->rMidv)
+				counter[id]--;
+		for (auto&& id : r->lowGreenChild->subids)
+			counter[id]--;
+	}
 }
 
-void BGTree_d::forward_match_lgreenNode(lgreennode_d*& r, const int& att, const int& value,
+void BGTree_d::forward_match_lgreenNode(lgreennode_d*& l, const int& att, const int& value,
 	const vector<IntervalSub>& subList)
 {
-	// 把最有可能出现的放前面
-	if (r->leftChild == nullptr)
+	if (l->leftChild == nullptr)
 	{ // 1. 叶子节点暴力处理
 #ifdef DEBUG
 		numProcessOneCmpNode++;
-		numProcessOneCmpPredicate += r->subids.size();
+		numProcessOneCmpPredicate += l->subids.size();
 #endif
-		for (auto&& id : r->subids)
+		for (auto&& id : l->subids)
 		{
 			for (auto&& pi : subList[id].constraints)
 				if (att == pi.att)
@@ -541,61 +527,43 @@ void BGTree_d::forward_match_lgreenNode(lgreennode_d*& r, const int& att, const 
 				}
 		}
 	}
-	else if (value < r->mid)
+	else if (value < l->mid)
 	{ // 2. 小于左中点, 检索左子节点
-		forward_match_lgreenNode(r->leftChild, att, value, subList);
-	}
-	else if (value > r->mid + 1)
-	{ // 5. 大于右中点, 左子节点完全匹配, 检索右子节点
-#ifdef DEBUG
-		numProcessExactNode++;
-		numProcessExactPredicate += r->leftChild->subids.size();
-#endif
-		for (auto&& id : r->leftChild->subids)
-		{
-			counter[id]--;
-		}
-		forward_match_lgreenNode(r->rightChild, att, value, subList);
-	}
-	else if (value == r->mid)
-	{ // 3. 等于左中点, 左子节点全部匹配
-#ifdef DEBUG
-		numProcessExactNode++;
-		numProcessExactPredicate += r->leftChild->subids.size();
-#endif
-		for (auto&& id : r->leftChild->subids)
-		{
-			counter[id]--;
-		}
+		forward_match_lgreenNode(l->leftChild, att, value, subList);
 	}
 	else
-	{ // 4. if (value == r->mid + 1), 等于 r->mid+1, 直接得到匹配结果
+	{ // 3、4、5. 左子节点完全匹配
 #ifdef DEBUG
 		numProcessExactNode++;
-		numProcessExactPredicate += r->midv.size() + r->leftChild->subids.size();
+		numProcessExactPredicate += l->leftChild->subids.size();
+		if (value == l->mid) hit++;
+		if (value == l->mid + 1)
+		{
+			hit++;
+			numProcessExactPredicate += l->midv.size();
+		}
 #endif
-		for (auto&& id : r->midv)
-		{
+		for (auto&& id : l->leftChild->subids)
 			counter[id]--;
-		}
-		for (auto&& id : r->leftChild->subids)
-		{
-			counter[id]--;
-		}
+		if (value == l->mid) return;
+		else if (value == l->mid + 1)
+			for (auto&& id : l->midv)
+				counter[id]--;
+		else //  检索右子节点
+			forward_match_lgreenNode(l->rightChild, att, value, subList);
 	}
 }
 
-void BGTree_d::forward_match_hgreenNode(hgreennode_d*& r, const int& att, const int& value,
+void BGTree_d::forward_match_hgreenNode(hgreennode_d*& h, const int& att, const int& value,
 	const vector<IntervalSub>& subList)
 {
-	// 把最有可能出现的放前面
-	if (r->leftChild == nullptr)
+	if (h->leftChild == nullptr)
 	{ // 1. 叶子节点暴力处理
 #ifdef DEBUG
 		numProcessOneCmpNode++;
-		numProcessOneCmpPredicate += r->subids.size();
+		numProcessOneCmpPredicate += h->subids.size();
 #endif
-		for (auto&& id : r->subids)
+		for (auto&& id : h->subids)
 		{
 			for (auto&& pi : subList[id].constraints)
 				if (att == pi.att)
@@ -606,47 +574,401 @@ void BGTree_d::forward_match_hgreenNode(hgreennode_d*& r, const int& att, const 
 				}
 		}
 	}
-	else if (value > r->mid)
+	else if (value > h->mid)
 	{ // 2. 大于右中点, 检索右子节点
-		forward_match_hgreenNode(r->rightChild, att, value, subList);
-	}
-	else if (value < r->mid - 1)
-	{ // 5. 小于左中点, 右子节点完全匹配, 检索左子节点
-#ifdef DEBUG
-		numProcessExactNode++;
-		numProcessExactPredicate += r->rightChild->subids.size();
-#endif
-		for (auto&& id : r->rightChild->subids)
-		{
-			counter[id]--;
-		}
-		forward_match_hgreenNode(r->leftChild, att, value, subList);
-	}
-	else if (value == r->mid)
-	{ // 3. 等于右中点, 右子节点全部匹配
-#ifdef DEBUG
-		numProcessExactNode++;
-		numProcessExactPredicate += r->rightChild->subids.size();
-#endif
-		for (auto&& id : r->rightChild->subids)
-		{
-			counter[id]--;
-		}
+		forward_match_hgreenNode(h->rightChild, att, value, subList);
 	}
 	else
-	{ // 4. if (value == r->mid - 1), 等于左中点, 直接得到匹配结果
+	{ // 3、4、5. 小于左中点, 右子节点完全匹配, 检索左子节点
 #ifdef DEBUG
 		numProcessExactNode++;
-		numProcessExactPredicate += r->midv.size() + r->rightChild->subids.size();
+		numProcessExactPredicate += h->rightChild->subids.size();
+		if (value == h->mid) hit++;
+		else if (value == h->mid - 1)
+		{
+			hit++;
+			numProcessExactPredicate += h->midv.size();
+		}
 #endif
-		for (auto&& id : r->midv)
-		{
+		for (auto&& id : h->rightChild->subids)
 			counter[id]--;
-		}
-		for (auto&& id : r->rightChild->subids)
+		if (value == h->mid) return;
+		else if (value == h->mid - 1)
+			for (auto&& id : h->midv)
+				counter[id]--;
+		else
+			forward_match_hgreenNode(h->leftChild, att, value, subList);
+	}
+}
+
+void BGTree_d::forward_match_C_BOMP(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
+{
+	bitset<subs> gB, mB; // global bitset
+	gB.set(); // 全设为1, 假设都是匹配的
+	vector<bool> attExist(atts, false);
+	for (auto&& pi : pub.pairs)
+	{
+		mB = nB[pi.att];
+		attExist[pi.att] = true;
+		forward_match_blueNode_C_BOMP(roots[pi.att], pi.att, pi.value, subList, mB);
+		gB &= mB;
+	}
+	_for(i, 0, atts) if (!attExist[i])
+			gB &= nB[i];
+	matchSubs = gB.count();
+}
+
+void
+BGTree_d::forward_match_blueNode_C_BOMP(bluenode_d*& r, const int& att, const int& value, const vector<IntervalSub>& subList,
+	bitset<subs>& mB)
+{
+	if (r->leftBlueChild == nullptr)
+	{ // 1. 叶子节点暴力处理
+#ifdef DEBUG
+		numProcessTwoCmpNode++;
+		numProcessTwoCmpPredicate += r->subids.size();
+#endif
+		for (auto&& id : r->subids)
 		{
-			counter[id]--;
+			for (auto&& pi : subList[id].constraints)
+				if (att == pi.att)
+				{
+					if (pi.lowValue <= value && value <= pi.highValue)
+						mB[id] = 1;
+					break;
+				}
 		}
+	}
+	else if (value < r->mid)
+	{ // 2. 小于左中点, 检索两个子节点
+		forward_match_blueNode_C_BOMP(r->leftBlueChild, att, value, subList, mB);
+		forward_match_lgreenNode_C_BOMP(r->lowGreenChild, att, value, subList, mB);
+	}
+	else if (value > r->mid + 1)
+	{ // 5. value > r->mid + 1 大于右中节点, 检索两个子节点
+		forward_match_blueNode_C_BOMP(r->rightBlueChild, att, value, subList, mB);
+		forward_match_hgreenNode_C_BOMP(r->highGreenChild, att, value, subList, mB);
+	}
+	else
+	{ // 3、4. 等于左中点或右中点, 直接得到匹配结果
+#ifdef DEBUG
+		hit++;
+		numProcessExactNode++;
+		if (value == r->mid)
+			numProcessExactPredicate += r->lMidv.size() + r->lowGreenChild->subids.size();
+		else numProcessExactPredicate += r->rMidv.size() + r->highGreenChild->subids.size();
+		if (r->lowGreenChild->bst) numBitsetOperation++;
+#endif
+		if (value == r->mid)
+			for (auto&& id : r->lMidv)
+				mB[id] = 1;
+		else
+			for (auto&& id : r->rMidv)
+				mB[id] = 1;
+		if (r->lowGreenChild->bst)
+		{
+			mB |= *r->lowGreenChild->bst;
+		}
+		else
+		{
+			for (auto&& id : r->lowGreenChild->subids)
+				mB[id] = 1;
+		}
+	}
+}
+
+void BGTree_d::forward_match_lgreenNode_C_BOMP(lgreennode_d*& l, const int& att, const int& value,
+	const vector<IntervalSub>& subList, bitset<subs>& mB)
+{
+	if (l->leftChild == nullptr)
+	{ // 1. 叶子节点暴力处理
+#ifdef DEBUG
+		numProcessOneCmpNode++;
+		numProcessOneCmpPredicate += l->subids.size();
+#endif
+		for (auto&& id : l->subids)
+		{
+			for (auto&& pi : subList[id].constraints)
+				if (att == pi.att)
+				{
+					if (pi.lowValue <= value)
+						mB[id] = 1;
+					break;
+				}
+		}
+	}
+	else if (value < l->mid)
+	{ // 2. 小于左中点, 检索左子节点
+		forward_match_lgreenNode_C_BOMP(l->leftChild, att, value, subList, mB);
+	}
+	else
+	{ // 3、4、5. 左子节点完全匹配
+#ifdef DEBUG
+		numProcessExactNode++;
+		numProcessExactPredicate += l->leftChild->subids.size();
+		if (value == l->mid) hit++;
+		if (value == l->mid + 1)
+		{
+			hit++;
+			numProcessExactPredicate += l->midv.size();
+		}
+		if (l->leftChild->bst) numBitsetOperation++;
+#endif
+		if (l->leftChild->bst)
+		{
+			mB |= *l->leftChild->bst;
+		}
+		else
+		{
+			for (auto&& id : l->leftChild->subids)
+				mB[id] = 1;
+		}
+		if (value == l->mid) return;
+		else if (value == l->mid + 1)
+			for (auto&& id : l->midv)
+				mB[id] = 1;
+		else //  value > l->mid + 1 检索右子节点
+			forward_match_lgreenNode_C_BOMP(l->rightChild, att, value, subList, mB);
+	}
+}
+
+void BGTree_d::forward_match_hgreenNode_C_BOMP(hgreennode_d*& h, const int& att, const int& value,
+	const vector<IntervalSub>& subList, bitset<subs>& mB)
+{
+	if (h->leftChild == nullptr)
+	{ // 1. 叶子节点暴力处理
+#ifdef DEBUG
+		numProcessOneCmpNode++;
+		numProcessOneCmpPredicate += h->subids.size();
+#endif
+		for (auto&& id : h->subids)
+		{
+			for (auto&& pi : subList[id].constraints)
+				if (att == pi.att)
+				{
+					if (value <= pi.highValue)
+						mB[id] = 1;
+					break;
+				}
+		}
+	}
+	else if (value > h->mid)
+	{ // 2. 大于右中点, 检索右子节点
+		forward_match_hgreenNode_C_BOMP(h->rightChild, att, value, subList, mB);
+	}
+	else
+	{ // 3、4、5. 小于左中点, 右子节点完全匹配, 检索左子节点
+#ifdef DEBUG
+		numProcessExactNode++;
+		numProcessExactPredicate += h->rightChild->subids.size();
+		if (value == h->mid) hit++;
+		else if (value == h->mid - 1)
+		{
+			hit++;
+			numProcessExactPredicate += h->midv.size();
+		}
+		if (h->rightChild->bst) numBitsetOperation++;
+#endif
+		if (h->rightChild->bst)
+		{
+			mB |= *h->rightChild->bst;
+		}
+		else
+		{
+			for (auto&& id : h->rightChild->subids)
+				mB[id] = 1;
+		}
+		if (value == h->mid) return;
+		else if (value == h->mid - 1)
+			for (auto&& id : h->midv)
+				mB[id] = 1;
+		else
+			forward_match_hgreenNode_C_BOMP(h->leftChild, att, value, subList, mB);
+	}
+}
+
+void BGTree_d::backward_match_DMFT_fBGTree_d_CBOMP(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
+{
+	bitset<subs> gB, mB; // global bitset
+	vector<bool> attExist(atts, false);
+	for (auto&& pi : pub.pairs)
+	{
+		mB = nnB[pi.att]; // Assume all having definitions is mismatching and marked
+		attExist[pi.att] = true;
+		backward_match_DMFT_fBGTree_d_CBOMP_blueNode(roots[pi.att], pi.att, pi.value, subList, mB);
+		gB |= mB;
+	}
+	_for(i, 0, atts) if (!attExist[i])
+			gB |= nnB[i];
+	matchSubs = numSub - gB.count();
+}
+
+void
+BGTree_d::backward_match_DMFT_fBGTree_d_CBOMP_blueNode(bluenode_d*& r, const int& att, const int& value, const vector<
+	IntervalSub>& subList, bitset<subs>& mB)
+{
+	if (r->leftBlueChild == nullptr)
+	{ // 1. 叶子节点暴力处理
+#ifdef DEBUG
+		numProcessTwoCmpNode++;
+		numProcessTwoCmpPredicate += r->subids.size();
+#endif
+		for (auto&& id : r->subids)
+		{
+			for (auto&& pi : subList[id].constraints)
+				if (att == pi.att)
+				{
+					if (pi.lowValue <= value && value <= pi.highValue)
+						mB[id] = 0;
+					break;
+				}
+		}
+	}
+	else if (value < r->mid)
+	{ // 2. 小于左中点, 检索两个子节点
+		backward_match_DMFT_fBGTree_d_CBOMP_blueNode(r->leftBlueChild, att, value, subList, mB);
+		backward_match_DMFT_fBGTree_d_CBOMP_lgreenNode(r->lowGreenChild, att, value, subList, mB);
+	}
+	else if (value > r->mid + 1)
+	{ // 5. value > r->mid + 1 大于右中节点, 检索两个子节点
+		backward_match_DMFT_fBGTree_d_CBOMP_blueNode(r->rightBlueChild, att, value, subList, mB);
+		backward_match_DMFT_fBGTree_d_CBOMP_hgreenNode(r->highGreenChild, att, value, subList, mB);
+	}
+	else
+	{ // 3、4. 等于左中点或右中点, 直接得到匹配结果
+#ifdef DEBUG
+		hit++;
+		numProcessExactNode++;
+		if (value == r->mid)
+			numProcessExactPredicate += r->lMidv.size() + r->lowGreenChild->subids.size();
+		else numProcessExactPredicate += r->rMidv.size() + r->highGreenChild->subids.size();
+		if (r->lowGreenChild->bst) numBitsetOperation++;
+#endif
+		if (value == r->mid)
+			for (auto&& id : r->lMidv)
+				mB[id] = 0;
+		else
+			for (auto&& id : r->rMidv)
+				mB[id] = 0;
+		if (r->lowGreenChild->bst)
+		{
+			mB &= ~(*r->lowGreenChild->bst);
+		}
+		else
+		{
+			for (auto&& id : r->lowGreenChild->subids)
+				mB[id] = 0;
+		}
+	}
+}
+
+void BGTree_d::backward_match_DMFT_fBGTree_d_CBOMP_lgreenNode(lgreennode_d*& l, const int& att, const int& value,
+	const vector<IntervalSub>& subList, bitset<subs>& mB)
+{
+	if (l->leftChild == nullptr)
+	{ // 1. 叶子节点暴力处理
+#ifdef DEBUG
+		numProcessOneCmpNode++;
+		numProcessOneCmpPredicate += l->subids.size();
+#endif
+		for (auto&& id : l->subids)
+		{
+			for (auto&& pi : subList[id].constraints)
+				if (att == pi.att)
+				{
+					if (pi.lowValue <= value)
+						mB[id] = 0;
+					break;
+				}
+		}
+	}
+	else if (value < l->mid)
+	{ // 2. 小于左中点, 检索左子节点
+		backward_match_DMFT_fBGTree_d_CBOMP_lgreenNode(l->leftChild, att, value, subList, mB);
+	}
+	else
+	{ // 3、4、5. 左子节点完全匹配
+#ifdef DEBUG
+		numProcessExactNode++;
+		numProcessExactPredicate += l->leftChild->subids.size();
+		if (value == l->mid) hit++;
+		else if (value == l->mid + 1)
+		{
+			hit++;
+			numProcessExactPredicate += l->midv.size();
+		}
+		if (l->leftChild->bst) numBitsetOperation++;
+#endif
+		if (l->leftChild->bst)
+		{
+			mB &= ~(*l->leftChild->bst);
+		}
+		else
+		{
+			for (auto&& id : l->leftChild->subids)
+				mB[id] = 0;
+		}
+		if (value == l->mid) return;
+		else if (value == l->mid + 1)
+			for (auto&& id : l->midv)
+				mB[id] = 0;
+		else //  value > l->mid + 1 检索右子节点
+			backward_match_DMFT_fBGTree_d_CBOMP_lgreenNode(l->rightChild, att, value, subList, mB);
+	}
+}
+
+void BGTree_d::backward_match_DMFT_fBGTree_d_CBOMP_hgreenNode(hgreennode_d*& h, const int& att, const int& value,
+	const vector<IntervalSub>& subList, bitset<subs>& mB)
+{
+	if (h->leftChild == nullptr)
+	{ // 1. 叶子节点暴力处理
+#ifdef DEBUG
+		numProcessOneCmpNode++;
+		numProcessOneCmpPredicate += h->subids.size();
+#endif
+		for (auto&& id : h->subids)
+		{
+			for (auto&& pi : subList[id].constraints)
+				if (att == pi.att)
+				{
+					if (value <= pi.highValue)
+						mB[id] = 0;
+					break;
+				}
+		}
+	}
+	else if (value > h->mid)
+	{ // 2. 大于右中点, 检索右子节点
+		backward_match_DMFT_fBGTree_d_CBOMP_hgreenNode(h->rightChild, att, value, subList, mB);
+	}
+	else
+	{ // 3、4、5. 小于左中点, 右子节点完全匹配, 检索左子节点
+#ifdef DEBUG
+		numProcessExactNode++;
+		numProcessExactPredicate += h->rightChild->subids.size();
+		if (value == h->mid) hit++;
+		else if (value == h->mid - 1)
+		{
+			hit++;
+			numProcessExactPredicate += h->midv.size();
+		}
+		if (h->rightChild->bst) numBitsetOperation++;
+#endif
+		if (h->rightChild->bst)
+		{
+			mB &= ~(*h->rightChild->bst);
+		}
+		else
+		{
+			for (auto&& id : h->rightChild->subids)
+				mB[id] = 0;
+		}
+		if (value == h->mid) return;
+		else if (value == h->mid - 1)
+			for (auto&& id : h->midv)
+				mB[id] = 0;
+		else
+			backward_match_DMFT_fBGTree_d_CBOMP_hgreenNode(h->leftChild, att, value, subList, mB);
 	}
 }
 
@@ -691,80 +1013,72 @@ void BGTree_d::backward_match_blueNode_native(bluenode_d*& r, const int& att, co
 	}
 	else if (value <= r->mid)
 	{
+#ifdef DEBUG
+		numProcessExactNode++;
+		numProcessExactPredicate += r->rightBlueChild->subids.size();
+		if (r->rightBlueChild->bst) numBitsetOperation++;
+#endif
 		if (r->rightBlueChild->bst == nullptr)
 		{
-#ifdef DEBUG
-			numProcessExactNode++;
-			numProcessExactPredicate += r->rightBlueChild->subids.size();
-#endif
 			for (auto&& id : r->rightBlueChild->subids)
 				gB[id] = 1;
 		}
 		else
 		{
-#ifdef DEBUG
-			numProcessExactNode++;
-			numProcessExactPredicate += r->rightBlueChild->subids.size();
-			numOROperation++;
-#endif
 			gB = gB | *r->rightBlueChild->bst;
 		}
-		if (value == r->mid && r->leftBlueChild->bst != nullptr)
+		if (value != r->mid || r->leftBlueChild->bst == nullptr)
+		{
+			backward_match_blueNode_native(r->leftBlueChild, att, value, subList, gB);
+			backward_match_lgreenNode_native(r->lowGreenChild, att, value, subList, gB);
+		}
+		else
 		{
 #ifdef DEBUG
+			hit++;
 			numProcessExactNode++;
 			numProcessExactPredicate += r->leftBlueChild->subids.size() - r->lMidv.size();
-			numOROperation++;
-			hit++;
+			numBitsetOperation++;
 #endif
 			bitset<subs> bst_c = *r->leftBlueChild->bst;
 			for (auto&& id : r->lMidv)
 				bst_c[id] = 0;
 			gB = gB | bst_c;
 		}
-		else
-		{
-			backward_match_blueNode_native(r->leftBlueChild, att, value, subList, gB);
-			backward_match_lgreenNode_native(r->lowGreenChild, att, value, subList, gB);
-		}
 	}
-	else
+	else // value>mid
 	{
+#ifdef DEBUG
+		numProcessExactNode++;
+		numProcessExactPredicate += r->leftBlueChild->subids.size();
+		if (r->leftBlueChild->bst) numBitsetOperation++;
+#endif
 		if (r->leftBlueChild->bst == nullptr)
 		{
-#ifdef DEBUG
-			numProcessExactNode++;
-			numProcessExactPredicate += r->leftBlueChild->subids.size();
-#endif
 			for (auto&& id : r->leftBlueChild->subids)
 				gB[id] = 1;
 		}
 		else
 		{
-#ifdef DEBUG
-			numProcessExactNode++;
-			numProcessExactPredicate += r->leftBlueChild->subids.size();
-			numOROperation++;
-#endif
 			gB = gB | *r->leftBlueChild->bst;
 		}
-		if (value == r->mid + 1 && r->rightBlueChild->bst != nullptr)
+		if (value != r->mid + 1 || r->rightBlueChild->bst == nullptr)
+		{
+			backward_match_blueNode_native(r->rightBlueChild, att, value, subList, gB);
+			backward_match_hgreenNode_native(r->highGreenChild, att, value, subList, gB);
+		}
+		else
 		{
 #ifdef DEBUG
+			hit++;
 			numProcessExactNode++;
 			numProcessExactPredicate += r->rightBlueChild->subids.size() - r->rMidv.size();
-			numOROperation++;
-			hit++;
+			numBitsetOperation++;
 #endif
 			bitset<subs> bst_c = *r->rightBlueChild->bst;
 			for (auto&& id : r->rMidv)
 				bst_c[id] = 0;
 			gB = gB | bst_c;
-		}
-		else
-		{
-			backward_match_blueNode_native(r->rightBlueChild, att, value, subList, gB);
-			backward_match_hgreenNode_native(r->highGreenChild, att, value, subList, gB);
 		}
 	}
 }
@@ -773,7 +1087,6 @@ void
 BGTree_d::backward_match_lgreenNode_native(lgreennode_d*& l, const int& att, const int& value,
 	const vector<IntervalSub>& subList, bitset<subs>& gB)
 {
-	// 把最有可能出现的放前面
 	if (l->leftChild == nullptr)
 	{ // 1. 叶子节点暴力处理
 #ifdef DEBUG
@@ -793,39 +1106,36 @@ BGTree_d::backward_match_lgreenNode_native(lgreennode_d*& l, const int& att, con
 	}
 	else if (value <= l->mid)
 	{
+#ifdef DEBUG
+		numProcessExactNode++;
+		numProcessExactPredicate += l->rightChild->subids.size();
+		if (value == l->mid) hit++;
+		if (l->rightChild->bst) numBitsetOperation++;
+#endif
 		if (l->rightChild->bst == nullptr)
 		{
-#ifdef DEBUG
-			numProcessExactNode++;
-			numProcessExactPredicate += l->rightChild->subids.size();
-#endif
 			for (auto&& id : l->rightChild->subids)
 				gB[id] = 1;
 		}
 		else
 		{
-#ifdef DEBUG
-			numProcessExactNode++;
-			numProcessExactPredicate += l->rightChild->subids.size();
-			numOROperation++;
-#endif
 			gB = gB | *l->rightChild->bst;
 		}
 		if (value < l->mid)
 			backward_match_lgreenNode_native(l->leftChild, att, value, subList, gB);
-#ifdef DEBUG
-		if (value == l->mid)
-			hit++;
-#endif
 	}
 	else
 	{ // l->mid < value
-		if (l->mid + 1 == value && l->rightChild->bst != nullptr)
+		if (l->mid + 1 != value || l->rightChild->bst == nullptr)
+		{
+			backward_match_lgreenNode_native(l->rightChild, att, value, subList, gB);
+		}
+		else
 		{
 #ifdef DEBUG
 			numProcessExactNode++;
 			numProcessExactPredicate += l->rightChild->subids.size() - l->midv.size();
-			numOROperation++;
+			numBitsetOperation++;
 			hit++;
 #endif
 			bitset<subs> bst_c = *l->rightChild->bst;
@@ -833,24 +1143,20 @@ BGTree_d::backward_match_lgreenNode_native(lgreennode_d*& l, const int& att, con
 				bst_c[id] = 0;
 			gB = gB | bst_c;
 		}
-		else
-		{
-			backward_match_lgreenNode_native(l->rightChild, att, value, subList, gB);
-		}
 	}
 }
 
 void
-BGTree_d::backward_match_hgreenNode_native(hgreennode_d*& r, const int& att, const int& value,
+BGTree_d::backward_match_hgreenNode_native(hgreennode_d*& h, const int& att, const int& value,
 	const vector<IntervalSub>& subList, bitset<subs>& gB)
 {
-	if (r->leftChild == nullptr)
+	if (h->leftChild == nullptr)
 	{ // 1. 叶子节点暴力处理
 #ifdef DEBUG
 		numProcessOneCmpNode++;
-		numProcessOneCmpPredicate += r->subids.size();
+		numProcessOneCmpPredicate += h->subids.size();
 #endif
-		for (auto&& id : r->subids)
+		for (auto&& id : h->subids)
 		{
 			for (auto&& pi : subList[id].constraints)
 				if (att == pi.att)
@@ -861,51 +1167,279 @@ BGTree_d::backward_match_hgreenNode_native(hgreennode_d*& r, const int& att, con
 				}
 		}
 	}
-	else if (value >= r->mid)
+	else if (value >= h->mid)
 	{ // 2. fall into right subInterval
-		if (r->leftChild->bst == nullptr)
-		{ // leftChild must be all-unmatch
 #ifdef DEBUG
-			numProcessExactNode++;
-			numProcessExactPredicate += r->leftChild->subids.size();
+		numProcessExactNode++;
+		numProcessExactPredicate += h->leftChild->subids.size();
+		if (value == h->mid) hit++;
+		if (h->leftChild->bst) numBitsetOperation++;
 #endif
-			for (auto&& id : r->leftChild->subids)
+		if (h->leftChild->bst == nullptr)
+		{ // leftChild must be all-unmatch
+			for (auto&& id : h->leftChild->subids)
 				gB[id] = 1;
 		}
 		else
 		{
-#ifdef DEBUG
-			numProcessExactNode++;
-			numProcessExactPredicate += r->leftChild->subids.size();
-			numOROperation++;
-#endif
-			gB = gB | *r->leftChild->bst;
+			gB = gB | *h->leftChild->bst;
 		}
-		if (value > r->mid)
-			backward_match_hgreenNode_native(r->rightChild, att, value, subList, gB);
-#ifdef DEBUG
-		if (value == r->mid)
-			hit++;
-#endif
+		if (value > h->mid)
+			backward_match_hgreenNode_native(h->rightChild, att, value, subList, gB);
 	}
 	else
-	{ // value < r->mid
-		if (r->mid == value + 1 && r->leftChild->bst != nullptr)
+	{ // value < h->mid
+		if (h->mid != value + 1 || h->leftChild->bst == nullptr)
 		{
-#ifdef DEBUG
-			numProcessExactNode++;
-			numProcessExactPredicate += r->leftChild->subids.size() - r->midv.size();
-			numOROperation++;
-			hit++;
-#endif
-			bitset<subs> bst_c = *r->leftChild->bst;
-			for (auto&& id : r->midv)
-				bst_c[id] = 0;
-			gB = gB | bst_c;
+			backward_match_hgreenNode_native(h->leftChild, att, value, subList, gB);
 		}
 		else
 		{
-			backward_match_hgreenNode_native(r->leftChild, att, value, subList, gB);
+#ifdef DEBUG
+			numProcessExactNode++;
+			numProcessExactPredicate += h->leftChild->subids.size() - h->midv.size();
+			numBitsetOperation++;
+			hit++;
+#endif
+			bitset<subs> bst_c = *h->leftChild->bst;
+			for (auto&& id : h->midv)
+				bst_c[id] = 0;
+			gB = gB | bst_c;
+		}
+	}
+}
+
+void
+BGTree_d::forward_match_DMFT_bBGTree_d(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList) // bBG-Tree_d-F
+{  // bBG-Tree_d-F
+	bitset<subs> gB; // global bitset
+	gB.set(); // 全设为1, 假设都是匹配的
+	vector<bool> attExist(atts, false);
+	for (auto&& pi : pub.pairs)
+	{
+		attExist[pi.att] = true;
+		forward_match_DMFT_bBGTree_d_blueNode(roots[pi.att], pi.att, pi.value, subList, gB);
+	}
+	_for(i, 0, atts) if (!attExist[i])
+			gB &= nB[i];
+	matchSubs = gB.count();
+}
+
+void
+BGTree_d::forward_match_DMFT_bBGTree_d_blueNode(const bluenode_d* const& r, const int& att, const int& value, const vector<
+	IntervalSub>& subList, bitset<subs>& gB)
+{
+	if (r->leftBlueChild == nullptr)
+	{
+#ifdef DEBUG
+		numProcessTwoCmpNode++;
+		numProcessTwoCmpPredicate += r->subids.size();
+#endif
+		for (auto&& i : r->subids)
+		{
+			for (auto&& pi : subList[i].constraints)
+				if (att == pi.att)
+				{
+					if (value < pi.lowValue || pi.highValue < value)
+						gB[i] = 0;
+					break;
+				}
+		}
+	}
+	else if (value <= r->mid)
+	{
+#ifdef DEBUG
+		numProcessExactNode++;
+		numProcessExactPredicate += r->rightBlueChild->subids.size();
+		if (r->rightBlueChild->bst) numBitsetOperation++;
+#endif
+		if (r->rightBlueChild->bst == nullptr)
+		{
+			for (auto&& id : r->rightBlueChild->subids)
+				gB[id] = 0;
+		}
+		else
+		{
+			gB &= ~*r->rightBlueChild->bst;
+		}
+		if (value != r->mid || r->leftBlueChild->bst == nullptr)
+		{
+			forward_match_DMFT_bBGTree_d_blueNode(r->leftBlueChild, att, value, subList, gB);
+			forward_match_DMFT_bBGTree_d_lgreenNode(r->lowGreenChild, att, value, subList, gB);
+		}
+		else
+		{
+#ifdef DEBUG
+			hit++;
+			numProcessExactNode++;
+			numProcessExactPredicate += r->leftBlueChild->subids.size() - r->lMidv.size();
+			numBitsetOperation++;
+#endif
+			bitset<subs> bst_c = *r->leftBlueChild->bst;
+			for (auto&& id : r->lMidv)
+				bst_c[id] = 0;
+			gB &= ~bst_c;
+		}
+	}
+	else // value>mid
+	{
+#ifdef DEBUG
+		numProcessExactNode++;
+		numProcessExactPredicate += r->leftBlueChild->subids.size();
+		if (r->leftBlueChild->bst) numBitsetOperation++;
+#endif
+		if (r->leftBlueChild->bst == nullptr)
+		{
+			for (auto&& id : r->leftBlueChild->subids)
+				gB[id] = 0;
+		}
+		else
+		{
+			gB &= ~*r->leftBlueChild->bst;
+		}
+		if (value != r->mid + 1 || r->rightBlueChild->bst == nullptr)
+		{
+			forward_match_DMFT_bBGTree_d_blueNode(r->rightBlueChild, att, value, subList, gB);
+			forward_match_DMFT_bBGTree_d_hgreenNode(r->highGreenChild, att, value, subList, gB);
+		}
+		else
+		{
+#ifdef DEBUG
+			hit++;
+			numProcessExactNode++;
+			numProcessExactPredicate += r->rightBlueChild->subids.size() - r->rMidv.size();
+			numBitsetOperation++;
+#endif
+			bitset<subs> bst_c = *r->rightBlueChild->bst;
+			for (auto&& id : r->rMidv)
+				bst_c[id] = 0;
+			gB &= ~bst_c;
+		}
+	}
+}
+
+void
+BGTree_d::forward_match_DMFT_bBGTree_d_lgreenNode(const lgreennode_d* const& l, const int& att, const int& value, const vector<
+	IntervalSub>& subList, bitset<subs>& gB)
+{
+	if (l->leftChild == nullptr)
+	{ // 1. 叶子节点暴力处理
+#ifdef DEBUG
+		numProcessOneCmpNode++;
+		numProcessOneCmpPredicate += l->subids.size();
+#endif
+		for (auto&& id : l->subids)
+		{
+			for (auto&& pi : subList[id].constraints)
+				if (att == pi.att)
+				{
+					if (pi.lowValue > value)
+						gB[id] = 0;
+					break;
+				}
+		}
+	}
+	else if (value <= l->mid)
+	{
+#ifdef DEBUG
+		numProcessExactNode++;
+		numProcessExactPredicate += l->rightChild->subids.size();
+		if (value == l->mid) hit++;
+		if (l->rightChild->bst) numBitsetOperation++;
+#endif
+		if (l->rightChild->bst)
+		{
+			gB &= ~*l->rightChild->bst;
+		}
+		else
+		{
+			for (auto&& id : l->rightChild->subids)
+				gB[id] = 0;
+		}
+		if (value < l->mid)
+			forward_match_DMFT_bBGTree_d_lgreenNode(l->leftChild, att, value, subList, gB);
+	}
+	else
+	{ // l->mid < value
+		if (l->mid + 1 != value || l->rightChild->bst == nullptr)
+		{
+			forward_match_DMFT_bBGTree_d_lgreenNode(l->rightChild, att, value, subList, gB);
+		}
+		else
+		{
+#ifdef DEBUG
+			hit++;
+			numProcessExactNode++;
+			numProcessExactPredicate += l->rightChild->subids.size() - l->midv.size();
+			numBitsetOperation++;
+#endif
+			bitset<subs> bst_c = *l->rightChild->bst;
+			for (auto&& id : l->midv)
+				bst_c[id] = 0;
+			gB &= ~bst_c;
+		}
+	}
+}
+
+void
+BGTree_d::forward_match_DMFT_bBGTree_d_hgreenNode(const hgreennode_d* const& h, const int& att, const int& value, const vector<
+	IntervalSub>& subList, bitset<subs>& gB)
+{
+	if (h->leftChild == nullptr)
+	{ // 1. 叶子节点暴力处理
+#ifdef DEBUG
+		numProcessOneCmpNode++;
+		numProcessOneCmpPredicate += h->subids.size();
+#endif
+		for (auto&& id : h->subids)
+		{
+			for (auto&& pi : subList[id].constraints)
+				if (att == pi.att)
+				{
+					if (pi.highValue < value)
+						gB[id] = 0;
+					break;
+				}
+		}
+	}
+	else if (value >= h->mid)
+	{ // 2. fall into right subInterval
+#ifdef DEBUG
+		numProcessExactNode++;
+		numProcessExactPredicate += h->leftChild->subids.size();
+		if (value == h->mid) hit++;
+		if (h->leftChild->bst) numBitsetOperation++;
+#endif
+		if (h->leftChild->bst) // leftChild must be all-unmatch
+		{
+			gB &= ~*h->leftChild->bst;
+		}
+		else
+		{
+			for (auto&& id : h->leftChild->subids)
+				gB[id] = 0;
+		}
+		if (value > h->mid)
+			forward_match_DMFT_bBGTree_d_hgreenNode(h->rightChild, att, value, subList, gB);
+	}
+	else
+	{ // value < h->mid
+		if (h->mid != value + 1 || h->leftChild->bst == nullptr)
+		{
+			forward_match_DMFT_bBGTree_d_hgreenNode(h->leftChild, att, value, subList, gB);
+		}
+		else
+		{
+#ifdef DEBUG
+			numProcessExactNode++;
+			numProcessExactPredicate += h->leftChild->subids.size() - h->midv.size();
+			numBitsetOperation++;
+			hit++;
+#endif
+			bitset<subs> bst_c = *h->leftChild->bst;
+			for (auto&& id : h->midv)
+				bst_c[id] = 0;
+			gB &= ~bst_c;
 		}
 	}
 }
@@ -975,7 +1509,7 @@ int BGTree_d::calMemory()
 	size += sizeof(int) * subs * 2; // subPredicate counter
 	size += sizeof(nB) + sizeof(nB[0]) * atts; // nB or nnB
 	size = size / 1024 / 1024; // MB
-	return (int)size;
+	return (int32_t)size;
 }
 
 void BGTree_d::printBGTree()
@@ -1058,7 +1592,7 @@ void BGTree_d::printBGTree()
  << "\nEffectivePredicate: " << numEffectivePredicate << ", effectiveRate: "
 		 << (double)numEffectivePredicate /
 			(double)(numProcessExactPredicate + numProcessOneCmpPredicate + numProcessTwoCmpPredicate + 1)
-		 << "\nOR: " << numOROperation << ", AvgHit: " << hit << ".\n\n";
+		 << "\nOR: " << numBitsetOperation << ", AvgHit: " << hit << ".\n\n";
 
 }
 

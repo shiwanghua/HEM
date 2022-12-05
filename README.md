@@ -39,8 +39,8 @@
 4. sudo cpufreq-set -c 8 -d 3.6G
 5. sudo cpufreq-set -c 8 -u 4.9G
 6. Run command "ulimit -s unlimited; taskset -c 8 ./run" (8 指指定第 8 号核单独运行程序)
-
-- debug: g++ -g -o derun *.h *.cpp -mavx2 -std=c++2a -lboost_system -lpthread; gdb derun
+7. 查看最近一次部分算法的结果：head -1 Rein.txt Rein_F_DMFT.txt fRein.txt fRein_C.txt fRein_C_B.txt hRein.txt hRein_c.txt  HEM5.txt Tama.txt bTama6.txt bTama8.txt fBGTree.txt fBGTree_C.txt fBGTree_CB.txt bBGTree.txt bBGTree_F.txt fBGTree_d.txt fBGTree_d_C.txt fBGTree_d_CB.txt bBGTree_d.txt bBGTree_d_F.txt
+8. debug: g++ -g -o derun *.h *.cpp -mavx2 -std=c++2a -lboost_system -lpthread; gdb derun
 
 #### 注意事项
 
@@ -79,15 +79,17 @@
 - 实验 9 的匹配个数有错，两个 Simple 算法的结果是一样的，其他所有算法的结果是一样的，在 500、10000 个事件时两个平均匹配个数相差**都**少于 1
 - Why can setting p=0.5 increase the matching probability clearly in Exp 3 and 4 for real data set ?
 
-# BG-Tree 开发月志
+# BG-Tree/FBMAD/C-BOMP/DMFT 开发月志
 
 | 月      | 进展情况                                                                                                                                                                                                                        |
 | ------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | 2021-07 | 提出三层划分模型（0-0.5, 0.5-1.0, 跨 0.5）                                                                                                                                                                                      |
 | 2021-11 | 基于三层划分模型结合 AWB+Tree 提出新数据结构 BGTree，做初步设计(讲 PPT)与分析，实现初始化函数                                                                                                                                   |
 | 2021-12 | 做插入匹配的数据结构详细设计 1.0，实现插入删除函数，提出正向计数优化范式 C-BOMP 和方向匹配基本定理 1                                                                                                                            |
-| 2022-01 | 提出将 OpIndex、PS-Tree、C-BOMP、节点动态伸缩结合在一起的优化，提出多分割点优化(多叉树)，解剖 BG-Tree 做可视化分析，提出方向匹配基本定理 2，做支持正反匹配的数据结构详细设计 2.0 以及实现，基于此实现节点动态伸缩、正向事件匹配 |
-| 2022-02 | 基于第二版本的同一数据结构实现反向事件匹配；细化 BG-Tree-d-vsr 并开始实现                                                                                                                                                       |
+| 2022-01 | 实现 fRein, fRein-C, hRein, hRein-C，提出将 OpIndex、PS-Tree、C-BOMP、节点动态伸缩结合在一起的优化，提出多分割点优化(多叉树)，解剖 BG-Tree 做可视化分析，提出方向匹配基本定理 2，做支持正反匹配的数据结构详细设计 2.0 以及实现，基于此实现节点动态伸缩、正向事件匹配 |
+| 2022-02 | 基于第二版本的同一数据结构实现反向事件匹配；细化 BG-Tree-d-vsr 并开始实现
+| 2022-11 | 实现 pTama_Lock, pTama_Reduce, bTama6_p, bTama8_p, fRein/hRein 的 PGWO 系列，fRein-C-B，Rein-F
+|2022-12| 重构BGTree1.0，实现 bBGTree，bBGTree_F，fBGTree_d_C，fBGTree_d_CB, bBGTree_d_F 并优化其他5个BGTree版本
 
 # 2022-HEM 扩展版开发周志
 

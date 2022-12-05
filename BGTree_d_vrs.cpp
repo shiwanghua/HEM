@@ -713,7 +713,7 @@ bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 //#ifdef DEBUG
 //			numProcessExactNode++;
 //			numProcessExactPredicate += r->rightBlueChild->subids.size();
-//			numOROperation++;
+//			numBitsetOperation++;
 //#endif
 //			gB = gB | *r->rightBlueChild->realBstPtr;
 //		}
@@ -721,7 +721,7 @@ bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 //#ifdef DEBUG
 //			numProcessExactNode++;
 //			numProcessExactPredicate += r->leftBlueChild->subids.size() - r->lMidv.size();
-//			numOROperation++;
+//			numBitsetOperation++;
 //			hit++;
 //#endif
 //			bitset<subs> bst_c = *r->leftBlueChild->realBstPtr;
@@ -744,7 +744,7 @@ bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 //#ifdef DEBUG
 //			numProcessExactNode++;
 //			numProcessExactPredicate += r->leftBlueChild->subids.size();
-//			numOROperation++;
+//			numBitsetOperation++;
 //#endif
 //			gB = gB | *r->leftBlueChild->realBstPtr;
 //		}
@@ -752,7 +752,7 @@ bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 //#ifdef DEBUG
 //			numProcessExactNode++;
 //			numProcessExactPredicate += r->rightBlueChild->subids.size() - r->rMidv.size();
-//			numOROperation++;
+//			numBitsetOperation++;
 //			hit++;
 //#endif
 //			bitset<subs> bst_c = *r->rightBlueChild->realBstPtr;
@@ -795,7 +795,7 @@ bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 //#ifdef DEBUG
 //			numProcessExactNode++;
 //			numProcessExactPredicate += l->rightChild->subids.size();
-//			numOROperation++;
+//			numBitsetOperation++;
 //#endif
 //			gB = gB | *l->rightChild->realBstPtr;
 //		}
@@ -810,7 +810,7 @@ bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 //#ifdef DEBUG
 //			numProcessExactNode++;
 //			numProcessExactPredicate += l->rightChild->subids.size() - l->midv.size();
-//			numOROperation++;
+//			numBitsetOperation++;
 //			hit++;
 //#endif
 //			bitset<subs> bst_c = *l->rightChild->realBstPtr;
@@ -851,7 +851,7 @@ bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 //#ifdef DEBUG
 //			numProcessExactNode++;
 //			numProcessExactPredicate += r->leftChild->subids.size();
-//			numOROperation++;
+//			numBitsetOperation++;
 //#endif
 //			gB = gB | *r->leftChild->realBstPtr;
 //		}
@@ -866,7 +866,7 @@ bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 //#ifdef DEBUG
 //			numProcessExactNode++;
 //			numProcessExactPredicate += r->leftChild->subids.size() - r->midv.size();
-//			numOROperation++;
+//			numBitsetOperation++;
 //			hit++;
 //#endif
 //			bitset<subs> bst_c = *r->leftChild->realBstPtr;
@@ -1008,7 +1008,7 @@ bool BGTree_d_vrs::deleteSubscription(IntervalSub sub) {
 // << "\nEffectivePredicate: " << numEffectivePredicate << ", effectiveRate: "
 //		 << (double) numEffectivePredicate /
 //			(double) (numProcessExactPredicate + numProcessOneCmpPredicate + numProcessTwoCmpPredicate + 1)
-//		 << "\nOR: " << numOROperation << ", AvgHit: " << hit << ".\n\n";
+//		 << "\nOR: " << numBitsetOperation << ", AvgHit: " << hit << ".\n\n";
 //
 //}
 //
