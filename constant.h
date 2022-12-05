@@ -14,9 +14,9 @@ extern const bool verifyID;// whether to verify Insertion and Deletion function
 extern const int interval; // ÿƥ����ô����¼����һ����־��Ϣ
 extern const double subp;  // subp�����Ķ��ĺ��¼���ν�ʶ�����ǰcons��ά����
 extern double realMatchNum;
-const int subs = 9000000;  //1048576;//134217728;  // Number of subscriptions.
-extern const int pubs;     // Number of publications.
-extern int atts;           // Total number of attributes, i.e. dimensions.
+const int subs = 1000000;  //1048576;//134217728;  // Number of subscriptions.
+extern const int32_t pubs;     // Number of publications.
+extern int32_t atts;           // Total number of attributes, i.e. dimensions.
 extern int attrGroup;          // The number of attribute group in #atts attributes.
 extern int cons;           // Number of constraints(predicates) in one sub.
 extern int m;              // Number of constraints in one pub.

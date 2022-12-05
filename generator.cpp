@@ -603,7 +603,7 @@ void intervalGenerator::GenZipfValues(IntervalSub& sub)
 	int maxVal = valDom - minRange;
 	_for(i, 0, sub.size)
 	{
-		w = minRange+random(maxVal);
+		w = minRange + random(maxVal);
 		x = zipfDistribution(valDom - w, alpha);
 		y = x + w;
 		sub.constraints[i].lowValue = x;
@@ -681,7 +681,8 @@ void intervalGenerator::GenUniformValues(Pub& pub)
 {
 	for (int i = 0; i < pub.size; i++)
 	{
-		int x = random(valDom);
+//		int x = random(valDom);
+		int x = random(int32_t(0.1 * valDom)) + 000000;
 		pub.pairs[i].value = x;
 	}
 }

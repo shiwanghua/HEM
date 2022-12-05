@@ -299,10 +299,23 @@ BGTree::match_forward_blueNode(const bluenode* const& r, const int& att, const i
 		match_forward_blueNode(r->leftBlueChild, att, value, subList);
 		match_forward_lgreenNode(r->lowGreenChild, att, value, subList);
 	}
-	else if (r->mid < value)
+	else if (value > r->mid)
 	{ // 3. value > r->mid 检索右蓝绿子节点
 		match_forward_blueNode(r->rightBlueChild, att, value, subList);
-		match_forward_hgreenNode(r->highGreenChild, att, value, subList);
+		if (value != r->mid + 1)
+		{
+			match_forward_hgreenNode(r->highGreenChild, att, value, subList);
+		}
+		else
+		{ // 高绿子节点全匹配
+#ifdef DEBUG
+			hit++;
+			numProcessExactNode++;
+			numProcessExactPredicate += + r->highGreenChild->subids.size();
+#endif
+			for (auto&& id : r->highGreenChild->subids)
+				counter[id]--;
+		}
 	}
 	else
 	{ // 4.等于中点, 直接得到匹配结果
@@ -311,8 +324,8 @@ BGTree::match_forward_blueNode(const bluenode* const& r, const int& att, const i
 		numProcessExactNode++;
 		numProcessExactPredicate += r->midEqual.size() + r->lowGreenChild->subids.size();
 #endif
-		for (auto&& i : r->midEqual)
-			counter[i]--;
+		for (auto&& id : r->midEqual)
+			counter[id]--;
 		for (auto&& id : r->lowGreenChild->subids) // 这部分最初是多存了一份到midEqual里于是只需要 1 个 for 循环
 			counter[id]--;
 	}

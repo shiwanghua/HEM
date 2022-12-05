@@ -34,7 +34,7 @@ int main(int argc, char** argv)
 
 	intervalGenerator gen(subs, pubs, atts, attrGroup, cons, m, attNumType, attDis, valDis, valDom, alpha, subp, width);
 	gen.GenSubList();
-	gen.GenPubList2();
+	gen.GenPubList();
 //	gen.GenSubList_g();
 //	gen.GenPubList_g();
 
@@ -65,7 +65,7 @@ int main(int argc, char** argv)
 //	run_rein_backward_DMFT(gen,deleteNo);
 //	run_pRein(gen, deleteNo);
 
-//	run_AdaRein_ORI(gen, deleteNo);
+	run_AdaRein_ORI(gen, deleteNo);
 //	run_AdaRein_SSS(gen, deleteNo);
 //	run_AdaRein_SSS_B(gen, deleteNo);
 //	run_AdaRein_SSS_C(gen, deleteNo);
@@ -117,9 +117,9 @@ int main(int argc, char** argv)
 //	 run_BGTREE_d_vrs_backward_native(gen, deleteNo);
 
 //	run_OpIndex(gen, deleteNo);
-	//	run_bOpIndex2(gen, deleteNo);
+		run_bOpIndex2(gen, deleteNo);
 	//	run_PSTREE(gen, deleteNo);
-//	run_AWBTREE(gen, deleteNo);
+	run_AWBTREE(gen, deleteNo);
 //	run_AWBTREE_parallel(gen, deleteNo);
 	// measure_numMark(gen);
 
