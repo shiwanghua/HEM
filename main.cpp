@@ -65,7 +65,7 @@ int main(int argc, char** argv)
 //	run_rein_backward_DMFT(gen,deleteNo);
 //	run_pRein(gen, deleteNo);
 
-	run_AdaRein_ORI(gen, deleteNo);
+//	run_AdaRein_ORI(gen, deleteNo);
 //	run_AdaRein_SSS(gen, deleteNo);
 //	run_AdaRein_SSS_B(gen, deleteNo);
 //	run_AdaRein_SSS_C(gen, deleteNo);
@@ -80,7 +80,7 @@ int main(int argc, char** argv)
 	//	run_HEM2(gen);
 	//	run_HEM3(gen);
 	//	run_HEM4(gen);
-	run_HEM5(gen, deleteNo);
+//	run_HEM5(gen, deleteNo);
 //	run_HEM5_avxOR(gen, deleteNo);
 //	 run_HEM5_parallel(gen, deleteNo);
 //	 run_HEM5_avxOR_parallel(gen, deleteNo);
@@ -94,7 +94,7 @@ int main(int argc, char** argv)
 	//run_Simple(gen, deleteNo);
 	//	run_Simple2(gen, deleteNo);
 
-	run_tama(gen, deleteNo);
+//	run_tama(gen, deleteNo);
 //	 run_tama_parallel_lock(gen,deleteNo); // parallel TAMA-lock very slow
 //	 run_tama_parallel_reduce(gen,deleteNo); // parallel TAMA-reduce
 //	run_btama_forward_C_BOMP(gen, deleteNo); // bTAMA6 C-BOMP
@@ -117,9 +117,9 @@ int main(int argc, char** argv)
 //	 run_BGTREE_d_vrs_backward_native(gen, deleteNo);
 
 //	run_OpIndex(gen, deleteNo);
-		run_bOpIndex2(gen, deleteNo);
+//		run_bOpIndex2(gen, deleteNo);
 	//	run_PSTREE(gen, deleteNo);
-	run_AWBTREE(gen, deleteNo);
+//	run_AWBTREE(gen, deleteNo);
 //	run_AWBTREE_parallel(gen, deleteNo);
 	// measure_numMark(gen);
 
@@ -134,6 +134,12 @@ int main(int argc, char** argv)
 //	run_btama_forward_C_BOMP(gen, deleteNo); // bTAMA6 C-BOMP
 //	run_btama_backward2_CBOMP(gen, deleteNo); // bTAMA8 DMFT
 //	run_HEM5(gen, deleteNo);
+
+//	run_AdaRein_ORI(gen, deleteNo);
+//	run_HEM5(gen, deleteNo);
+//	run_tama(gen, deleteNo);
+//	run_OpIndex(gen, deleteNo);
+//	run_AWBTREE(gen, deleteNo);
 
 	cout << "Done.\n";
 	std::system("pause");

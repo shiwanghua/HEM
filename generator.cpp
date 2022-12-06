@@ -681,8 +681,8 @@ void intervalGenerator::GenUniformValues(Pub& pub)
 {
 	for (int i = 0; i < pub.size; i++)
 	{
-//		int x = random(valDom);
-		int x = random(int32_t(0.1 * valDom)) + 000000;
+		int x = random(valDom);
+//		int x = random(int32_t(0.1 * valDom)) + 000000;
 		pub.pairs[i].value = x;
 	}
 }
