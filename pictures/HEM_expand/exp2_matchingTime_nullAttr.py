@@ -26,7 +26,7 @@ OpIndex2 = [61.273606, 40.896958, 25.819700, 16.657835, 8.618768, 1.331137]
 
 # 11: 22607/1024
 Name = [
-    "REIN", "HEM-B", "HEMSS", "BIOP2SD", "BIOP3PD", "BIOP4DS", "HEM-LDA",
+    "REIN", "HEM-B", "HEMSS", "BIOP2SD", "BIOP3PD", "BIOP4DS", "HEM-SOA",
     "Simple", "Simple2"
 ]
 x = np.arange(6)

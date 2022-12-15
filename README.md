@@ -138,12 +138,14 @@
 
 ## HEM 命名史
 
-* ReinBits (RB) ~ BIOP ~ HEM
-* Double Reverse Optimization ~ Dual Reverse Optimization (DRO) ~ Group Selection Optimization (GSO)
-* Dynamic Group Optimization (DGO) ~ Group Partitioning Optimization (GPO)
-* Pure Static HEM (HEMPS) ~ HEM with  Equal **C**ell-number Tolerance GPO (HEM-C)
-* Static Static HEM (HEMSS) ~ HEM with  Equal **C**ell-number Tolerance GPO and **C**ell Number GSO (HEM-CC)
-* Static Dynamic HEM (HEMSD) ~ HEM with  Equal **C**ell-number Tolerance GPO and **W**orkload GSO (HEM-CW)
-* Pure Dynamic HEM (HEMPD) ~ HEM with Equal **P**redicate-number Tolerance GPO (HEM-P)
-* Dynamic Static HEM (HEMSD) ~ HEM with Equal **P**redicate-number Tolerance GPO and **C**ell Number GSO (HEM-PC)
-* Dynamic Dynamic HEM (HEMDD) ~ HEM with Equal **P**redicate-number Tolerance GPO and **W**orkload GSO (HEM-PW)
+* ReinBits (**RB**) ~ **BIOP** ~ **HEM**
+* Multi-level Pre-mark Caching (**MPC**) ~ Cache-based Mismatch Pre-mark (**CMP**)
+* Double Reverse Optimization ~ Dual Reverse Optimization (**DRO**) ~ Group Selection Optimization (**GSO**) ~ Dual Selection Strategy (**DSS**) ~ Optimal Group Selection (**OGS**)
+* Dynamic Group Optimization (**DGO**) ~ Group Partitioning Optimization (**GPO**) ~ Load-oriented Grouping Scheme (**LGS**) ~ Skewness-aware Cell Grouping (**SCG**)
+* Virtual/Real Attribute Subset Optimization (**ASO**) ~ Attribute Clustering Method (**ACM**) ~ Attribute Set Partition (**ASP**)
+* Pure Static HEM (**HEMPS**) ~ HEM with  Equal Cell-number Tolerance GPO (**HEM-C)** ~ Basic HEM (**HEM-B**)
+* Static Static HEM (**HEMSS**) ~ HEM with  Equal Cell-number Tolerance GPO and Cell Number GSO (**HEM-CC**) ~ HEM with Dual Selection Strategy (**HEM-BD**) ~ **HEM-BO**
+* Static Dynamic HEM (**HEMSD**) ~ HEM with  Equal Cell-number Tolerance GPO and Workload GSO (**HEM-CW**) ~ **HEM-BL** ~ **HEM-BS**
+* Pure Dynamic HEM (**HEMPD**) ~ HEM with Equal Predicate-number Tolerance GPO (**HEM-P**) ~ HEM with Load-oriented Grouping Scheme (**HEM-L**) ~ **HEM-S**
+* Dynamic Static HEM (**HEMSD**) ~ HEM with Equal Predicate-number Tolerance GPO and Cell Number GSO (**HEM-PC**) ~ **HEM-LD' **~ **HEM-SO'**
+* Dynamic Dynamic HEM (HEMDD) ~ HEM with Equal Predicate-number Tolerance GPO and Workload GSO (**HEM-PW**) ~ **HEM-LD **~ **HEM-SO**

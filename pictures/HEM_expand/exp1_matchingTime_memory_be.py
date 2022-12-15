@@ -11,7 +11,7 @@ plt.rcParams['axes.unicode_minus'] = False
 g = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]
 x = np.arange(10)  # x轴刻度标签位置
 Name = [
-    "Rein", "HEM-B", "HEMSS", "HEMSD", "HEMPD", "HEMDS", "HEM-LD", "Simple",
+    "Rein", "HEM-B", "HEMSS", "HEMSD", "HEMPD", "HEMDS", "HEM-SO", "Simple",
     "Simple2"
 ]
 

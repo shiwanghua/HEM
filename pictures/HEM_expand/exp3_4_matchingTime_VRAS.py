@@ -1,4 +1,4 @@
-# coding=gbk
+
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
@@ -11,7 +11,7 @@ plt.rcParams['axes.unicode_minus'] = False
 
 x_label = ["20", "50", "100", "400", "500", "1000"]
 x = np.arange(6)  #x轴刻度标签位置
-Name = ["HEM-LD-VAS", "HEM-LD-RAS"]
+Name = ["HEM-SOA-VAS", "HEM-SOA-RAS"]
 
 HEM5_VAG = [53.276685, 26.959339, 15.227813, 7.188751, 7.167826, 9.302589]
 
