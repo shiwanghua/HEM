@@ -44,7 +44,7 @@ void Tama::initiate(int p, int l, int r, int lvl)
 		rchild[p] = ++nodeCounter;
 		initiate(nodeCounter, mid[p] + 1, r, lvl + 1);
 	}
-//	cout<<"TAMA initialization finishes.\n";
+//	cout<<"TAMA_FORWARD initialization finishes.\n";
 }
 
 int Tama::median(int l, int r)

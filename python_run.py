@@ -7,12 +7,14 @@ import sys
 expID = int(sys.argv[1])
 coreId = '8'
 
-os.system('ulimit -s unlimited;sudo chmod 777 run')
 os.system('sudo chmod 777 *.txt')
 os.system("rm tmpData/*.txt")
 os.system("sudo cpufreq-set -c " + coreId + " -g performance")
 os.system("sudo cpufreq-set -c " + coreId + " -d 3.7G")
 os.system("sudo cpufreq-set -c " + coreId + " -u 4.9G")
+os.system('make -j6')
+os.system('sudo chmod 777 run')
+os.system('ulimit -s unlimited')
 
 # Exp 1: be
 # need to #define DEBUG in constant.h file
@@ -89,7 +91,7 @@ os.system("sudo cpufreq-set -c " + coreId + " -u 4.9G")
 # need to use GenPubList2 function to generate data!
 width = 0.9
 for i in range(9):
-    os.system('taskset -c ' + coreId + ' ./run ' + str(expID) + ' 20 5 20 0.0 ' + str(width) + ' 4 1 1000000 1')
+    os.system('ulimit -s unlimited; taskset -c ' + coreId + ' ./run ' + str(expID) + ' 20 5 20 0.0 ' + str(width) + ' 4 1 1000000 1')
     print('Experiment', str(expID), ': atts= 20, k= 5, m= 20, alpha= 0.0, w= ' + str(width) + ', be= 4, attrGroup= 1, valDom= 1000000, pD= 1 done.\n\n')
     expID += 1
     width -= 0.1

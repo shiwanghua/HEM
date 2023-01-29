@@ -3839,11 +3839,11 @@ void run_Simple2(const intervalGenerator& gen, unordered_map<int, bool> deleteNo
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_tama(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_tama_forward_native(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
 	//	printf("123\n");
 	//	fflush(stdout);
-	Tama tama(TAMA);
+	Tama tama(TAMA_FORWARD);
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -3937,7 +3937,7 @@ void run_tama(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_tama_parallel_lock(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_tama_forward_native_parallel_lock(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
 	Tama pTama_l(TAMA_PARALLEL_LOCK);
 
@@ -4032,7 +4032,7 @@ void run_tama_parallel_lock(const intervalGenerator& gen, unordered_map<int, boo
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_tama_parallel_reduce(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_tama_forward_native_parallel_reduce(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
 	Tama pTama_r(TAMA_PARALLEL_REDUCE);
 
@@ -4127,9 +4127,9 @@ void run_tama_parallel_reduce(const intervalGenerator& gen, unordered_map<int, b
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_btama_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_tama_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
-	bTama btama_fc(bTAMA_FORWARD); // bTAMA6
+	bTama btama_fc(TAMA_FORWARD_CBOMP); // bTAMA6
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -4145,19 +4145,18 @@ void run_btama_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, b
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
 	}
-	cout << "bTama_forward Insertion Finishes.\n";
+	cout << "Tama_CF Insertion Finishes.\n";
 
-	// ��֤����ɾ����ȷ��
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
 		{
 			Timer deleteStart;
 			if (!btama_fc.deleteSubscription(gen.subList[kv.first]))
-				cout << "bTama_forward: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+				cout << "Tama_CF: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
 			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
 		}
-		cout << "bTama_forward Deletion Finishes.\n";
+		cout << "Tama_CF Deletion Finishes.\n";
 		for (auto kv : deleteNo)
 		{
 			btama_fc.insert(gen.subList[kv.first]);
@@ -4170,17 +4169,17 @@ void run_btama_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, b
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
-		btama_fc.forward_match_accurate(gen.pubList[i], matchSubs, gen.subList);
+		btama_fc.match_forward_CBOMP_accurate(gen.pubList[i], matchSubs, gen.subList);
 		//tama.match_vague(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "bTama_forward Event " << i << " is matched.\n";
+			cout << "Tama_CF Event " << i << " is matched.\n";
 	}
 #ifdef DEBUG
-	cout << "bTama_forward: AvgMatchNum= " << Util::Average(matchSubList) << ", matchTime= "
+	cout << "Tama_CF: AvgMatchNum= " << Util::Average(matchSubList) << ", matchTime= "
 		 << Util::Double2String(Util::Average(matchTimeList))
 		 << " ms\n";
 #endif
@@ -4210,7 +4209,7 @@ void run_btama_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, b
 
 #ifdef DEBUG
 	outputFileName = "ComprehensiveExpTime.txt";
-	content = "bTama6= [";
+	content = "Tama6_CF= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
 	Util::WriteData2Begin(outputFileName.c_str(), content);
@@ -4221,9 +4220,9 @@ void run_btama_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, b
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_btama_forward_C_BOMP_parallel(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_tama_forward_C_BOMP_parallel(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
-	bTama btama_fcp(bTAMA_FORWARD_PARALLEL); // bTAMA6
+	bTama btama_fcp(TAMA_FORWARD_CBOMP_PARALLEL); // TAMA6-CFP
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -4239,20 +4238,19 @@ void run_btama_forward_C_BOMP_parallel(const intervalGenerator& gen, unordered_m
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
 	}
-	cout << "bTama_forward parallel" << parallelDegree << " Insertion Finishes.\n";
+	cout << "Tama_CFP" << parallelDegree << " Insertion Finishes.\n";
 
-	// ��֤����ɾ����ȷ��
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
 		{
 			Timer deleteStart;
 			if (!btama_fcp.deleteSubscription(gen.subList[kv.first]))
-				cout << "bTama_forward parallel" << parallelDegree << ": sub" << gen.subList[kv.first].id
+				cout << "Tama_CFP" << parallelDegree << ": sub" << gen.subList[kv.first].id
 					 << " is failled to be deleted.\n";
 			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
 		}
-		cout << "bTama_forward parallel" << parallelDegree << ": Deletion Finishes.\n";
+		cout << "Tama_CFP" << parallelDegree << ": Deletion Finishes.\n";
 		for (auto kv : deleteNo)
 		{
 			btama_fcp.insert(gen.subList[kv.first]);
@@ -4265,16 +4263,16 @@ void run_btama_forward_C_BOMP_parallel(const intervalGenerator& gen, unordered_m
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
-		btama_fcp.forward_match_parallel(gen.pubList[i], matchSubs, gen.subList);
+		btama_fcp.match_forward_CBOMP_parallel(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "bTama_forward parallel" << parallelDegree << ": Event " << i << " is matched.\n";
+			cout << "Tama_CFP" << parallelDegree << ": Event " << i << " is matched.\n";
 	}
 #ifdef DEBUG
-	cout << "bTama_forward parallel" << parallelDegree << ": AvgMatchNum= " << Util::Average(matchSubList)
+	cout << "Tama_CFP" << parallelDegree << ": AvgMatchNum= " << Util::Average(matchSubList)
 		 << ", matchTime= "
 		 << Util::Double2String(Util::Average(matchTimeList))
 		 << " ms\n";
@@ -4306,7 +4304,7 @@ void run_btama_forward_C_BOMP_parallel(const intervalGenerator& gen, unordered_m
 
 #ifdef DEBUG
 	outputFileName = "ComprehensiveExpTime.txt";
-	content = "bTama6_p= [";
+	content = "Tama6_CF_p= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
 	Util::WriteData2Begin(outputFileName.c_str(), content);
@@ -4317,9 +4315,9 @@ void run_btama_forward_C_BOMP_parallel(const intervalGenerator& gen, unordered_m
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_btama_backward1_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_tama_backward1_DMFT_TAMA_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
-	bTama btama_b1c(bTAMA_BACKWARD1); // bTAMA7
+	bTama btama_b1c(TAMA_BACKWARD1_DMFT); // bTAMA7
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -4335,19 +4333,18 @@ void run_btama_backward1_C_BOMP(const intervalGenerator& gen, unordered_map<int,
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
 	}
-	cout << "bTama_backward1 Insertion Finishes.\n";
+	cout << "Tama-CB1 Insertion Finishes.\n";
 
-	// ��֤����ɾ����ȷ��
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
 		{
 			Timer deleteStart;
 			if (!btama_b1c.deleteSubscription(gen.subList[kv.first]))
-				cout << "bTama_backward1: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+				cout << "Tama-CB1: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
 			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
 		}
-		cout << "bTama_backward1 Deletion Finishes.\n";
+		cout << "Tama-CB1 Deletion Finishes.\n";
 		for (auto kv : deleteNo)
 		{
 			btama_b1c.insert(gen.subList[kv.first]);
@@ -4360,16 +4357,16 @@ void run_btama_backward1_C_BOMP(const intervalGenerator& gen, unordered_map<int,
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
-		btama_b1c.backward1_match_accurate(gen.pubList[i], matchSubs, gen.subList);
+		btama_b1c.match_backward1_DMFT_TAMA_CBOMP_accurate(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "bTama_backward1 Event " << i << " is matched.\n";
+			cout << "Tama-CB1 Event " << i << " is matched.\n";
 	}
 #ifdef DEBUG
-	cout << "bTama_backward1: AvgMatchNum= " << Util::Average(matchSubList) << ", matchTime= "
+	cout << "Tama-CB1: AvgMatchNum= " << Util::Average(matchSubList) << ", matchTime= "
 		 << Util::Double2String(Util::Average(matchTimeList))
 		 << " ms\n";
 #endif
@@ -4399,7 +4396,7 @@ void run_btama_backward1_C_BOMP(const intervalGenerator& gen, unordered_map<int,
 
 #ifdef DEBUG
 	outputFileName = "ComprehensiveExpTime.txt";
-	content = "bTama7= [";
+	content = "Tama7_CB1= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
 	Util::WriteData2Begin(outputFileName.c_str(), content);
@@ -4410,9 +4407,9 @@ void run_btama_backward1_C_BOMP(const intervalGenerator& gen, unordered_map<int,
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_btama_backward2_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_tama_backward2_DMFT_TAMA_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
-	bTama btama_b2c(bTAMA_BACKWARD2); // bTAMA8
+	bTama btama_b2c(TAMA_BACKWARD2_DMFT); // bTAMA8
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -4428,9 +4425,8 @@ void run_btama_backward2_CBOMP(const intervalGenerator& gen, unordered_map<int, 
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
 	}
-	cout << "bTama_backward2 Insertion Finishes.\n";
+	cout << "bTama-CB2 Insertion Finishes.\n";
 
-	// ��֤����ɾ����ȷ��
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
@@ -4440,7 +4436,7 @@ void run_btama_backward2_CBOMP(const intervalGenerator& gen, unordered_map<int, 
 				cout << "bTama_backward2: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
 			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
 		}
-		cout << "bTama_backward2 Deletion Finishes.\n";
+		cout << "bTama-CB2 Deletion Finishes.\n";
 		for (auto kv : deleteNo)
 		{
 			btama_b2c.insert(gen.subList[kv.first]);
@@ -4453,17 +4449,17 @@ void run_btama_backward2_CBOMP(const intervalGenerator& gen, unordered_map<int, 
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
-		btama_b2c.backward2_match_accurate(gen.pubList[i], matchSubs, gen.subList);
+		btama_b2c.match_backward2_DMFT_TAMA_CBOMP_accurate(gen.pubList[i], matchSubs, gen.subList);
 		//tama.match_vague(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "bTama_backward2 Event " << i << " is matched.\n";
+			cout << "Tama_-CB2 Event " << i << " is matched.\n";
 	}
 #ifdef DEBUG
-	cout << "bTama_backward2: AvgMatchNum= " << Util::Average(matchSubList) << ", matchTime= "
+	cout << "Tama-CB2: AvgMatchNum= " << Util::Average(matchSubList) << ", matchTime= "
 		 << Util::Double2String(Util::Average(matchTimeList))
 		 << " ms\n";
 #endif
@@ -4494,7 +4490,7 @@ void run_btama_backward2_CBOMP(const intervalGenerator& gen, unordered_map<int, 
 
 #ifdef DEBUG
 	outputFileName = "ComprehensiveExpTime.txt";
-	content = "bTama8= [";
+	content = "Tama8-CB2= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
 	Util::WriteData2Begin(outputFileName.c_str(), content);
@@ -4505,9 +4501,9 @@ void run_btama_backward2_CBOMP(const intervalGenerator& gen, unordered_map<int, 
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_btama_backward2_CBOMP_parallel(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_tama_backward2_DMFT_TAMA_CBOMP_parallel(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
-	bTama btama_b2cp(bTAMA_BACKWARD2_PARALLEL); // bTAMA8
+	bTama btama_b2cp(TAMA_BACKWARD2_DMFT_PARALLEL); // bTAMA8
 
 	vector<double> insertTimeList;
 	vector<double> deleteTimeList;
@@ -4523,19 +4519,18 @@ void run_btama_backward2_CBOMP_parallel(const intervalGenerator& gen, unordered_
 		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
 		insertTimeList.push_back((double)insertTime / 1000000);
 	}
-	cout << "bTama_backward2_parallel: Insertion Finishes.\n";
+	cout << "Tama-CB2_parallel: Insertion Finishes.\n";
 
-	// ��֤����ɾ����ȷ��
 	if (verifyID)
 	{
 		for (auto kv : deleteNo)
 		{
 			Timer deleteStart;
 			if (!btama_b2cp.deleteSubscription(gen.subList[kv.first]))
-				cout << "bTama_backward2_parallel: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+				cout << "Tama-CB2_parallel: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
 			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
 		}
-		cout << "bTama_backward2_parallel: Deletion Finishes.\n";
+		cout << "Tama-CB2_parallel: Deletion Finishes.\n";
 		for (auto kv : deleteNo)
 		{
 			btama_b2cp.insert(gen.subList[kv.first]);
@@ -4548,16 +4543,16 @@ void run_btama_backward2_CBOMP_parallel(const intervalGenerator& gen, unordered_
 		int matchSubs = 0; // Record the number of matched subscriptions.
 		Timer matchStart;
 
-		btama_b2cp.backward2_match_parallel(gen.pubList[i], matchSubs, gen.subList);
+		btama_b2cp.match_backward2_DMFT_TAMA_CBOMP_accurate_parallel(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "bTama_backward2_parallel: Event " << i << " is matched.\n";
+			cout << "Tama-CB2_parallel: Event " << i << " is matched.\n";
 	}
 #ifdef DEBUG
-	cout << "bTama_backward2_parallel: AvgMatchNum= " << Util::Average(matchSubList) << ", matchTime= "
+	cout << "bTama-CB2_parallel: AvgMatchNum= " << Util::Average(matchSubList) << ", matchTime= "
 		 << Util::Double2String(Util::Average(matchTimeList))
 		 << " ms\n";
 #endif
@@ -4589,7 +4584,7 @@ void run_btama_backward2_CBOMP_parallel(const intervalGenerator& gen, unordered_
 
 #ifdef DEBUG
 	outputFileName = "ComprehensiveExpTime.txt";
-	content = "bTama8_p= [";
+	content = "Tama8_CB_p= [";
 	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	content[content.length() - 2] = ']';
 	Util::WriteData2Begin(outputFileName.c_str(), content);
@@ -4599,6 +4594,187 @@ void run_btama_backward2_CBOMP_parallel(const intervalGenerator& gen, unordered_
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
+
+void run_btama_backward(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) // bTAMA
+{
+	bTama btama_b(bTAMA_BACKWARD); // bTAMA-B
+
+	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchSubList;
+
+	// insert
+	for (int i = 0; i < subs; i++)
+	{
+		Timer insertStart;
+		btama_b.insert_backward(gen.subList[i]); // Insert sub[i] into data structure.
+
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double)insertTime / 1000000);
+	}
+	cout << "bTama-B Insertion Finishes.\n";
+
+	if (verifyID)
+	{
+		for (auto kv : deleteNo)
+		{
+			Timer deleteStart;
+			if (!btama_b.deleteSubscription(gen.subList[kv.first])) // unimplemented
+				cout << "bTama-B: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+		}
+		cout << "bTama-B Deletion Finishes.\n";
+		for (auto kv : deleteNo)
+			btama_b.insert_backward(gen.subList[kv.first]);
+	}
+
+	// match
+	for (int i = 0; i < pubs; i++)
+	{
+		int matchSubs = 0; // Record the number of matched subscriptions.
+		Timer matchStart;
+
+		btama_b.match_backward_native(gen.pubList[i], matchSubs, gen.subList);
+
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double)eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "bTama-B Event " << i << " is matched.\n";
+	}
+#ifdef DEBUG
+	cout << "bTama-B: AvgMatchNum= " << Util::Average(matchSubList) << ", matchTime= "
+		 << Util::Double2String(Util::Average(matchTimeList) << " ms\n";
+#endif
+	cout << endl;
+
+	// output
+	string outputFileName = "bTama.txt";
+	string content = expID
+					 + " memory= " + Util::Int2String(btama_b.calMemory())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms level= " + Util::Int2String(level)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts)
+					 + " attGroup= " + Util::Int2String(attrGroup)
+					 + " attNumType= " + Util::Int2String(attNumType)
+					 + " attDis= " + Util::Int2String(attDis)
+					 + " valDis= " + Util::Int2String(valDis)
+					 + " width= " + Util::Double2String(width)
+					 + " alpha= " + Util::Double2String(alpha)
+					 + " valDom= " + Util::Double2String(valDom);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+#ifdef DEBUG
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "bTama-B= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif
+
+	outputFileName = "tmpData/bTama_B.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
+}
+
+void run_btama_forward_DMFT(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) // bTAMA-F
+{
+	bTama btama_f(bTAMA_FORWARD_DMFT); // bTAMA-F
+
+	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchSubList;
+
+	// insert
+	for (int i = 0; i < subs; i++)
+	{
+		Timer insertStart;
+		btama_f.insert_backward(gen.subList[i]); // Insert sub[i] into data structure.
+
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double)insertTime / 1000000);
+	}
+	cout << "bTama-F Insertion Finishes.\n";
+
+	if (verifyID)
+	{
+		for (auto kv : deleteNo)
+		{
+			Timer deleteStart;
+			if (!btama_f.deleteSubscription(gen.subList[kv.first])) // unimplemented
+				cout << "bTama-F: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+		}
+		cout << "bTama-F Deletion Finishes.\n";
+		for (auto kv : deleteNo)
+			btama_f.insert_backward(gen.subList[kv.first]);
+	}
+
+	// match
+	for (int i = 0; i < pubs; i++)
+	{
+		int matchSubs = 0; // Record the number of matched subscriptions.
+		Timer matchStart;
+
+		btama_f.match_forward_DMFT_bTAMA(gen.pubList[i], matchSubs, gen.subList);
+
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double)eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "bTama-F Event " << i << " is matched.\n";
+	}
+#ifdef DEBUG
+	cout << "bTama-F: AvgMatchNum= " << Util::Average(matchSubList) << ", matchTime= "
+		 << Util::Double2String(Util::Average(matchTimeList) << " ms\n";
+#endif
+	cout << endl;
+
+	// output
+	string outputFileName = "bTama_F.txt";
+	string content = expID
+					 + " memory= " + Util::Int2String(btama_f.calMemory())
+					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
+					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
+					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
+					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
+					 + " ms level= " + Util::Int2String(level)
+					 + " numSub= " + Util::Int2String(subs)
+					 + " subSize= " + Util::Int2String(cons)
+					 + " numPub= " + Util::Int2String(pubs)
+					 + " pubSize= " + Util::Int2String(m)
+					 + " attTypes= " + Util::Int2String(atts)
+					 + " attGroup= " + Util::Int2String(attrGroup)
+					 + " attNumType= " + Util::Int2String(attNumType)
+					 + " attDis= " + Util::Int2String(attDis)
+					 + " valDis= " + Util::Int2String(valDis)
+					 + " width= " + Util::Double2String(width)
+					 + " alpha= " + Util::Double2String(alpha)
+					 + " valDom= " + Util::Double2String(valDom);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+
+#ifdef DEBUG
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "bTama-F= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif
+
+	outputFileName = "tmpData/bTama_F.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
+}
+
 void run_OpIndex(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
 	OpIndex2 opindex2;

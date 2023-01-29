@@ -81,14 +81,16 @@ void run_HEMSR(const intervalGenerator& gen);
 void run_Simple(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 void run_Simple2(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 
-void run_tama(const intervalGenerator& gen,unordered_map<int,bool> deleteNo); // Original forward TANA
-void run_tama_parallel_lock(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
-void run_tama_parallel_reduce(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
-void run_btama_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);   // bTAMA6
-void run_btama_forward_C_BOMP_parallel(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);   // bTAMA6 parallel
-void run_btama_backward1_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);  // bTAMA7
-void run_btama_backward2_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo); // bTAMA8
-void run_btama_backward2_CBOMP_parallel(const intervalGenerator& gen, unordered_map<int, bool> deleteNo); // bTAMA8 parallel
+void run_tama_forward_native(const intervalGenerator& gen,unordered_map<int, bool> deleteNo); // Original forward TANA
+void run_tama_forward_native_parallel_lock(const intervalGenerator& gen,unordered_map<int, bool> deleteNo); // TAMA_FORWARD-FP1
+void run_tama_forward_native_parallel_reduce(const intervalGenerator& gen,unordered_map<int, bool> deleteNo); // TAMA_FORWARD-FP2
+void run_tama_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);   // TAMA6-C-BOMP  TAMA6-CF
+void run_tama_forward_C_BOMP_parallel(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);   // TAMA6-CFP
+void run_tama_backward1_DMFT_TAMA_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo);  // TAMA7-C-BOMP TAMA_FORWARD-CB1
+void run_tama_backward2_DMFT_TAMA_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo); // TAMA8-C-BOMP TAMA_FORWARD-CB2
+void run_tama_backward2_DMFT_TAMA_CBOMP_parallel(const intervalGenerator& gen, unordered_map<int, bool> deleteNo); // TAMA_FORWARD-CBP2
+void run_btama_backward(const intervalGenerator& gen, unordered_map<int, bool> deleteNo); // bTAMA
+void run_btama_forward_DMFT(const intervalGenerator& gen, unordered_map<int, bool> deleteNo); // bTAMA-F
 
 void run_OpIndex(const intervalGenerator& gen,unordered_map<int,bool> deleteNo);
 void run_bOpIndex2(const intervalGenerator &gen, unordered_map<int, bool> deleteNo);

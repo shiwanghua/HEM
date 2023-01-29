@@ -14,26 +14,36 @@ bTama::bTama(int32_t type)
 	initiate(0, 0, valDom - 1, 1);
 	nB.resize(atts);
 	nnB.resize(atts);
-	string TYPE = "bTama";
-	if (type == bTAMA_FORWARD)
+	string TYPE = "Tama";
+	if (type == TAMA_FORWARD_CBOMP)
 	{
-		TYPE += "-Forward";
+		TYPE = "f" + TYPE + "-CF";
 	}
-	else if (type == bTAMA_BACKWARD1)
+	else if (type == TAMA_BACKWARD1_DMFT)
 	{
-		TYPE += "-Backward1";
+		TYPE = "f" + TYPE + "-CB1";
 	}
-	else if (type == bTAMA_BACKWARD2)
+	else if (type == TAMA_BACKWARD2_DMFT)
 	{
-		TYPE += "-Backward2";
+		TYPE = "f" + TYPE + "-CB2";
 	}
-	else if (type == bTAMA_FORWARD_PARALLEL)
+	else if (type == TAMA_FORWARD_CBOMP_PARALLEL)
 	{
 		threadPool.initThreadPool(parallelDegree);
-		TYPE += "-Forward-Parallel" + to_string(parallelDegree);
-	}else if(type==bTAMA_BACKWARD2_PARALLEL){
+		TYPE = "f" + TYPE + "-CF-Parallel" + to_string(parallelDegree);
+	}
+	else if (type == TAMA_BACKWARD2_DMFT_PARALLEL)
+	{
 		threadPool.initThreadPool(parallelDegree);
-		TYPE += "-Backward2-Parallel" + to_string(parallelDegree);
+		TYPE = "f" + TYPE + "-CB2-Parallel" + to_string(parallelDegree);
+	}
+	else if (type == bTAMA_BACKWARD)
+	{
+		TYPE = "b" + TYPE + "-B";
+	}
+	else if (type == bTAMA_FORWARD_DMFT)
+	{
+		TYPE = "b" + TYPE + "-F";
 	}
 	cout << "ExpID = " << expID << ". " << TYPE << ": level = " << level << "\n";
 }
@@ -137,7 +147,7 @@ bool bTama::deleteSubscription(int p, int att, int subID, int l, int r, int low,
 	}
 }
 
-void bTama::forward_match_accurate(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
+void bTama::match_forward_CBOMP_accurate(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
 {
 	bitset<subs> gB, mB; // global bitset
 	//_for(i, 0, subs)
@@ -148,7 +158,7 @@ void bTama::forward_match_accurate(const Pub& pub, int& matchSubs, const vector<
 	{
 		mB = nB[pub.pairs[i].att];
 		attExist[pub.pairs[i].att] = true;
-		forward_match_accurate(0, pub.pairs[i].att, 0, valDom - 1, pub.pairs[i].value, 1, subList, mB);
+		match_forward_CBOMP_accurate(0, pub.pairs[i].att, 0, valDom - 1, pub.pairs[i].value, 1, subList, mB);
 		gB = gB & mB;
 	}
 	_for(i, 0, atts) if (!attExist[i])
@@ -162,7 +172,7 @@ void bTama::forward_match_accurate(const Pub& pub, int& matchSubs, const vector<
 	matchSubs = gB.count();
 }
 
-void bTama::forward_match_parallel(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
+void bTama::match_forward_CBOMP_parallel(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
 {
 	bitset<subs> gB; // global bitset
 	gB.set();
@@ -183,7 +193,7 @@ void bTama::forward_match_parallel(const Pub& pub, int& matchSubs, const vector<
 		  for (int i = begin; i < end; i++)
 		  {
 			  mB = nB[pub.pairs[i].att];
-			  forward_match_accurate(0, pub.pairs[i].att, 0, valDom - 1, pub.pairs[i].value, 1, subList, mB);
+			  match_forward_CBOMP_accurate(0, pub.pairs[i].att, 0, valDom - 1, pub.pairs[i].value, 1, subList, mB);
 			  localB = localB & mB;
 		  }
 		  return localB;
@@ -200,8 +210,8 @@ void bTama::forward_match_parallel(const Pub& pub, int& matchSubs, const vector<
 	matchSubs = gB.count();
 }
 
-// bTama7
-void bTama::backward1_match_accurate(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
+// TAMA7-C-BOMP TAMA_FORWARD-CB1
+void bTama::match_backward1_DMFT_TAMA_CBOMP_accurate(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
 {
 	bitset<subs> gB, mB; // global bitset
 	vector<bool> attExist(atts, false);
@@ -209,7 +219,7 @@ void bTama::backward1_match_accurate(const Pub& pub, int& matchSubs, const vecto
 	{
 		mB = nB[pub.pairs[i].att];
 		attExist[pub.pairs[i].att] = true;
-		forward_match_accurate(0, pub.pairs[i].att, 0, valDom - 1, pub.pairs[i].value, 1, subList, mB);
+		match_forward_CBOMP_accurate(0, pub.pairs[i].att, 0, valDom - 1, pub.pairs[i].value, 1, subList, mB);
 		gB = gB | (mB.flip());
 	}
 	_for(i, 0, atts) if (!attExist[i])
@@ -224,7 +234,7 @@ void bTama::backward1_match_accurate(const Pub& pub, int& matchSubs, const vecto
 }
 
 void
-bTama::forward_match_accurate(int p, int att, int l, int r, const int value, int lvl, const vector<IntervalSub>& subList, bitset<
+bTama::match_forward_CBOMP_accurate(int p, int att, int l, int r, const int value, int lvl, const vector<IntervalSub>& subList, bitset<
 	subs>& mB)
 {
 	if (level == lvl)
@@ -247,13 +257,13 @@ bTama::forward_match_accurate(int p, int att, int l, int r, const int value, int
 	if (l == r) // 这里l有可能等于r吗？当取值范围比较小, 层数很高时会等于; 当事件值刚好等于边界时也会等于!
 		return;
 	else if (value <= mid[p])
-		forward_match_accurate(lchild[p], att, l, mid[p], value, lvl + 1, subList, mB);
+		match_forward_CBOMP_accurate(lchild[p], att, l, mid[p], value, lvl + 1, subList, mB);
 	else
-		forward_match_accurate(rchild[p], att, mid[p] + 1, r, value, lvl + 1, subList, mB);
+		match_forward_CBOMP_accurate(rchild[p], att, mid[p] + 1, r, value, lvl + 1, subList, mB);
 }
 
-// bTAMA8
-void bTama::backward2_match_accurate(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
+// TAMA8-C-BOMP TAMA_FORWARD-CB2
+void bTama::match_backward2_DMFT_TAMA_CBOMP_accurate(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
 {
 	bitset<subs> gB, mB; // register
 	vector<bool> attExist(atts, false);
@@ -261,16 +271,16 @@ void bTama::backward2_match_accurate(const Pub& pub, int& matchSubs, const vecto
 	{
 		mB = nnB[pi.att]; // based on a non null bitset/def bitset
 		attExist[pi.att] = true;
-		backward2_match_accurate(0, pi.att, 0, valDom - 1, pi.value, 1, subList, mB);
+		match_backward2_DMFT_TAMA_CBOMP_accurate(0, pi.att, 0, valDom - 1, pi.value, 1, subList, mB);
 		gB = gB | mB;
 	}
 	_for(i, 0, atts) if (!attExist[i])
 			gB = gB | nnB[i];
-
 	matchSubs = numSub - gB.count();
 }
 
-void bTama::backward2_match_parallel(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
+void
+bTama::match_backward2_DMFT_TAMA_CBOMP_accurate_parallel(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
 {
 	bitset<subs> gB; // global bitset
 	vector<bool> attExist(atts, false);
@@ -288,8 +298,9 @@ void bTama::backward2_match_parallel(const Pub& pub, int& matchSubs, const vecto
 		  bitset<subs> localB, mB;
 		  for (int i = begin; i < end; i++)
 		  {
-			  mB = nnB[pub.pairs[i].att]; // based on a non null bitset/def bitset
-			  backward2_match_accurate(0, pub.pairs[i].att, 0, valDom - 1, pub.pairs[i].value, 1, subList, mB);
+			  mB = nnB[pub.pairs[i].att]; // based on a non-null bitset/def bitset
+			  match_backward2_DMFT_TAMA_CBOMP_accurate(0, pub.pairs[i].att, 0,
+				  valDom - 1, pub.pairs[i].value, 1, subList, mB);
 			  localB = localB | mB;
 		  }
 		  return localB;
@@ -307,7 +318,8 @@ void bTama::backward2_match_parallel(const Pub& pub, int& matchSubs, const vecto
 }
 
 void
-bTama::backward2_match_accurate(int p, int att, int l, int r, const int value, int lvl, const vector<IntervalSub>& subList, bitset<
+bTama::match_backward2_DMFT_TAMA_CBOMP_accurate(int p, int att, int l, int r, const int value, int lvl, const vector<
+	IntervalSub>& subList, bitset<
 	subs>& mB)
 {
 	if (level == lvl)
@@ -329,9 +341,115 @@ bTama::backward2_match_accurate(int p, int att, int l, int r, const int value, i
 	if (l == r) // 这里l有可能等于r吗？当取值范围比较小, 层数很高时会等于; 当事件值刚好等于边界时也会等于!
 		return;
 	else if (value <= mid[p])
-		backward2_match_accurate(lchild[p], att, l, mid[p], value, lvl + 1, subList, mB);
+		match_backward2_DMFT_TAMA_CBOMP_accurate(lchild[p], att, l, mid[p], value, lvl + 1, subList, mB);
 	else
-		backward2_match_accurate(rchild[p], att, mid[p] + 1, r, value, lvl + 1, subList, mB);
+		match_backward2_DMFT_TAMA_CBOMP_accurate(rchild[p], att, mid[p] + 1, r, value, lvl + 1, subList, mB);
+}
+
+
+// -------------------- backward TAMA_FORWARD 2023.01.25 --------------------
+
+void bTama::insert_backward(IntervalSub sub)
+{
+	vector<bool> attrExist(atts, false);
+	for (const auto& iCnt : sub.constraints)
+	{
+		if (iCnt.lowValue > 0)
+			insert(0, iCnt.att, sub.id, 0, valDom - 1, 0, iCnt.lowValue - 1, 1);
+		if (iCnt.highValue + 1 < valDom)
+			insert(0, iCnt.att, sub.id, 0, valDom - 1, iCnt.highValue, valDom - 1, 1);
+		attrExist[iCnt.att] = true;
+		nnB[iCnt.att][sub.id] = 1;
+	}
+	_for(ai, 0, atts) if (!attrExist[ai])
+			nB[ai][sub.id] = 1;
+	numSub++;
+}
+
+void bTama::match_backward_native(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
+{
+	bitset<subs> gB; // register
+	vector<bool> attExist(atts, false);
+	for (auto&& pi : pub.pairs)
+	{
+		attExist[pi.att] = true;
+		match_backward_native(0, pi.att, 0, valDom - 1, pi.value, 1, subList, gB);
+	}
+	_for(i, 0, atts) if (!attExist[i])
+			gB = gB | nnB[i];
+	matchSubs = numSub - gB.count();
+}
+
+void
+bTama::match_backward_native(const int& p, const int& att, const int& l, const int& r, const int& value, const int& lvl, const vector<
+	IntervalSub>& subList, bitset<
+	subs>& gB)
+{
+	if (level == lvl)
+	{
+		for (const auto& id : data[att][p])
+		{
+			for (const auto& predicate : subList[id].constraints)
+				if (att == predicate.att)
+				{
+					if (predicate.lowValue > value || value > predicate.highValue)
+						gB[id] = 1;
+					break;
+				}
+		}
+		return;
+	}
+	for (const auto& id : data[att][p])
+		gB[id] = 1;
+	if (l == r) // 这里l有可能等于r吗？当取值范围比较小, 层数很高时会等于; 当事件值刚好等于边界时也会等于!
+		return;
+	else if (value <= mid[p])
+		match_backward_native(lchild[p], att, l, mid[p], value, lvl + 1, subList, gB);
+	else
+		match_backward_native(rchild[p], att, mid[p] + 1, r, value, lvl + 1, subList, gB);
+}
+
+void bTama::match_forward_DMFT_bTAMA(const Pub& pub, int& matchSubs, const vector<IntervalSub>& subList)
+{
+	bitset<subs> gB; // register
+	gB.set();
+	vector<bool> attExist(atts, false);
+	for (auto&& pi : pub.pairs)
+	{
+		attExist[pi.att] = true;
+		match_forward_DMFT_bTAMA(0, pi.att, 0, valDom - 1, pi.value, 1, subList, gB);
+	}
+	_for(i, 0, atts) if (!attExist[i])
+			gB = gB & nB[i];
+	matchSubs = gB.count();
+}
+
+void
+bTama::match_forward_DMFT_bTAMA(const int& p, const int& att, const int& l, const int& r, const int& value, const int& lvl, \
+    const vector<IntervalSub>& subList, bitset<subs>& gB)
+{
+	if (level == lvl)
+	{
+		for (auto& id : data[att][p])
+		{
+			for (auto& predicate : subList[id].constraints)
+				if (att == predicate.att)
+				{
+					if (predicate.lowValue > value || value > predicate.highValue)
+						gB[id] = 0;
+					break;
+				}
+		}
+		return;
+	}
+	for (auto& id : data[att][p])
+		gB[id] = 0;
+	if (l == r) // 这里l有可能等于r吗？当取值范围比较小, 层数很高时会等于; 当事件值刚好等于边界时也会等于!
+		return;
+	else if (value <= mid[p])
+		match_forward_DMFT_bTAMA(lchild[p], att, l, mid[p], value, lvl + 1, subList, gB);
+	else
+		match_forward_DMFT_bTAMA(rchild[p], att, mid[p] + 1, r, value, lvl + 1, subList, gB);
 }
 
 int bTama::calMemory()
