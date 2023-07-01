@@ -88,7 +88,7 @@ int mainss()
 	for (int i = 0; i < subs; i++)
 		if (pCounter[i] != 0)
 			cout << pCounter[i] << "\n";
-	system("pause");
+	int r = system("pause");
 	return 0;
 }
 
