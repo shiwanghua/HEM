@@ -9,7 +9,7 @@
 #include "ThreadPool.h"
 
 // Virtual/Real Attribute Subset/Class Mode with OR operation result precomputed optimization
-class HEM5_ASO
+class HEM3_ASO
 {
 private:
     int numSub;                            // 插入的订阅个数
@@ -35,9 +35,9 @@ public:
     double bitTime = 0.0;     // 遍历结果数组获取匹配个数所花的时间
     double mergeTime = 0.0;   // 合并每个并行线程部分匹配结果的时间
 
-    HEM5_ASO(int);
+    HEM3_ASO(int);
 
-    ~HEM5_ASO();
+    ~HEM3_ASO();
 
     void insert_VASO(IntervalSub sub); // 没有bitset时的插入算法
     void insert_RASO(IntervalSub sub); // 没有bitset时的插入算法

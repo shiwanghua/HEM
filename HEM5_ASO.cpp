@@ -1,6 +1,6 @@
-#include "HEM5_ASO.h"
+#include "HEM3_ASO.h"
 
-HEM5_ASO::HEM5_ASO(int type)
+HEM3_ASO::HEM3_ASO(int type)
 {
     numSub = 0;
     numDimension = atts;
@@ -12,19 +12,15 @@ HEM5_ASO::HEM5_ASO(int type)
 
     (be == -1) ? numBits = be2 : numBits = pow(2, be); // 每个维度上 bits 数组个数
     numAttrGroup = attrGroup;
-    attrGroupSize = (numDimension + numAttrGroup - 1) / numAttrGroup; //
+    attrGroupSize = (numDimension + numAttrGroup - 1) / numAttrGroup; // 最后一组可能不满
     attrGroupBits.resize(numAttrGroup);
 
-    doubleReverse[0] = new bool *[numDimension];
-    doubleReverse[1] = new bool *[numDimension];
     endBucket[0] = new int *[numDimension];
     endBucket[1] = new int *[numDimension];
     bitsID[0] = new int *[numDimension];
     bitsID[1] = new int *[numDimension];
     _for(i, 0, numDimension)
     {
-        doubleReverse[0][i] = new bool[numBucket];
-        doubleReverse[1][i] = new bool[numBucket];
         endBucket[0][i] = new int[numBucket];
         endBucket[1][i] = new int[numBucket];
         bitsID[0][i] = new int[numBucket];
@@ -34,13 +30,13 @@ HEM5_ASO::HEM5_ASO(int type)
     fix[0].resize(numDimension, vector<int>(numBucket + 1));
     fix[1].resize(numDimension, vector<int>(numBucket + 1));
     string TYPE;
-    if (type == HEM5_DD_VAS)
-        TYPE = "HEM5_DD_VAS";
-    else if (type == HEM5_DD_RAS)
-        TYPE = "HEM5_DD_RAS";
-    else if (type == HEM5_DD_RAS_AVXOR_PARALLEL)
+    if (type == HEM3_D_VASO)
+        TYPE = "HEM_D_VAS)";
+    else if (type == HEM3_D_RASO)
+        TYPE = "HEM3_D_RASO";
+    else if (type == HEM3_D_RASO_AVXOR_PARALLEL)
     {
-        TYPE = "HEM5_DD_RAS_AVXOR" + to_string(blockSize) + "_PARALLEL";
+        TYPE = "HEM3_D_RASO_AVXOR" + to_string(blockSize) + "_PARALLEL";
         threadPool.initThreadPool(parallelDegree);
     }
     cout << "ExpID = " << expID << ". " + TYPE + ": bitset number = " << numBits << ", bucketStep = " << buckStep
@@ -48,15 +44,16 @@ HEM5_ASO::HEM5_ASO(int type)
          << endl;
 }
 
-HEM5_ASO::~HEM5_ASO()
+HEM3_ASO::~HEM3_ASO()
 {
-    _for(i, 0,
-         numDimension) delete[] doubleReverse[0][i],
-        doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
-    delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1], doubleReverse[0], doubleReverse[1];
+    _for(i, 0, numDimension)
+    {
+        delete[] endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
+    }
+    delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1];
 }
 
-void HEM5_ASO::insert_VASO(IntervalSub sub)
+void HEM3_ASO::insert_VASO(IntervalSub sub)
 {
     Combo c;
     c.subID = sub.id;
@@ -71,7 +68,7 @@ void HEM5_ASO::insert_VASO(IntervalSub sub)
     numSub++;
 }
 
-void HEM5_ASO::insert_RASO(IntervalSub sub)
+void HEM3_ASO::insert_RASO(IntervalSub sub)
 {
     for (int attGroupNo = sub.constraints[0].att / attrGroupSize, i = 0; i < numAttrGroup; i++)
     {
@@ -90,7 +87,7 @@ void HEM5_ASO::insert_RASO(IntervalSub sub)
     numSub++;
 }
 
-void HEM5_ASO::insert_online_VASO(IntervalSub sub)
+void HEM3_ASO::insert_online_VASO(IntervalSub sub)
 {
     int b, bucketID;
     Combo c;
@@ -122,7 +119,7 @@ void HEM5_ASO::insert_online_VASO(IntervalSub sub)
     numSub++;
 }
 
-void HEM5_ASO::insert_online_RASO(IntervalSub sub)
+void HEM3_ASO::insert_online_RASO(IntervalSub sub)
 {
     int b, bucketID;
     Combo c;
@@ -159,7 +156,7 @@ void HEM5_ASO::insert_online_RASO(IntervalSub sub)
     numSub++;
 }
 
-bool HEM5_ASO::deleteSubscription_VASO(IntervalSub sub)
+bool HEM3_ASO::deleteSubscription_VASO(IntervalSub sub)
 {
     int find = 0, b, bucketID, id = sub.id;
 
@@ -204,7 +201,7 @@ bool HEM5_ASO::deleteSubscription_VASO(IntervalSub sub)
     return find == sub.size << 1;
 }
 
-bool HEM5_ASO::deleteSubscription_RASO(IntervalSub sub)
+bool HEM3_ASO::deleteSubscription_RASO(IntervalSub sub)
 {
     int find = 0, b, bucketID, id = sub.id;
 
@@ -255,7 +252,7 @@ bool HEM5_ASO::deleteSubscription_RASO(IntervalSub sub)
     return find == sub.size << 1;
 }
 
-void HEM5_ASO::initBits()
+void HEM3_ASO::initBits()
 {
     // 如果有多次初始化
     _for(i, 0,
@@ -532,7 +529,7 @@ void HEM5_ASO::initBits()
     // cout << "HEM5_AGDD Stop.\n";
 }
 
-void HEM5_ASO::match_VASO(const Pub &pub, int &matchSubs)
+void HEM3_ASO::match_VASO(const Pub &pub, int &matchSubs)
 {
     bitset<subs> b; // register
     bitset<subs> bLocal;
@@ -701,7 +698,7 @@ void HEM5_ASO::match_VASO(const Pub &pub, int &matchSubs)
 #endif // DEBUG
 }
 
-void HEM5_ASO::match_RASO(const Pub &pub, int &matchSubs)
+void HEM3_ASO::match_RASO(const Pub &pub, int &matchSubs)
 {
     bitset<subs> b; // register
     bitset<subs> bLocal;
@@ -860,7 +857,7 @@ void HEM5_ASO::match_RASO(const Pub &pub, int &matchSubs)
 #endif // DEBUG
 }
 
-void HEM5_ASO::match_RASO_avxOR_parallel(const Pub &pub, int &matchSubs)
+void HEM3_ASO::match_RASO_avxOR_parallel(const Pub &pub, int &matchSubs)
 {
     vector<future<bitset<subs>>> threadResult;
     int seg = pub.size / parallelDegree;
@@ -976,7 +973,7 @@ void HEM5_ASO::match_RASO_avxOR_parallel(const Pub &pub, int &matchSubs)
 #endif // DEBUG
 }
 
-int HEM5_ASO::calMemory()
+int HEM3_ASO::calMemory()
 {
     long long size = 0; // Byte
     size += sizeof(bits) + sizeof(bits[0]) * 2 + sizeof(data) + sizeof(data[0]) + sizeof(data[1]);
@@ -1017,7 +1014,7 @@ int HEM5_ASO::calMemory()
     return (int)size;
 }
 
-void HEM5_ASO::printRelation(int dimension_i)
+void HEM3_ASO::printRelation(int dimension_i)
 {
     cout << "\n\nHEM5_AGDDMap\n";
     if (dimension_i == -1)
@@ -1065,7 +1062,7 @@ void HEM5_ASO::printRelation(int dimension_i)
     cout << "\n\n";
 }
 
-vector<int> HEM5_ASO::calMarkNumForBuckets()
+vector<int> HEM3_ASO::calMarkNumForBuckets()
 {
     vector<int> numMarking(numBucket, 0);
     _for(i, 0, numBucket)
