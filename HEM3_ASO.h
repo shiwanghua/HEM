@@ -9,6 +9,7 @@
 #include "ThreadPool.h"
 
 // Virtual/Real Attribute Subset/Class Mode with OR operation result precomputed optimization
+// 参考自 HEM5_AS.h/cpp
 class HEM3_ASO
 {
 private:
@@ -23,7 +24,8 @@ private:
     vector<vector<int>> fix[2];            // 0 代表 low 上的后缀和，1是 high 上的前缀和，用于计算任务量
     // vector<bitset<subs>> fullBits;         // 全覆盖的 bits 单独存，因为只要存一次 // deprecated，高低端位集都只需要一份了
     vector<bitset<subs>> attrGroupBits; // 每个实 or 虚属性组对应一个bitset
-    int **endBucket, **bitsID;          // 每个维度上，落入这个 bucket 的事件在标记时终止于哪一个 bucket、用到的 bits 数组的下标，也都只需要存一份了
+    int **endBucket[2];                 // 每个维度上，落入这个 bucket 的事件在遍历标记时终止于哪一个 bucket
+    int **bitsID;                       // 每个维度上，落入这个 bucket 的事件用到的 bits 数组的下标，只需要存一份了
     // bool **doubleReverse[2];            // 为 true 时是把 1 标成 0 // deprecated，取高左、低右端位集做或运算，不支持再反转了，即高端必须往事件桶左端标记，低端必须往事件桶右端标记
     ThreadPool threadPool; // 每个维度上不需要做或运算了，负载更小了
 

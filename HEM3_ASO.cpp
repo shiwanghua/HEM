@@ -17,21 +17,19 @@ HEM3_ASO::HEM3_ASO(int type)
 
     endBucket[0] = new int *[numDimension];
     endBucket[1] = new int *[numDimension];
-    bitsID[0] = new int *[numDimension];
-    bitsID[1] = new int *[numDimension];
+    bitsID = new int *[numDimension];
     _for(i, 0, numDimension)
     {
         endBucket[0][i] = new int[numBucket];
         endBucket[1][i] = new int[numBucket];
-        bitsID[0][i] = new int[numBucket];
-        bitsID[1][i] = new int[numBucket];
+        bitsID[i] = new int[numBucket];
     }
 
     fix[0].resize(numDimension, vector<int>(numBucket + 1));
     fix[1].resize(numDimension, vector<int>(numBucket + 1));
     string TYPE;
     if (type == HEM3_D_VASO)
-        TYPE = "HEM_D_VAS)";
+        TYPE = "HEM3_D_VASO)";
     else if (type == HEM3_D_RASO)
         TYPE = "HEM3_D_RASO";
     else if (type == HEM3_D_RASO_AVXOR_PARALLEL)
@@ -48,9 +46,9 @@ HEM3_ASO::~HEM3_ASO()
 {
     _for(i, 0, numDimension)
     {
-        delete[] endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
+        delete[] endBucket[0][i], endBucket[1][i], bitsID[i];
     }
-    delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1];
+    delete[] endBucket[0], endBucket[1], bitsID;
 }
 
 void HEM3_ASO::insert_VASO(IntervalSub sub)
@@ -87,6 +85,7 @@ void HEM3_ASO::insert_RASO(IntervalSub sub)
     numSub++;
 }
 
+// 在线插入，已经构建好索引结构了，插入谓词、标记订阅
 void HEM3_ASO::insert_online_VASO(IntervalSub sub)
 {
     int b, bucketID;
@@ -95,16 +94,13 @@ void HEM3_ASO::insert_online_VASO(IntervalSub sub)
 
     for (auto &&iCnt : sub.constraints)
     {
-        fullBits[iCnt.att][sub.id] = 1;
+        bits[iCnt.att][0][sub.id] = 1; // 默认 0 号位集存储所有订阅，即原来的 fullBits
         attrGroupBits[iCnt.att / attrGroupSize][sub.id] = 1;
 
         bucketID = iCnt.lowValue / buckStep;
         c.val = iCnt.lowValue;
         data[0][iCnt.att][bucketID].emplace_back(c);
-        if (doubleReverse[0][iCnt.att][bucketID])
-            b = bitsID[0][iCnt.att][bucketID];
-        else
-            b = bitsID[0][iCnt.att][bucketID] + 1;
+        b = bitsID[iCnt.att][bucketID];
         _for(q, b, numBits - 1) bits[0][iCnt.att][q][sub.id] = 1;
 
         bucketID = iCnt.highValue / buckStep;
