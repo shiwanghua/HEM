@@ -7,13 +7,16 @@ HEM3_ASO::HEM3_ASO(int type)
     buckStep = (valDom - 1) / buks + 1;
     numBucket = (valDom - 1) / buckStep + 1;
 
-    data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
-    data[1].resize(numDimension, vector<vector<Combo>>(numBucket));
-
-    (be == -1) ? numBits = be2 : numBits = pow(2, be); // 每个维度上 bits 数组个数
     numAttrGroup = attrGroup;
     attrGroupSize = (numDimension + numAttrGroup - 1) / numAttrGroup; // 最后一组可能不满
     attrGroupBits.resize(numAttrGroup);
+
+    (be == -1) ? numBits = be2 : numBits = pow(2, be) + 1; // 每个维度上 bits 数组个数
+
+    data[0].resize(numDimension, vector<vector<Combo>>(numBucket));
+    data[1].resize(numDimension, vector<vector<Combo>>(numBucket));
+
+    bits.resize(numDimension, vector<bitset<subs>>(numBits));
 
     endBucket[0] = new int *[numDimension];
     endBucket[1] = new int *[numDimension];
@@ -68,10 +71,10 @@ void HEM3_ASO::insert_VASO(IntervalSub sub)
 
 void HEM3_ASO::insert_RASO(IntervalSub sub)
 {
-    for (int attGroupNo = sub.constraints[0].att / attrGroupSize, i = 0; i < numAttrGroup; i++)
+    for (int attGroupNo = sub.constraints[0].att / attrGroupSize, gi = 0; gi < numAttrGroup; gi++)
     {
-        if (i != attGroupNo)
-            attrGroupBits[i][sub.id] = 1;
+        if (gi != attGroupNo)
+            attrGroupBits[gi][sub.id] = 1;
     }
     Combo c;
     c.subID = sub.id;
@@ -96,21 +99,17 @@ void HEM3_ASO::insert_online_VASO(IntervalSub sub)
     {
         bits[iCnt.att][0][sub.id] = 1; // 默认 0 号位集存储所有订阅，即原来的 fullBits
         attrGroupBits[iCnt.att / attrGroupSize][sub.id] = 1;
+        b = bitsID[iCnt.att][bucketID]; // = 这个桶所属的组号（从 LVE看）
 
         bucketID = iCnt.lowValue / buckStep;
         c.val = iCnt.lowValue;
         data[0][iCnt.att][bucketID].emplace_back(c);
-        b = bitsID[iCnt.att][bucketID];
-        _for(q, b, numBits - 1) bits[0][iCnt.att][q][sub.id] = 1;
+        _for(q, b + 1, numBits) bits[iCnt.att][q][sub.id] = 1;
 
         bucketID = iCnt.highValue / buckStep;
         c.val = iCnt.highValue;
         data[1][iCnt.att][bucketID].emplace_back(c);
-        if (doubleReverse[1][iCnt.att][bucketID])
-            b = bitsID[1][iCnt.att][bucketID];
-        else
-            b = bitsID[1][iCnt.att][bucketID] + 1;
-        _for(q, b, numBits - 1) bits[1][iCnt.att][q][sub.id] = 1;
+        _for(q, 1, b) bits[iCnt.att][q][sub.id] = 1;
     }
     numSub++;
 }
@@ -129,25 +128,18 @@ void HEM3_ASO::insert_online_RASO(IntervalSub sub)
 
     for (auto &&iCnt : sub.constraints)
     {
-        fullBits[iCnt.att][sub.id] = 1;
+        bits[iCnt.att][0][sub.id] = 1;
+        b = bitsID[iCnt.att][bucketID]; // = 这个桶所属的组号（从 LVE看）
 
         bucketID = iCnt.lowValue / buckStep;
         c.val = iCnt.lowValue;
         data[0][iCnt.att][bucketID].emplace_back(c);
-        if (doubleReverse[0][iCnt.att][bucketID])
-            b = bitsID[0][iCnt.att][bucketID];
-        else
-            b = bitsID[0][iCnt.att][bucketID] + 1;
-        _for(q, b, numBits - 1) bits[0][iCnt.att][q][sub.id] = 1;
+        _for(q, b + 1, numBits) bits[iCnt.att][q][sub.id] = 1;
 
         bucketID = iCnt.highValue / buckStep;
         c.val = iCnt.highValue;
         data[1][iCnt.att][bucketID].emplace_back(c);
-        if (doubleReverse[1][iCnt.att][bucketID])
-            b = bitsID[1][iCnt.att][bucketID];
-        else
-            b = bitsID[1][iCnt.att][bucketID] + 1;
-        _for(q, b, numBits - 1) bits[1][iCnt.att][q][sub.id] = 1;
+        _for(q, 1, b) bits[iCnt.att][q][sub.id] = 1;
     }
     numSub++;
 }
@@ -155,46 +147,40 @@ void HEM3_ASO::insert_online_RASO(IntervalSub sub)
 bool HEM3_ASO::deleteSubscription_VASO(IntervalSub sub)
 {
     int find = 0, b, bucketID, id = sub.id;
+    vector<Combo>::const_iterator it;
 
     for (auto &&iCnt : sub.constraints)
     {
-        fullBits[iCnt.att][id] = 0;
+        bits[iCnt.att][0][sub.id] = 0;
         attrGroupBits[iCnt.att / attrGroupSize][sub.id] = 0;
+        b = bitsID[iCnt.att][bucketID];
 
         bucketID = iCnt.lowValue / buckStep;
-        vector<Combo>::const_iterator it;
         for (it = data[0][iCnt.att][bucketID].cbegin(); it != data[0][iCnt.att][bucketID].cend(); it++)
             if (it->subID == id)
             {
-                data[0][iCnt.att][bucketID].erase(it); // it =
+                data[0][iCnt.att][bucketID].erase(it);
                 find++;
                 break;
             }
-
-        if (doubleReverse[0][iCnt.att][bucketID])
-            b = bitsID[0][iCnt.att][bucketID];
-        else
-            b = bitsID[0][iCnt.att][bucketID] + 1;
-        _for(q, b, numBits - 1) bits[0][iCnt.att][q][sub.id] = 0;
+        _for(q, b + 1, numBits) bits[iCnt.att][q][sub.id] = 0;
 
         bucketID = iCnt.highValue / buckStep;
         for (it = data[1][iCnt.att][bucketID].cbegin(); it != data[1][iCnt.att][bucketID].cend(); it++)
             if (it->subID == id)
             {
-                data[1][iCnt.att][bucketID].erase(it); // it =
+                data[1][iCnt.att][bucketID].erase(it);
                 find++;
                 break;
             }
-
-        if (doubleReverse[1][iCnt.att][bucketID])
-            b = bitsID[1][iCnt.att][bucketID];
-        else
-            b = bitsID[1][iCnt.att][bucketID] + 1;
-        _for(q, b, numBits - 1) bits[1][iCnt.att][q][sub.id] = 0;
+        _for(q, 1, b) bits[iCnt.att][q][sub.id] = 0;
     }
     if (find == sub.size << 1)
+    {
         numSub--;
-    return find == sub.size << 1;
+        return true;
+    }
+    return false;
 }
 
 bool HEM3_ASO::deleteSubscription_RASO(IntervalSub sub)
@@ -210,69 +196,54 @@ bool HEM3_ASO::deleteSubscription_RASO(IntervalSub sub)
 
     for (auto &&iCnt : sub.constraints)
     {
-        fullBits[iCnt.att][id] = 0;
+        bits[iCnt.att][0][sub.id] = 0;
+        b = bitsID[iCnt.att][bucketID];
 
         bucketID = iCnt.lowValue / buckStep;
         vector<Combo>::const_iterator it;
         for (it = data[0][iCnt.att][bucketID].cbegin(); it != data[0][iCnt.att][bucketID].cend(); it++)
             if (it->subID == id)
             {
-                data[0][iCnt.att][bucketID].erase(it); // it =
+                data[0][iCnt.att][bucketID].erase(it);
                 find++;
                 break;
             }
-
-        if (doubleReverse[0][iCnt.att][bucketID])
-            b = bitsID[0][iCnt.att][bucketID];
-        else
-            b = bitsID[0][iCnt.att][bucketID] + 1;
-        _for(q, b, numBits - 1) bits[0][iCnt.att][q][sub.id] = 0;
+        _for(q, b + 1, numBits) bits[iCnt.att][q][sub.id] = 0;
 
         bucketID = iCnt.highValue / buckStep;
         for (it = data[1][iCnt.att][bucketID].cbegin(); it != data[1][iCnt.att][bucketID].cend(); it++)
             if (it->subID == id)
             {
-                data[1][iCnt.att][bucketID].erase(it); // it =
+                data[1][iCnt.att][bucketID].erase(it);
                 find++;
                 break;
             }
-
-        if (doubleReverse[1][iCnt.att][bucketID])
-            b = bitsID[1][iCnt.att][bucketID];
-        else
-            b = bitsID[1][iCnt.att][bucketID] + 1;
-        _for(q, b, numBits - 1) bits[1][iCnt.att][q][sub.id] = 0;
+        _for(q, 1, b) bits[iCnt.att][q][sub.id] = 0;
     }
     if (find == sub.size << 1)
+    {
         numSub--;
-    return find == sub.size << 1;
+        return true;
+    }
+    return false;
 }
 
 void HEM3_ASO::initBits()
 {
-    // 如果有多次初始化
-    _for(i, 0,
-         numDimension) delete[] doubleReverse[0][i],
-        doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
-    delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1], doubleReverse[0], doubleReverse[1];
-    doubleReverse[0] = new bool *[numDimension];
-    doubleReverse[1] = new bool *[numDimension];
+    // 考虑多次初始化
+    _for(i, 0, numDimension) delete[] endBucket[0][i], endBucket[1][i], bitsID[i], bitsID[i];
+    delete[] endBucket[0], endBucket[1], bitsID;
     endBucket[0] = new int *[numDimension];
     endBucket[1] = new int *[numDimension];
-    bitsID[0] = new int *[numDimension];
-    bitsID[1] = new int *[numDimension];
+    bitsID = new int *[numDimension];
     _for(i, 0, numDimension)
     {
-        doubleReverse[0][i] = new bool[numBucket];
-        doubleReverse[1][i] = new bool[numBucket];
         endBucket[0][i] = new int[numBucket];
         endBucket[1][i] = new int[numBucket];
-        bitsID[0][i] = new int[numBucket];
-        bitsID[1][i] = new int[numBucket];
+        bitsID[i] = new int[numBucket];
     }
     bits[0].clear(), bits[1].clear();
-    bits[0].resize(numDimension, vector<bitset<subs>>(numBits > 1 ? numBits - 1 : 1));
-    bits[1].resize(numDimension, vector<bitset<subs>>(max(numBits - 1, 1)));
+    bits.resize(numDimension, vector<bitset<subs>>(numBits));
 
     //// 前缀和、后缀和数组, 不包括本身
     //_for(i, 0, numDimension) {
@@ -300,69 +271,6 @@ void HEM3_ASO::initBits()
         // fix[0][i][numBucket] = fix[0][i][0];  // Bug: 导致后面刚开始算映射关系时fix[0][i][lowBktId]不合理
         fix[1][i][numBucket] = fix[1][i][numBucket - 1] + data[1][i][numBucket - 1].size(); // Bug: 少了-1!!!
     }
-
-    // if (numBits == 1) { // 只有一个bits时特判，不用fullBits
-    //	_for(i, 0, numDimension) {
-    //		int halfWorkLoad = fix[0][i][0] >> 1; // subWorkLoadStep  fix[1][i][numBucket]
-    //		int quarterWorkLoad = halfWorkLoad >> 1;
-    //		// 第一个后/前缀和包含一半订阅的桶ID，bit数组最远正好覆盖到lowHalfPoint和highHalfPoint-1
-    //		int lowHalfPoint = -1, lowQuarterPoint = -1, highHalfPoint = -1, highQuarterPoint = -1;
-    //		_for(j, 0, numBucket) {
-    //			if (lowQuarterPoint == -1 && fix[0][i][numBucket - 1 - j] >= quarterWorkLoad)
-    //				lowQuarterPoint = numBucket - 1 - j;
-    //			else if (lowHalfPoint == -1 && fix[0][i][numBucket - 1 - j] >= halfWorkLoad)
-    //				lowHalfPoint = numBucket - 1 - j;
-
-    //			if (highQuarterPoint == -1 && fix[1][i][j] >= quarterWorkLoad)
-    //				highQuarterPoint = j;
-    //			else if (highHalfPoint == -1 && fix[1][i][j] >= halfWorkLoad)
-    //				highHalfPoint = j;
-    //		}
-
-    //		_for(j, 0, numBucket) {
-    //			if (j < lowHalfPoint) { // 可以用上bitset
-    //				bitsID[0][i][j] = 0;
-    //				endBucket[0][i][j] = lowHalfPoint; // 遍历到小于 lowCriticalPoint
-    //				doubleReverse[0][i][j] = false;
-    //			}
-    //			else if (j < lowQuarterPoint) {
-    //				bitsID[0][i][j] = 0;
-    //				endBucket[0][i][j] = lowHalfPoint; // 从 j 二重反向遍历到等于 lowCriticalPoint(都包含)
-    //				doubleReverse[0][i][j] = true;
-    //				_for(k, 0, data[0][i][j].size()) // 桶里每个订阅
-    //					bits[0][i][0][data[0][i][j][k].subID] = 1;
-    //			}
-    //			else {
-    //				bitsID[0][i][j] = -1;
-    //				endBucket[0][i][j] = numBucket;
-    //				doubleReverse[0][i][j] = false;
-    //				_for(k, 0, data[0][i][j].size()) // 桶里每个订阅
-    //					bits[0][i][0][data[0][i][j][k].subID] = 1;
-    //			}
-    //			if (j < highQuarterPoint) { // 不可以用bitset
-    //				bitsID[1][i][j] = -1;
-    //				endBucket[1][i][j] = 0; // 遍历到等于0
-    //				doubleReverse[1][i][j] = false;
-    //				_for(k, 0, data[1][i][j].size()) // 桶里每个订阅
-    //					bits[1][i][0][data[1][i][j][k].subID] = 1;
-    //			}
-    //			else if (j < highHalfPoint) {
-    //				bitsID[1][i][j] = 0;
-    //				endBucket[1][i][j] = highHalfPoint; // 从 j 二重反向遍历到大于等于 highCriticalPoint
-    //				doubleReverse[1][i][j] = true;
-    //				_for(k, 0, data[1][i][j].size()) // 桶里每个订阅
-    //					bits[1][i][0][data[1][i][j][k].subID] = 1;
-    //			}
-    //			else {
-    //				bitsID[1][i][j] = 0;
-    //				endBucket[1][i][j] = highHalfPoint; // 从 j-1 遍历到大于等于 highHalfPoint, 和以前保持一致
-    //				doubleReverse[1][i][j] = false;
-    //			}
-    //		}
-    //	}
-    //	//cout << "HEM5_AGDD Stop.\n";
-    //	return;
-    //}
 
     // 当前应该映射到的bitId, 桶id, 下一个临界负载点
     int lowBid, highBid, lowBktId, highBktId, lowSubWorkLoad, highSubWorkLoad;
