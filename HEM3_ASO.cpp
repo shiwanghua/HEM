@@ -259,7 +259,7 @@ void HEM3_ASO::initBits()
     // 前缀和数组(不包括本身)、后缀和数组(包括本身)
     _for(i, 0, numDimension)
     {
-        fix[0][i][numBucket] = 0;
+        fix[0][i][numBucket] = 0; // 后缀和
         fix[0][i][numBucket - 1] = data[0][i][numBucket - 1].size();
         fix[1][i][0] = 0;
         _for(j, 1, numBucket)
@@ -277,18 +277,14 @@ void HEM3_ASO::initBits()
     int subWorkLoadStep; // 每个维度上的subWorkLoadStep都不同, 但同一个维度上的low/high subWorkLoadStep是一样的
     _for(i, 0, numDimension)
     {
-
         // 基本不会出现
-        if (fix[0][i][0] == 0)
+        if (fix[0][i][0] == 0) // 空维度
         {
             _for(j, 0, numBucket)
             {
-                bitsID[0][i][j] = -1;
-                endBucket[0][i][j] = j;
-                doubleReverse[0][i][j] = false;
-                bitsID[1][i][j] = -1;
+                bitsID[i][j] = 0;
+                endBucket[0][i][j] = j; // 遍历到等于endBucket[0][i][j]-1
                 endBucket[1][i][j] = j; // 遍历到大于等于endBucket[1][i][j]
-                doubleReverse[1][i][j] = false;
             }
             continue;
         }
