@@ -282,7 +282,7 @@ void HEM3_ASO::initBits()
         {
             _for(j, 0, numBucket)
             {
-                bitsID[i][j] = 0;
+                bitsID[i][j] = 0;       // 此时 bitset 里也是全 0
                 endBucket[0][i][j] = j; // 遍历到等于endBucket[0][i][j]-1
                 endBucket[1][i][j] = j; // 遍历到大于等于endBucket[1][i][j]
             }
@@ -293,12 +293,12 @@ void HEM3_ASO::initBits()
 
         // 由于是low/high都是动态的, 基本不可能共用同一套partition/cell,
         // 但这里low还是从左边开始数一个subWorkLoadStep的量, 保持一致
-        // 或者(但是要改成)从右边数 剩余负载量 开始累加subWorkLoadStep, 否则不清楚endBucket!
-        // 0号low桶一定可以用到以 (numBits - 2) 为下标的bitset
+        // 或者(但是要改成)从右边数 剩余负载量 开始累加subWorkLoadStep（下面使用的这种）, 否则不清楚endBucket!
+        // 0号low桶一定可以用到以 (numBits - 1) 为下标的bitset
         // 最后一个桶一定用不到bitset
         // 举例: numBits=15(不是16), fix[0][i][0]=1000000, subWorkLoadStep=66667 (low上的后14个多1, high上的前14个多1)
         // fix[0][i][numBucket] / subWorkLoadStep=14, lowSubWorkLoad=66662
-        lowSubWorkLoad = fix[0][i][0] - (fix[0][i][0] - 1) / subWorkLoadStep * subWorkLoadStep;
+        lowSubWorkLoad = fix[0][i][0] - (fix[0][i][0] - 1) / subWorkLoadStep * subWorkLoadStep; // 减一是为了避免正好整除
         highSubWorkLoad = subWorkLoadStep;
 
         // lowContain[i]=从右数(第一个覆盖)lowSubWorkLoad+(i-1)*subWorkLoadStep个订阅所到的桶号(i>0时)
