@@ -239,7 +239,7 @@ void HEM3_ASO::initBits()
     _for(i, 0, numDimension)
     {
         endBucket[0][i] = new int[numBucket];
-        endBucket[1][i] = new int[numBucket];
+        endBucket[1][i] = new int[numBucket]; // 初始化时计算一下，插入搜索统一只用 LVE 上的一套
         bitsID[i] = new int[numBucket];
     }
     bits[0].clear(), bits[1].clear();
@@ -289,41 +289,41 @@ void HEM3_ASO::initBits()
             continue;
         }
 
-        subWorkLoadStep = (fix[0][i][0] + numBits - 1) / numBits; // fix[1][i][numBucket]
+        subWorkLoadStep = (fix[0][i][0] + numBits - 2) / (numBits - 1); // fix[1][i][numBucket]; numBits 算上了空桶，Eg. numBits=9, 则应分成 8 组
 
         // 由于是low/high都是动态的, 基本不可能共用同一套partition/cell,
         // 但这里low还是从左边开始数一个subWorkLoadStep的量, 保持一致
         // 或者(但是要改成)从右边数 剩余负载量 开始累加subWorkLoadStep（下面使用的这种）, 否则不清楚endBucket!
         // 0号low桶一定可以用到以 (numBits - 1) 为下标的bitset
-        // 最后一个桶一定用不到bitset
+        // 最后一个桶一定用不到 bitset
         // 举例: numBits=15(不是16), fix[0][i][0]=1000000, subWorkLoadStep=66667 (low上的后14个多1, high上的前14个多1)
         // fix[0][i][numBucket] / subWorkLoadStep=14, lowSubWorkLoad=66662
         lowSubWorkLoad = fix[0][i][0] - (fix[0][i][0] - 1) / subWorkLoadStep * subWorkLoadStep; // 减一是为了避免正好整除
         highSubWorkLoad = subWorkLoadStep;
 
         // lowContain[i]=从右数(第一个覆盖)lowSubWorkLoad+(i-1)*subWorkLoadStep个订阅所到的桶号(i>0时)
-        vector<int> lowContain(numBits + 1, numBucket);
+        vector<int> lowContain(numBits, numBucket); // Eg. numBits=9, lowContain[1~8] 有效
         // highContain[i]=左数 i*subWorkLoadStep 个订阅所到的桶号
-        vector<int> highContain(numBits + 1, 0);
+        vector<int> highContain(numBits, 0);
         int li = 1, hi = 1; // lowContain和highContain的下标
         _for(j, 0, numBucket)
         {
             if (fix[1][i][j] >= highSubWorkLoad)
             {                          // fix[1][i][numBucket]才包括全部, 最后不一定能进入if
-                highContain[hi++] = j; // numBits=1时highContain[1]<=numBucket-1(右数第一个非空桶位置+1)
+                highContain[hi++] = j; // numBits=2时highContain[1]<=numBucket-1(右数第一个非空桶位置+1)
                 highSubWorkLoad += subWorkLoadStep;
             }
             // 举例: fix[0][i][0]=1M, subWorkLoadStep=100000, numBits=10
             // li,lowSubWorkLoad = 1,100000; 2,200000; ... ; 9,900000; 10,1000000; 11,1100000
             if (fix[0][i][numBucket - j - 1] >= lowSubWorkLoad)
             {                                         // fix[0][i][0]就包括全部, 所以一定进入if
-                lowContain[li++] = numBucket - j - 1; // numBits=1时lowContain[1]>=0 (左数第一个非空桶位置)
+                lowContain[li++] = numBucket - j - 1; // numBits=2时lowContain[1]>=0 (左数第一个非空桶位置)
                 lowSubWorkLoad += subWorkLoadStep;
             }
         }
-        // lowContain[li] = 0; // 为啥不会越界??? li==numBits+1了
-        if (hi == numBits)               // Bug: 最后几个桶为空时hi会在for循环里增加到numBits+1; 最后一个桶非空时highContain[numBits]还没赋值
-            highContain[hi] = numBucket; // numBits=1时highContain[1]=numBucket
+        
+        if (hi == numBits-1)             // Bug: 最后几个桶为空时hi会在for循环里增加到numBits; 最后一个桶非空时highContain[numBits]还没赋值
+            highContain[hi] = numBucket; // numBits=2时highContain[1]=numBucket
 
         li = hi = 1; // 双重反向遍历时所对应的另一端的桶号在contain数组中的下标, 其实 li=lowBid+2, hi=highBid+2
         lowSubWorkLoad = fix[0][i][0] - (fix[0][i][0] - 1) / subWorkLoadStep * subWorkLoadStep;
@@ -343,7 +343,7 @@ void HEM3_ASO::initBits()
                 highBktId = lj;
             }
 
-            // Bug: 提前满了, 最后几个桶为空, 此时highBid=numBits-1, hi=numBits+1, 越界了, 直接用fullBL
+            // Bug: 提前满了, 最后几个桶为空, 此时highBid=numBits-2, hi=numBits, 越界了, 直接用fullBL
             if (fix[1][i][lj] == fix[1][i][numBucket])
             {
                 bitsID[1][i][lj] = numBits - 1;
