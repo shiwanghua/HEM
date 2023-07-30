@@ -273,8 +273,9 @@ void HEM3_ASO::initBits()
     }
 
     // 当前应该映射到的bitId, 桶id, 下一个临界负载点
-    int lowBid, highBid, lowBktId, highBktId, lowSubWorkLoad, highSubWorkLoad;
-    int subWorkLoadStep; // 每个维度上的subWorkLoadStep都不同, 但同一个维度上的low/high subWorkLoadStep是一样的
+    int32_t lowBid, lowBktId, lowSubWorkLoad;
+    // int32_t highBid, highBktId, highSubWorkLoad;
+    int32_t subWorkLoadStep; // 每个维度上的subWorkLoadStep都不同, 但同一个维度上的low/high subWorkLoadStep是一样的
     _for(i, 0, numDimension)
     {
         // 基本不会出现
@@ -298,102 +299,80 @@ void HEM3_ASO::initBits()
         // 最后一个桶一定用不到 bitset
         // 举例: numBits=15(不是16), fix[0][i][0]=1000000, subWorkLoadStep=66667 (low上的后14个多1, high上的前14个多1)
         // fix[0][i][numBucket] / subWorkLoadStep=14, lowSubWorkLoad=66662
-        lowSubWorkLoad = fix[0][i][0] - (fix[0][i][0] - 1) / subWorkLoadStep * subWorkLoadStep; // 减一是为了避免正好整除
-        highSubWorkLoad = subWorkLoadStep;
+        // lowSubWorkLoad = fix[0][i][0] - (fix[0][i][0] - 1) / subWorkLoadStep * subWorkLoadStep; // 减一是为了避免正好整除
+        // highSubWorkLoad = subWorkLoadStep;
 
+        // 没有双重反向优化，不需要提前知道每过一个 subWorkLoadStep 的桶号位置了，Contain 数组的计算可以省去了
         // lowContain[i]=从右数(第一个覆盖)lowSubWorkLoad+(i-1)*subWorkLoadStep个订阅所到的桶号(i>0时)
-        vector<int> lowContain(numBits, numBucket); // Eg. numBits=9, lowContain[1~8] 有效
-        // highContain[i]=左数 i*subWorkLoadStep 个订阅所到的桶号
-        vector<int> highContain(numBits, 0);
-        int li = 1, hi = 1; // lowContain和highContain的下标
-        _for(j, 0, numBucket)
-        {
-            if (fix[1][i][j] >= highSubWorkLoad)
-            {                          // fix[1][i][numBucket]才包括全部, 最后不一定能进入if
-                highContain[hi++] = j; // numBits=2时highContain[1]<=numBucket-1(右数第一个非空桶位置+1)
-                highSubWorkLoad += subWorkLoadStep;
-            }
-            // 举例: fix[0][i][0]=1M, subWorkLoadStep=100000, numBits=10
-            // li,lowSubWorkLoad = 1,100000; 2,200000; ... ; 9,900000; 10,1000000; 11,1100000
-            if (fix[0][i][numBucket - j - 1] >= lowSubWorkLoad)
-            {                                         // fix[0][i][0]就包括全部, 所以一定进入if
-                lowContain[li++] = numBucket - j - 1; // numBits=2时lowContain[1]>=0 (左数第一个非空桶位置)
-                lowSubWorkLoad += subWorkLoadStep;
-            }
-        }
+        // vector<int> lowContain(numBits, numBucket); // Eg. numBits=9, lowContain[1~8] 有效
+        // // highContain[i]=左数 i*subWorkLoadStep 个订阅所到的桶号
+        // vector<int> highContain(numBits, 0);
+        // int li = 1, hi = 1; // lowContain和highContain的下标
+        // _for(j, 0, numBucket)
+        // {
+        //     if (fix[1][i][j] >= highSubWorkLoad)
+        //     {                          // fix[1][i][numBucket]才包括全部, 最后不一定能进入if
+        //         highContain[hi++] = j; // numBits=2时highContain[1]<=numBucket-1(右数第一个非空桶位置+1)
+        //         highSubWorkLoad += subWorkLoadStep;
+        //     }
+        //     // 举例: fix[0][i][0]=1M, subWorkLoadStep=100000, numBits=10
+        //     // li,lowSubWorkLoad = 1,100000; 2,200000; ... ; 9,900000; 10,1000000; 11,1100000
+        //     if (fix[0][i][numBucket - j - 1] >= lowSubWorkLoad)
+        //     {                                         // fix[0][i][0]就包括全部, 所以一定进入if
+        //         lowContain[li++] = numBucket - j - 1; // numBits=2时lowContain[1]>=0 (左数第一个非空桶位置)
+        //         lowSubWorkLoad += subWorkLoadStep;
+        //     }
+        // }
         
-        if (hi == numBits-1)             // Bug: 最后几个桶为空时hi会在for循环里增加到numBits; 最后一个桶非空时highContain[numBits]还没赋值
-            highContain[hi] = numBucket; // numBits=2时highContain[1]=numBucket
+        // if (hi == numBits-1)             // Bug: 最后几个桶为空时hi会在for循环里增加到numBits; 最后一个桶非空时highContain[numBits]还没赋值
+        //     highContain[hi] = numBucket; // numBits=2时highContain[1]=numBucket
 
-        li = hi = 1; // 双重反向遍历时所对应的另一端的桶号在contain数组中的下标, 其实 li=lowBid+2, hi=highBid+2
-        lowSubWorkLoad = fix[0][i][0] - (fix[0][i][0] - 1) / subWorkLoadStep * subWorkLoadStep;
-        highSubWorkLoad = subWorkLoadStep;
-        lowBid = -1;
-        highBid = -1;
+        lowSubWorkLoad = fix[0][i][0] - (fix[0][i][0] - 1) / subWorkLoadStep * subWorkLoadStep; // 减一是为了避免正好整除
+        // highSubWorkLoad = subWorkLoadStep;
+        lowBid = 1;
+        // highBid = numBits - 1; // high 上的动态数组没用上，这里只是计算一下，后面都是用的 low 上的动态分组方案, 由于 bitsID 少了一维，存不下，所以注释了
         lowBktId = numBucket;
-        highBktId = 0;
-        for (int lj = 0, hj = numBucket - 1; lj < numBucket; lj++, hj--)
+        // highBktId = 0;
+        for (int lj = 0, rj = numBucket - 1; lj < numBucket; lj++, rj--)
         {
-            // 此时大于等于highSubWorkLoad了, 可以用bits, 因为bits覆盖到j-1桶
-            if (fix[1][i][lj] >= highSubWorkLoad)
-            { // 第一个大于等于临界点的桶(j-1号, 前缀和不包含本身)作为bitset覆盖的终点桶
-                highSubWorkLoad += subWorkLoadStep;
-                hi++;
-                highBid++;
-                highBktId = lj;
-            }
+            // 此时大于等于highSubWorkLoad了, 可以用bits, 因为bits覆盖到lj-1桶
+            // if (fix[1][i][lj] >= highSubWorkLoad)
+            // { // 第一个大于等于临界点的桶(j-1号, 前缀和不包含本身)作为bitset覆盖的终点桶
+            //     highSubWorkLoad += subWorkLoadStep;
+            //     highBid--;
+            //     highBktId = lj; // 之后的桶只需遍历标记到大于等于 highBktId
+            // }
 
-            // Bug: 提前满了, 最后几个桶为空, 此时highBid=numBits-2, hi=numBits, 越界了, 直接用fullBL
-            if (fix[1][i][lj] == fix[1][i][numBucket])
+            // Bug: 提前满了, 后面的所有桶都为空, 无需遍历了，直接用全量位集 0 号
+            // if (fix[1][i][lj] == fix[1][i][numBucket])
+            // {
+            //     bitsID[i][lj] = 0;
+            //     endBucket[1][i][lj] = lj; // bkt lj does not need to be marked
+            // }
+            // else
+            // {
+            //     bitsID[i][lj] = highBid;
+            //     endBucket[1][i][lj] = highBktId; // 遍历到大于等于endBucket[1][i][j]
+            // }
+
+            // Bug: 提前满了, 前面一些序号小的桶都是空的, 单独考虑
+            if (fix[0][i][rj] == fix[0][i][0] && data[0][i][rj].size() == 0) // 需要本桶也为空才行，否则全量位集不是全不匹配的，不能直接用
             {
-                bitsID[1][i][lj] = numBits - 1;
-                endBucket[1][i][lj] = lj; // bkt lj does not need to be marked
-                doubleReverse[1][i][lj] = true;
-            }
-            else if (fix[1][i][lj] - fix[1][i][highBktId] <
-                     fix[1][i][highContain[hi]] - fix[1][i][lj + 1])
-            {                                    // Bug: 没有减highBktId
-                bitsID[1][i][lj] = highBid;      // hi - 2
-                endBucket[1][i][lj] = highBktId; // 遍历到大于等于endBucket[1][i][j]
-                doubleReverse[1][i][lj] = false;
+                bitsID[i][rj] = 0; // 全不匹配，直接用全量位集 0 号
+                endBucket[0][i][rj] = rj; // 此时不需要遍历桶了
             }
             else
             {
-                bitsID[1][i][lj] = hi - 1;             // highBid+1
-                endBucket[1][i][lj] = highContain[hi]; // 从j往右遍历到小于endBucket[1][i][j]
-                doubleReverse[1][i][lj] = true;
-            }
-
-            // 后缀数组求和时包括本身(如果不包括本身, 则在两个lj、lowBktId和lowContain[li]后再减一，而lowContain[li]有可能为0); -1+1省去了
-            // fix[0][i][j][numBucket]需要是0, 使fix[0][i][j][lowBktId]刚开始为0
-            // Bug: 提前满了, 序号小的几个桶为空, 单独考虑, 直接用二重反向
-            if (fix[0][i][hj] == fix[0][i][0])
-            {
-                bitsID[0][i][hj] = numBits - 1;
-                endBucket[0][i][hj] = hj + 1;
-                doubleReverse[0][i][hj] = true;
-            }
-            else if (fix[0][i][hj + 1] - fix[0][i][lowBktId] <
-                     fix[0][i][lowContain[li]] - fix[0][i][hj])
-            {
-                bitsID[0][i][hj] = lowBid;
-                endBucket[0][i][hj] = lowBktId;
-                doubleReverse[0][i][hj] = false;
-            }
-            else
-            {
-                bitsID[0][i][hj] = li - 1; // lowBid+1
-                endBucket[0][i][hj] = lowContain[li];
-                doubleReverse[0][i][hj] = true;
+                bitsID[i][rj] = lowBid;
+                endBucket[0][i][rj] = lowBktId;
             }
 
             // 此时虽然大于等于lowSubWorkLoad了, 但仍不可以用bits, 因为bits要覆盖到hj号桶
-            if (fix[0][i][hj] >= lowSubWorkLoad)
+            if (fix[0][i][rj] >= lowSubWorkLoad)
             {
                 lowSubWorkLoad += subWorkLoadStep;
-                li++;
                 lowBid++;
-                lowBktId = hj;
+                lowBktId = rj;
             }
         }
     }
@@ -403,30 +382,22 @@ void HEM3_ASO::initBits()
     { // 每个维度
         _for(j, 0, numBucket)
         { // 每个桶
-            if (doubleReverse[0][i][j])
-                b = bitsID[0][i][j]; // 最小的需要插入的bits数组的ID
-            else
-                b = bitsID[0][i][j] + 1;
+            b = bitsID[i][j]; // 0 ~ numBits-1
             _for(k, 0, data[0][i][j].size())
             {
                 subID = data[0][i][j][k].subID;
-                fullBits[i][subID] = 1; // 0号bits每次必须标记
-                _for(q, b, numBits - 1) // Bug: bits都是是从高位(覆盖广)往低位遍历！
-                    bits[0][i][q][subID] = 1;
+                bits[i][0][subID] = 1; // 0号bits每次必须标记
+                _for(q, b+1, numBits)
+                    bits[i][q][subID] = 1;
             }
-
-            if (doubleReverse[1][i][j])
-                b = bitsID[1][i][j];
-            else
-                b = bitsID[1][i][j] + 1; // 最小的需要插入的bits数组的ID
             _for(k, 0, data[1][i][j].size())
-            { // 桶里每个订阅
+            {
                 subID = data[1][i][j][k].subID;
-                _for(q, b, numBits - 1) bits[1][i][q][subID] = 1;
+                _for(q, 1, b) bits[i][q][subID] = 1;
             }
         }
     }
-    // cout << "HEM5_AGDD Stop.\n";
+    // std::cout << "HEM5_ASO Stop.\n";
 }
 
 void HEM3_ASO::match_VASO(const Pub &pub, int &matchSubs)
@@ -439,44 +410,16 @@ void HEM3_ASO::match_VASO(const Pub &pub, int &matchSubs)
 
     _for(i, 0, pub.size)
     {
-
         value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
         attExist[att] = true;
         attGroupExist[att / attrGroupSize] = true;
 
-        if (doubleReverse[0][att][buck])
-        {
-#ifdef DEBUG
-            Timer markStart;
-#endif                                               // DEBUG
-            if (bitsID[0][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
-                bLocal = fullBits[att];
-            else
-                bLocal = bits[0][att][bitsID[0][att][buck]];
-            _for(j, endBucket[0][att][buck], buck) for (auto &&iCob : data[0][att][j])
-                bLocal[iCob.subID] = 0;
-#ifdef DEBUG
-            markTime += (double)markStart.elapsed_nano();
-            Timer compareStart;
-#endif // DEBUG
-            for (auto &&iCob : data[0][att][buck])
-                if (iCob.val <= value)
-                    bLocal[iCob.subID] = 0;
-#ifdef DEBUG
-            compareTime += (double)compareStart.elapsed_nano();
-            Timer orStart;
-#endif // DEBUG
-            b = b | bLocal;
-#ifdef DEBUG
-            orTime += (double)orStart.elapsed_nano();
-#endif // DEBUG
-        }
-        else
-        {
 #ifdef DEBUG
             Timer markStart;
 #endif // DEBUG
             _for(j, buck + 1, endBucket[0][att][buck]) for (auto &&iCob : data[0][att][j])
+                b[iCob.subID] = 1;
+            _for(j, endBucket[1][att][buck], buck) for (auto &&iCob : data[1][att][j])
                 b[iCob.subID] = 1;
 #ifdef DEBUG
             markTime += (double)markStart.elapsed_nano();
@@ -485,55 +428,6 @@ void HEM3_ASO::match_VASO(const Pub &pub, int &matchSubs)
             for (auto &&iCob : data[0][att][buck])
                 if (iCob.val > value)
                     b[iCob.subID] = 1;
-#ifdef DEBUG
-            compareTime += (double)compareStart.elapsed_nano();
-            Timer orStart;
-#endif // DEBUG
-            if (bitsID[0][att][buck] != -1)
-                b = b | bits[0][att][bitsID[0][att][buck]];
-#ifdef DEBUG
-            orTime += (double)orStart.elapsed_nano();
-#endif // DEBUG
-        }
-
-        if (doubleReverse[1][att][buck])
-        {
-#ifdef DEBUG
-            Timer markStart;
-#endif                                               // DEBUG
-            if (bitsID[1][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
-                bLocal = fullBits[att];
-            else
-                bLocal = bits[1][att][bitsID[1][att][buck]];
-            _for(j, buck + 1, endBucket[1][att][buck]) for (auto &&iCob : data[1][att][j])
-                bLocal[iCob.subID] = 0;
-#ifdef DEBUG
-            markTime += (double)markStart.elapsed_nano();
-            Timer compareStart;
-#endif // DEBUG
-            for (auto &&iCob : data[1][att][buck])
-                if (iCob.val >= value)
-                    bLocal[iCob.subID] = 0;
-#ifdef DEBUG
-            compareTime += (double)compareStart.elapsed_nano();
-            Timer orStart;
-#endif // DEBUG
-            b = b | bLocal;
-#ifdef DEBUG
-            orTime += (double)orStart.elapsed_nano();
-#endif // DEBUG
-        }
-        else
-        {
-#ifdef DEBUG
-            Timer markStart;
-#endif // DEBUG
-            _for(j, endBucket[1][att][buck], buck) for (auto &&iCob : data[1][att][j])
-                b[iCob.subID] = 1;
-#ifdef DEBUG
-            markTime += (double)markStart.elapsed_nano();
-            Timer compareStart;
-#endif // DEBUG
             for (auto &&iCob : data[1][att][buck])
                 if (iCob.val < value)
                     b[iCob.subID] = 1;
@@ -541,12 +435,11 @@ void HEM3_ASO::match_VASO(const Pub &pub, int &matchSubs)
             compareTime += (double)compareStart.elapsed_nano();
             Timer orStart;
 #endif // DEBUG
-            if (bitsID[1][att][buck] != -1)
-                b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
+            if (bitsID[att][buck] != -1)
+                b = b | bits[att][bitsID[att][buck]];
 #ifdef DEBUG
             orTime += (double)orStart.elapsed_nano();
 #endif // DEBUG
-        }
     }
 
     // 处理空维度情况
@@ -573,13 +466,13 @@ void HEM3_ASO::match_VASO(const Pub &pub, int &matchSubs)
         if (attGroupExist[AGi])
         {
             base = AGi * attrGroupSize;
-            _for(aj, base, base + attrGroupSize)
+            _for(aj, base, base + attrGroupSize) // 遍历这个属性组的每个属性号
             {
                 if (!attExist[aj])
-                    b = b | fullBits[aj];
+                    b = b | bits[aj][0];
             }
         }
-        else
+        else // 该属性组不存在谓词
         {
             b = b | attrGroupBits[AGi];
         }
