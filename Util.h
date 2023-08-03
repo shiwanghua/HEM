@@ -129,7 +129,7 @@ public:
 
 
 // 256
-#if blockSize == 256
+#if BlockSize == 256
  void Util::bitsetOr(bitset<subs> &b1, const bitset<subs> &b2) { // b1=b1|b2;
  	__m256i b1_256, b2_256;
  	long long int *begin1 = reinterpret_cast<long long int *> (&b1);
@@ -149,7 +149,7 @@ public:
  		begin2 += ptrIncrement;
  	}
  }
-#elif blockSize==512
+#elif BlockSize==512
 // 512
 void Util::bitsetOr(bitset<subs> &b1, const bitset<subs> &b2) { // b1=b1|b2;
 	__m512i b1_512, b2_512;

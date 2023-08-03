@@ -74,7 +74,7 @@ void run_rein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 					 + " ms AvgMarkTime= " + to_string(rein.markTime / pubs / 1000000)
 					 + " ms AvgBitTime= " + to_string(rein.bitTime / pubs / 1000000)
 					 + " ms pD= " + to_string(parallelDegree)
-					 + " avx= " + to_string(blockSize)
+					 + " avx= " + to_string(BlockSize)
 					 + " numBuk= " + Util::Int2String(rein.numBucket)
 					 + " numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
@@ -2763,7 +2763,7 @@ void run_HEM5(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 					 + " ms AvgMarkTime= " + to_string(hem5.markTime / pubs / 1000000)
 					 + " ms OrTime= " + to_string(hem5.orTime / pubs / 1000000)
 					 + " ms AvgBitTime= " + to_string(hem5.bitTime / pubs / 1000000)
-					 + " ms avx= " + to_string(blockSize)
+					 + " ms avx= " + to_string(BlockSize)
 					 + " numBuk= " + Util::Int2String(hem5.numBucket)
 					 + " numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
@@ -2886,7 +2886,7 @@ void run_HEM5_avxOR(const intervalGenerator& gen, unordered_map<int, bool> delet
 					 + " ms AvgMarkTime= " + to_string(hem5_avxor.markTime / pubs / 1000000)
 					 + " ms OrTime= " + to_string(hem5_avxor.orTime / pubs / 1000000)
 					 + " ms AvgBitTime= " + to_string(hem5_avxor.bitTime / pubs / 1000000)
-					 + " ms avx= " + to_string(blockSize)
+					 + " ms avx= " + to_string(BlockSize)
 					 + " numBuk= " + Util::Int2String(hem5_avxor.numBucket)
 					 + " numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
@@ -3116,7 +3116,7 @@ void run_HEM5_avxOR_parallel(const intervalGenerator& gen, unordered_map<int, bo
 					 + " ms MergeTime= " + to_string(hem5_avxOR_p.mergeTime / pubs / 1000000)
 					 + " ms AvgBitTime= " + to_string(hem5_avxOR_p.bitTime / pubs / 1000000)
 					 + " ms pD= " + to_string(parallelDegree)
-					 + " avx= " + to_string(blockSize)
+					 + " avx= " + to_string(BlockSize)
 					 + " numBuk= " + Util::Int2String(hem5_avxOR_p.numBucket)
 					 + " numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)
@@ -3423,7 +3423,7 @@ void run_HEM5_RAS_avxOR_parallel(const intervalGenerator& gen, unordered_map<int
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
 		if (i % interval == 0)
-			cout << "HEM5DD_RAS_avxOR_Parallel" + to_string(blockSize) + "-Parallel: Event " << i << " is matched.\n";
+			cout << "HEM5DD_RAS_avxOR_Parallel" + to_string(BlockSize) + "-Parallel: Event " << i << " is matched.\n";
 	}
 
 	if (display)
@@ -3452,7 +3452,7 @@ void run_HEM5_RAS_avxOR_parallel(const intervalGenerator& gen, unordered_map<int
 					 + " ms MergeTime= " + to_string(hem5_ras_a_p.mergeTime / pubs / 1000000)
 					 + " ms AvgBitTime= " + to_string(hem5_ras_a_p.bitTime / pubs / 1000000)
 					 + " ms pD= " + to_string(parallelDegree)
-					 + " avx= " + to_string(blockSize)
+					 + " avx= " + to_string(BlockSize)
 					 + " numBuk= " + Util::Int2String(hem5_ras_a_p.numBucket)
 					 + " numSub= " + Util::Int2String(subs)
 					 + " subSize= " + Util::Int2String(cons)

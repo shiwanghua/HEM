@@ -37,7 +37,7 @@ HEM3_ASO::HEM3_ASO(int type)
         TYPE = "HEM3_D_RASO";
     else if (type == HEM3_D_RASO_AVXOR_PARALLEL)
     {
-        TYPE = "HEM3_D_RASO_AVXOR" + to_string(blockSize) + "_PARALLEL";
+        TYPE = "HEM3_D_RASO_AVXOR" + to_string(BlockSize) + "_PARALLEL";
         threadPool.initThreadPool(parallelDegree);
     }
     cout << "ExpID = " << expID << ". " + TYPE + ": bitset number = " << numBits << ", bucketStep = " << buckStep
@@ -382,7 +382,7 @@ void HEM3_ASO::initBits()
     { // 每个维度
         _for(j, 0, numBucket)
         { // 每个桶
-            b = bitsID[i][j]; // 0 ~ numBits-1
+            b = bitsID[i][j]; // 1 ~ numBits-1
             _for(k, 0, data[0][i][j].size())
             {
                 subID = data[0][i][j][k].subID;
@@ -402,7 +402,7 @@ void HEM3_ASO::initBits()
 
 void HEM3_ASO::match_VASO(const Pub &pub, int &matchSubs)
 {
-    bitset<subs> b; // register
+    bitset<subs> gB; // register
     bitset<subs> bLocal;
     vector<bool> attExist(numDimension, false);
     vector<bool> attGroupExist(numAttrGroup, false);
@@ -418,46 +418,34 @@ void HEM3_ASO::match_VASO(const Pub &pub, int &matchSubs)
             Timer markStart;
 #endif // DEBUG
             _for(j, buck + 1, endBucket[0][att][buck]) for (auto &&iCob : data[0][att][j])
-                b[iCob.subID] = 1;
+                gB[iCob.subID] = 1;
             _for(j, endBucket[1][att][buck], buck) for (auto &&iCob : data[1][att][j])
-                b[iCob.subID] = 1;
+                gB[iCob.subID] = 1;
 #ifdef DEBUG
             markTime += (double)markStart.elapsed_nano();
             Timer compareStart;
 #endif // DEBUG
             for (auto &&iCob : data[0][att][buck])
                 if (iCob.val > value)
-                    b[iCob.subID] = 1;
+                    gB[iCob.subID] = 1;
             for (auto &&iCob : data[1][att][buck])
                 if (iCob.val < value)
-                    b[iCob.subID] = 1;
+                    gB[iCob.subID] = 1;
 #ifdef DEBUG
             compareTime += (double)compareStart.elapsed_nano();
             Timer orStart;
 #endif // DEBUG
-            if (bitsID[att][buck] != -1)
-                b = b | bits[att][bitsID[att][buck]];
+#if BatchSize == 64
+            gB = gB | bits[att][bitsID[att][buck]];
+#else
+            Util::bitsetOr(gB, bits[att][bitsID[att][buck]]);
+#endif
 #ifdef DEBUG
             orTime += (double)orStart.elapsed_nano();
 #endif // DEBUG
     }
 
     // 处理空维度情况
-    /*if (numBits > 1) // 如果只有一个bitset时bitset是设置为负责一半的桶而不是全部桶就要用if区分
-    {*/
-    /*_for(i, 0, numDimension) if (!attExist[i])
-        b = b | fullBits[i];*/
-    /*}
-    else
-    {
-        _for(i, 0, numDimension) if (!attExist[i])
-            _for(j, 0, endBucket[0][i][0])
-            _for(k, 0, data[0][i][j].size())
-            b[data[0][i][j][k].subID] = 1;
-
-        _for(i, 0, numDimension) if (!attExist[i])
-            b = b | bits[0][i][0];
-    }*/
 #ifdef DEBUG
     Timer orStart;
 #endif // DEBUG
@@ -466,15 +454,25 @@ void HEM3_ASO::match_VASO(const Pub &pub, int &matchSubs)
         if (attGroupExist[AGi])
         {
             base = AGi * attrGroupSize;
-            _for(aj, base, base + attrGroupSize) // 遍历这个属性组的每个属性号
+            _for(att, base, min(base + attrGroupSize, numDimension)) // 遍历这个属性组的每个属性号
             {
-                if (!attExist[aj])
-                    b = b | bits[aj][0];
+                if (!attExist[att])
+                {
+#if BatchSize == 64
+                    gB = gB | bits[att][0];
+#else
+                    Util::bitsetOr(gB, bits[att][0]);
+#endif
+                }
             }
         }
         else // 该属性组不存在谓词
         {
-            b = b | attrGroupBits[AGi];
+#if BatchSize == 64
+            gB = gB | attrGroupBits[AGi];
+#else
+            Util::bitsetOr(gB, attrGroupBits[AGi]);
+#endif
         }
     }
 #ifdef DEBUG
@@ -485,7 +483,7 @@ void HEM3_ASO::match_VASO(const Pub &pub, int &matchSubs)
     //			++matchSubs;
     //			//cout << "HEM5_VAG matches sub: " << i << endl;
     //		}
-    matchSubs = subs - b.count();
+    matchSubs = subs - gB.count();
 #ifdef DEBUG
     bitTime += (double)bitStart.elapsed_nano();
 #endif // DEBUG
@@ -493,7 +491,7 @@ void HEM3_ASO::match_VASO(const Pub &pub, int &matchSubs)
 
 void HEM3_ASO::match_RASO(const Pub &pub, int &matchSubs)
 {
-    bitset<subs> b; // register
+    bitset<subs> gB; // register
     bitset<subs> bLocal;
     vector<bool> attExist(numDimension, false);
     int value, att, buck;
@@ -504,137 +502,58 @@ void HEM3_ASO::match_RASO(const Pub &pub, int &matchSubs)
         value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
         attExist[att] = true;
 
-        if (doubleReverse[0][att][buck])
-        {
-#ifdef DEBUG
-            Timer markStart;
-#endif                                               // DEBUG
-            if (bitsID[0][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
-                bLocal = fullBits[att];
-            else
-                bLocal = bits[0][att][bitsID[0][att][buck]];
-            _for(j, endBucket[0][att][buck], buck) for (auto &&iCob : data[0][att][j])
-                bLocal[iCob.subID] = 0;
-#ifdef DEBUG
-            markTime += (double)markStart.elapsed_nano();
-            Timer compareStart;
-#endif // DEBUG
-            for (auto &&iCob : data[0][att][buck])
-                if (iCob.val <= value)
-                    bLocal[iCob.subID] = 0;
-#ifdef DEBUG
-            compareTime += (double)compareStart.elapsed_nano();
-            Timer orStart;
-#endif // DEBUG
-            b = b | bLocal;
-#ifdef DEBUG
-            orTime += (double)orStart.elapsed_nano();
-#endif // DEBUG
-        }
-        else
-        {
 #ifdef DEBUG
             Timer markStart;
 #endif // DEBUG
             _for(j, buck + 1, endBucket[0][att][buck]) for (auto &&iCob : data[0][att][j])
-                b[iCob.subID] = 1;
+                gB[iCob.subID] = 1;
+            _for(j, endBucket[1][att][buck], buck) for (auto &&iCob : data[1][att][j])
+                gB[iCob.subID] = 1;
 #ifdef DEBUG
             markTime += (double)markStart.elapsed_nano();
             Timer compareStart;
 #endif // DEBUG
             for (auto &&iCob : data[0][att][buck])
                 if (iCob.val > value)
-                    b[iCob.subID] = 1;
-#ifdef DEBUG
-            compareTime += (double)compareStart.elapsed_nano();
-            Timer orStart;
-#endif // DEBUG
-            if (bitsID[0][att][buck] != -1)
-                b = b | bits[0][att][bitsID[0][att][buck]];
-#ifdef DEBUG
-            orTime += (double)orStart.elapsed_nano();
-#endif // DEBUG
-        }
-
-        if (doubleReverse[1][att][buck])
-        {
-#ifdef DEBUG
-            Timer markStart;
-#endif                                               // DEBUG
-            if (bitsID[1][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
-                bLocal = fullBits[att];
-            else
-                bLocal = bits[1][att][bitsID[1][att][buck]];
-            _for(j, buck + 1, endBucket[1][att][buck]) for (auto &&iCob : data[1][att][j])
-                bLocal[iCob.subID] = 0;
-#ifdef DEBUG
-            markTime += (double)markStart.elapsed_nano();
-            Timer compareStart;
-#endif // DEBUG
-            for (auto &&iCob : data[1][att][buck])
-                if (iCob.val >= value)
-                    bLocal[iCob.subID] = 0;
-#ifdef DEBUG
-            compareTime += (double)compareStart.elapsed_nano();
-            Timer orStart;
-#endif // DEBUG
-            b = b | bLocal;
-#ifdef DEBUG
-            orTime += (double)orStart.elapsed_nano();
-#endif // DEBUG
-        }
-        else
-        {
-#ifdef DEBUG
-            Timer markStart;
-#endif // DEBUG
-            _for(j, endBucket[1][att][buck], buck) for (auto &&iCob : data[1][att][j])
-                b[iCob.subID] = 1;
-#ifdef DEBUG
-            markTime += (double)markStart.elapsed_nano();
-            Timer compareStart;
-#endif // DEBUG
+                    gB[iCob.subID] = 1;
             for (auto &&iCob : data[1][att][buck])
                 if (iCob.val < value)
-                    b[iCob.subID] = 1;
+                    gB[iCob.subID] = 1;
 #ifdef DEBUG
             compareTime += (double)compareStart.elapsed_nano();
             Timer orStart;
 #endif // DEBUG
-            if (bitsID[1][att][buck] != -1)
-                b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
+#if BatchSize == 64
+            gB = gB | bits[att][bitsID[att][buck]];
+#else
+            Util::bitsetOr(gB, bits[att][bitsID[att][buck]]);
+#endif
 #ifdef DEBUG
             orTime += (double)orStart.elapsed_nano();
 #endif // DEBUG
-        }
     }
 
     // 处理空维度情况
-    /*if (numBits > 1) // 如果只有一个bitset时bitset是设置为负责一半的桶而不是全部桶就要用if区分
-    {*/
-    /*_for(i, 0, numDimension) if (!attExist[i])
-        b = b | fullBits[i];*/
-    /*}
-    else
-    {
-        _for(i, 0, numDimension) if (!attExist[i])
-            _for(j, 0, endBucket[0][i][0])
-            _for(k, 0, data[0][i][j].size())
-            b[data[0][i][j][k].subID] = 1;
-
-        _for(i, 0, numDimension) if (!attExist[i])
-            b = b | bits[0][i][0];
-    }*/
 #ifdef DEBUG
     Timer orStart;
 #endif // DEBUG
-    int attGroupNo = att / attrGroupSize;
-    b = b | attrGroupBits[attGroupNo];
-    int base = attGroupNo * attrGroupSize;
-    _for(ai, base, base + attrGroupSize)
+    int att_group_no = att / attrGroupSize;
+#if BatchSize == 64
+    gB = gB | attrGroupBits[att_group_no];
+#else
+    Util::bitsetOr(gB, attrGroupBits[att_group_no]);
+#endif
+    int base = att_group_no * attrGroupSize;
+    _for(att, base, min(base + attrGroupSize,numDimension))
     {
-        if (!attExist[ai])
-            b = b | fullBits[ai];
+        if (!attExist[att])
+        {
+#if BatchSize == 64
+                gB = gB | bits[att][0];
+#else
+                Util::bitsetOr(gB, bits[att][0]);
+#endif
+        }
     }
 #ifdef DEBUG
     orTime += (double)orStart.elapsed_nano();
@@ -644,7 +563,7 @@ void HEM3_ASO::match_RASO(const Pub &pub, int &matchSubs)
     //			++matchSubs;
     //			//cout << "HEM5_VAG matches sub: " << i << endl;
     //		}
-    matchSubs = subs - b.count();
+    matchSubs = subs - gB.count();
 #ifdef DEBUG
     bitTime += (double)bitStart.elapsed_nano();
 #endif // DEBUG
@@ -652,7 +571,7 @@ void HEM3_ASO::match_RASO(const Pub &pub, int &matchSubs)
 
 void HEM3_ASO::match_RASO_avxOR_parallel(const Pub &pub, int &matchSubs)
 {
-    vector<future<bitset<subs>>> threadResult;
+    vector<future<bitset<subs>>> thread_result;
     int seg = pub.size / parallelDegree;
     int remainder = pub.size % parallelDegree;
     int tId = 0, end;
@@ -662,108 +581,72 @@ void HEM3_ASO::match_RASO_avxOR_parallel(const Pub &pub, int &matchSubs)
             end = begin + seg + 1;
         else
             end = begin + seg;
-        threadResult.emplace_back(threadPool.enqueue([this, &pub, begin, end]
-                                                     {
-// 局部变量存栈里
-			bitset<subs> b; // register
-			bitset<subs> bLocal;
-			
+        thread_result.emplace_back(threadPool.enqueue([this, &pub, begin, end]
+        {
+            // 局部变量存栈里
+			bitset<subs> gB; // register
 			int value, att, buck;
 			for (int i = begin; i < end; i++) {
 				value = pub.pairs[i].value, att = pub.pairs[i].att, buck = value / buckStep;
 
-				if (doubleReverse[0][att][buck]) {
-					if (bitsID[0][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
-						bLocal = fullBits[att];
-					else
-						bLocal = bits[0][att][bitsID[0][att][buck]];
-					_for(j, endBucket[0][att][buck], buck)
-					for (auto &&iCob: data[0][att][j])
-							bLocal[iCob.subID] = 0;
-					_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val <= value)
-							bLocal[data[0][att][buck][k].subID] = 0;
-					Util::bitsetOr(b, bLocal);
-				} else {
-					_for(j, buck + 1, endBucket[0][att][buck]) 
-					for (auto &&iCob: data[0][att][j])
-							b[iCob.subID] = 1;
-					_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
-							b[data[0][att][buck][k].subID] = 1;
-					if (bitsID[0][att][buck] != -1)
-						Util::bitsetOr(b,bits[0][att][bitsID[0][att][buck]]);
-				}
+                _for(j, buck + 1, endBucket[0][att][buck]) for (auto &&iCob: data[0][att][j])
+                    gB[iCob.subID] = 1;
+                _for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
+                    gB[data[0][att][buck][k].subID] = 1;
 
-				if (doubleReverse[1][att][buck]) {
-					if (bitsID[1][att][buck] == numBits - 1) // 只有1个bitset时建到fullBits上，去掉: && numBits > 1
-						bLocal = fullBits[att];
-					else
-						bLocal = bits[1][att][bitsID[1][att][buck]];
-					_for(j, buck+1, endBucket[1][att][buck])
-					for (auto &&iCob: data[1][att][j])
-							bLocal[iCob.subID] = 0;
-					_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val >= value)
-							bLocal[data[1][att][buck][k].subID] = 0;
-					Util::bitsetOr(b, bLocal);
-				} else {
-					_for(j, endBucket[1][att][buck], buck) 
-					for (auto &&iCob: data[1][att][j])
-							b[iCob.subID] = 1;
-					_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
-							b[data[1][att][buck][k].subID] = 1;
-					if (bitsID[1][att][buck] != -1)
-						Util::bitsetOr(b, bits[1][att][bitsID[1][att][buck]]);//b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: 是att不是i
-				}
-			}
-			return b; }));
+                _for(j, endBucket[1][att][buck], buck) for (auto &&iCob : data[1][att][j])
+                    gB[iCob.subID] = 1;
+                _for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
+                    gB[data[1][att][buck][k].subID] = 1;
+
+#if BatchSize == 64
+                gB = gB | bits[att][bitsID[att][buck]];
+#else
+                Util::bitsetOr(gB, bits[att][bitsID[att][buck]]);
+#endif
+            }
+			return gB; }));
     }
 
-    // 处理空维度情况
-    /*if (numBits > 1) // 如果只有一个bitset时bitset是设置为负责一半的桶而不是全部桶就要用if区分
-    {*/
-    /*_for(i, 0, numDimension) if (!attExist[i])
-        b = b | fullBits[i];*/
-    /*}
-    else
-    {
-        _for(i, 0, numDimension) if (!attExist[i])
-            _for(j, 0, endBucket[0][i][0])
-            _for(k, 0, data[0][i][j].size())
-            b[data[0][i][j][k].subID] = 1;
-
-        _for(i, 0, numDimension) if (!attExist[i])
-            b = b | bits[0][i][0];
-    }*/
-    int attGroupNo = pub.pairs[0].att / attrGroupSize;
-    bitset<subs> gb = attrGroupBits[attGroupNo];
+    int att_group_no = pub.pairs[0].att / attrGroupSize;
+    bitset<subs> gB = attrGroupBits[att_group_no];
     if (pub.size < attrGroupSize)
     {
         vector<bool> attExist(numDimension, false);
         for (auto &item : pub.pairs)
             attExist[item.att] = true;
-        int base = attGroupNo * attrGroupSize;
-        _for(ai, base, base + attrGroupSize)
+        int base = att_group_no * attrGroupSize;
+        _for(ai, base, min(base + attrGroupSize, numDimension))
         {
             if (!attExist[ai])
-                gb = gb | fullBits[ai];
+            {
+#if BatchSize == 64
+                    gB = gB | bits[att][0];
+#else
+                    Util::bitsetOr(gB, bits[ai][0]);
+#endif
+            }
         }
     }
 #ifdef DEBUG
     Timer mergeStart;
-#endif // DEBUG
-    for (int i = 0; i < threadResult.size(); i++)
-        Util::bitsetOr(gb, threadResult[i].get());
+#endif
+    for (int i = 0; i < thread_result.size(); i++)
+    {
+#if BatchSize == 64
+        gB = gB | thread_result[i].get();
+#else
+        Util::bitsetOr(gB, thread_result[i].get());
+#endif
+    }
 #ifdef DEBUG
     mergeTime += (double)mergeStart.elapsed_nano();
     Timer bitStart;
-#endif // DEBUG
-    //	_for(i, 0, subs) if (!b[i]) {
-    //			++matchSubs;
-    //			//cout << "HEM5_VAG matches sub: " << i << endl;
-    //		}
-    matchSubs = subs - gb.count();
+#endif
+    matchSubs = subs - gB.count();
 #ifdef DEBUG
     bitTime += (double)bitStart.elapsed_nano();
-#endif // DEBUG
+#endif
 }
 
 int HEM3_ASO::calMemory()

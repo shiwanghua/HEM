@@ -38,10 +38,10 @@ int be = 4;                 // bit exponent. In each dimension, there are 2 * 2^
 int be2 = 50;                // When be=-1, be2 is adopted. In each dimension, there are 2 * be2 bitsets.
 const int lvls = 2;         // HEMSC number of levels
 int gs = 5;                 // HEMSR Group Size 一组有多少个维度
-// const int blockSize = 512;  // 每次对256位做逻辑运算
+// const int BlockSize = 512;  // 每次对256位做逻辑运算
 const int ptrSize = 64;     // 每次只能加载__int64 64位
-const int blockNum = (subs + blockSize - 1) / blockSize; //  把做 subs 位的逻辑运算 简化为做 blockNum 次逻辑运算
-const int ptrIncrement = blockSize / ptrSize;       //  需要加载的次数
+const int blockNum = (subs + BlockSize - 1) / BlockSize; //  把做 subs 位的逻辑运算 简化为做 blockNum 次逻辑运算
+const int ptrIncrement = BlockSize / ptrSize;       //  需要加载的次数
 const __m256i mask = _mm256_set1_epi32(0x80000000);
 
 // Tama

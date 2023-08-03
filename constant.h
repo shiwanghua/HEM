@@ -14,7 +14,7 @@ extern const bool verifyID; // whether to verify Insertion and Deletion function
 extern const int interval;	// ÿƥ����ô����¼����һ����־��Ϣ
 extern const double subp;	// subp�����Ķ��ĺ��¼���ν�ʶ�����ǰcons��ά����
 extern double realMatchNum;
-const int subs = 1000000;	 // 1048576;//134217728;  // Number of subscriptions.
+const int subs = 1048576;    // 1048576;//134217728;  // Number of subscriptions.
 extern const int32_t pubs;	 // Number of publications.
 extern int32_t atts;		 // Total number of attributes, i.e. dimensions.
 extern int attrGroup;		 // The number of attribute group in #atts attributes.
@@ -90,8 +90,8 @@ extern int be;		   // ÿ��ά���� 2 * 2^bits��bits����
 extern int be2;		   // be=-1ʱÿ��ά���� 2 * be2 ��bits����
 extern const int lvls; // HEMSC ����
 extern int gs;		   // HEMSR һ���ж��ٸ�ά��
-// extern const int blockSize;
-#define blockSize 256
+// extern const int BlockSize;
+#define BlockSize 256
 extern const int ptrSize;
 extern const int blockNum; // ���������
 extern const int ptrIncrement;

@@ -6,7 +6,7 @@ HEM5_avxOR::HEM5_avxOR()
 	numDimension = atts;
 	buckStep = (valDom - 1) / buks + 1;
 	numBucket = (valDom - 1) / buckStep + 1;
-	cout << "ExpID = " << expID << ". HEM5DD_avxOR" + to_string(blockSize) + ": bit exponent = " << be
+	cout << "ExpID = " << expID << ". HEM5DD_avxOR" + to_string(BlockSize) + ": bit exponent = " << be
 		 << ", bucketStep = " << buckStep
 		 << ", numBucket = " << numBucket << endl;
 
@@ -17,9 +17,9 @@ HEM5_avxOR::HEM5_avxOR()
 	if (be == -1)
 		numBits = be2;
 	else
-		numBits = pow(2, be); // Ã¿¸öÎ¬¶ÈÉÏlowValue¶ÔÓ¦µÄbitsÊý×é¸öÊý
+		numBits = pow(2, be); // Ã¿ï¿½ï¿½Î¬ï¿½ï¿½ï¿½ï¿½lowValueï¿½ï¿½Ó¦ï¿½ï¿½bitsï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	//if (numBits > 1)
-	fullBits.resize(numDimension); // Î¬¶È×ÜÊýÓÀÔ¶²»±ä£¬ËùÒÔÖ»ÐèÒªresizeÒ»´Î
+	fullBits.resize(numDimension); // Î¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ä£¬ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ÒªresizeÒ»ï¿½ï¿½
 	//else bitStep = numBucket >> 1;
 
 	doubleReverse[0] = new bool* [numDimension];
@@ -55,7 +55,7 @@ void HEM5_avxOR::insert(IntervalSub sub)
 	{
 		IntervalCnt cnt = sub.constraints[i];
 		Combo c;
-		// int bucketID = cnt.lowValue / buckStep; // Bug: ÕâÀï±»¿ÓÁË
+		// int bucketID = cnt.lowValue / buckStep; // Bug: ï¿½ï¿½ï¿½ï±»ï¿½ï¿½ï¿½ï¿½
 		c.val = cnt.lowValue;
 		c.subID = sub.id;
 		data[0][cnt.att][cnt.lowValue / buckStep].push_back(c);
@@ -71,7 +71,7 @@ void HEM5_avxOR::insert_online(IntervalSub sub)
 	Combo c;
 	int b, bucketID;
 	c.subID = sub.id;
-	//if (numBits > 1) { // ÀÁµÃÔÚÏÂÃæforÑ­»·ÀïÃ¿´Î¶¼ÅÐ¶ÏÒ»´Î
+	//if (numBits > 1) { // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½forÑ­ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½Î¶ï¿½ï¿½Ð¶ï¿½Ò»ï¿½ï¿½
 	_for(i, 0, sub.size)
 	{
 		fullBits[sub.constraints[i].att][sub.id] = 1;
@@ -107,7 +107,7 @@ bool HEM5_avxOR::deleteSubscription(IntervalSub sub)
 	IntervalCnt cnt;
 	int b, bucketID, id = sub.id;
 
-	//if (numBits > 1) { // ÀÁµÃÔÚÏÂÃæforÑ­»·ÀïÃ¿´Î¶¼ÅÐ¶ÏÒ»´Î
+	//if (numBits > 1) { // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½forÑ­ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½Î¶ï¿½ï¿½Ð¶ï¿½Ò»ï¿½ï¿½
 	_for(i, 0, sub.size)
 	{
 		fullBits[sub.constraints[i].att][id] = 0;
@@ -154,11 +154,11 @@ bool HEM5_avxOR::deleteSubscription(IntervalSub sub)
 	return find == 2 * sub.size;
 }
 
-// fullBitsµ¥¶À´æ´¢µÄ°æ±¾
+// fullBitsï¿½ï¿½ï¿½ï¿½ï¿½æ´¢ï¿½Ä°æ±¾
 void HEM5_avxOR::initBits()
 {
 
-	// Èç¹ûÓÐ¶à´Î³õÊ¼»¯
+	// ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½Î³ï¿½Ê¼ï¿½ï¿½
 	_for(i, 0,
 		numDimension) delete[] doubleReverse[0][i], doubleReverse[1][i], endBucket[0][i], endBucket[1][i], bitsID[0][i], bitsID[1][i];
 	delete[] endBucket[0], endBucket[1], bitsID[0], bitsID[1], doubleReverse[0], doubleReverse[1];
@@ -181,18 +181,18 @@ void HEM5_avxOR::initBits()
 	bits[0].resize(numDimension, vector<bitset<subs>>(numBits - 1));
 	bits[1].resize(numDimension, vector<bitset<subs>>(numBits - 1));
 
-	//// Ç°×ººÍ¡¢ºó×ººÍÊý×é, ²»°üÀ¨±¾Éí
+	//// Ç°×ºï¿½Í¡ï¿½ï¿½ï¿½×ºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	//_for(i, 0, numDimension) {
 	//	_for(j, 1, numBucket) {
 	//		fix[0][i][numBucket - 1 - j] = fix[0][i][numBucket - j] + data[0][i][numBucket - j].size();
 	//		fix[1][i][j] = fix[1][i][j - 1] + data[1][i][j - 1].size();
 	//	}
-	//	// Õû¸öÊý×éµÄºÍ´æÔÚ×îºóÒ»¸öÔªËØÉÏ
+	//	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÄºÍ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ôªï¿½ï¿½ï¿½ï¿½
 	//	fix[0][i][numBucket] = fix[0][i][0] + data[0][i][0].size();
-	//	fix[1][i][numBucket] = fix[1][i][numBucket - 1] + data[1][i][numBucket - 1].size(); // Bug: ÉÙÁË-1!!!
+	//	fix[1][i][numBucket] = fix[1][i][numBucket - 1] + data[1][i][numBucket - 1].size(); // Bug: ï¿½ï¿½ï¿½ï¿½-1!!!
 	//}
 
-	// Ç°×ººÍÊý×é(²»°üÀ¨±¾Éí)¡¢ºó×ººÍÊý×é(°üÀ¨±¾Éí)
+	// Ç°×ºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ï¿½ï¿½×ºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
 	_for(i, 0, numDimension)
 	{
 		fix[0][i][numBucket] = 0;
@@ -203,16 +203,16 @@ void HEM5_avxOR::initBits()
 			fix[0][i][numBucket - 1 - j] = fix[0][i][numBucket - j] + data[0][i][numBucket - j - 1].size();
 			fix[1][i][j] = fix[1][i][j - 1] + data[1][i][j - 1].size();
 		}
-		// Õû¸öÊý×éµÄºÍ´æÔÚ×îºóÒ»¸öÔªËØÉÏ
-		//fix[0][i][numBucket] = fix[0][i][0];  // Bug: µ¼ÖÂºóÃæ¸Õ¿ªÊ¼ËãÓ³Éä¹ØÏµÊ±fix[0][i][lowBktId]²»ºÏÀí
-		fix[1][i][numBucket] = fix[1][i][numBucket - 1] + data[1][i][numBucket - 1].size(); // Bug: ÉÙÁË-1!!!
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÄºÍ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ôªï¿½ï¿½ï¿½ï¿½
+		//fix[0][i][numBucket] = fix[0][i][0];  // Bug: ï¿½ï¿½ï¿½Âºï¿½ï¿½ï¿½Õ¿ï¿½Ê¼ï¿½ï¿½Ó³ï¿½ï¿½ï¿½ÏµÊ±fix[0][i][lowBktId]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		fix[1][i][numBucket] = fix[1][i][numBucket - 1] + data[1][i][numBucket - 1].size(); // Bug: ï¿½ï¿½ï¿½ï¿½-1!!!
 	}
 
-	//if (numBits == 1) { // Ö»ÓÐÒ»¸öbitsÊ±ÌØÅÐ£¬²»ÓÃfullBits
+	//if (numBits == 1) { // Ö»ï¿½ï¿½Ò»ï¿½ï¿½bitsÊ±ï¿½ï¿½ï¿½Ð£ï¿½ï¿½ï¿½ï¿½ï¿½fullBits
 	//	_for(i, 0, numDimension) {
 	//		int halfWorkLoad = fix[0][i][0] >> 1; // subWorkLoadStep  fix[1][i][numBucket]
 	//		int quarterWorkLoad = halfWorkLoad >> 1;
-	//		// µÚÒ»¸öºó/Ç°×ººÍ°üº¬Ò»°ë¶©ÔÄµÄÍ°ID£¬bitÊý×é×îÔ¶ÕýºÃ¸²¸Çµ½lowHalfPointºÍhighHalfPoint-1
+	//		// ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½/Ç°×ºï¿½Í°ï¿½ï¿½ï¿½Ò»ï¿½ë¶©ï¿½Äµï¿½Í°IDï¿½ï¿½bitï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½Ã¸ï¿½ï¿½Çµï¿½lowHalfPointï¿½ï¿½highHalfPoint-1
 	//		int lowHalfPoint = -1, lowQuarterPoint = -1, highHalfPoint = -1, highQuarterPoint = -1;
 	//		_for(j, 0, numBucket) {
 	//			if (lowQuarterPoint == -1 && fix[0][i][numBucket - 1 - j] >= quarterWorkLoad)
@@ -227,42 +227,42 @@ void HEM5_avxOR::initBits()
 	//		}
 
 	//		_for(j, 0, numBucket) {
-	//			if (j < lowHalfPoint) { // ¿ÉÒÔÓÃÉÏbitset
+	//			if (j < lowHalfPoint) { // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bitset
 	//				bitsID[0][i][j] = 0;
-	//				endBucket[0][i][j] = lowHalfPoint; // ±éÀúµ½Ð¡ÓÚ lowCriticalPoint
+	//				endBucket[0][i][j] = lowHalfPoint; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ lowCriticalPoint
 	//				doubleReverse[0][i][j] = false;
 	//			}
 	//			else if (j < lowQuarterPoint) {
 	//				bitsID[0][i][j] = 0;
-	//				endBucket[0][i][j] = lowHalfPoint; // ´Ó j ¶þÖØ·´Ïò±éÀúµ½µÈÓÚ lowCriticalPoint(¶¼°üº¬)
+	//				endBucket[0][i][j] = lowHalfPoint; // ï¿½ï¿½ j ï¿½ï¿½ï¿½Ø·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ lowCriticalPoint(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
 	//				doubleReverse[0][i][j] = true;
-	//				_for(k, 0, data[0][i][j].size()) // Í°ÀïÃ¿¸ö¶©ÔÄ
+	//				_for(k, 0, data[0][i][j].size()) // Í°ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	//					bits[0][i][0][data[0][i][j][k].subID] = 1;
 	//			}
 	//			else {
 	//				bitsID[0][i][j] = -1;
 	//				endBucket[0][i][j] = numBucket;
 	//				doubleReverse[0][i][j] = false;
-	//				_for(k, 0, data[0][i][j].size()) // Í°ÀïÃ¿¸ö¶©ÔÄ
+	//				_for(k, 0, data[0][i][j].size()) // Í°ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	//					bits[0][i][0][data[0][i][j][k].subID] = 1;
 	//			}
-	//			if (j < highQuarterPoint) { // ²»¿ÉÒÔÓÃbitset
+	//			if (j < highQuarterPoint) { // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bitset
 	//				bitsID[1][i][j] = -1;
-	//				endBucket[1][i][j] = 0; // ±éÀúµ½µÈÓÚ0
+	//				endBucket[1][i][j] = 0; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½0
 	//				doubleReverse[1][i][j] = false;
-	//				_for(k, 0, data[1][i][j].size()) // Í°ÀïÃ¿¸ö¶©ÔÄ
+	//				_for(k, 0, data[1][i][j].size()) // Í°ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	//					bits[1][i][0][data[1][i][j][k].subID] = 1;
 	//			}
 	//			else if (j < highHalfPoint) {
 	//				bitsID[1][i][j] = 0;
-	//				endBucket[1][i][j] = highHalfPoint; // ´Ó j ¶þÖØ·´Ïò±éÀúµ½´óÓÚµÈÓÚ highCriticalPoint
+	//				endBucket[1][i][j] = highHalfPoint; // ï¿½ï¿½ j ï¿½ï¿½ï¿½Ø·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½ highCriticalPoint
 	//				doubleReverse[1][i][j] = true;
-	//				_for(k, 0, data[1][i][j].size()) // Í°ÀïÃ¿¸ö¶©ÔÄ
+	//				_for(k, 0, data[1][i][j].size()) // Í°ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	//					bits[1][i][0][data[1][i][j][k].subID] = 1;
 	//			}
 	//			else {
 	//				bitsID[1][i][j] = 0;
-	//				endBucket[1][i][j] = highHalfPoint; // ´Ó j-1 ±éÀúµ½´óÓÚµÈÓÚ highHalfPoint, ºÍÒÔÇ°±£³ÖÒ»ÖÂ
+	//				endBucket[1][i][j] = highHalfPoint; // ï¿½ï¿½ j-1 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½ highHalfPoint, ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
 	//				doubleReverse[1][i][j] = false;
 	//			}
 	//		}
@@ -271,13 +271,13 @@ void HEM5_avxOR::initBits()
 	//	return;
 	//}
 
-	// µ±Ç°Ó¦¸ÃÓ³Éäµ½µÄbitId, Í°id, ÏÂÒ»¸öÁÙ½ç¸ºÔØµã
+	// ï¿½ï¿½Ç°Ó¦ï¿½ï¿½Ó³ï¿½äµ½ï¿½ï¿½bitId, Í°id, ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ù½ç¸ºï¿½Øµï¿½
 	int lowBid, highBid, lowBktId, highBktId, lowSubWorkLoad, highSubWorkLoad;
-	int subWorkLoadStep; // Ã¿¸öÎ¬¶ÈÉÏµÄsubWorkLoadStep¶¼²»Í¬, µ«Í¬Ò»¸öÎ¬¶ÈÉÏµÄlow/high subWorkLoadStepÊÇÒ»ÑùµÄ
+	int subWorkLoadStep; // Ã¿ï¿½ï¿½Î¬ï¿½ï¿½ï¿½Ïµï¿½subWorkLoadStepï¿½ï¿½ï¿½ï¿½Í¬, ï¿½ï¿½Í¬Ò»ï¿½ï¿½Î¬ï¿½ï¿½ï¿½Ïµï¿½low/high subWorkLoadStepï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½
 	_for(i, 0, numDimension)
 	{
 
-		// »ù±¾²»»á³öÏÖ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		if (fix[0][i][0] == 0)
 		{
 			_for(j, 0, numBucket)
@@ -286,7 +286,7 @@ void HEM5_avxOR::initBits()
 				endBucket[0][i][j] = j;
 				doubleReverse[0][i][j] = false;
 				bitsID[1][i][j] = -1;
-				endBucket[1][i][j] = j; // ±éÀúµ½´óÓÚµÈÓÚendBucket[1][i][j]
+				endBucket[1][i][j] = j; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½endBucket[1][i][j]
 				doubleReverse[1][i][j] = false;
 			}
 			continue;
@@ -294,12 +294,12 @@ void HEM5_avxOR::initBits()
 
 		subWorkLoadStep = (fix[0][i][0] + numBits - 1) / numBits; // fix[1][i][numBucket]
 
-		// ÓÉÓÚÊÇlow/high¶¼ÊÇ¶¯Ì¬µÄ, »ù±¾²»¿ÉÄÜ¹²ÓÃÍ¬Ò»Ì×partition/cell,
-		// µ«ÕâÀïlow»¹ÊÇ´Ó×ó±ß¿ªÊ¼ÊýÒ»¸ösubWorkLoadStepµÄÁ¿, ±£³ÖÒ»ÖÂ
-		// »òÕß´ÓÓÒ±ßÊý Ê£Óà¸ºÔØÁ¿ ¿ªÊ¼ÀÛ¼ÓsubWorkLoadStep, ·ñÔò²»Çå³þendBucket!
-		// 0ºÅlowÍ°Ò»¶¨¿ÉÒÔÓÃµ½ÒÔ (numBits - 2) ÎªÏÂ±êµÄbitset
-		// ×îºóÒ»¸öÍ°Ò»¶¨ÓÃ²»µ½bitset
-		// ¾ÙÀý: numBits=15, fix[0][i][numBucket]=1000000, subWorkLoadStep=66667 (lowÉÏµÄºó14¸ö¶à1, highÉÏµÄÇ°14¸ö¶à1)
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½low/highï¿½ï¿½ï¿½Ç¶ï¿½Ì¬ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü¹ï¿½ï¿½ï¿½Í¬Ò»ï¿½ï¿½partition/cell,
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½lowï¿½ï¿½ï¿½Ç´ï¿½ï¿½ï¿½ß¿ï¿½Ê¼ï¿½ï¿½Ò»ï¿½ï¿½subWorkLoadStepï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
+		// ï¿½ï¿½ï¿½ß´ï¿½ï¿½Ò±ï¿½ï¿½ï¿½ Ê£ï¿½à¸ºï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ê¼ï¿½Û¼ï¿½subWorkLoadStep, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½endBucket!
+		// 0ï¿½ï¿½lowÍ°Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½ (numBits - 2) Îªï¿½Â±ï¿½ï¿½bitset
+		// ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Í°Ò»ï¿½ï¿½ï¿½Ã²ï¿½ï¿½ï¿½bitset
+		// ï¿½ï¿½ï¿½ï¿½: numBits=15, fix[0][i][numBucket]=1000000, subWorkLoadStep=66667 (lowï¿½ÏµÄºï¿½14ï¿½ï¿½ï¿½ï¿½1, highï¿½Ïµï¿½Ç°14ï¿½ï¿½ï¿½ï¿½1)
 		// fix[0][i][numBucket] / subWorkLoadStep=14, lowSubWorkLoad=66662
 		lowBid = -1;
 		lowBktId = numBucket;
@@ -308,11 +308,11 @@ void HEM5_avxOR::initBits()
 		highBktId = 0;
 		highSubWorkLoad = subWorkLoadStep;
 
-		// lowContain[i]=ÓÒÊý(µÚÒ»¸ö¸²¸Ç)lowSubWorkLoad+(i-1)*subWorkLoadStep¸ö¶©ÔÄËùµ½µÄÍ°ºÅ(i>0Ê±)
+		// lowContain[i]=ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)lowSubWorkLoad+(i-1)*subWorkLoadStepï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í°ï¿½ï¿½(i>0Ê±)
 		vector<int> lowContain(numBits + 1, numBucket);
-		// highContain[i]=×óÊý i*subWorkLoadStep ¸ö¶©ÔÄËùµ½µÄÍ°ºÅ
+		// highContain[i]=ï¿½ï¿½ï¿½ï¿½ i*subWorkLoadStep ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í°ï¿½ï¿½
 		vector<int> highContain(numBits + 1, 0);
-		int li = 1, hi = 1; // lowContainºÍhighContainµÄÏÂ±ê
+		int li = 1, hi = 1; // lowContainï¿½ï¿½highContainï¿½ï¿½ï¿½Â±ï¿½
 		_for(j, 0, numBucket)
 		{
 			if (fix[1][i][j] >= highSubWorkLoad)
@@ -320,7 +320,7 @@ void HEM5_avxOR::initBits()
 				highContain[hi++] = j;
 				highSubWorkLoad += subWorkLoadStep;
 			}
-			// ¾ÙÀý: fix[0][i][0]=1M, subWorkLoadStep=100000, numBits=10
+			// ï¿½ï¿½ï¿½ï¿½: fix[0][i][0]=1M, subWorkLoadStep=100000, numBits=10
 			// li,lowSubWorkLoad = 1,100000; 2,200000; ... ; 9,900000; 10,1000000; 11,1100000
 			if (fix[0][i][numBucket - j - 1] >= lowSubWorkLoad)
 			{
@@ -328,48 +328,48 @@ void HEM5_avxOR::initBits()
 				lowSubWorkLoad += subWorkLoadStep;
 			}
 		}
-		//lowContain[li] = 0; // ÎªÉ¶²»»áÔ½½ç??? li==numBits+1ÁË
-		if (hi == numBits) // Bug: ×îºó¼¸¸öÍ°Îª¿ÕÊ±hi»áÔÚforÑ­»·ÀïÔö¼Óµ½numBits+1
+		//lowContain[li] = 0; // ÎªÉ¶ï¿½ï¿½ï¿½ï¿½Ô½ï¿½ï¿½??? li==numBits+1ï¿½ï¿½
+		if (hi == numBits) // Bug: ï¿½ï¿½ó¼¸¸ï¿½Í°Îªï¿½ï¿½Ê±hiï¿½ï¿½ï¿½ï¿½forÑ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½numBits+1
 			highContain[hi] = numBucket;
 
-		li = hi = 1; // Ë«ÖØ·´Ïò±éÀúÊ±Ëù¶ÔÓ¦µÄÁíÒ»¶ËµÄÍ°ºÅÔÚcontainÊý×éÖÐµÄÏÂ±ê, ÆäÊµ li=lowBid+2, hi=highBid+2
+		li = hi = 1; // Ë«ï¿½Ø·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Ëµï¿½Í°ï¿½ï¿½ï¿½ï¿½containï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½Â±ï¿½, ï¿½ï¿½Êµ li=lowBid+2, hi=highBid+2
 		lowSubWorkLoad = fix[0][i][0] - (fix[0][i][0] - 1) / subWorkLoadStep * subWorkLoadStep;
 		highSubWorkLoad = subWorkLoadStep;
 		_for(j, 0, numBucket)
 		{
-			// ´ËÊ±´óÓÚµÈÓÚhighSubWorkLoadÁË, ¿ÉÒÔÓÃbits, ÒòÎªbits¸²¸Çµ½j-1Í°
+			// ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½highSubWorkLoadï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bits, ï¿½ï¿½Îªbitsï¿½ï¿½ï¿½Çµï¿½j-1Í°
 			if (fix[1][i][j] >= highSubWorkLoad)
-			{ // µÚÒ»¸ö´óÓÚµÈÓÚÁÙ½çµãµÄÍ°(j-1ºÅ, Ç°×ººÍ²»°üº¬±¾Éí)×÷Îªbitset¸²¸ÇµÄÖÕµãÍ°
+			{ // ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½ï¿½Ù½ï¿½ï¿½ï¿½Í°(j-1ï¿½ï¿½, Ç°×ºï¿½Í²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½Îªbitsetï¿½ï¿½ï¿½Çµï¿½ï¿½Õµï¿½Í°
 				highSubWorkLoad += subWorkLoadStep;
 				hi++;
 				highBid++;
 				highBktId = j;
 			}
 
-			// Bug: ÌáÇ°ÂúÁË, ×îºó¼¸¸öÍ°Îª¿Õ, ´ËÊ±highBid=numBits-1, Ô½½çÁË, Ö±½ÓÓÃfullBL
+			// Bug: ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ó¼¸¸ï¿½Í°Îªï¿½ï¿½, ï¿½ï¿½Ê±highBid=numBits-1, Ô½ï¿½ï¿½ï¿½ï¿½, Ö±ï¿½ï¿½ï¿½ï¿½fullBL
 			if (fix[1][i][j] == fix[1][i][numBucket])
 			{
 				bitsID[1][i][j] = numBits - 1;
-				endBucket[1][i][j] = j + 1; // Èç¹ûÊÇµÚÒ»´Î½øÀ´, jºÅÍ°·Ç¿Õ, ÐèÒª¶þÖØ·´Ïò±ê¼Ç, ·ñÔòÊÇ¿ÕÍ°, ¿ÉÒÔ¼æÈÝÕâÖÖÇé¿ö
+				endBucket[1][i][j] = j + 1; // ï¿½ï¿½ï¿½ï¿½Çµï¿½Ò»ï¿½Î½ï¿½ï¿½ï¿½, jï¿½ï¿½Í°ï¿½Ç¿ï¿½, ï¿½ï¿½Òªï¿½ï¿½ï¿½Ø·ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½Ç¿ï¿½Í°, ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				doubleReverse[1][i][j] = true;
 			}
 			else if (fix[1][i][j] - fix[1][i][highBktId] <
 					 fix[1][i][highContain[hi]] - fix[1][i][j + 1])
-			{ // Bug: Ã»ÓÐ¼õhighBktId
+			{ // Bug: Ã»ï¿½Ð¼ï¿½highBktId
 				bitsID[1][i][j] = highBid;
-				endBucket[1][i][j] = highBktId; // ±éÀúµ½´óÓÚµÈÓÚendBucket[1][i][j]
+				endBucket[1][i][j] = highBktId; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½endBucket[1][i][j]
 				doubleReverse[1][i][j] = false;
 			}
 			else
 			{
 				bitsID[1][i][j] = hi - 1;              // highBid+1
-				endBucket[1][i][j] = highContain[hi]; // ´ÓjÍùÓÒ±éÀúµ½Ð¡ÓÚendBucket[1][i][j]
+				endBucket[1][i][j] = highContain[hi]; // ï¿½ï¿½jï¿½ï¿½ï¿½Ò±ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½endBucket[1][i][j]
 				doubleReverse[1][i][j] = true;
 			}
 
-			// ºó×ºÊý×éÇóºÍÊ±°üÀ¨±¾Éí(Èç¹û²»°üÀ¨±¾Éí, ÔòÔÚÁ½¸öj¡¢lowBktIdºÍlowContain[li]ºóÔÙ¼õÒ»£¬¶ølowContain[li]ÓÐ¿ÉÄÜÎª0); -1+1Ê¡È¥ÁË
-			// fix[0][i][j][numBucket]ÐèÒªÊÇ0, Ê¹fix[0][i][j][lowBktId]¸Õ¿ªÊ¼Îª0
-			// Bug: ÌáÇ°ÂúÁË, ÐòºÅÐ¡µÄ¼¸¸öÍ°Îª¿Õ, µ¥¶À¿¼ÂÇ, Ö±½ÓÓÃ¶þÖØ·´Ïò
+			// ï¿½ï¿½×ºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½jï¿½ï¿½lowBktIdï¿½ï¿½lowContain[li]ï¿½ï¿½ï¿½Ù¼ï¿½Ò»ï¿½ï¿½ï¿½ï¿½lowContain[li]ï¿½Ð¿ï¿½ï¿½ï¿½Îª0); -1+1Ê¡È¥ï¿½ï¿½
+			// fix[0][i][j][numBucket]ï¿½ï¿½Òªï¿½ï¿½0, Ê¹fix[0][i][j][lowBktId]ï¿½Õ¿ï¿½Ê¼Îª0
+			// Bug: ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½Ð¡ï¿½Ä¼ï¿½ï¿½ï¿½Í°Îªï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, Ö±ï¿½ï¿½ï¿½Ã¶ï¿½ï¿½Ø·ï¿½ï¿½ï¿½
 			if (fix[0][i][numBucket - j - 1] == fix[0][i][0])
 			{
 				bitsID[0][i][numBucket - j - 1] = numBits - 1;
@@ -390,7 +390,7 @@ void HEM5_avxOR::initBits()
 				doubleReverse[0][i][numBucket - j - 1] = true;
 			}
 
-			// ´ËÊ±ËäÈ»´óÓÚµÈÓÚlowSubWorkLoadÁË, µ«ÈÔ²»¿ÉÒÔÓÃbits, ÒòÎªbitsÒª¸²¸Çµ½jºÅÍ°
+			// ï¿½ï¿½Ê±ï¿½ï¿½È»ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½lowSubWorkLoadï¿½ï¿½, ï¿½ï¿½ï¿½Ô²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bits, ï¿½ï¿½ÎªbitsÒªï¿½ï¿½ï¿½Çµï¿½jï¿½ï¿½Í°
 			if (fix[0][i][numBucket - j - 1] >= lowSubWorkLoad)
 			{
 				lowSubWorkLoad += subWorkLoadStep;
@@ -401,29 +401,29 @@ void HEM5_avxOR::initBits()
 		}
 	}
 
-	int subID, b; // ÆðÊ¼±ê¼ÇÊý×éµÄÏÂ±ê
+	int subID, b; // ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â±ï¿½
 	_for(i, 0, numDimension)
-	{ // Ã¿¸öÎ¬¶È
+	{ // Ã¿ï¿½ï¿½Î¬ï¿½ï¿½
 		_for(j, 0, numBucket)
-		{ // Ã¿¸öÍ°
+		{ // Ã¿ï¿½ï¿½Í°
 			if (doubleReverse[0][i][j])
-				b = bitsID[0][i][j]; // ×îÐ¡µÄÐèÒª²åÈëµÄbitsÊý×éµÄID
+				b = bitsID[0][i][j]; // ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½bitsï¿½ï¿½ï¿½ï¿½ï¿½ID
 			else
 				b = bitsID[0][i][j] + 1;
 			_for(k, 0, data[0][i][j].size())
 			{
 				subID = data[0][i][j][k].subID;
-				fullBits[i][subID] = 1; // 0ºÅbitsÃ¿´Î±ØÐë±ê¼Ç
-				_for(q, b, numBits - 1) // Bug: bits¶¼ÊÇÊÇ´Ó¸ßÎ»(¸²¸Ç¹ã)ÍùµÍÎ»±éÀú£¡
+				fullBits[i][subID] = 1; // 0ï¿½ï¿½bitsÃ¿ï¿½Î±ï¿½ï¿½ï¿½ï¿½ï¿½
+				_for(q, b, numBits - 1) // Bug: bitsï¿½ï¿½ï¿½ï¿½ï¿½Ç´Ó¸ï¿½Î»(ï¿½ï¿½ï¿½Ç¹ï¿½)ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 					bits[0][i][q][subID] = 1;
 			}
 
 			if (doubleReverse[1][i][j])
 				b = bitsID[1][i][j];
 			else
-				b = bitsID[1][i][j] + 1; // ×îÐ¡µÄÐèÒª²åÈëµÄbitsÊý×éµÄID
+				b = bitsID[1][i][j] + 1; // ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½bitsï¿½ï¿½ï¿½ï¿½ï¿½ID
 			_for(k, 0, data[1][i][j].size())
-			{ // Í°ÀïÃ¿¸ö¶©ÔÄ
+			{ // Í°ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				subID = data[1][i][j][k].subID;
 				_for(q, b, numBits - 1) bits[1][i][q][subID] = 1;
 			}
@@ -432,7 +432,7 @@ void HEM5_avxOR::initBits()
 	//cout << "HEM5_256ORDD Stop.\n";
 }
 
-// ²»¼ÆËãÊ±¼ä×é³É
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½
 void HEM5_avxOR::match(const Pub& pub, int& matchSubs)
 {
 	bitset<subs> b; // register
@@ -447,7 +447,7 @@ void HEM5_avxOR::match(const Pub& pub, int& matchSubs)
 
 		if (doubleReverse[0][att][buck])
 		{
-			if (bitsID[0][att][buck] == numBits - 1) // Ö»ÓÐ1¸öbitsetÊ±½¨µ½fullBitsÉÏ£¬È¥µôÁË: && numBits > 1
+			if (bitsID[0][att][buck] == numBits - 1) // Ö»ï¿½ï¿½1ï¿½ï¿½bitsetÊ±ï¿½ï¿½ï¿½ï¿½fullBitsï¿½Ï£ï¿½È¥ï¿½ï¿½ï¿½ï¿½: && numBits > 1
 				bLocal = fullBits[att];
 			else
 				bLocal = bits[0][att][bitsID[0][att][buck]];
@@ -469,7 +469,7 @@ void HEM5_avxOR::match(const Pub& pub, int& matchSubs)
 
 		if (doubleReverse[1][att][buck])
 		{
-			if (bitsID[1][att][buck] == numBits - 1) // Ö»ÓÐ1¸öbitsetÊ±½¨µ½fullBitsÉÏ£¬È¥µôÁË: && numBits > 1
+			if (bitsID[1][att][buck] == numBits - 1) // Ö»ï¿½ï¿½1ï¿½ï¿½bitsetÊ±ï¿½ï¿½ï¿½ï¿½fullBitsï¿½Ï£ï¿½È¥ï¿½ï¿½ï¿½ï¿½: && numBits > 1
 				bLocal = fullBits[att];
 			else
 				bLocal = bits[1][att][bitsID[1][att][buck]];
@@ -495,7 +495,7 @@ void HEM5_avxOR::match(const Pub& pub, int& matchSubs)
 	_for(i, 0, numDimension) if (!attExist[i])
 			Util::bitsetOr(b, fullBits[i]);
 	//}
-	//else // Ö»ÓÐÒ»°ëÓÃÁËbitset¸²¸Ç
+	//else // Ö»ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bitsetï¿½ï¿½ï¿½ï¿½
 	//{
 	//	_for(i, 0, numDimension) if (!attExist[i])
 	//		_for(j, 0, endBucket[0][i][0])
@@ -513,7 +513,7 @@ void HEM5_avxOR::match(const Pub& pub, int& matchSubs)
 	matchSubs = numSub - b.count();
 }
 
-// ¼ÆËãÊ±¼ä×é³É
+// ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½
 void HEM5_avxOR::match_debug(const Pub& pub, int& matchSubs)
 {
 	bitset<subs> b, bLocal;
@@ -529,7 +529,7 @@ void HEM5_avxOR::match_debug(const Pub& pub, int& matchSubs)
 		if (doubleReverse[0][att][buck])
 		{
 			Timer markStart;
-			if (bitsID[0][att][buck] == numBits - 1) // Ö»ÓÐ1¸öbitsetÊ±½¨µ½fullBitsÉÏ£¬È¥µôÁË: && numBits > 1
+			if (bitsID[0][att][buck] == numBits - 1) // Ö»ï¿½ï¿½1ï¿½ï¿½bitsetÊ±ï¿½ï¿½ï¿½ï¿½fullBitsï¿½Ï£ï¿½È¥ï¿½ï¿½ï¿½ï¿½: && numBits > 1
 				bLocal = fullBits[att];
 			else
 				bLocal = bits[0][att][bitsID[0][att][buck]];
@@ -563,7 +563,7 @@ void HEM5_avxOR::match_debug(const Pub& pub, int& matchSubs)
 		if (doubleReverse[1][att][buck])
 		{
 			Timer markStart;
-			if (bitsID[1][att][buck] == numBits - 1) // Ö»ÓÐ1¸öbitsetÊ±½¨µ½fullBitsÉÏ£¬È¥µôÁË: && numBits > 1
+			if (bitsID[1][att][buck] == numBits - 1) // Ö»ï¿½ï¿½1ï¿½ï¿½bitsetÊ±ï¿½ï¿½ï¿½ï¿½fullBitsï¿½Ï£ï¿½È¥ï¿½ï¿½ï¿½ï¿½: && numBits > 1
 				bLocal = fullBits[att];
 			else
 				bLocal = bits[1][att][bitsID[1][att][buck]];
@@ -639,18 +639,18 @@ int HEM5_avxOR::calMemory()
 	long long size = 0; // Byte
 	_for(i, 0, numDimension)
 	{
-		// ÈôÃ¿¸öÎ¬¶ÈÉÏbitsÊý×é¸öÊýÒ»Ñù¾ÍÊÇ 2*sizeof(bitset<subs>)*numDimension*numBits
+		// ï¿½ï¿½Ã¿ï¿½ï¿½Î¬ï¿½ï¿½ï¿½ï¿½bitsï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 2*sizeof(bitset<subs>)*numDimension*numBits
 		size += sizeof(bitset<subs>) * (bits[0][i].size() + bits[1][i].size());
 		_for(j, 0, numBucket) size += sizeof(Combo) * (data[0][i][j].size() + data[1][i][j].size());
 	}
 
 	// fullBits
 	if (numBits > 1)
-		size += sizeof(bitset<subs>) * fullBits.size(); // fullBits.size()¼´numDimension
+		size += sizeof(bitset<subs>) * fullBits.size(); // fullBits.size()ï¿½ï¿½numDimension
 
-	// Á½¸öfix
+	// ï¿½ï¿½ï¿½ï¿½fix
 	size += sizeof(int) * numDimension * (numBucket + 1);
-	// Á½¸öendBucket¡¢Á½¸öbitsID¡¢Á½¸ödoubleReverse
+	// ï¿½ï¿½ï¿½ï¿½endBucketï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bitsIDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½doubleReverse
 	size += (4 * sizeof(int) + 2 * sizeof(bool)) * numDimension * numBucket;
 	size = size / 1024 / 1024; // MB
 	return (int)size;
@@ -711,7 +711,7 @@ vector<int> HEM5_avxOR::calMarkNumForBuckets()
 	{
 		_for(j, 0, numDimension)
 		{
-			numMarking[i] += data[0][j][i].size() + data[1][j][i].size(); // ±È½Ï
+			numMarking[i] += data[0][j][i].size() + data[1][j][i].size(); // ï¿½È½ï¿½
 
 			if (doubleReverse[0][j][i])
 			{

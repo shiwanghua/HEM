@@ -15,6 +15,7 @@
 #define mmfor(i,a,b) for(int i=(a);i>=(b);--i)
 
 // 动动模式 用avx2 做256位的或运算
+// 用于和 HEM5 对比
 class HEM5_avxOR
 {
 private:
