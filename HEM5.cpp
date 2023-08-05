@@ -27,7 +27,7 @@ HEM5::HEM5(int type)
 	if (be == -1)
 		numBits = be2;
 	else
-		numBits = pow(2, be); // ÿ��ά����lowValue��Ӧ��bits�������
+		numBits = pow(2, be); // ÿ��ά����lowValue��Ӧ��bits�������?
 	//if (numBits > 1)
 	fullBits.resize(numDimension); // ά��������Զ���䣬����ֻ��Ҫresizeһ��
 
@@ -245,7 +245,7 @@ void HEM5::initBits()
 	//			}
 	//			else if (j < lowQuarterPoint) {
 	//				bitsID[0][i][j] = 0;
-	//				endBucket[0][i][j] = lowHalfPoint; // �� j ���ط������������ lowCriticalPoint(������)
+	//				endBucket[0][i][j] = lowHalfPoint; // �� j ���ط������������? lowCriticalPoint(������)
 	//				doubleReverse[0][i][j] = true;
 	//				_for(k, 0, data[0][i][j].size()) // Ͱ��ÿ������
 	//					bits[0][i][0][data[0][i][j][k].subID] = 1;
@@ -266,7 +266,7 @@ void HEM5::initBits()
 	//			}
 	//			else if (j < highHalfPoint) {
 	//				bitsID[1][i][j] = 0;
-	//				endBucket[1][i][j] = highHalfPoint; // �� j ���ط�����������ڵ��� highCriticalPoint
+	//				endBucket[1][i][j] = highHalfPoint; // �� j ���ط�����������ڵ���? highCriticalPoint
 	//				doubleReverse[1][i][j] = true;
 	//				_for(k, 0, data[1][i][j].size()) // Ͱ��ÿ������
 	//					bits[1][i][0][data[1][i][j][k].subID] = 1;
@@ -288,7 +288,7 @@ void HEM5::initBits()
 	_for(i, 0, numDimension)
 	{
 
-		// �����������
+		// �����������?
 		if (fix[0][i][0] == 0)
 		{
 			_for(j, 0, numBucket)
@@ -327,7 +327,7 @@ void HEM5::initBits()
 		_for(j, 0, numBucket)
 		{
 			if (fix[1][i][j] >= highSubWorkLoad)
-			{ // ǰ׺�Ͳ�����������0��j-1�������Ͱ����
+			{ // ǰ׺�Ͳ�����������0��j-1�������Ͱ����?
 				highContain[hi++] = j; // bkt0 ~ bkt[highContain[hi]]-1 contains subWorkLoadStep*hi workload; highContain[hi]-1 is the right end bkt ID of the $hi group; hi means the old hi.
 				highSubWorkLoad += subWorkLoadStep;
 			}
@@ -340,7 +340,7 @@ void HEM5::initBits()
 			}
 		}
 		//lowContain[li] = 0; // Ϊɶ����Խ��??? li==numBits+1��
-		if (hi == numBits) // Bug: ��󼸸�ͰΪ��ʱhi����forѭ�������ӵ�numBits+1
+		if (hi == numBits) // Bug: ��󼸸�Ͱ�?���ʱhi����forѭ�������ӵ�numBits+1
 			highContain[hi] = numBucket;
 
 		li = hi = 1; // ˫�ط������ʱ����Ӧ����һ�˵�Ͱ����contain�����е��±�, ��ʵ li=lowBid+2, hi=highBid+2
@@ -357,7 +357,7 @@ void HEM5::initBits()
 				highBktId = j; // == highContain[hi-1] ?
 			}
 
-			// Bug: ��ǰ����, ��󼸸�ͰΪ��, ��ʱhighBid=numBits-1, Խ����, ֱ����fullBL
+			// Bug: ��ǰ����, ��󼸸�Ͱ�?���?, ��ʱhighBid=numBits-1, Խ����, ֱ����fullBL
 			if (fix[1][i][j] == fix[1][i][numBucket])
 			{
 				bitsID[1][i][j] = numBits - 1;
@@ -378,9 +378,9 @@ void HEM5::initBits()
 				doubleReverse[1][i][j] = true;
 			}
 
-			// ��׺�������ʱ��������(�������������, ��������j��lowBktId��lowContain[li]���ټ�һ����lowContain[li]�п���Ϊ0); -1+1ʡȥ��
+			// ��׺�������ʱ��������?(�������������?, ��������j��lowBktId��lowContain[li]���ټ�һ����lowContain[li]�п���Ϊ0); -1+1ʡȥ��
 			// fix[0][i][j][numBucket]��Ҫ��0, ʹfix[0][i][j][lowBktId]�տ�ʼΪ0
-			// Bug: ��ǰ����, ���С�ļ���ͰΪ��, ��������, ֱ���ö��ط���
+			// Bug: ��ǰ����, ���С�ļ���Ͱ�?���?, ��������, ֱ���ö��ط���
 			if (fix[0][i][numBucket - j - 1] == fix[0][i][0])
 			{
 				bitsID[0][i][numBucket - j - 1] = numBits - 1;
@@ -442,10 +442,10 @@ void HEM5::initBits()
 	//cout << "HEM5DD Stop.\n";
 }
 
-// ������ʱ�����
+// ������ʱ�����?
 void HEM5::match(const Pub& pub, int& matchSubs)
 {
-	// �ֲ����������
+	// �ֲ����������?
 //	bitset<subs>* b = new bitset<subs>; // register
 //	bitset<subs>* bLocal = new bitset<subs>;
 //	vector<bool> attExist(numDimension, false);
@@ -605,7 +605,7 @@ void HEM5::match(const Pub& pub, int& matchSubs)
 	matchSubs = numSub - b.count();
 }
 
-// ����ʱ�����
+// ����ʱ�����?
 void HEM5::match_debug(const Pub& pub, int& matchSubs)
 {
 	bitset<subs> b, bLocal;
@@ -825,7 +825,7 @@ void HEM5::match_parallel(const Pub& pub, int& matchSubs)
 	// for (int i = 0; i < parallelDegree; i++)
 	// 	threadResult2.emplace_back(threadResult[i].get());
 
-#ifdef DEBUG // ���ڵ��̹߳鲢�����û�� ��ȡ�����̵߳Ĳ��ֽ���� �ſ�ʼ��ʱ���ͻᵼ�²���ƽ
+#ifdef DEBUG // ���ڵ��̹߳鲢�����û��? ��ȡ�����̵߳Ĳ��ֽ����? �ſ�ʼ��ʱ���ͻᵼ�²���ƽ
 	Timer mergeStart;
 #endif
 
@@ -883,7 +883,6 @@ void HEM5::match_avxOR_parallel(const Pub& pub, int& matchSubs)
 		else end = begin + seg;
 		threadResult.emplace_back(threadPool.enqueue([this, &pub, begin, end]
 		{
-// �ֲ�������ջ��
 		  bitset<subs> b; // register
 		  bitset<subs> bLocal;
 		  int value, att, buck;
@@ -1000,7 +999,7 @@ int HEM5::calMemory()
 	//cout << sizeof(bits[0]) << " " << sizeof(bits[1]) <<" " << sizeof(data) << " " << sizeof(data[0]) << " " << sizeof(data[1]) << "\n";
 	_for(i, 0, numDimension)
 	{
-		// ��ÿ��ά����bits�������һ������ 2*sizeof(bitset<subs>)*numDimension*numBits
+		// ��ÿ��ά����bits�������һ������? 2*sizeof(bitset<subs>)*numDimension*numBits
 		size += sizeof(bitset<subs>) * (bits[0][i].size() + bits[1][i].size());
 		size += (sizeof(bits[0][i]) + sizeof(data[0][i])) * 2;
 		//cout << i << ": " << sizeof(bits[0][i]) << " " << sizeof(data[0][i]) << " ";

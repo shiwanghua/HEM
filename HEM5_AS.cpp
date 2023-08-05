@@ -1000,13 +1000,13 @@ vector<int> HEM5_AS::calMarkNumForBuckets() {
 			numMarking[i] += data[0][j][i].size() + data[1][j][i].size(); // �Ƚ�
 
 			if (doubleReverse[0][j][i]) {
-				_for(k, endBucket[0][j][i], i + 1) numMarking[i] += data[0][j][k].size();
+				_for(k, endBucket[0][j][i], i) numMarking[i] += data[0][j][k].size();
 			} else {
 				_for(k, i + 1, endBucket[0][j][i]) numMarking[i] += data[0][j][k].size();
 			}
 
 			if (doubleReverse[1][j][i]) {
-				_for(k, i, endBucket[1][j][i]) numMarking[i] += data[0][j][k].size();
+				_for(k, i+1, endBucket[1][j][i]) numMarking[i] += data[1][j][k].size();
 			} else {
 				_for(k, endBucket[1][j][i], i) numMarking[i] += data[1][j][k].size();
 			}

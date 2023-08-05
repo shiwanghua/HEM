@@ -323,7 +323,6 @@ void HEM3_ASO::initBits()
         //         lowSubWorkLoad += subWorkLoadStep;
         //     }
         // }
-        
         // if (hi == numBits-1)             // Bug: 最后几个桶为空时hi会在for循环里增加到numBits; 最后一个桶非空时highContain[numBits]还没赋值
         //     highContain[hi] = numBucket; // numBits=2时highContain[1]=numBucket
 
@@ -333,8 +332,10 @@ void HEM3_ASO::initBits()
         // highBid = numBits - 1; // high 上的动态数组没用上，这里只是计算一下，后面都是用的 low 上的动态分组方案, 由于 bitsID 少了一维，存不下，所以注释了
         lowBktId = numBucket;
         // highBktId = 0;
-        for (int lj = 0, rj = numBucket - 1; lj < numBucket; lj++, rj--)
+        vector<int32_t> loadBktPoint; // 从高到低记录 LVE 上的动态分组方案（每个分组的低边界桶）
+        for (int lj = 0, rj = numBucket - 1; rj >= 0; lj++, rj--)
         {
+            // HVE 上按动态分组方案的代码（改成共享 LVE 上的动态分组方案了）
             // 此时大于等于highSubWorkLoad了, 可以用bits, 因为bits覆盖到lj-1桶
             // if (fix[1][i][lj] >= highSubWorkLoad)
             // { // 第一个大于等于临界点的桶(j-1号, 前缀和不包含本身)作为bitset覆盖的终点桶
@@ -358,7 +359,7 @@ void HEM3_ASO::initBits()
             // Bug: 提前满了, 前面一些序号小的桶都是空的, 单独考虑
             if (fix[0][i][rj] == fix[0][i][0] && data[0][i][rj].size() == 0) // 需要本桶也为空才行，否则全量位集不是全不匹配的，不能直接用
             {
-                bitsID[i][rj] = 0; // 全不匹配，直接用全量位集 0 号
+                bitsID[i][rj] = 0;        // 全不匹配，直接用全量位集 0 号
                 endBucket[0][i][rj] = rj; // 此时不需要遍历桶了
             }
             else
@@ -367,27 +368,39 @@ void HEM3_ASO::initBits()
                 endBucket[0][i][rj] = lowBktId;
             }
 
-            // 此时虽然大于等于lowSubWorkLoad了, 但仍不可以用bits, 因为bits要覆盖到hj号桶
+            // 此时虽然大于等于lowSubWorkLoad了, 但仍不可以用bits, 因为bits要覆盖到rj号桶
             if (fix[0][i][rj] >= lowSubWorkLoad)
             {
                 lowSubWorkLoad += subWorkLoadStep;
                 lowBid++;
                 lowBktId = rj;
+                loadBktPoint.push_back(rj);
             }
         }
-    }
+        if (loadBktPoint.size() + 1 != numBits)
+        { // 记录了 numBits -1 个等分位桶号
+            std:cerr << "loadBktPoint.size()= " << loadBktPoint.size() << " != numBits-1, numBits= " << numBits << std::endl;
+        }
+        // 根据 loadBktPoint 反推 HVE 上的 endBucket
+        for (int32_t bj = 0, pj = loadBktPoint.size() - 1; bj < numBucket; bj++)
+        {
+            if (pj > 0 && bj == loadBktPoint[pj - 1]) // 进入下一个分组
+                pj--;
+            endBucket[1][i][bj] = loadBktPoint[pj];
+        }
+    } // each dimension
 
     int subID, b; // 起始标记数组的下标
     _for(i, 0, numDimension)
     { // 每个维度
         _for(j, 0, numBucket)
-        { // 每个桶
+        {                     // 每个桶
             b = bitsID[i][j]; // 1 ~ numBits-1
             _for(k, 0, data[0][i][j].size())
             {
                 subID = data[0][i][j][k].subID;
                 bits[i][0][subID] = 1; // 0号bits每次必须标记
-                _for(q, b+1, numBits)
+                _for(q, b + 1, numBits)
                     bits[i][q][subID] = 1;
             }
             _for(k, 0, data[1][i][j].size())
@@ -415,33 +428,33 @@ void HEM3_ASO::match_VASO(const Pub &pub, int &matchSubs)
         attGroupExist[att / attrGroupSize] = true;
 
 #ifdef DEBUG
-            Timer markStart;
+        Timer markStart;
 #endif // DEBUG
-            _for(j, buck + 1, endBucket[0][att][buck]) for (auto &&iCob : data[0][att][j])
+        _for(j, buck + 1, endBucket[0][att][buck]) for (auto &&iCob : data[0][att][j])
+            gB[iCob.subID] = 1;
+        _for(j, endBucket[1][att][buck], buck) for (auto &&iCob : data[1][att][j])
+            gB[iCob.subID] = 1;
+#ifdef DEBUG
+        markTime += (double)markStart.elapsed_nano();
+        Timer compareStart;
+#endif // DEBUG
+        for (auto &&iCob : data[0][att][buck])
+            if (iCob.val > value)
                 gB[iCob.subID] = 1;
-            _for(j, endBucket[1][att][buck], buck) for (auto &&iCob : data[1][att][j])
+        for (auto &&iCob : data[1][att][buck])
+            if (iCob.val < value)
                 gB[iCob.subID] = 1;
 #ifdef DEBUG
-            markTime += (double)markStart.elapsed_nano();
-            Timer compareStart;
-#endif // DEBUG
-            for (auto &&iCob : data[0][att][buck])
-                if (iCob.val > value)
-                    gB[iCob.subID] = 1;
-            for (auto &&iCob : data[1][att][buck])
-                if (iCob.val < value)
-                    gB[iCob.subID] = 1;
-#ifdef DEBUG
-            compareTime += (double)compareStart.elapsed_nano();
-            Timer orStart;
+        compareTime += (double)compareStart.elapsed_nano();
+        Timer orStart;
 #endif // DEBUG
 #if BatchSize == 64
-            gB = gB | bits[att][bitsID[att][buck]];
+        gB = gB | bits[att][bitsID[att][buck]];
 #else
-            Util::bitsetOr(gB, bits[att][bitsID[att][buck]]);
+        Util::bitsetOr(gB, bits[att][bitsID[att][buck]]);
 #endif
 #ifdef DEBUG
-            orTime += (double)orStart.elapsed_nano();
+        orTime += (double)orStart.elapsed_nano();
 #endif // DEBUG
     }
 
@@ -503,33 +516,33 @@ void HEM3_ASO::match_RASO(const Pub &pub, int &matchSubs)
         attExist[att] = true;
 
 #ifdef DEBUG
-            Timer markStart;
+        Timer markStart;
 #endif // DEBUG
-            _for(j, buck + 1, endBucket[0][att][buck]) for (auto &&iCob : data[0][att][j])
+        _for(j, buck + 1, endBucket[0][att][buck]) for (auto &&iCob : data[0][att][j])
+            gB[iCob.subID] = 1;
+        _for(j, endBucket[1][att][buck], buck) for (auto &&iCob : data[1][att][j])
+            gB[iCob.subID] = 1;
+#ifdef DEBUG
+        markTime += (double)markStart.elapsed_nano();
+        Timer compareStart;
+#endif // DEBUG
+        for (auto &&iCob : data[0][att][buck])
+            if (iCob.val > value)
                 gB[iCob.subID] = 1;
-            _for(j, endBucket[1][att][buck], buck) for (auto &&iCob : data[1][att][j])
+        for (auto &&iCob : data[1][att][buck])
+            if (iCob.val < value)
                 gB[iCob.subID] = 1;
 #ifdef DEBUG
-            markTime += (double)markStart.elapsed_nano();
-            Timer compareStart;
-#endif // DEBUG
-            for (auto &&iCob : data[0][att][buck])
-                if (iCob.val > value)
-                    gB[iCob.subID] = 1;
-            for (auto &&iCob : data[1][att][buck])
-                if (iCob.val < value)
-                    gB[iCob.subID] = 1;
-#ifdef DEBUG
-            compareTime += (double)compareStart.elapsed_nano();
-            Timer orStart;
+        compareTime += (double)compareStart.elapsed_nano();
+        Timer orStart;
 #endif // DEBUG
 #if BatchSize == 64
-            gB = gB | bits[att][bitsID[att][buck]];
+        gB = gB | bits[att][bitsID[att][buck]];
 #else
-            Util::bitsetOr(gB, bits[att][bitsID[att][buck]]);
+        Util::bitsetOr(gB, bits[att][bitsID[att][buck]]);
 #endif
 #ifdef DEBUG
-            orTime += (double)orStart.elapsed_nano();
+        orTime += (double)orStart.elapsed_nano();
 #endif // DEBUG
     }
 
@@ -544,21 +557,21 @@ void HEM3_ASO::match_RASO(const Pub &pub, int &matchSubs)
     Util::bitsetOr(gB, attrGroupBits[att_group_no]);
 #endif
     int base = att_group_no * attrGroupSize;
-    _for(att, base, min(base + attrGroupSize,numDimension))
+    _for(att, base, min(base + attrGroupSize, numDimension))
     {
         if (!attExist[att])
         {
 #if BatchSize == 64
-                gB = gB | bits[att][0];
+            gB = gB | bits[att][0];
 #else
-                Util::bitsetOr(gB, bits[att][0]);
+            Util::bitsetOr(gB, bits[att][0]);
 #endif
         }
     }
 #ifdef DEBUG
     orTime += (double)orStart.elapsed_nano();
     Timer bitStart;
-#endif // DEBUG
+#endif
     //	_for(i, 0, subs) if (!b[i]) {
     //			++matchSubs;
     //			//cout << "HEM5_VAG matches sub: " << i << endl;
@@ -566,10 +579,10 @@ void HEM3_ASO::match_RASO(const Pub &pub, int &matchSubs)
     matchSubs = subs - gB.count();
 #ifdef DEBUG
     bitTime += (double)bitStart.elapsed_nano();
-#endif // DEBUG
+#endif
 }
 
-void HEM3_ASO::match_RASO_avxOR_parallel(const Pub &pub, int &matchSubs)
+void HEM3_ASO::match_RASO_parallel(const Pub &pub, int &matchSubs)
 {
     vector<future<bitset<subs>>> thread_result;
     int seg = pub.size / parallelDegree;
@@ -582,7 +595,7 @@ void HEM3_ASO::match_RASO_avxOR_parallel(const Pub &pub, int &matchSubs)
         else
             end = begin + seg;
         thread_result.emplace_back(threadPool.enqueue([this, &pub, begin, end]
-        {
+                                                      {
             // 局部变量存栈里
 			bitset<subs> gB; // register
 			int value, att, buck;
@@ -621,9 +634,9 @@ void HEM3_ASO::match_RASO_avxOR_parallel(const Pub &pub, int &matchSubs)
             if (!attExist[ai])
             {
 #if BatchSize == 64
-                    gB = gB | bits[att][0];
+                gB = gB | bits[att][0];
 #else
-                    Util::bitsetOr(gB, bits[ai][0]);
+                Util::bitsetOr(gB, bits[ai][0]);
 #endif
             }
         }
@@ -652,55 +665,52 @@ void HEM3_ASO::match_RASO_avxOR_parallel(const Pub &pub, int &matchSubs)
 int HEM3_ASO::calMemory()
 {
     long long size = 0; // Byte
-    size += sizeof(bits) + sizeof(bits[0]) * 2 + sizeof(data) + sizeof(data[0]) + sizeof(data[1]);
-    // cout << sizeof(bits[0]) << " " << sizeof(bits[1]) <<" " << sizeof(data) << " " << sizeof(data[0]) << " " << sizeof(data[1]) << "\n";
+    size += sizeof(bits) + sizeof(data) + sizeof(data[0]) + sizeof(data[1]);
+    // cout << sizeof(bits) << " " << sizeof(data) << " " << sizeof(data[0]) << " " << sizeof(data[1]) << "\n";
     _for(i, 0, numDimension)
     {
-        // 若每个维度上bits数组个数一样就是 2*sizeof(bitset<subs>)*numDimension*numBits
-        size += sizeof(bitset<subs>) * (bits[0][i].size() + bits[1][i].size());
-        size += (sizeof(bits[0][i]) + sizeof(data[0][i])) * 2;
-        // cout << i << ": " << sizeof(bits[0][i]) << " " << sizeof(data[0][i]) << " ";
+        // 若每个维度上bits数组个数一样就是 sizeof(bitset<subs>)*numDimension*numBits
+        size += sizeof(bitset<subs>) * (bits[i].size());
+        size += sizeof(bits[i]) + sizeof(data[0][i]) * 2;
+        // cout << i << ": " << sizeof(bits[i]) << " " << sizeof(data[0][i]) << " ";
         _for(j, 0, numBucket)
         {
-            // cout << sizeof(data[0][i][j]) << " " << sizeof(data[1][i][j]) << " ";
+            // cout << "j= " << j << sizeof(data[0][i][j]) << " " << sizeof(data[1][i][j]) << " ";
             size += sizeof(data[0][i][j]) + sizeof(data[1][i][j]);
             size += sizeof(Combo) * (data[0][i][j].size() + data[1][i][j].size());
         }
         // cout << "\n";
     }
 
-    // fullBits
-    size += sizeof(bitset<subs>) * fullBits.size(); // fullBits.size()即numDimension
-    size += sizeof(fullBits);                       // 24
-    // cout << "fullBits: " << sizeof(fullBits) << " " << sizeof(fullBits[0]) << "\n";
+    // 两个fix
+    // cout << "fix: " << sizeof(fix) << " " << sizeof(fix[0]) << " " << sizeof(fix[0][10]) << sizeof(fix[1][7][20]) << "\n";
+    size += sizeof(fix) + sizeof(fix[0]) * 2;
+    if (fix[0].size() > 0)
+    {
+        size += sizeof(fix[0][0]) * fix[0].size() * 2 + sizeof(int32_t) * fix[0].size() * fix[0][0].size() * 2;
+    }
 
     // attrGroupBits
     size += sizeof(bitset<subs>) * attrGroupBits.size();
 
-    // 两个fix
-    // cout << "fix: " << sizeof(fix) << " " << sizeof(fix[0]) << " " << sizeof(fix[0][10]) << sizeof(fix[1][7][20]) << "\n";
-    size += sizeof(fix) + sizeof(fix[0]) * 2 + sizeof(fix[0][0]) * numDimension +
-            sizeof(fix[0][0][0]) * numDimension * (numBucket + 1) * 2;
+    // 两个endBucket、一个bitsID
+    size += sizeof(endBucket) * 3 + sizeof(endBucket[0][0]) * numDimension * 3 + sizeof(int) * numDimension * numBucket * 3;
 
-    // 两个endBucket、两个bitsID、两个doubleReverse
-    size += (4 * sizeof(int) + 2 * sizeof(bool)) * numDimension * numBucket;
-    size += sizeof(endBucket[0]) * 4 + sizeof(endBucket[0][0]) * numDimension * 4;
-    // cout << sizeof(endBucket) << " " << sizeof(endBucket[0]) << " " << sizeof(endBucket[0][0]) << " " << sizeof(endBucket[0][0][0]) << "\n";
+    // cout << "endBucket size: " << sizeof(endBucket) << " " << sizeof(endBucket[0]) << " " << sizeof(endBucket[0][0]) << " " << sizeof(endBucket[0][0][0]) << "\n";
     size = size / 1024 / 1024; // MB
     return (int)size;
 }
 
 void HEM3_ASO::printRelation(int dimension_i)
 {
-    cout << "\n\nHEM5_AGDDMap\n";
+    cout << "\n\nHEM3_D_ASO Map\n";
     if (dimension_i == -1)
         _for(i, 0, numDimension)
         {
             cout << "\nDimension " << i << "    LowBucket Predicates: " << fix[0][i][0] << "   ----------------\n";
             _for(j, 0, numBucket)
             {
-                cout << "lBkt" << j << ": bID=" << bitsID[0][i][j] << ", eBkt=" << endBucket[0][i][j] << ", dRvs="
-                     << doubleReverse[0][i][j] << "; ";
+                cout << "lBkt" << j << ": bID=" << bitsID[i][j] << ", eBkt=" << endBucket[0][i][j] << "; ";
                 if (j % 5 == 0 && j > 0)
                     cout << "\n";
             }
@@ -708,8 +718,7 @@ void HEM3_ASO::printRelation(int dimension_i)
                  << "   ----------------\n";
             _for(j, 0, numBucket)
             {
-                cout << "hBkt" << j << ": bID=" << bitsID[1][i][j] << ", eBkt=" << endBucket[1][i][j] << ", dRvs="
-                     << doubleReverse[1][i][j] << "; ";
+                cout << "hBkt" << j << ": bID=" << bitsID[i][j] << ", eBkt=" << endBucket[1][i][j] << "; ";
                 if (j % 5 == 0 && j > 0)
                     cout << "\n";
             }
@@ -720,8 +729,7 @@ void HEM3_ASO::printRelation(int dimension_i)
              << "   ----------------\n";
         _for(i, 0, numBucket)
         {
-            cout << "lBkt" << i << ": bID=" << bitsID[0][dimension_i][i] << ", eBkt=" << endBucket[0][dimension_i][i]
-                 << ", dRvs=" << doubleReverse[0][dimension_i][i] << "; ";
+            cout << "lBkt" << i << ": bID=" << bitsID[dimension_i][i] << ", eBkt=" << endBucket[0][dimension_i][i] << "; ";
             if (i % 5 == 0 && i > 0)
                 cout << "\n";
         }
@@ -729,8 +737,7 @@ void HEM3_ASO::printRelation(int dimension_i)
              << "   ----------------\n";
         _for(i, 0, numBucket)
         {
-            cout << "hBkt" << i << ": bID=" << bitsID[1][dimension_i][i] << ", eBkt=" << endBucket[1][dimension_i][i]
-                 << ", dRvs=" << doubleReverse[1][dimension_i][i] << "; ";
+            cout << "hBkt" << i << ": bID=" << bitsID[dimension_i][i] << ", eBkt=" << endBucket[1][dimension_i][i] << "; ";
             if (i % 5 == 0 && i > 0)
                 cout << "\n";
         }
@@ -741,29 +748,15 @@ void HEM3_ASO::printRelation(int dimension_i)
 vector<int> HEM3_ASO::calMarkNumForBuckets()
 {
     vector<int> numMarking(numBucket, 0);
-    _for(i, 0, numBucket)
+    _for(i, 0, numDimension)
     {
-        _for(j, 0, numDimension)
+        _for(j, 0, numBucket)
         {
-            numMarking[i] += data[0][j][i].size() + data[1][j][i].size(); // 比较
+            numMarking[j] += data[0][i][j].size() + data[1][i][j].size();
+            
+            _for(k, j + 1, endBucket[0][i][j]) numMarking[j] += data[0][i][k].size();
 
-            if (doubleReverse[0][j][i])
-            {
-                _for(k, endBucket[0][j][i], i + 1) numMarking[i] += data[0][j][k].size();
-            }
-            else
-            {
-                _for(k, i + 1, endBucket[0][j][i]) numMarking[i] += data[0][j][k].size();
-            }
-
-            if (doubleReverse[1][j][i])
-            {
-                _for(k, i, endBucket[1][j][i]) numMarking[i] += data[0][j][k].size();
-            }
-            else
-            {
-                _for(k, endBucket[1][j][i], i) numMarking[i] += data[1][j][k].size();
-            }
+            _for(k, endBucket[1][i][j], j) numMarking[j] += data[1][i][k].size();
         }
     }
     return numMarking;

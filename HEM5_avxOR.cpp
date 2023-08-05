@@ -17,7 +17,7 @@ HEM5_avxOR::HEM5_avxOR()
 	if (be == -1)
 		numBits = be2;
 	else
-		numBits = pow(2, be); // ÿ��ά����lowValue��Ӧ��bits�������
+		numBits = pow(2, be); // ÿ��ά����lowValue��Ӧ��bits�������?
 	//if (numBits > 1)
 	fullBits.resize(numDimension); // ά��������Զ���䣬����ֻ��Ҫresizeһ��
 	//else bitStep = numBucket >> 1;
@@ -234,7 +234,7 @@ void HEM5_avxOR::initBits()
 	//			}
 	//			else if (j < lowQuarterPoint) {
 	//				bitsID[0][i][j] = 0;
-	//				endBucket[0][i][j] = lowHalfPoint; // �� j ���ط������������ lowCriticalPoint(������)
+	//				endBucket[0][i][j] = lowHalfPoint; // �� j ���ط������������? lowCriticalPoint(������)
 	//				doubleReverse[0][i][j] = true;
 	//				_for(k, 0, data[0][i][j].size()) // Ͱ��ÿ������
 	//					bits[0][i][0][data[0][i][j][k].subID] = 1;
@@ -255,7 +255,7 @@ void HEM5_avxOR::initBits()
 	//			}
 	//			else if (j < highHalfPoint) {
 	//				bitsID[1][i][j] = 0;
-	//				endBucket[1][i][j] = highHalfPoint; // �� j ���ط�����������ڵ��� highCriticalPoint
+	//				endBucket[1][i][j] = highHalfPoint; // �� j ���ط�����������ڵ���? highCriticalPoint
 	//				doubleReverse[1][i][j] = true;
 	//				_for(k, 0, data[1][i][j].size()) // Ͱ��ÿ������
 	//					bits[1][i][0][data[1][i][j][k].subID] = 1;
@@ -277,7 +277,7 @@ void HEM5_avxOR::initBits()
 	_for(i, 0, numDimension)
 	{
 
-		// �����������
+		// �����������?
 		if (fix[0][i][0] == 0)
 		{
 			_for(j, 0, numBucket)
@@ -329,7 +329,7 @@ void HEM5_avxOR::initBits()
 			}
 		}
 		//lowContain[li] = 0; // Ϊɶ����Խ��??? li==numBits+1��
-		if (hi == numBits) // Bug: ��󼸸�ͰΪ��ʱhi����forѭ�������ӵ�numBits+1
+		if (hi == numBits) // Bug: ��󼸸�Ͱ�?��ʱhi����forѭ�������ӵ�numBits+1
 			highContain[hi] = numBucket;
 
 		li = hi = 1; // ˫�ط������ʱ����Ӧ����һ�˵�Ͱ����contain�����е��±�, ��ʵ li=lowBid+2, hi=highBid+2
@@ -346,11 +346,11 @@ void HEM5_avxOR::initBits()
 				highBktId = j;
 			}
 
-			// Bug: ��ǰ����, ��󼸸�ͰΪ��, ��ʱhighBid=numBits-1, Խ����, ֱ����fullBL
+			// Bug: ��ǰ����, ��󼸸�Ͱ�?��, ��ʱhighBid=numBits-1, Խ����, ֱ����fullBL
 			if (fix[1][i][j] == fix[1][i][numBucket])
 			{
 				bitsID[1][i][j] = numBits - 1;
-				endBucket[1][i][j] = j + 1; // ����ǵ�һ�ν���, j��Ͱ�ǿ�, ��Ҫ���ط�����, �����ǿ�Ͱ, ���Լ����������
+				endBucket[1][i][j] = j + 1; // ����ǵ�һ�ν���?, j��Ͱ�ǿ�, ��Ҫ���ط�����, �����ǿ�Ͱ, ���Լ����������?
 				doubleReverse[1][i][j] = true;
 			}
 			else if (fix[1][i][j] - fix[1][i][highBktId] <
@@ -367,9 +367,9 @@ void HEM5_avxOR::initBits()
 				doubleReverse[1][i][j] = true;
 			}
 
-			// ��׺�������ʱ��������(�������������, ��������j��lowBktId��lowContain[li]���ټ�һ����lowContain[li]�п���Ϊ0); -1+1ʡȥ��
+			// ��׺�������ʱ��������?(�������������?, ��������j��lowBktId��lowContain[li]���ټ�һ����lowContain[li]�п���Ϊ0); -1+1ʡȥ��
 			// fix[0][i][j][numBucket]��Ҫ��0, ʹfix[0][i][j][lowBktId]�տ�ʼΪ0
-			// Bug: ��ǰ����, ���С�ļ���ͰΪ��, ��������, ֱ���ö��ط���
+			// Bug: ��ǰ����, ���С�ļ���Ͱ�?��, ��������, ֱ���ö��ط���
 			if (fix[0][i][numBucket - j - 1] == fix[0][i][0])
 			{
 				bitsID[0][i][numBucket - j - 1] = numBits - 1;
@@ -432,7 +432,7 @@ void HEM5_avxOR::initBits()
 	//cout << "HEM5_256ORDD Stop.\n";
 }
 
-// ������ʱ�����
+// ������ʱ�����?
 void HEM5_avxOR::match(const Pub& pub, int& matchSubs)
 {
 	bitset<subs> b; // register
@@ -513,7 +513,7 @@ void HEM5_avxOR::match(const Pub& pub, int& matchSubs)
 	matchSubs = numSub - b.count();
 }
 
-// ����ʱ�����
+// ����ʱ�����?
 void HEM5_avxOR::match_debug(const Pub& pub, int& matchSubs)
 {
 	bitset<subs> b, bLocal;
@@ -639,7 +639,7 @@ int HEM5_avxOR::calMemory()
 	long long size = 0; // Byte
 	_for(i, 0, numDimension)
 	{
-		// ��ÿ��ά����bits�������һ������ 2*sizeof(bitset<subs>)*numDimension*numBits
+		// ��ÿ��ά����bits�������һ������? 2*sizeof(bitset<subs>)*numDimension*numBits
 		size += sizeof(bitset<subs>) * (bits[0][i].size() + bits[1][i].size());
 		_for(j, 0, numBucket) size += sizeof(Combo) * (data[0][i][j].size() + data[1][i][j].size());
 	}
@@ -706,31 +706,31 @@ void HEM5_avxOR::printRelation(int dimension_i)
 
 vector<int> HEM5_avxOR::calMarkNumForBuckets()
 {
-	vector<int> numMarking(numBucket, 0);
-	_for(i, 0, numBucket)
-	{
-		_for(j, 0, numDimension)
-		{
-			numMarking[i] += data[0][j][i].size() + data[1][j][i].size(); // �Ƚ�
+    vector<int> numMarking(numBucket, 0);
+    _for(i, 0, numDimension)
+    {
+        _for(j, 0, numBucket)
+        {
+            numMarking[j] += data[0][i][j].size() + data[1][i][j].size();
 
-			if (doubleReverse[0][j][i])
-			{
-				_for(k, endBucket[0][j][i], i + 1) numMarking[i] += data[0][j][k].size();
-			}
-			else
-			{
-				_for(k, i + 1, endBucket[0][j][i]) numMarking[i] += data[0][j][k].size();
-			}
+            if (doubleReverse[0][i][j])
+            {
+                _for(k, endBucket[0][i][j], j) numMarking[j] += data[0][i][k].size();
+            }
+            else
+            {
+                _for(k, j + 1, endBucket[0][i][j]) numMarking[j] += data[0][i][k].size();
+            }
 
-			if (doubleReverse[1][j][i])
-			{
-				_for(k, i, endBucket[1][j][i]) numMarking[i] += data[0][j][k].size();
-			}
-			else
-			{
-				_for(k, endBucket[1][j][i], i) numMarking[i] += data[1][j][k].size();
-			}
-		}
-	}
-	return numMarking;
+            if (doubleReverse[1][i][j])
+            {
+                _for(k, j + 1, endBucket[1][i][j]) numMarking[j] += data[1][i][k].size();
+            }
+            else
+            {
+                _for(k, endBucket[1][i][j], j) numMarking[j] += data[1][i][k].size();
+            }
+        }
+    }
+    return numMarking;
 }

@@ -57,7 +57,7 @@ public:
 
     void match_RASO(const Pub &pub, int &matchSubs);
 
-    void match_RASO_avxOR_parallel(const Pub &pub, int &matchSubs);
+    void match_RASO_parallel(const Pub &pub, int &matchSubs);
 
     int calMemory();                     // 计算占用内存大小
     void printRelation(int dimension_i); // 打印映射关系
