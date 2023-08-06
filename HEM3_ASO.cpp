@@ -54,7 +54,7 @@ HEM3_ASO::~HEM3_ASO()
     delete[] endBucket[0], endBucket[1], bitsID;
 }
 
-void HEM3_ASO::insert_VASO(IntervalSub sub)
+void HEM3_ASO::insert_VASO(const IntervalSub& sub)
 {
     Combo c;
     c.subID = sub.id;
@@ -69,7 +69,7 @@ void HEM3_ASO::insert_VASO(IntervalSub sub)
     numSub++;
 }
 
-void HEM3_ASO::insert_RASO(IntervalSub sub)
+void HEM3_ASO::insert_RASO(const IntervalSub &sub)
 {
     for (int attGroupNo = sub.constraints[0].att / attrGroupSize, gi = 0; gi < numAttrGroup; gi++)
     {
@@ -89,7 +89,7 @@ void HEM3_ASO::insert_RASO(IntervalSub sub)
 }
 
 // 在线插入，已经构建好索引结构了，插入谓词、标记订阅
-void HEM3_ASO::insert_online_VASO(IntervalSub sub)
+void HEM3_ASO::insert_online_VASO(const IntervalSub &sub)
 {
     int b, bucketID;
     Combo c;
@@ -114,7 +114,7 @@ void HEM3_ASO::insert_online_VASO(IntervalSub sub)
     numSub++;
 }
 
-void HEM3_ASO::insert_online_RASO(IntervalSub sub)
+void HEM3_ASO::insert_online_RASO(const IntervalSub &sub)
 {
     int b, bucketID;
     Combo c;
@@ -144,7 +144,7 @@ void HEM3_ASO::insert_online_RASO(IntervalSub sub)
     numSub++;
 }
 
-bool HEM3_ASO::deleteSubscription_VASO(IntervalSub sub)
+bool HEM3_ASO::deleteSubscription_VASO(const IntervalSub &sub)
 {
     int find = 0, b, bucketID, id = sub.id;
     vector<Combo>::const_iterator it;
@@ -183,7 +183,7 @@ bool HEM3_ASO::deleteSubscription_VASO(IntervalSub sub)
     return false;
 }
 
-bool HEM3_ASO::deleteSubscription_RASO(IntervalSub sub)
+bool HEM3_ASO::deleteSubscription_RASO(const IntervalSub &sub)
 {
     int find = 0, b, bucketID, id = sub.id;
 
@@ -448,7 +448,7 @@ void HEM3_ASO::match_VASO(const Pub &pub, int &matchSubs)
         compareTime += (double)compareStart.elapsed_nano();
         Timer orStart;
 #endif // DEBUG
-#if BatchSize == 64
+#if BlockSize == 64
         gB = gB | bits[att][bitsID[att][buck]];
 #else
         Util::bitsetOr(gB, bits[att][bitsID[att][buck]]);
@@ -471,7 +471,7 @@ void HEM3_ASO::match_VASO(const Pub &pub, int &matchSubs)
             {
                 if (!attExist[att])
                 {
-#if BatchSize == 64
+#if BlockSize == 64
                     gB = gB | bits[att][0];
 #else
                     Util::bitsetOr(gB, bits[att][0]);
@@ -481,7 +481,7 @@ void HEM3_ASO::match_VASO(const Pub &pub, int &matchSubs)
         }
         else // 该属性组不存在谓词
         {
-#if BatchSize == 64
+#if BlockSize == 64
             gB = gB | attrGroupBits[AGi];
 #else
             Util::bitsetOr(gB, attrGroupBits[AGi]);
@@ -536,7 +536,7 @@ void HEM3_ASO::match_RASO(const Pub &pub, int &matchSubs)
         compareTime += (double)compareStart.elapsed_nano();
         Timer orStart;
 #endif // DEBUG
-#if BatchSize == 64
+#if BlockSize == 64
         gB = gB | bits[att][bitsID[att][buck]];
 #else
         Util::bitsetOr(gB, bits[att][bitsID[att][buck]]);
@@ -551,7 +551,7 @@ void HEM3_ASO::match_RASO(const Pub &pub, int &matchSubs)
     Timer orStart;
 #endif // DEBUG
     int att_group_no = att / attrGroupSize;
-#if BatchSize == 64
+#if BlockSize == 64
     gB = gB | attrGroupBits[att_group_no];
 #else
     Util::bitsetOr(gB, attrGroupBits[att_group_no]);
@@ -561,7 +561,7 @@ void HEM3_ASO::match_RASO(const Pub &pub, int &matchSubs)
     {
         if (!attExist[att])
         {
-#if BatchSize == 64
+#if BlockSize == 64
             gB = gB | bits[att][0];
 #else
             Util::bitsetOr(gB, bits[att][0]);
@@ -612,7 +612,7 @@ void HEM3_ASO::match_RASO_parallel(const Pub &pub, int &matchSubs)
                 _for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
                     gB[data[1][att][buck][k].subID] = 1;
 
-#if BatchSize == 64
+#if BlockSize == 64
                 gB = gB | bits[att][bitsID[att][buck]];
 #else
                 Util::bitsetOr(gB, bits[att][bitsID[att][buck]]);
@@ -633,8 +633,8 @@ void HEM3_ASO::match_RASO_parallel(const Pub &pub, int &matchSubs)
         {
             if (!attExist[ai])
             {
-#if BatchSize == 64
-                gB = gB | bits[att][0];
+#if BlockSize == 64
+                gB = gB | bits[ai][0];
 #else
                 Util::bitsetOr(gB, bits[ai][0]);
 #endif
@@ -646,7 +646,7 @@ void HEM3_ASO::match_RASO_parallel(const Pub &pub, int &matchSubs)
 #endif
     for (int i = 0; i < thread_result.size(); i++)
     {
-#if BatchSize == 64
+#if BlockSize == 64
         gB = gB | thread_result[i].get();
 #else
         Util::bitsetOr(gB, thread_result[i].get());

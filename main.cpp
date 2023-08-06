@@ -85,30 +85,32 @@ int main(int argc, char** argv)
 //	 run_HEM5_parallel(gen, deleteNo);
 //	 run_HEM5_avxOR_parallel(gen, deleteNo);
 //	run_HEM5_VAS(gen, deleteNo);
-//if(parallelDegree<5)
 //	run_HEM5_RAS(gen, deleteNo);
 //	run_HEM5_RAS_avxOR_parallel(gen, deleteNo);
-	//	run_HEMSC(gen);
+    run_HEM3_D_VASO(gen, deleteNo);
+    run_HEM3_D_RASO(gen, deleteNo);
+    run_HEM3_D_RASO_parallel(gen, deleteNo);
+    //	run_HEMSC(gen);
 	//	run_HEMSR(gen);
 
-	//run_Simple(gen, deleteNo);
+    //run_Simple(gen, deleteNo);
 	//	run_Simple2(gen, deleteNo);
 
-	run_tama_forward_native(gen, deleteNo);
-	run_tama_forward_C_BOMP(gen, deleteNo); // bTAMA6 C-BOMP
+	// run_tama_forward_native(gen, deleteNo);
+	// run_tama_forward_C_BOMP(gen, deleteNo); // bTAMA6 C-BOMP
 //	run_tama_backward1_DMFT_TAMA_C_BOMP(gen, deleteNo);// bTAMA7
-	run_tama_backward2_DMFT_TAMA_CBOMP(gen, deleteNo); // bTAMA8 DMFT
-	run_btama_backward(gen, deleteNo);
-	run_btama_forward_DMFT(gen, deleteNo);
+	// run_tama_backward2_DMFT_TAMA_CBOMP(gen, deleteNo); // bTAMA8 DMFT
+	// run_btama_backward(gen, deleteNo);
+	// run_btama_forward_DMFT(gen, deleteNo);
 //	 run_tama_forward_native_parallel_lock(gen,deleteNo); // parallel TAMA_FORWARD-lock very slow
 //	 run_tama_forward_native_parallel_reduce(gen,deleteNo); // parallel TAMA_FORWARD-reduce
 //	 run_tama_forward_C_BOMP_parallel(gen,deleteNo); // bTAMA6 parallel
 //	 run_tama_backward2_DMFT_TAMA_CBOMP_parallel(gen,deleteNo); // bTAMA8 parallel
 
-	run_BGTREE_forward_native(gen, deleteNo);
+	// run_BGTREE_forward_native(gen, deleteNo);
 //	run_BGTREE_forward_C_BOMP(gen, deleteNo);
 //	run_BGTREE_backward_DMFT_fBGTree_CBOMP(gen, deleteNo);
-	run_BGTREE_backward_native(gen,deleteNo);
+	// run_BGTREE_backward_native(gen,deleteNo);
 //	run_BGTREE_forward_DMFT_bBGTree(gen,deleteNo);
 //
 //	run_BGTREE_d_forward_native(gen, deleteNo);

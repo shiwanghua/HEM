@@ -14,7 +14,7 @@
 #define mfor(i,a,b) for(int i=(a);i>(b);--i)
 #define mmfor(i,a,b) for(int i=(a);i>=(b);--i)
 
-// 订阅分类+动动模式 Subscriptions Classification
+// 基于 HEM5-DD 的订阅分类+动动模式 Subscriptions Classification
 class HEMSC
 {
 private:

@@ -1,5 +1,5 @@
 #include "constant.h"
-string expID = "1704";             // Record the experiment ID number
+string expID = "1706";             // Record the experiment ID number
 const bool display = false;    // whether to print the mapping relation, 有待逐步改成DEBUG宏定义判断
 const bool verifyID = false;   // whether to verify Insertion and Deletion function
 const int interval = 500;        // after a interval of events is matched, print a log
@@ -31,7 +31,7 @@ const int adarein_level = 5;
 //const double divider=0.2;
 
 // pRein pHEM5DD pHEM5DD-avxOR pHEM5DD-RAS-avxOR TAMA_FORWARD-P bTama-F/B-P
-int parallelDegree = 5;
+int parallelDegree = 4;
 
 // HEM
 int be = 4;                 // bit exponent. In each dimension, there are 2 * 2^{be} bitsets.

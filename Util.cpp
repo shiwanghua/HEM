@@ -115,7 +115,7 @@ std::string Util::RemoveLastZero(std::string str) {
 }
 
 void Util::WriteData2Begin(string fileName, string text) {
-	ifstream ifs(fileName); // 读文件
+	ifstream ifs(fileName);
 	if (!ifs) {
 		cout << "Create file failed!" << endl;
 	}
@@ -123,14 +123,14 @@ void Util::WriteData2Begin(string fileName, string text) {
 	ifs.close();
 	fileStream.open(fileName.c_str(), ios::binary | ios::ate);
 	fileStream.seekp(0, ios::beg);
-	fileStream << text << endl << content; // 插入到文件头部
+	fileStream << text << endl << content;
 	fileStream << flush;
 	fileStream.close();
 }
 
 void Util::WriteData2End(string fileName, string text) {
-	fileStream.open(fileName.c_str(), ios::binary | ios::app); //  插入到文件末尾
-	fileStream << text; // 插入到文件头部
+	fileStream.open(fileName.c_str(), ios::binary | ios::app);
+	fileStream << text; // 锟斤拷锟诫到锟侥硷拷头锟斤拷
 	fileStream << flush;
 	fileStream.close();
 }

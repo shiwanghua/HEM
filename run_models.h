@@ -14,9 +14,10 @@
 #include "HEM4.h"
 #include "HEM5.h"
 #include "HEM5_avxOR.h"
-#include "HEM5_AS.h"
 #include "HEMSC.h"
 #include "HEMSR.h"
+#include "HEM5_AS.h"
+#include "HEM3_ASO.h"
 
 #include "Simple.h"
 #include "Simple2.h"

@@ -41,17 +41,17 @@ public:
 
     ~HEM3_ASO();
 
-    void insert_VASO(IntervalSub sub); // 没有bitset时的插入算法
-    void insert_RASO(IntervalSub sub); // 没有bitset时的插入算法
+    void insert_VASO(const IntervalSub &); // 没有bitset时的插入算法
+    void insert_RASO(const IntervalSub &); // 没有bitset时的插入算法
 
     void initBits(); // 初始化 bits 数组 / 重新初始化 bits 数组以负载均衡，可以看成一个训练索引的过程
 
-    void insert_online_VASO(IntervalSub sub); // 构建好订阅集后的在线插入订阅算法, 虚拟属性组版本
-    void insert_online_RASO(IntervalSub sub); // 构建好订阅集后的在线插入订阅算法, 实际属性组版本
+    void insert_online_VASO(const IntervalSub &); // 构建好订阅集后的在线插入订阅算法, 虚拟属性组版本
+    void insert_online_RASO(const IntervalSub &); // 构建好订阅集后的在线插入订阅算法, 实际属性组版本
 
-    bool deleteSubscription_VASO(IntervalSub sub);
+    bool deleteSubscription_VASO(const IntervalSub &);
 
-    bool deleteSubscription_RASO(IntervalSub sub);
+    bool deleteSubscription_RASO(const IntervalSub &);
 
     void match_VASO(const Pub &pub, int &matchSubs);
 

@@ -8,11 +8,11 @@
 
 using namespace std;
 
-extern string expID;		// ��¼ʵ��id
-extern const bool display;	// �Ƿ��ӡӳ���ϵ
+extern string expID;		// experiment ID
+extern const bool display;	// whether to display the map relationship
 extern const bool verifyID; // whether to verify Insertion and Deletion function
-extern const int interval;	// ÿƥ����ô����¼����һ����־��Ϣ
-extern const double subp;	// subp�����Ķ��ĺ��¼���ν�ʶ�����ǰcons��ά����
+extern const int interval;  // after a $interval number of events is matched, print a log
+extern const double subp;   // subp比例的订阅的谓词定义在前cons个维度上 in order to make the number of matching subscriptions > 0
 extern double realMatchNum;
 const int subs = 1048576;    // 1048576;//134217728;  // Number of subscriptions.
 extern const int32_t pubs;	 // Number of publications.
@@ -91,7 +91,7 @@ extern int be2;		   // be=-1ʱÿ��ά���� 2 * be2 ��bits���
 extern const int lvls; // HEMSC ����
 extern int gs;		   // HEMSR һ���ж��ٸ�ά��
 // extern const int BlockSize;
-#define BlockSize 256
+#define BlockSize 64
 extern const int ptrSize;
 extern const int blockNum; // ���������
 extern const int ptrIncrement;

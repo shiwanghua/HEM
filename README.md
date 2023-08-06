@@ -40,7 +40,7 @@
 5. sudo cpufreq-set -c 8 -u 4.9G
 6. Run command "ulimit -s unlimited; taskset -c 8 ./run" (8 指指定第 8 号核单独运行程序)
 7. 查看最近一次部分算法的结果：head -1 Rein.txt Rein_F_DMFT.txt fRein.txt fRein_C.txt fRein_C_B.txt hRein.txt hRein_c.txt  HEM5.txt Tama.txt bTama6.txt bTama8.txt fBGTree.txt fBGTree_C.txt fBGTree_CB.txt bBGTree.txt bBGTree_F.txt fBGTree_d.txt fBGTree_d_C.txt fBGTree_d_CB.txt bBGTree_d.txt bBGTree_d_F.txt
-8. debug: g++ -g -o derun *.h *.cpp -mavx2 -std=c++2a -lboost_system -lpthread; gdb derun
+8. Debug: g++ -g -o derun *.h *.cpp -mavx2 -std=c++2a -lboost_system -lpthread; gdb derun
 
 #### 注意事项
 

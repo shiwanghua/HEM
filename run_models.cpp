@@ -3141,7 +3141,7 @@ void run_HEM5_avxOR_parallel(const intervalGenerator& gen, unordered_map<int, bo
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-// ����ģʽ + ��������(�¼��������Էֲ�������)�汾
+// HEM5_DD_VAS
 void run_HEM5_VAS(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
 	HEM5_AS hem5_vas(HEM5_DD_VAS);
@@ -3365,7 +3365,6 @@ void run_HEM5_RAS(const intervalGenerator& gen, unordered_map<int, bool> deleteN
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-// ����ģʽ + ʵ�����Ӽ� + avx2 + ����
 void run_HEM5_RAS_avxOR_parallel(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 {
 	HEM5_AS hem5_ras_a_p(HEM5_DD_RAS_AVXOR_PARALLEL);
@@ -3477,7 +3476,269 @@ void run_HEM5_RAS_avxOR_parallel(const intervalGenerator& gen, unordered_map<int
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-// HEM ����ģʽ + ���ݿ��ȷֲ�
+void run_HEM3_D_VASO(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
+{
+    HEM3_ASO hem3_d_vaso(HEM3_D_VASO);
+
+    vector<double> insertTimeList;
+    vector<double> deleteTimeList;
+    vector<double> matchTimeList;
+    vector<double> matchInstructionList;
+    vector<double> matchSubList;
+
+    // insert
+    for (int i = 0; i < subs; i++)
+    {
+        Timer insertStart;
+
+        hem3_d_vaso.insert_VASO(gen.subList[i]); // Insert sub[i] into data structure.
+
+        int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+        insertTimeList.push_back((double)insertTime / 1000000);
+    }
+    cout << "HEM3_D_VASO Insertion Finishes.\n";
+
+    double initTime;
+    Timer initStart;
+    hem3_d_vaso.initBits();
+    initTime = (double)initStart.elapsed_nano() / 1000000.0;
+
+    if (verifyID)
+    {
+        for (auto kv : deleteNo)
+        {
+            Timer deleteStart;
+            if (!hem3_d_vaso.deleteSubscription_VASO(gen.subList[kv.first]))
+                cout << "HEM3_D_VASO: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+            deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+        }
+        cout << "HEM3_D_VASO Deletion Finishes.\n";
+        for (auto kv : deleteNo)
+        {
+            hem3_d_vaso.insert_online_VASO(gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
+        }
+    }
+
+    // match
+    for (int i = 0; i < pubs; i++)
+    {
+        int matchSubs = 0; // Record the number of matched subscriptions.
+        Timer matchStart;
+        // int64_t begin = GetCPUCycle();
+        hem3_d_vaso.match_VASO(gen.pubList[i], matchSubs);
+        // matchInstructionList.push_back(GetCPUCycle() - begin);
+        int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+        matchTimeList.push_back((double)eventTime / 1000000);
+        matchSubList.push_back(matchSubs);
+        if (i % interval == 0)
+            cout << "HEM5DD_VAS Event " << i << " is matched.\n";
+    }
+
+    if (display)
+        hem3_d_vaso.printRelation(1);
+    cout << endl;
+
+#ifdef DEBUG
+    cout << "HEM3_D_VASO: avgMatchNum= " << Util::Average(matchSubList) << ", matchTime= "
+         << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
+#endif
+
+    // output
+    string outputFileName = "HEM3_D_VASO.txt";
+    string content = expID + " bits= " + Util::Int2String(be) + " memory= " + Util::Int2String(hem3_d_vaso.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + \
+    " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " + \
+                     Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + \ 
+                     Util::Double2String(Util::Average(matchTimeList)) + " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList)) + " AvgCmpTime= " + \
+                     to_string(hem3_d_vaso.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(hem3_d_vaso.markTime / pubs / 1000000) + " ms OrTime= " + \
+                     to_string(hem3_d_vaso.orTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hem3_d_vaso.bitTime / pubs / 1000000) + " ms numBuk= " + Util::Int2String(hem3_d_vaso.numBucket) + \
+                     " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + \
+                     " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
+    Util::WriteData2Begin(outputFileName.c_str(), content);
+
+#ifdef DEBUG
+    outputFileName = "ComprehensiveExpTime.txt";
+    content = "HEM3_D_VASO= [";
+    _for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+    content[content.length() - 2] = ']';
+    Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif // DEBUG
+
+    outputFileName = "tmpData/HEM5_VAS.txt";
+    content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+    Util::WriteData2End(outputFileName.c_str(), content);
+}
+
+void run_HEM3_D_RASO(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
+{
+    HEM3_ASO hem3_d_ras(HEM3_D_RASO);
+
+    vector<double> insertTimeList;
+    vector<double> deleteTimeList;
+    vector<double> matchTimeList;
+    vector<double> matchInstructionList;
+    vector<double> matchSubList;
+
+    // insert
+    for (int i = 0; i < subs; i++)
+    {
+        Timer insertStart;
+
+        hem3_d_ras.insert_RASO(gen.subList[i]); // Insert sub[i] into data structure.
+
+        int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+        insertTimeList.push_back((double)insertTime / 1000000);
+    }
+    cout << "HEM3_D_RASO Insertion Finishes.\n";
+
+    double initTime;
+    Timer initStart;
+    hem3_d_ras.initBits();
+    initTime = (double)initStart.elapsed_nano() / 1000000.0;
+
+    if (verifyID)
+    {
+        for (auto kv : deleteNo)
+        {
+            Timer deleteStart;
+            if (!hem3_d_ras.deleteSubscription_RASO(gen.subList[kv.first]))
+                cout << "HEM3_D_RASO: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+            deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+        }
+        cout << "HEM3_D_RASO Deletion Finishes.\n";
+        for (auto kv : deleteNo)
+        {
+            hem3_d_ras.insert_online_RASO(
+                gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
+        }
+    }
+
+    // match
+    for (int i = 0; i < pubs; i++)
+    {
+        int matchSubs = 0; // Record the number of matched subscriptions.
+        Timer matchStart;
+        // int64_t begin = GetCPUCycle();
+        hem3_d_ras.match_RASO(gen.pubList[i], matchSubs);
+        // matchInstructionList.push_back(GetCPUCycle() - begin);
+        int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+        matchTimeList.push_back((double)eventTime / 1000000);
+        matchSubList.push_back(matchSubs);
+        if (i % interval == 0)
+            cout << "HEM3_D_RASO Event " << i << " is matched.\n";
+    }
+
+    if (display)
+        hem3_d_ras.printRelation(1);
+    cout << endl;
+
+#ifdef DEBUG
+    cout << "HEM3_D_RASO: matchNum= " << Util::Average(matchSubList) << ", matchTime= " << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
+#endif
+
+    string outputFileName = "HEM3_D_RASO.txt";
+    string content = expID + " bits= " + Util::Int2String(be) + " memory= " + Util::Int2String(hem3_d_ras.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+                     Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList)) + " AvgCmpTime= " + to_string(hem3_d_ras.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(hem3_d_ras.markTime / pubs / 1000000) + " ms OrTime= " + to_string(hem3_d_ras.orTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hem3_d_ras.bitTime / pubs / 1000000) + " ms numBuk= " + Util::Int2String(hem3_d_ras.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
+    Util::WriteData2Begin(outputFileName.c_str(), content);
+
+#ifdef DEBUG
+    outputFileName = "ComprehensiveExpTime.txt";
+    content = "HEM3_D_RASO= [";
+    _for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+    content[content.length() - 2] = ']';
+    Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif // DEBUG
+
+    outputFileName = "tmpData/HEM3_D_RASO.txt";
+    content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+    Util::WriteData2End(outputFileName.c_str(), content);
+}
+
+void run_HEM3_D_RASO_parallel(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
+{
+    HEM3_ASO hem3_d_ras_p(HEM3_D_RASO_AVXOR_PARALLEL);
+
+    vector<double> insertTimeList;
+    vector<double> deleteTimeList;
+    vector<double> matchTimeList;
+    vector<double> matchInstructionList;
+    vector<double> matchSubList;
+
+    // insert
+    for (int i = 0; i < subs; i++)
+    {
+        Timer insertStart;
+
+        hem3_d_ras_p.insert_RASO(gen.subList[i]); // Insert sub[i] into data structure.
+
+        int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+        insertTimeList.push_back((double)insertTime / 1000000);
+    }
+    cout << "HEM3_D_RASO_AVXOR_PARALLEL Insertion Finishes.\n";
+
+    double initTime;
+    Timer initStart;
+    hem3_d_ras_p.initBits();
+    initTime = (double)initStart.elapsed_nano() / 1000000.0;
+
+    if (verifyID)
+    {
+        for (auto kv : deleteNo)
+        {
+            Timer deleteStart;
+            if (!hem3_d_ras_p.deleteSubscription_RASO(gen.subList[kv.first]))
+                cout << "HEM3_D_RASO_AVXOR_PARALLEL: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+            deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+        }
+        cout << "HEM3_D_RASO_AVXOR_PARALLEL Deletion Finishes.\n";
+        for (auto kv : deleteNo)
+        {
+            hem3_d_ras_p.insert_online_RASO(gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
+        }
+    }
+
+    // match
+    for (int i = 0; i < pubs; i++)
+    {
+        int matchSubs = 0; // Record the number of matched subscriptions.
+        Timer matchStart;
+        // int64_t begin = GetCPUCycle();
+        hem3_d_ras_p.match_RASO_parallel(gen.pubList[i], matchSubs);
+        // matchInstructionList.push_back(GetCPUCycle() - begin);
+        int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+        matchTimeList.push_back((double)eventTime / 1000000);
+        matchSubList.push_back(matchSubs);
+        if (i % interval == 0)
+            cout << "HEM3_D_RASO_AVXOR_P" + to_string(BlockSize) + ": Event " << i << " is matched.\n";
+    }
+
+    if (display)
+        hem3_d_ras_p.printRelation(1);
+    cout << endl;
+
+#ifdef DEBUG
+    cout << "HEM3_D_RASO_AVXOR_PARALLEL: matchNum= " << Util::Average(matchSubList) << ", matchTime= " << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
+#endif
+
+    // output
+    string outputFileName = "HEM3_D_RASO_AVXOR_PARALLEL.txt";
+    string content = expID + " bits= " + Util::Int2String(be) + " memory= " + Util::Int2String(hem3_d_ras_p.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+                     Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList)) + " ms MergeTime= " + to_string(hem3_d_ras_p.mergeTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hem3_d_ras_p.bitTime / pubs / 1000000) + " ms pD= " + to_string(parallelDegree) + " avx= " + to_string(BlockSize) + " numBuk= " + Util::Int2String(hem3_d_ras_p.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
+    Util::WriteData2Begin(outputFileName.c_str(), content);
+
+#ifdef DEBUG
+    outputFileName = "ComprehensiveExpTime.txt";
+    content = "HEM3_D_RASO_AVXOR_PARALLEL= [";
+    _for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+    content[content.length() - 2] = ']';
+    Util::WriteData2Begin(outputFileName.c_str(), content);
+#endif // DEBUG
+
+    outputFileName = "tmpData/HEM3_D_RASO_AVXOR_PARALLEL.txt";
+    content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+    Util::WriteData2End(outputFileName.c_str(), content);
+}
+
+// 基于 HEM5-DD 的订阅分类+动动模式 Subscriptions Classification
 void run_HEMSC(const intervalGenerator& gen)
 {
 	HEMSC hem_sc;

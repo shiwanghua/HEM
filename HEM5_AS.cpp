@@ -818,16 +818,25 @@ void HEM5_AS::match_RAS_avxOR_parallel(const Pub &pub, int &matchSubs) {
 							bLocal[iCob.subID] = 0;
 					_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val <= value)
 							bLocal[data[0][att][buck][k].subID] = 0;
-					Util::bitsetOr(b, bLocal);
-				} else {
+					
+#if BlockSize == 64
+                    b |= bLocal;
+#else
+                    Util::bitsetOr(b, bLocal);
+#endif
+                } else {
 					_for(j, buck + 1, endBucket[0][att][buck]) 
 					for (auto &&iCob: data[0][att][j])
 							b[iCob.subID] = 1;
 					_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
 							b[data[0][att][buck][k].subID] = 1;
 					if (bitsID[0][att][buck] != -1)
-						Util::bitsetOr(b,bits[0][att][bitsID[0][att][buck]]);
-				}
+#if BlockSize == 64
+                    b |= bits[0][att][bitsID[0][att][buck]];
+#else
+                    Util::bitsetOr(b, bits[0][att][bitsID[0][att][buck]]);
+#endif
+                }
 
 				if (doubleReverse[1][att][buck]) {
 					if (bitsID[1][att][buck] == numBits - 1) // ֻ��1��bitsetʱ����fullBits�ϣ�ȥ��: && numBits > 1
@@ -839,20 +848,28 @@ void HEM5_AS::match_RAS_avxOR_parallel(const Pub &pub, int &matchSubs) {
 							bLocal[iCob.subID] = 0;
 					_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val >= value)
 							bLocal[data[1][att][buck][k].subID] = 0;
-					Util::bitsetOr(b, bLocal);
-				} else {
+#if BlockSize == 64
+                    b |= bLocal;
+#else
+                    Util::bitsetOr(b, bLocal);
+#endif
+                } else {
 					_for(j, endBucket[1][att][buck], buck) 
 					for (auto &&iCob: data[1][att][j])
 							b[iCob.subID] = 1;
 					_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
 							b[data[1][att][buck][k].subID] = 1;
 					if (bitsID[1][att][buck] != -1)
-						Util::bitsetOr(b, bits[1][att][bitsID[1][att][buck]]);//b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: ��att����i
-				}
+#if BlockSize == 64
+                    b |= bits[1][att][bitsID[1][att][buck]];
+#else
+                    Util::bitsetOr(b, bits[1][att][bitsID[1][att][buck]]);
+#endif
+                }
 			}
 			return b;
 		}));
-	}
+    }
 
 	// ������ά�����
 	/*if (numBits > 1) // ���ֻ��һ��bitsetʱbitset������Ϊ����һ���Ͱ������ȫ��Ͱ��Ҫ��if����
@@ -886,7 +903,11 @@ void HEM5_AS::match_RAS_avxOR_parallel(const Pub &pub, int &matchSubs) {
 	Timer mergeStart;
 #endif // DEBUG
 	for (int i = 0; i < threadResult.size(); i++)
-		Util::bitsetOr(gb, threadResult[i].get());
+#if BlockSize == 64
+    gb |= threadResult[i].get();
+#else
+    Util::bitsetOr(gb, threadResult[i].get());
+#endif
 #ifdef DEBUG
 	mergeTime += (double)mergeStart.elapsed_nano();
 	Timer bitStart;
