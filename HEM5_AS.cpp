@@ -518,7 +518,11 @@ void HEM5_AS::match_VAS(const Pub &pub, int &matchSubs) {
 			compareTime += (double)compareStart.elapsed_nano();
 			Timer orStart;
 #endif // DEBUG
-			b = b | bLocal;
+#if BlockSize == 64
+            b |= bLocal;
+#else
+            Util::bitsetOr(b, bLocal);
+#endif
 #ifdef DEBUG
 			orTime += (double)orStart.elapsed_nano();
 #endif // DEBUG
@@ -540,7 +544,11 @@ void HEM5_AS::match_VAS(const Pub &pub, int &matchSubs) {
 			Timer orStart;
 #endif // DEBUG
 			if (bitsID[0][att][buck] != -1)
-				b = b | bits[0][att][bitsID[0][att][buck]];
+#if BlockSize == 64
+                b |= bits[0][att][bitsID[0][att][buck]];
+#else
+                Util::bitsetOr(b, bits[0][att][bitsID[0][att][buck]]);
+#endif
 #ifdef DEBUG
 			orTime += (double)orStart.elapsed_nano();
 #endif // DEBUG
@@ -567,7 +575,11 @@ void HEM5_AS::match_VAS(const Pub &pub, int &matchSubs) {
 			compareTime += (double)compareStart.elapsed_nano();
 			Timer orStart;
 #endif // DEBUG
-			b = b | bLocal;
+#if BlockSize == 64
+            b |= bLocal;
+#else
+            Util::bitsetOr(b, bLocal);
+#endif
 #ifdef DEBUG
 			orTime += (double)orStart.elapsed_nano();
 #endif // DEBUG
@@ -589,7 +601,11 @@ void HEM5_AS::match_VAS(const Pub &pub, int &matchSubs) {
 			Timer orStart;
 #endif // DEBUG
 			if (bitsID[1][att][buck] != -1)
-				b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: ��att����i
+#if BlockSize == 64
+            	b |= bits[1][att][bitsID[1][att][buck]];
+#else
+            	Util::bitsetOr(b, bits[1][att][bitsID[1][att][buck]]);
+#endif
 #ifdef DEBUG
 			orTime += (double)orStart.elapsed_nano();
 #endif // DEBUG
@@ -620,10 +636,18 @@ void HEM5_AS::match_VAS(const Pub &pub, int &matchSubs) {
 			base = AGi * attrGroupSize;
 			_for(aj, base, base + attrGroupSize) {
 				if (!attExist[aj])
-					b = b | fullBits[aj];
+#if BlockSize == 64
+                b |= fullBits[aj];
+#else
+                Util::bitsetOr(b, fullBits[aj]);
+#endif
 			}
 		} else {
-			b = b | attrGroupBits[AGi];
+#if BlockSize == 64
+            b |= attrGroupBits[AGi];
+#else
+            Util::bitsetOr(b, attrGroupBits[AGi]);
+#endif
 		}
 	}
 #ifdef DEBUG
@@ -672,7 +696,11 @@ void HEM5_AS::match_RAS(const Pub &pub, int &matchSubs) {
 			compareTime += (double)compareStart.elapsed_nano();
 			Timer orStart;
 #endif // DEBUG
-			b = b | bLocal;
+#if BlockSize == 64
+            b |= bLocal;
+#else
+            Util::bitsetOr(b, bLocal);
+#endif
 #ifdef DEBUG
 			orTime += (double)orStart.elapsed_nano();
 #endif // DEBUG
@@ -694,7 +722,11 @@ void HEM5_AS::match_RAS(const Pub &pub, int &matchSubs) {
 			Timer orStart;
 #endif // DEBUG
 			if (bitsID[0][att][buck] != -1)
-				b = b | bits[0][att][bitsID[0][att][buck]];
+#if BlockSize == 64
+            	b |= bits[0][att][bitsID[0][att][buck]];
+#else
+            	Util::bitsetOr(b, bits[0][att][bitsID[0][att][buck]]);
+#endif
 #ifdef DEBUG
 			orTime += (double)orStart.elapsed_nano();
 #endif // DEBUG
@@ -721,7 +753,11 @@ void HEM5_AS::match_RAS(const Pub &pub, int &matchSubs) {
 			compareTime += (double)compareStart.elapsed_nano();
 			Timer orStart;
 #endif // DEBUG
-			b = b | bLocal;
+#if BlockSize == 64
+            b |= bLocal;
+#else
+            Util::bitsetOr(b, bLocal);
+#endif
 #ifdef DEBUG
 			orTime += (double)orStart.elapsed_nano();
 #endif // DEBUG
@@ -743,7 +779,11 @@ void HEM5_AS::match_RAS(const Pub &pub, int &matchSubs) {
 			Timer orStart;
 #endif // DEBUG
 			if (bitsID[1][att][buck] != -1)
-				b = b | bits[1][att][bitsID[1][att][buck]]; // Bug: ��att����i
+#if BlockSize == 64
+            	b |= bits[1][att][bitsID[1][att][buck]];
+#else
+            	Util::bitsetOr(b, bits[1][att][bitsID[1][att][buck]]);
+#endif
 #ifdef DEBUG
 			orTime += (double)orStart.elapsed_nano();
 #endif // DEBUG
@@ -770,11 +810,19 @@ void HEM5_AS::match_RAS(const Pub &pub, int &matchSubs) {
 	Timer orStart;
 #endif // DEBUG
 	int attGroupNo = att / attrGroupSize;
-	b = b | attrGroupBits[attGroupNo];
+#if BlockSize == 64
+    b |= attrGroupBits[attGroupNo];
+#else
+    Util::bitsetOr(b, attrGroupBits[attGroupNo]);
+#endif
 	int base = attGroupNo * attrGroupSize;
 	_for(ai, base, base + attrGroupSize) {
 		if (!attExist[ai])
-			b = b | fullBits[ai];
+#if BlockSize == 64
+            b |= fullBits[ai];
+#else
+            Util::bitsetOr(b, fullBits[ai]);
+#endif
 	}
 #ifdef DEBUG
 	orTime += (double)orStart.elapsed_nano();
@@ -800,7 +848,7 @@ void HEM5_AS::match_RAS_avxOR_parallel(const Pub &pub, int &matchSubs) {
 			end=begin+seg+1;
 		else end=begin+seg;
 		threadResult.emplace_back(threadPool.enqueue([this, &pub, begin, end] {
-// �ֲ�������ջ��
+
 			bitset<subs> b; // register
 			bitset<subs> bLocal;
 			
@@ -871,22 +919,6 @@ void HEM5_AS::match_RAS_avxOR_parallel(const Pub &pub, int &matchSubs) {
 		}));
     }
 
-	// ������ά�����
-	/*if (numBits > 1) // ���ֻ��һ��bitsetʱbitset������Ϊ����һ���Ͱ������ȫ��Ͱ��Ҫ��if����
-	{*/
-	/*_for(i, 0, numDimension) if (!attExist[i])
-		b = b | fullBits[i];*/
-	/*}
-	else
-	{
-		_for(i, 0, numDimension) if (!attExist[i])
-			_for(j, 0, endBucket[0][i][0])
-			_for(k, 0, data[0][i][j].size())
-			b[data[0][i][j][k].subID] = 1;
-
-		_for(i, 0, numDimension) if (!attExist[i])
-			b = b | bits[0][i][0];
-	}*/
 	int attGroupNo = pub.pairs[0].att / attrGroupSize;
 	bitset<subs> gb=attrGroupBits[attGroupNo];
 	if(pub.size<attrGroupSize){
@@ -896,7 +928,11 @@ void HEM5_AS::match_RAS_avxOR_parallel(const Pub &pub, int &matchSubs) {
 		int base = attGroupNo * attrGroupSize;
 		_for(ai, base, base + attrGroupSize) {
 			if (!attExist[ai])
-				gb = gb | fullBits[ai];
+#if BlockSize == 64
+                    gb |= fullBits[ai];
+#else
+                    Util::bitsetOr(gb, fullBits[ai]);
+#endif
 		}
 	}
 #ifdef DEBUG

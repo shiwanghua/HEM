@@ -17,7 +17,7 @@ HEM5_avxOR::HEM5_avxOR()
 	if (be == -1)
 		numBits = be2;
 	else
-		numBits = pow(2, be); // ÿ��ά����lowValue��Ӧ��bits�������?
+		numBits = pow(2, be); // ÿ��ά����lowValue��Ӧ��bits�������?
 	//if (numBits > 1)
 	fullBits.resize(numDimension); // ά��������Զ���䣬����ֻ��Ҫresizeһ��
 	//else bitStep = numBucket >> 1;
@@ -234,7 +234,7 @@ void HEM5_avxOR::initBits()
 	//			}
 	//			else if (j < lowQuarterPoint) {
 	//				bitsID[0][i][j] = 0;
-	//				endBucket[0][i][j] = lowHalfPoint; // �� j ���ط������������? lowCriticalPoint(������)
+	//				endBucket[0][i][j] = lowHalfPoint; // �� j ���ط������������? lowCriticalPoint(������)
 	//				doubleReverse[0][i][j] = true;
 	//				_for(k, 0, data[0][i][j].size()) // Ͱ��ÿ������
 	//					bits[0][i][0][data[0][i][j][k].subID] = 1;
@@ -255,7 +255,7 @@ void HEM5_avxOR::initBits()
 	//			}
 	//			else if (j < highHalfPoint) {
 	//				bitsID[1][i][j] = 0;
-	//				endBucket[1][i][j] = highHalfPoint; // �� j ���ط�����������ڵ���? highCriticalPoint
+	//				endBucket[1][i][j] = highHalfPoint; // �� j ���ط�����������ڵ���? highCriticalPoint
 	//				doubleReverse[1][i][j] = true;
 	//				_for(k, 0, data[1][i][j].size()) // Ͱ��ÿ������
 	//					bits[1][i][0][data[1][i][j][k].subID] = 1;
@@ -277,7 +277,7 @@ void HEM5_avxOR::initBits()
 	_for(i, 0, numDimension)
 	{
 
-		// �����������?
+		// �����������?
 		if (fix[0][i][0] == 0)
 		{
 			_for(j, 0, numBucket)
@@ -329,7 +329,7 @@ void HEM5_avxOR::initBits()
 			}
 		}
 		//lowContain[li] = 0; // Ϊɶ����Խ��??? li==numBits+1��
-		if (hi == numBits) // Bug: ��󼸸�Ͱ�?��ʱhi����forѭ�������ӵ�numBits+1
+		if (hi == numBits) // Bug: ��󼸸�Ͱ�?��ʱhi����forѭ�������ӵ�numBits+1
 			highContain[hi] = numBucket;
 
 		li = hi = 1; // ˫�ط������ʱ����Ӧ����һ�˵�Ͱ����contain�����е��±�, ��ʵ li=lowBid+2, hi=highBid+2
@@ -346,11 +346,11 @@ void HEM5_avxOR::initBits()
 				highBktId = j;
 			}
 
-			// Bug: ��ǰ����, ��󼸸�Ͱ�?��, ��ʱhighBid=numBits-1, Խ����, ֱ����fullBL
+			// Bug: ��ǰ����, ��󼸸�Ͱ�?��, ��ʱhighBid=numBits-1, Խ����, ֱ����fullBL
 			if (fix[1][i][j] == fix[1][i][numBucket])
 			{
 				bitsID[1][i][j] = numBits - 1;
-				endBucket[1][i][j] = j + 1; // ����ǵ�һ�ν���?, j��Ͱ�ǿ�, ��Ҫ���ط�����, �����ǿ�Ͱ, ���Լ����������?
+				endBucket[1][i][j] = j + 1; // ����ǵ�һ�ν���?, j��Ͱ�ǿ�, ��Ҫ���ط�����, �����ǿ�Ͱ, ���Լ����������?
 				doubleReverse[1][i][j] = true;
 			}
 			else if (fix[1][i][j] - fix[1][i][highBktId] <
@@ -367,9 +367,9 @@ void HEM5_avxOR::initBits()
 				doubleReverse[1][i][j] = true;
 			}
 
-			// ��׺�������ʱ��������?(�������������?, ��������j��lowBktId��lowContain[li]���ټ�һ����lowContain[li]�п���Ϊ0); -1+1ʡȥ��
+			// ��׺�������ʱ��������?(�������������?, ��������j��lowBktId��lowContain[li]���ټ�һ����lowContain[li]�п���Ϊ0); -1+1ʡȥ��
 			// fix[0][i][j][numBucket]��Ҫ��0, ʹfix[0][i][j][lowBktId]�տ�ʼΪ0
-			// Bug: ��ǰ����, ���С�ļ���Ͱ�?��, ��������, ֱ���ö��ط���
+			// Bug: ��ǰ����, ���С�ļ���Ͱ�?��, ��������, ֱ���ö��ط���
 			if (fix[0][i][numBucket - j - 1] == fix[0][i][0])
 			{
 				bitsID[0][i][numBucket - j - 1] = numBits - 1;
@@ -432,7 +432,7 @@ void HEM5_avxOR::initBits()
 	//cout << "HEM5_256ORDD Stop.\n";
 }
 
-// ������ʱ�����?
+// ������ʱ�����?
 void HEM5_avxOR::match(const Pub& pub, int& matchSubs)
 {
 	bitset<subs> b; // register
@@ -455,7 +455,11 @@ void HEM5_avxOR::match(const Pub& pub, int& matchSubs)
 				buck) _for(k, 0, data[0][att][j].size()) bLocal[data[0][att][j][k].subID] = 0;
 			_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val <= value)
 					bLocal[data[0][att][buck][k].subID] = 0;
-			Util::bitsetOr(b, bLocal); //b = b | bLocal;
+#if BlockSize == 64
+            b |= bLocal;
+#else
+            Util::bitsetOr(b, bLocal);
+#endif
 		}
 		else
 		{
@@ -464,7 +468,11 @@ void HEM5_avxOR::match(const Pub& pub, int& matchSubs)
 			_for(k, 0, data[0][att][buck].size()) if (data[0][att][buck][k].val > value)
 					b[data[0][att][buck][k].subID] = 1;
 			if (bitsID[0][att][buck] != -1)
-				Util::bitsetOr(b, bits[0][att][bitsID[0][att][buck]]);
+#if BlockSize == 64
+            b |= bits[0][att][bitsID[0][att][buck]];
+#else
+            Util::bitsetOr(b, bits[0][att][bitsID[0][att][buck]]);
+#endif
 		}
 
 		if (doubleReverse[1][att][buck])
@@ -478,7 +486,11 @@ void HEM5_avxOR::match(const Pub& pub, int& matchSubs)
 				+1, endBucket[1][att][buck]) _for(k, 0, data[1][att][j].size()) bLocal[data[1][att][j][k].subID] = 0;
 			_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val >= value)
 					bLocal[data[1][att][buck][k].subID] = 0;
-			Util::bitsetOr(b, bLocal);
+#if BlockSize == 64
+            b |= bLocal;
+#else
+            Util::bitsetOr(b, bLocal);
+#endif
 		}
 		else
 		{
@@ -486,34 +498,24 @@ void HEM5_avxOR::match(const Pub& pub, int& matchSubs)
 			_for(k, 0, data[1][att][buck].size()) if (data[1][att][buck][k].val < value)
 					b[data[1][att][buck][k].subID] = 1;
 			if (bitsID[1][att][buck] != -1)
-				Util::bitsetOr(b, bits[1][att][bitsID[1][att][buck]]);
+#if BlockSize == 64
+            	b |= bits[1][att][bitsID[1][att][buck]];
+#else
+            	Util::bitsetOr(b, bits[1][att][bitsID[1][att][buck]]);
+#endif
 		}
 	}
 
-	/*if (numBits > 1)
-	{*/
 	_for(i, 0, numDimension) if (!attExist[i])
-			Util::bitsetOr(b, fullBits[i]);
-	//}
-	//else // ֻ��һ������bitset����
-	//{
-	//	_for(i, 0, numDimension) if (!attExist[i])
-	//		_for(j, 0, endBucket[0][i][0])
-	//		for (auto&& kId : data[0][i][j])
-	//			b[kId.subID] = 1;
-	//	_for(i, 0, numDimension) if (!attExist[i])
-	//		Util::bitsetOr(b, bits[0][i][0]);
-	//}
+#if BlockSize == 64
+            b |= fullBits[i];
+#else
+            Util::bitsetOr(b, fullBits[i]);
+#endif
 
-	//_for(i, 0, subs) if (!b[i])
-	//{
-	//	++matchSubs;
-	//	//cout << "HEM5_avxOR matches sub: " << i << endl;
-	//}
 	matchSubs = numSub - b.count();
 }
 
-// ����ʱ�����?
 void HEM5_avxOR::match_debug(const Pub& pub, int& matchSubs)
 {
 	bitset<subs> b, bLocal;
@@ -541,7 +543,11 @@ void HEM5_avxOR::match_debug(const Pub& pub, int& matchSubs)
 					bLocal[data[0][att][buck][k].subID] = 0;
 			compareTime += (double)compareStart.elapsed_nano();
 			Timer orStart;
-			Util::bitsetOr(b, bLocal);
+#if BlockSize == 64
+            b |= bLocal;
+#else
+            Util::bitsetOr(b, bLocal);
+#endif
 			orTime += (double)orStart.elapsed_nano();
 		}
 		else
@@ -556,7 +562,11 @@ void HEM5_avxOR::match_debug(const Pub& pub, int& matchSubs)
 			compareTime += (double)compareStart.elapsed_nano();
 			Timer orStart;
 			if (bitsID[0][att][buck] != -1)
-				Util::bitsetOr(b, bits[0][att][bitsID[0][att][buck]]);
+#if BlockSize == 64
+            	b |= bits[0][att][bitsID[0][att][buck]];
+#else
+            	Util::bitsetOr(b, bits[0][att][bitsID[0][att][buck]]);
+#endif
 			orTime += (double)orStart.elapsed_nano();
 		}
 
@@ -575,7 +585,11 @@ void HEM5_avxOR::match_debug(const Pub& pub, int& matchSubs)
 					bLocal[data[1][att][buck][k].subID] = 0;
 			compareTime += (double)compareStart.elapsed_nano();
 			Timer orStart;
-			Util::bitsetOr(b, bLocal);
+#if BlockSize == 64
+            b |= bLocal;
+#else
+            Util::bitsetOr(b, bLocal);
+#endif
 			orTime += (double)orStart.elapsed_nano();
 		}
 		else
@@ -589,28 +603,23 @@ void HEM5_avxOR::match_debug(const Pub& pub, int& matchSubs)
 			compareTime += (double)compareStart.elapsed_nano();
 			Timer orStart;
 			if (bitsID[1][att][buck] != -1)
-				Util::bitsetOr(b, bits[1][att][bitsID[1][att][buck]]);
+#if BlockSize == 64
+            	b |= bits[1][att][bitsID[1][att][buck]];
+#else
+            	Util::bitsetOr(b, bits[1][att][bitsID[1][att][buck]]);
+#endif
 			orTime += (double)orStart.elapsed_nano();
 		}
 	}
 
-	//if (numBits > 1) {
 	Timer orStart;
 	_for(i, 0, numDimension) if (!attExist[i])
-			Util::bitsetOr(b, fullBits[i]);
+#if BlockSize == 64
+            b |= fullBits[i];
+#else
+            Util::bitsetOr(b, fullBits[i]);
+#endif
 	orTime += (double)orStart.elapsed_nano();
-	/*}
-	else {
-		Timer markStart;
-		_for(i, 0, numDimension) if (!attExist[i])
-			_for(j, 0, endBucket[0][i][0]) _for(k, 0, data[0][i][j].size()) b[data[0][i][j][k].subID] = 1;
-		markTime += (double)markStart.elapsed_nano();
-
-		Timer orStart;
-		_for(i, 0, numDimension) if (!attExist[i])
-			Util::bitsetOr(b, bits[0][i][0]);
-		orTime += (double)orStart.elapsed_nano();
-	}*/
 
 	Timer bitStart;
 	//	_for(i, 0, subs) if (!b[i]) {
@@ -639,7 +648,7 @@ int HEM5_avxOR::calMemory()
 	long long size = 0; // Byte
 	_for(i, 0, numDimension)
 	{
-		// ��ÿ��ά����bits�������һ������? 2*sizeof(bitset<subs>)*numDimension*numBits
+		// ��ÿ��ά����bits�������һ������? 2*sizeof(bitset<subs>)*numDimension*numBits
 		size += sizeof(bitset<subs>) * (bits[0][i].size() + bits[1][i].size());
 		_for(j, 0, numBucket) size += sizeof(Combo) * (data[0][i][j].size() + data[1][i][j].size());
 	}
