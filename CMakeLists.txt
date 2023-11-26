@@ -28,7 +28,7 @@ find_package(Threads REQUIRED)
 #SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++0x")
 #set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3" )
 LINK_LIBRARIES(m)
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -march=native -mavx2  -O3 -pthread ") #-mavx2  -static -L /usr/local/lib/  -lboost_system -lboost_thread -lpthread  -g  -DDEBUG -mavx512bw -mavx512vl -mavx512f -mavx512cd -mavx512dq -msse -lboost_thread -lboost_system -std=c++2a
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -g -march=native -mavx2  -O3 -pthread ") #-mavx2  -static -L /usr/local/lib/  -lboost_system -lboost_thread -lpthread  -g  -DDEBUG -mavx512bw -mavx512vl -mavx512f -mavx512cd -mavx512dq -msse -lboost_thread -lboost_system -std=c++2a
 #set(CMAKE_C_STANDARD 17)
 #set(CMAKE_CXX_FLAGS_DEBUG “${CMAKE_CXX_FLAGS_DEBUG} -O0”)
 #set(CMAKE_C_FLAGS_DEBUG “${CMAKE_C_FLAGS_DEBUG} -O0”)

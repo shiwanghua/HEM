@@ -1,7 +1,7 @@
 #include "run_models.h"
 
 // ԭʼ����Rein
-void run_rein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_rein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	Rein rein(OriginalRein);
 
@@ -25,7 +25,7 @@ void run_rein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 	// ��֤����ɾ����ȷ��
 	if (verifyID)
 	{
-		for (auto&& kv : deleteNo)
+		for (auto &&kv : deleteNo)
 		{
 			Timer deleteStart;
 			if (!rein.deleteSubscription_backward_original(gen.subList[kv.first]))
@@ -64,33 +64,7 @@ void run_rein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 
 	// output
 	string outputFileName = "Rein.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(rein.calMemory_backward_original())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(rein.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(rein.markTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(rein.bitTime / pubs / 1000000)
-					 + " ms pD= " + to_string(parallelDegree)
-					 + " avx= " + to_string(BlockSize)
-					 + " numBuk= " + Util::Int2String(rein.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(rein.calMemory_backward_original()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgCmpTime= " + to_string(rein.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(rein.markTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(rein.bitTime / pubs / 1000000) + " ms pD= " + to_string(parallelDegree) + " avx= " + to_string(BlockSize) + " numBuk= " + Util::Int2String(rein.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -101,22 +75,22 @@ void run_rein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 #endif
 
-	//outputFileName = "ReinBucketSize.txt";
-	//rein.calBucketSize();
-	//content = expID + " numBucket= " + Util::Int2String(rein.numBucket)
+	// outputFileName = "ReinBucketSize.txt";
+	// rein.calBucketSize();
+	// content = expID + " numBucket= " + Util::Int2String(rein.numBucket)
 	//	//+ " sumBukSetSize= " + to_string(accumulate(rein.bucketSub.begin(), rein.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
 	//	+ " maxBukSetSize= " + to_string((*max_element(rein.bucketSub.begin(), rein.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
 	//	+ " minBukSetSize= " + to_string(min_element(rein.bucketSub.begin(), rein.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
 	//_for(i, 0, rein.numBucket)
 	//	content += " " + to_string(rein.bucketSub[i].size());
-	//Util::WriteData2Begin(outputFileName.c_str(), content);
+	// Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "tmpData/Rein.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_rein_forward_native(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_rein_forward_native(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	Rein fRein(ForwardRein);
 
@@ -178,31 +152,7 @@ void run_rein_forward_native(const intervalGenerator& gen, unordered_map<int, bo
 
 	// output
 	string outputFileName = "fRein.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(fRein.calMemory_forward_native())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(fRein.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(fRein.markTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(fRein.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(fRein.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(fRein.calMemory_forward_native()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgCmpTime= " + to_string(fRein.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(fRein.markTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(fRein.bitTime / pubs / 1000000) + " ms numBuk= " + Util::Int2String(fRein.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -213,22 +163,22 @@ void run_rein_forward_native(const intervalGenerator& gen, unordered_map<int, bo
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 #endif
 
-	//outputFileName = "ReinBucketSize.txt";
-	//rein.calBucketSize();
-	//content = expID + " numBucket= " + Util::Int2String(rein.numBucket)
+	// outputFileName = "ReinBucketSize.txt";
+	// rein.calBucketSize();
+	// content = expID + " numBucket= " + Util::Int2String(rein.numBucket)
 	//	//+ " sumBukSetSize= " + to_string(accumulate(rein.bucketSub.begin(), rein.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
 	//	+ " maxBukSetSize= " + to_string((*max_element(rein.bucketSub.begin(), rein.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
 	//	+ " minBukSetSize= " + to_string(min_element(rein.bucketSub.begin(), rein.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
 	//_for(i, 0, fRein.numBucket)
 	//	content += " " + to_string(rein.bucketSub[i].size());
-	//Util::WriteData2Begin(outputFileName.c_str(), content);
+	// Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "tmpData/fRein.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_rein_forward_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_rein_forward_CBOMP(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	Rein fRein_c(ForwardRein_CBOMP);
 
@@ -290,31 +240,7 @@ void run_rein_forward_CBOMP(const intervalGenerator& gen, unordered_map<int, boo
 
 	// output
 	string outputFileName = "fRein_C.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(fRein_c.calMemory_forward_CBOMP())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(fRein_c.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(fRein_c.markTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(fRein_c.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(fRein_c.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(fRein_c.calMemory_forward_CBOMP()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgCmpTime= " + to_string(fRein_c.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(fRein_c.markTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(fRein_c.bitTime / pubs / 1000000) + " ms numBuk= " + Util::Int2String(fRein_c.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -330,7 +256,7 @@ void run_rein_forward_CBOMP(const intervalGenerator& gen, unordered_map<int, boo
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_rein_hybrid(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_rein_hybrid(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	Rein hRein(HybridRein);
 
@@ -390,32 +316,7 @@ void run_rein_hybrid(const intervalGenerator& gen, unordered_map<int, bool> dele
 
 	// output
 	string outputFileName = "hRein.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(hRein.calMemory_hybrid_native())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(hRein.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(hRein.markTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(hRein.bitTime / pubs / 1000000)
-					 + " ms Ppoint= " + to_string(awRein_Ppoint)
-					 + " numBuk= " + Util::Int2String(hRein.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(hRein.calMemory_hybrid_native()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgCmpTime= " + to_string(hRein.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(hRein.markTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hRein.bitTime / pubs / 1000000) + " ms Ppoint= " + to_string(awRein_Ppoint) + " numBuk= " + Util::Int2String(hRein.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -431,7 +332,7 @@ void run_rein_hybrid(const intervalGenerator& gen, unordered_map<int, bool> dele
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_rein_hybrid_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_rein_hybrid_CBOMP(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	Rein hRein_c(HybridRein_CBOMP);
 
@@ -493,32 +394,7 @@ void run_rein_hybrid_CBOMP(const intervalGenerator& gen, unordered_map<int, bool
 
 	// output
 	string outputFileName = "hRein_c.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(hRein_c.calMemory_hybrid_CBOMP())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(hRein_c.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(hRein_c.markTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(hRein_c.bitTime / pubs / 1000000)
-					 + " ms Ppoint= " + to_string(awRein_Ppoint)
-					 + " numBuk= " + Util::Int2String(hRein_c.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(hRein_c.calMemory_hybrid_CBOMP()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgCmpTime= " + to_string(hRein_c.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(hRein_c.markTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hRein_c.bitTime / pubs / 1000000) + " ms Ppoint= " + to_string(awRein_Ppoint) + " numBuk= " + Util::Int2String(hRein_c.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -534,7 +410,7 @@ void run_rein_hybrid_CBOMP(const intervalGenerator& gen, unordered_map<int, bool
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_rein_forward_PGWO(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_rein_forward_PGWO(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	Rein fRein_pgwo(ForwardRein_PGWO);
 
@@ -595,31 +471,7 @@ void run_rein_forward_PGWO(const intervalGenerator& gen, unordered_map<int, bool
 
 	// output
 	string outputFileName = "fRein_pgwo.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(fRein_pgwo.calMemory_forward_native())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(fRein_pgwo.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(fRein_pgwo.markTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(fRein_pgwo.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(fRein_pgwo.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(fRein_pgwo.calMemory_forward_native()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgCmpTime= " + to_string(fRein_pgwo.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(fRein_pgwo.markTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(fRein_pgwo.bitTime / pubs / 1000000) + " ms numBuk= " + Util::Int2String(fRein_pgwo.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -635,7 +487,7 @@ void run_rein_forward_PGWO(const intervalGenerator& gen, unordered_map<int, bool
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_rein_forward_PGWO_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_rein_forward_PGWO_CBOMP(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	Rein fRein_pgwo_c(ForwardRein_PGWO_CBOMP);
 
@@ -695,31 +547,7 @@ void run_rein_forward_PGWO_CBOMP(const intervalGenerator& gen, unordered_map<int
 
 	// output
 	string outputFileName = "fRein_pgwo_c.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(fRein_pgwo_c.calMemory_forward_CBOMP())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(fRein_pgwo_c.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(fRein_pgwo_c.markTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(fRein_pgwo_c.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(fRein_pgwo_c.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(fRein_pgwo_c.calMemory_forward_CBOMP()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgCmpTime= " + to_string(fRein_pgwo_c.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(fRein_pgwo_c.markTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(fRein_pgwo_c.bitTime / pubs / 1000000) + " ms numBuk= " + Util::Int2String(fRein_pgwo_c.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -735,7 +563,7 @@ void run_rein_forward_PGWO_CBOMP(const intervalGenerator& gen, unordered_map<int
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_rein_hybrid_PGWO(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_rein_hybrid_PGWO(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	Rein hRein_pgwo(HybridRein_PGWO);
 
@@ -796,32 +624,7 @@ void run_rein_hybrid_PGWO(const intervalGenerator& gen, unordered_map<int, bool>
 
 	// output
 	string outputFileName = "hRein_pgwo.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(hRein_pgwo.calMemory_hybrid_native())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(hRein_pgwo.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(hRein_pgwo.markTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(hRein_pgwo.bitTime / pubs / 1000000)
-					 + " ms Ppoint= " + to_string(awRein_Ppoint)
-					 + " numBuk= " + Util::Int2String(hRein_pgwo.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(hRein_pgwo.calMemory_hybrid_native()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgCmpTime= " + to_string(hRein_pgwo.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(hRein_pgwo.markTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hRein_pgwo.bitTime / pubs / 1000000) + " ms Ppoint= " + to_string(awRein_Ppoint) + " numBuk= " + Util::Int2String(hRein_pgwo.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -837,7 +640,7 @@ void run_rein_hybrid_PGWO(const intervalGenerator& gen, unordered_map<int, bool>
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_rein_hybrid_PGWO_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_rein_hybrid_PGWO_CBOMP(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	Rein hRein_pgwo_c(HybridRein_PGWO_CBOMP);
 
@@ -898,32 +701,7 @@ void run_rein_hybrid_PGWO_CBOMP(const intervalGenerator& gen, unordered_map<int,
 
 	// output
 	string outputFileName = "hRein_pgwo_c.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(hRein_pgwo_c.calMemory_hybrid_CBOMP())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(hRein_pgwo_c.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(hRein_pgwo_c.markTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(hRein_pgwo_c.bitTime / pubs / 1000000)
-					 + " ms Ppoint= " + to_string(awRein_Ppoint)
-					 + " numBuk= " + Util::Int2String(hRein_pgwo_c.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(hRein_pgwo_c.calMemory_hybrid_CBOMP()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgCmpTime= " + to_string(hRein_pgwo_c.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(hRein_pgwo_c.markTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hRein_pgwo_c.bitTime / pubs / 1000000) + " ms Ppoint= " + to_string(awRein_Ppoint) + " numBuk= " + Util::Int2String(hRein_pgwo_c.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -939,8 +717,8 @@ void run_rein_hybrid_PGWO_CBOMP(const intervalGenerator& gen, unordered_map<int,
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_rein_forward_DMFT(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
-{                 // REIN-F
+void run_rein_forward_DMFT(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
+{ // REIN-F
 	Rein rein_F(Forward_DMFT_REIN);
 
 	vector<double> insertTimeList;
@@ -962,7 +740,7 @@ void run_rein_forward_DMFT(const intervalGenerator& gen, unordered_map<int, bool
 
 	if (verifyID)
 	{
-		for (auto&& kv : deleteNo)
+		for (auto &&kv : deleteNo)
 		{
 			Timer deleteStart;
 			if (!rein_F.deleteSubscription_forward_DMFT_REIN(gen.subList[kv.first]))
@@ -1001,31 +779,7 @@ void run_rein_forward_DMFT(const intervalGenerator& gen, unordered_map<int, bool
 
 	// output
 	string outputFileName = "Rein_F_DMFT.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(rein_F.calMemory_forward_DMFT_REIN())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(rein_F.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(rein_F.markTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(rein_F.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(rein_F.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(rein_F.calMemory_forward_DMFT_REIN()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgCmpTime= " + to_string(rein_F.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(rein_F.markTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(rein_F.bitTime / pubs / 1000000) + " ms numBuk= " + Util::Int2String(rein_F.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -1041,8 +795,8 @@ void run_rein_forward_DMFT(const intervalGenerator& gen, unordered_map<int, bool
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_rein_backward_DMFT(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
-{            // fREIN-C-B
+void run_rein_backward_DMFT(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
+{ // fREIN-C-B
 	Rein fRein_c_b(Backward_DMFT_fREIN_CBOMP);
 
 	vector<double> insertTimeList;
@@ -1102,31 +856,7 @@ void run_rein_backward_DMFT(const intervalGenerator& gen, unordered_map<int, boo
 
 	// output
 	string outputFileName = "fRein_C_B.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(fRein_c_b.calMemory_forward_CBOMP())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(fRein_c_b.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(fRein_c_b.markTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(fRein_c_b.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(fRein_c_b.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(fRein_c_b.calMemory_forward_CBOMP()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgCmpTime= " + to_string(fRein_c_b.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(fRein_c_b.markTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(fRein_c_b.bitTime / pubs / 1000000) + " ms numBuk= " + Util::Int2String(fRein_c_b.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -1143,7 +873,7 @@ void run_rein_backward_DMFT(const intervalGenerator& gen, unordered_map<int, boo
 }
 
 // parallel Rein
-void run_pRein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_pRein(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	pRein prein;
 
@@ -1182,7 +912,7 @@ void run_pRein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 	}
 
 	// match
-//#pragma omp parallel for schedule(static, 5) num_threads(4) default(none) shared(prein,gen.pubList,matchTimeList,matchSubList) private(stdout) //dynamic
+	// #pragma omp parallel for schedule(static, 5) num_threads(4) default(none) shared(prein,gen.pubList,matchTimeList,matchSubList) private(stdout) //dynamic
 	for (int i = 0; i < pubs; i++)
 	{
 		int matchSubs = 0; // Record the number of matched subscriptions.
@@ -1202,31 +932,7 @@ void run_pRein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 
 	// output
 	string outputFileName = "pRein.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(prein.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms MergeTime= " + to_string(prein.mergeTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(prein.bitTime / pubs / 1000000)
-					 + " ms pD= " + to_string(parallelDegree)
-					 + " numBuk = " + Util::Int2String(prein.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(prein.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms MergeTime= " + to_string(prein.mergeTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(prein.bitTime / pubs / 1000000) + " ms pD= " + to_string(parallelDegree) + " numBuk = " + Util::Int2String(prein.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -1243,7 +949,7 @@ void run_pRein(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 }
 
 // ����ӦRein
-void run_AdaRein_ORI(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_AdaRein_ORI(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	AdaRein adarein(AdaRein_ORI);
 
@@ -1303,33 +1009,15 @@ void run_AdaRein_ORI(const intervalGenerator& gen, unordered_map<int, bool> dele
 	}
 
 #ifdef DEBUG
-	cout << "falseMatchNum= " << Util::Average(matchSubList) << ", realFalsePositiveRate= " \
- << 1 - realMatchNum / Util::Average(matchSubList) << ", matchTime= " \
- << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
+	cout << "falseMatchNum= " << Util::Average(matchSubList) << ", realFalsePositiveRate= "
+		 << 1 - realMatchNum / Util::Average(matchSubList) << ", matchTime= "
+		 << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
 #endif
 	cout << "\n";
 	// output
 	string outputFileName = "AdaRein_ORI.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(adarein.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms maxSkipPre= " + Util::Int2String(adarein.maxSkipPredicate)
-					 + " fPR= " + Util::Double2String(falsePositiveRate)
-					 + " realfPR= " + Util::Double2String(1 - realMatchNum / Util::Average(matchSubList))
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(adarein.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms maxSkipPre= " + Util::Int2String(adarein.maxSkipPredicate) + " fPR= " + Util::Double2String(falsePositiveRate) + " realfPR= " + Util::Double2String(1 - realMatchNum / Util::Average(matchSubList)) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -1345,7 +1033,7 @@ void run_AdaRein_ORI(const intervalGenerator& gen, unordered_map<int, bool> dele
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_AdaRein_SSS(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_AdaRein_SSS(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	AdaRein adarein_sss(AdaRein_SSS);
 
@@ -1405,33 +1093,15 @@ void run_AdaRein_SSS(const intervalGenerator& gen, unordered_map<int, bool> dele
 	}
 
 #ifdef DEBUG
-	cout << "falseMatchNum= " << Util::Average(matchSubList) << ", realFalsePositiveRate= " \
- << 1 - realMatchNum / Util::Average(matchSubList) << ", matchTime= " \
- << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
+	cout << "falseMatchNum= " << Util::Average(matchSubList) << ", realFalsePositiveRate= "
+		 << 1 - realMatchNum / Util::Average(matchSubList) << ", matchTime= "
+		 << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
 #endif
 	cout << "\n";
 	// output
 	string outputFileName = "AdaRein_SSS.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(adarein_sss.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms maxSkipPre= " + Util::Int2String(adarein_sss.maxSkipPredicate)
-					 + " fPR= " + Util::Double2String(falsePositiveRate)
-					 + " realfPR= " + Util::Double2String(1 - realMatchNum / Util::Average(matchSubList))
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(adarein_sss.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms maxSkipPre= " + Util::Int2String(adarein_sss.maxSkipPredicate) + " fPR= " + Util::Double2String(falsePositiveRate) + " realfPR= " + Util::Double2String(1 - realMatchNum / Util::Average(matchSubList)) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -1447,7 +1117,7 @@ void run_AdaRein_SSS(const intervalGenerator& gen, unordered_map<int, bool> dele
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_AdaRein_SSS_B(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_AdaRein_SSS_B(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	AdaRein adarein_sss_b(AdaRein_SSS_B);
 
@@ -1507,33 +1177,15 @@ void run_AdaRein_SSS_B(const intervalGenerator& gen, unordered_map<int, bool> de
 	}
 
 #ifdef DEBUG
-	cout << "falseMatchNum= " << Util::Average(matchSubList) << ", realFalsePositiveRate= " \
- << 1 - realMatchNum / Util::Average(matchSubList) << ", matchTime= " \
- << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
+	cout << "falseMatchNum= " << Util::Average(matchSubList) << ", realFalsePositiveRate= "
+		 << 1 - realMatchNum / Util::Average(matchSubList) << ", matchTime= "
+		 << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
 #endif
 	cout << "\n";
 	// output
 	string outputFileName = "AdaRein_SSS_B.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(adarein_sss_b.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms maxSkipPre= " + Util::Int2String(adarein_sss_b.maxSkipPredicate)
-					 + " fPR= " + Util::Double2String(falsePositiveRate)
-					 + " realfPR= " + Util::Double2String(1 - realMatchNum / Util::Average(matchSubList))
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(adarein_sss_b.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms maxSkipPre= " + Util::Int2String(adarein_sss_b.maxSkipPredicate) + " fPR= " + Util::Double2String(falsePositiveRate) + " realfPR= " + Util::Double2String(1 - realMatchNum / Util::Average(matchSubList)) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -1549,7 +1201,7 @@ void run_AdaRein_SSS_B(const intervalGenerator& gen, unordered_map<int, bool> de
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_AdaRein_SSS_C(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_AdaRein_SSS_C(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	AdaRein adarein_sss_c(AdaRein_SSS_C);
 
@@ -1609,33 +1261,15 @@ void run_AdaRein_SSS_C(const intervalGenerator& gen, unordered_map<int, bool> de
 	}
 
 #ifdef DEBUG
-	cout << "falseMatchNum= " << Util::Average(matchSubList) << ", realFalsePositiveRate= " \
- << 1 - realMatchNum / Util::Average(matchSubList) << ", matchTime= " \
- << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
+	cout << "falseMatchNum= " << Util::Average(matchSubList) << ", realFalsePositiveRate= "
+		 << 1 - realMatchNum / Util::Average(matchSubList) << ", matchTime= "
+		 << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
 #endif
 	cout << "\n";
 	// output
 	string outputFileName = "AdaRein_SSS_C.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(adarein_sss_c.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms maxSkipPre= " + Util::Int2String(adarein_sss_c.maxSkipPredicate)
-					 + " fPR= " + Util::Double2String(falsePositiveRate)
-					 + " realfPR= " + Util::Double2String(1 - realMatchNum / Util::Average(matchSubList))
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(adarein_sss_c.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms maxSkipPre= " + Util::Int2String(adarein_sss_c.maxSkipPredicate) + " fPR= " + Util::Double2String(falsePositiveRate) + " realfPR= " + Util::Double2String(1 - realMatchNum / Util::Average(matchSubList)) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -1651,7 +1285,7 @@ void run_AdaRein_SSS_C(const intervalGenerator& gen, unordered_map<int, bool> de
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_AdaRein_SSS_C_W(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_AdaRein_SSS_C_W(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	AdaRein adarein_sss_c_w(AdaRein_SSS_C_W);
 
@@ -1713,34 +1347,15 @@ void run_AdaRein_SSS_C_W(const intervalGenerator& gen, unordered_map<int, bool> 
 	double falseAvgMatchNum = Util::Average(matchSubList);
 
 #ifdef DEBUG
-	cout << "falseMatchNum= " << falseAvgMatchNum << ", realFalsePositiveRate= " \
- << 1 - realMatchNum / falseAvgMatchNum << ", matchTime= " \
- << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
+	cout << "falseMatchNum= " << falseAvgMatchNum << ", realFalsePositiveRate= "
+		 << 1 - realMatchNum / falseAvgMatchNum << ", matchTime= "
+		 << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
 #endif
 	cout << "\n";
 	// output
 	string outputFileName = "AdaRein_SSS_C_W.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(adarein_sss_c_w.calMemory_sss_c_w())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms level= " + Util::Int2String(adarein_level)
-					 + " maxSkipPre= " + Util::Int2String(adarein_sss_c_w.maxSkipPredicate)
-					 + " fPR= " + Util::Double2String(falsePositiveRate)
-					 + " realfPR= " + Util::Double2String(1 - realMatchNum / falseAvgMatchNum)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(adarein_sss_c_w.calMemory_sss_c_w()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms level= " + Util::Int2String(adarein_level) + " maxSkipPre= " + Util::Int2String(adarein_sss_c_w.maxSkipPredicate) + " fPR= " + Util::Double2String(falsePositiveRate) + " realfPR= " + Util::Double2String(1 - realMatchNum / falseAvgMatchNum) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -1756,7 +1371,7 @@ void run_AdaRein_SSS_C_W(const intervalGenerator& gen, unordered_map<int, bool> 
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_pAdaRein_SSS_C_W(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_pAdaRein_SSS_C_W(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	AdaRein padarein_sss_c_w(pAdaRein_SSS_C_W);
 
@@ -1818,35 +1433,15 @@ void run_pAdaRein_SSS_C_W(const intervalGenerator& gen, unordered_map<int, bool>
 	double falseAvgMatchNum = Util::Average(matchSubList);
 
 #ifdef DEBUG
-	cout << "falseMatchNum= " << falseAvgMatchNum << ", realFalsePositiveRate= " \
- << 1 - realMatchNum / falseAvgMatchNum << ", matchTime= " \
- << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
+	cout << "falseMatchNum= " << falseAvgMatchNum << ", realFalsePositiveRate= "
+		 << 1 - realMatchNum / falseAvgMatchNum << ", matchTime= "
+		 << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
 #endif
 	cout << "\n";
 	// output
 	string outputFileName = "pAdaRein_SSS_C_W.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(padarein_sss_c_w.calMemory_sss_c_w())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms level= " + Util::Int2String(adarein_level)
-					 + " pD= " + Util::Int2String(parallelDegree)
-					 + " maxSkipPre= " + Util::Int2String(padarein_sss_c_w.maxSkipPredicate)
-					 + " fPR= " + Util::Double2String(falsePositiveRate)
-					 + " realfPR= " + Util::Double2String(1 - realMatchNum / falseAvgMatchNum)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(padarein_sss_c_w.calMemory_sss_c_w()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms level= " + Util::Int2String(adarein_level) + " pD= " + Util::Int2String(parallelDegree) + " maxSkipPre= " + Util::Int2String(padarein_sss_c_w.maxSkipPredicate) + " fPR= " + Util::Double2String(falsePositiveRate) + " realfPR= " + Util::Double2String(1 - realMatchNum / falseAvgMatchNum) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -1862,7 +1457,7 @@ void run_pAdaRein_SSS_C_W(const intervalGenerator& gen, unordered_map<int, bool>
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_p2AdaRein_SSS_C_W(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_p2AdaRein_SSS_C_W(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	AdaRein p2adarein_sss_c_w(p2AdaRein_SSS_C_W);
 
@@ -1924,35 +1519,15 @@ void run_p2AdaRein_SSS_C_W(const intervalGenerator& gen, unordered_map<int, bool
 	double falseAvgMatchNum = Util::Average(matchSubList);
 
 #ifdef DEBUG
-	cout << "falseMatchNum= " << falseAvgMatchNum << ", realFalsePositiveRate= " \
- << 1 - realMatchNum / falseAvgMatchNum << ", matchTime= " \
- << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
+	cout << "falseMatchNum= " << falseAvgMatchNum << ", realFalsePositiveRate= "
+		 << 1 - realMatchNum / falseAvgMatchNum << ", matchTime= "
+		 << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
 #endif
 	cout << "\n";
 	// output
 	string outputFileName = "p2AdaRein_SSS_C_W.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(p2adarein_sss_c_w.calMemory_sss_c_w())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms level= " + Util::Int2String(adarein_level)
-					 + " pD= " + Util::Int2String(parallelDegree)
-					 + " maxSkipPre= " + Util::Int2String(p2adarein_sss_c_w.maxSkipPredicate)
-					 + " fPR= " + Util::Double2String(falsePositiveRate)
-					 + " realfPR= " + Util::Double2String(1 - realMatchNum / falseAvgMatchNum)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(p2adarein_sss_c_w.calMemory_sss_c_w()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms level= " + Util::Int2String(adarein_level) + " pD= " + Util::Int2String(parallelDegree) + " maxSkipPre= " + Util::Int2String(p2adarein_sss_c_w.maxSkipPredicate) + " fPR= " + Util::Double2String(falsePositiveRate) + " realfPR= " + Util::Double2String(1 - realMatchNum / falseAvgMatchNum) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -1968,7 +1543,7 @@ void run_p2AdaRein_SSS_C_W(const intervalGenerator& gen, unordered_map<int, bool
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_AdaRein_DSS_W(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_AdaRein_DSS_W(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	AdaRein adarein_dss_w(AdaRein_DSS_W);
 
@@ -2028,44 +1603,22 @@ void run_AdaRein_DSS_W(const intervalGenerator& gen, unordered_map<int, bool> de
 	}
 
 #ifdef DEBUG
-	cout << "numSkipPredicate= " << adarein_dss_w.numSkipPredicateInTotal / pubs \
- << ", numSkipAttr= " << adarein_dss_w.numSkipAttsInTotal / pubs \
- << ", totalSkipBkt= " << adarein_dss_w.numSkipAttsInTotal / pubs << "*2*" << buks << " + "
-		 << adarein_dss_w.numSkipBuckInTotal / pubs \
- << " = " << adarein_dss_w.numSkipAttsInTotal / pubs * 2 * buks + adarein_dss_w.numSkipBuckInTotal / pubs \
- << " among " << atts * 2 * buks << " buckets.\n"\
- << "falseMatchNum= " << Util::Average(matchSubList) \
- << ", realFalsePositiveRate= " << 1 - realMatchNum / Util::Average(matchSubList)
+	cout << "numSkipPredicate= " << adarein_dss_w.numSkipPredicateInTotal / pubs
+		 << ", numSkipAttr= " << adarein_dss_w.numSkipAttsInTotal / pubs
+		 << ", totalSkipBkt= " << adarein_dss_w.numSkipAttsInTotal / pubs << "*2*" << buks << " + "
+		 << adarein_dss_w.numSkipBuckInTotal / pubs
+		 << " = " << adarein_dss_w.numSkipAttsInTotal / pubs * 2 * buks + adarein_dss_w.numSkipBuckInTotal / pubs
+		 << " among " << atts * 2 * buks << " buckets.\n"
+		 << "falseMatchNum= " << Util::Average(matchSubList)
+		 << ", realFalsePositiveRate= " << 1 - realMatchNum / Util::Average(matchSubList)
 		 << ", matchTime= " << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
 #endif
 	cout << "\n";
 
 	// output
 	string outputFileName = "AdaRein_DSS_W.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(adarein_dss_w.calMemory_dss_w())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms level= " + Util::Int2String(adarein_level)
-					 + " maxSkipPre= " + Util::Int2String(adarein_dss_w.maxSkipPredicate)
-					 + " numSkipPre= " + Util::Int2String((int)(adarein_dss_w.numSkipPredicateInTotal / pubs))
-					 + " numSkipBkt= " + Util::Int2String((int)(adarein_dss_w.numSkipBuckInTotal / pubs))
-					 + " numSkipAtt= " + Util::Int2String((int)(adarein_dss_w.numSkipAttsInTotal / pubs))
-					 + " fPR= " + Util::Double2String(falsePositiveRate)
-					 + " realfPR= " + Util::Double2String(1 - realMatchNum / Util::Average(matchSubList))
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(adarein_dss_w.calMemory_dss_w()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms level= " + Util::Int2String(adarein_level) + " maxSkipPre= " + Util::Int2String(adarein_dss_w.maxSkipPredicate) + " numSkipPre= " + Util::Int2String((int)(adarein_dss_w.numSkipPredicateInTotal / pubs)) + " numSkipBkt= " + Util::Int2String((int)(adarein_dss_w.numSkipBuckInTotal / pubs)) + " numSkipAtt= " + Util::Int2String((int)(adarein_dss_w.numSkipAttsInTotal / pubs)) + " fPR= " + Util::Double2String(falsePositiveRate) + " realfPR= " + Util::Double2String(1 - realMatchNum / Util::Average(matchSubList)) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -2081,7 +1634,7 @@ void run_AdaRein_DSS_W(const intervalGenerator& gen, unordered_map<int, bool> de
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_AdaRein_DSS_B(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_AdaRein_DSS_B(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	AdaRein adarein_dss_b(AdaRein_DSS_B);
 
@@ -2141,43 +1694,22 @@ void run_AdaRein_DSS_B(const intervalGenerator& gen, unordered_map<int, bool> de
 	}
 
 #ifdef DEBUG
-	cout << "numSkipPredicate= " << adarein_dss_b.numSkipPredicateInTotal / pubs \
- << ", numSkipAttr= " << adarein_dss_b.numSkipAttsInTotal / pubs \
- << ", totalSkipBkt= " << adarein_dss_b.numSkipAttsInTotal / pubs << "*2*" << buks << " + "
-		 << adarein_dss_b.numSkipBuckInTotal / pubs \
- << " = " << adarein_dss_b.numSkipAttsInTotal / pubs * 2 * buks + adarein_dss_b.numSkipBuckInTotal / pubs \
- << " among " << atts * 2 * buks << " buckets.\n"\
- << "\nfalseMatchNum= " << Util::Average(matchSubList) \
- << ", realFalsePositiveRate= " << 1 - realMatchNum / Util::Average(matchSubList)
+	cout << "numSkipPredicate= " << adarein_dss_b.numSkipPredicateInTotal / pubs
+		 << ", numSkipAttr= " << adarein_dss_b.numSkipAttsInTotal / pubs
+		 << ", totalSkipBkt= " << adarein_dss_b.numSkipAttsInTotal / pubs << "*2*" << buks << " + "
+		 << adarein_dss_b.numSkipBuckInTotal / pubs
+		 << " = " << adarein_dss_b.numSkipAttsInTotal / pubs * 2 * buks + adarein_dss_b.numSkipBuckInTotal / pubs
+		 << " among " << atts * 2 * buks << " buckets.\n"
+		 << "\nfalseMatchNum= " << Util::Average(matchSubList)
+		 << ", realFalsePositiveRate= " << 1 - realMatchNum / Util::Average(matchSubList)
 		 << ", matchTime= " << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
 #endif
 	cout << "\n";
 
 	// output
 	string outputFileName = "AdaRein_DSS_B.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(adarein_dss_b.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms maxSkipPre= " + Util::Int2String(adarein_dss_b.maxSkipPredicate)
-					 + " numSkipPre= " + Util::Int2String((int)(adarein_dss_b.numSkipPredicateInTotal / pubs))
-					 + " numSkipBkt= " + Util::Int2String((int)(adarein_dss_b.numSkipBuckInTotal / pubs))
-					 + " numSkipAtt= " + Util::Int2String((int)(adarein_dss_b.numSkipAttsInTotal / pubs))
-					 + " fPR= " + Util::Double2String(falsePositiveRate)
-					 + " realfPR= " + Util::Double2String(1 - realMatchNum / Util::Average(matchSubList))
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(adarein_dss_b.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms maxSkipPre= " + Util::Int2String(adarein_dss_b.maxSkipPredicate) + " numSkipPre= " + Util::Int2String((int)(adarein_dss_b.numSkipPredicateInTotal / pubs)) + " numSkipBkt= " + Util::Int2String((int)(adarein_dss_b.numSkipBuckInTotal / pubs)) + " numSkipAtt= " + Util::Int2String((int)(adarein_dss_b.numSkipAttsInTotal / pubs)) + " fPR= " + Util::Double2String(falsePositiveRate) + " realfPR= " + Util::Double2String(1 - realMatchNum / Util::Average(matchSubList)) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -2194,7 +1726,7 @@ void run_AdaRein_DSS_B(const intervalGenerator& gen, unordered_map<int, bool> de
 }
 
 // ����ģʽ
-void run_HEM(const intervalGenerator& gen)
+void run_HEM(const intervalGenerator &gen)
 {
 	HEM hem;
 
@@ -2229,7 +1761,7 @@ void run_HEM(const intervalGenerator& gen)
 		hem.match_debug(gen.pubList[i], matchSubs);
 #else
 		hem.match(gen.pubList[i], matchSubs);
-#endif // DEBUG
+#endif												   // DEBUG
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
@@ -2242,27 +1774,8 @@ void run_HEM(const intervalGenerator& gen)
 		hem.printRelation();
 	// output
 	string outputFileName = "HEM0.txt";
-	string content = expID
-					 + " bits= " + Util::Int2String(be == -1 ? be2 : be)
-					 + " memory= " + Util::Int2String(hem.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(hem.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(hem.markTime / pubs / 1000000)
-					 + " ms OrTime= " + to_string(hem.orTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(hem.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(hem.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType);
+	string content = expID + " bits= " + Util::Int2String(be == -1 ? be2 : be) + " memory= " + Util::Int2String(hem.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgCmpTime= " + to_string(hem.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(hem.markTime / pubs / 1000000) + " ms OrTime= " + to_string(hem.orTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hem.bitTime / pubs / 1000000) + " ms numBuk= " + Util::Int2String(hem.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -2273,15 +1786,15 @@ void run_HEM(const intervalGenerator& gen)
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 #endif // DEBUG
 
-	//outputFileName = "HEMBucketSize.txt";
-	//hem.calBucketSize();
-	//content = expID + " numBucket= " + Util::Int2String(hem.numBucket)
+	// outputFileName = "HEMBucketSize.txt";
+	// hem.calBucketSize();
+	// content = expID + " numBucket= " + Util::Int2String(hem.numBucket)
 	//	//+ " sumBukSetSize= " + to_string(accumulate(rein.bucketSub.begin(), rein.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
 	//	+ " maxBukSetSize= " + to_string((*max_element(hem.bucketSub.begin(), hem.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
 	//	+ " minBukSetSize= " + to_string(min_element(hem.bucketSub.begin(), hem.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
 	//_for(i, 0, hem.numBucket)
 	//	content += " " + to_string(hem.bucketSub[i].size());
-	//Util::WriteData2Begin(outputFileName.c_str(), content);
+	// Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "tmpData/HEM0.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
@@ -2289,7 +1802,7 @@ void run_HEM(const intervalGenerator& gen)
 }
 
 // ����ģʽ
-void run_HEM1(const intervalGenerator& gen)
+void run_HEM1(const intervalGenerator &gen)
 {
 	HEM1 hem1;
 
@@ -2324,7 +1837,7 @@ void run_HEM1(const intervalGenerator& gen)
 		hem1.match_debug(gen.pubList[i], matchSubs);
 #else
 		hem1.match(gen.pubList[i], matchSubs);
-#endif // DEBUG
+#endif												   // DEBUG
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
@@ -2338,27 +1851,8 @@ void run_HEM1(const intervalGenerator& gen)
 
 	// output
 	string outputFileName = "HEM1.txt";
-	string content = expID
-					 + " bits= " + Util::Int2String(be)
-					 + " memory= " + Util::Int2String(hem1.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(hem1.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(hem1.markTime / pubs / 1000000)
-					 + " ms OrTime= " + to_string(hem1.orTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(hem1.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(hem1.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType);
+	string content = expID + " bits= " + Util::Int2String(be) + " memory= " + Util::Int2String(hem1.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgCmpTime= " + to_string(hem1.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(hem1.markTime / pubs / 1000000) + " ms OrTime= " + to_string(hem1.orTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hem1.bitTime / pubs / 1000000) + " ms numBuk= " + Util::Int2String(hem1.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -2369,15 +1863,15 @@ void run_HEM1(const intervalGenerator& gen)
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 #endif // DEBUG
 
-	//outputFileName = "HEM1BucketSize.txt";
-	//hem.calBucketSize();
-	//content = expID + " numBucket= " + Util::Int2String(hem.numBucket)
+	// outputFileName = "HEM1BucketSize.txt";
+	// hem.calBucketSize();
+	// content = expID + " numBucket= " + Util::Int2String(hem.numBucket)
 	//	//+ " sumBukSetSize= " + to_string(accumulate(rein.bucketSub.begin(), rein.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
 	//	+ " maxBukSetSize= " + to_string((*max_element(hem.bucketSub.begin(), hem.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
 	//	+ " minBukSetSize= " + to_string(min_element(hem.bucketSub.begin(), hem.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
 	//_for(i, 0, hem.numBucket)
 	//	content += " " + to_string(hem.bucketSub[i].size());
-	//Util::WriteData2Begin(outputFileName.c_str(), content);
+	// Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "tmpData/HEM1.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
@@ -2385,7 +1879,7 @@ void run_HEM1(const intervalGenerator& gen)
 }
 
 // ����ģʽ
-void run_HEM2(const intervalGenerator& gen)
+void run_HEM2(const intervalGenerator &gen)
 {
 	HEM2 hem2;
 
@@ -2420,7 +1914,7 @@ void run_HEM2(const intervalGenerator& gen)
 		hem2.match_debug(gen.pubList[i], matchSubs);
 #else
 		hem2.match(gen.pubList[i], matchSubs);
-#endif // DEBUG
+#endif												   // DEBUG
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
@@ -2434,27 +1928,8 @@ void run_HEM2(const intervalGenerator& gen)
 
 	// output
 	string outputFileName = "HEM2.txt";
-	string content = expID
-					 + " bits= " + Util::Int2String(be)
-					 + " memory= " + Util::Int2String(hem2.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(hem2.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(hem2.markTime / pubs / 1000000)
-					 + " ms OrTime= " + to_string(hem2.orTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(hem2.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(hem2.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType);
+	string content = expID + " bits= " + Util::Int2String(be) + " memory= " + Util::Int2String(hem2.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgCmpTime= " + to_string(hem2.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(hem2.markTime / pubs / 1000000) + " ms OrTime= " + to_string(hem2.orTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hem2.bitTime / pubs / 1000000) + " ms numBuk= " + Util::Int2String(hem2.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -2465,15 +1940,15 @@ void run_HEM2(const intervalGenerator& gen)
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 #endif // DEBUG
 
-	//outputFileName = "HEM2BucketSize.txt";
-	//hem.calBucketSize();
-	//content = expID + " numBucket= " + Util::Int2String(hem.numBucket)
+	// outputFileName = "HEM2BucketSize.txt";
+	// hem.calBucketSize();
+	// content = expID + " numBucket= " + Util::Int2String(hem.numBucket)
 	//	//+ " sumBukSetSize= " + to_string(accumulate(rein.bucketSub.begin(), rein.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
 	//	+ " maxBukSetSize= " + to_string((*max_element(hem.bucketSub.begin(), hem.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
 	//	+ " minBukSetSize= " + to_string(min_element(hem.bucketSub.begin(), hem.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
 	//_for(i, 0, hem.numBucket)
 	//	content += " " + to_string(hem.bucketSub[i].size());
-	//Util::WriteData2Begin(outputFileName.c_str(), content);
+	// Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "tmpData/HEM2.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
@@ -2481,7 +1956,7 @@ void run_HEM2(const intervalGenerator& gen)
 }
 
 // ����ģʽ
-void run_HEM3(const intervalGenerator& gen)
+void run_HEM3(const intervalGenerator &gen)
 {
 	HEM3 hem3;
 
@@ -2516,7 +1991,7 @@ void run_HEM3(const intervalGenerator& gen)
 		hem3.match_debug(gen.pubList[i], matchSubs);
 #else
 		hem3.match(gen.pubList[i], matchSubs);
-#endif // DEBUG
+#endif												   // DEBUG
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
@@ -2530,27 +2005,8 @@ void run_HEM3(const intervalGenerator& gen)
 
 	// output
 	string outputFileName = "HEM3.txt";
-	string content = expID
-					 + " bits= " + Util::Int2String(be)
-					 + " memory= " + Util::Int2String(hem3.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(hem3.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(hem3.markTime / pubs / 1000000)
-					 + " ms OrTime= " + to_string(hem3.orTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(hem3.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(hem3.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType);
+	string content = expID + " bits= " + Util::Int2String(be) + " memory= " + Util::Int2String(hem3.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgCmpTime= " + to_string(hem3.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(hem3.markTime / pubs / 1000000) + " ms OrTime= " + to_string(hem3.orTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hem3.bitTime / pubs / 1000000) + " ms numBuk= " + Util::Int2String(hem3.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -2561,15 +2017,15 @@ void run_HEM3(const intervalGenerator& gen)
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 #endif // DEBUG
 
-	//outputFileName = "HEM3BucketSize.txt";
-	//hem.calBucketSize();
-	//content = expID + " numBucket= " + Util::Int2String(hem3.numBucket)
+	// outputFileName = "HEM3BucketSize.txt";
+	// hem.calBucketSize();
+	// content = expID + " numBucket= " + Util::Int2String(hem3.numBucket)
 	//	//+ " sumBukSetSize= " + to_string(accumulate(hem3.bucketSub.begin(), hem3.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
 	//	+ " maxBukSetSize= " + to_string((*max_element(hem3.bucketSub.begin(), hem3.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
 	//	+ " minBukSetSize= " + to_string(min_element(hem3.bucketSub.begin(), hem3.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
 	//_for(i, 0, hem3.numBucket)
 	//	content += " " + to_string(hem3.bucketSub[i].size());
-	//Util::WriteData2Begin(outputFileName.c_str(), content);
+	// Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "tmpData/HEM3.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
@@ -2577,7 +2033,7 @@ void run_HEM3(const intervalGenerator& gen)
 }
 
 // ����ģʽ
-void run_HEM4(const intervalGenerator& gen)
+void run_HEM4(const intervalGenerator &gen)
 {
 	HEM4 hem4;
 
@@ -2612,7 +2068,7 @@ void run_HEM4(const intervalGenerator& gen)
 		hem4.match_debug(gen.pubList[i], matchSubs);
 #else
 		hem4.match(gen.pubList[i], matchSubs);
-#endif // DEBUG
+#endif												   // DEBUG
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
@@ -2626,27 +2082,8 @@ void run_HEM4(const intervalGenerator& gen)
 
 	// output
 	string outputFileName = "HEM4.txt";
-	string content = expID
-					 + " bits= " + Util::Int2String(be)
-					 + " memory= " + Util::Int2String(hem4.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(hem4.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(hem4.markTime / pubs / 1000000)
-					 + " ms OrTime= " + to_string(hem4.orTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(hem4.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(hem4.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType);
+	string content = expID + " bits= " + Util::Int2String(be) + " memory= " + Util::Int2String(hem4.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgCmpTime= " + to_string(hem4.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(hem4.markTime / pubs / 1000000) + " ms OrTime= " + to_string(hem4.orTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hem4.bitTime / pubs / 1000000) + " ms numBuk= " + Util::Int2String(hem4.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -2657,15 +2094,15 @@ void run_HEM4(const intervalGenerator& gen)
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 #endif // DEBUG
 
-	//outputFileName = "HEM4BucketSize.txt";
-	//hem4.calBucketSize();
-	//content = expID + " numBucket= " + Util::Int2String(hem4.numBucket)
+	// outputFileName = "HEM4BucketSize.txt";
+	// hem4.calBucketSize();
+	// content = expID + " numBucket= " + Util::Int2String(hem4.numBucket)
 	//	//+ " sumBukSetSize= " + to_string(accumulate(hem4.bucketSub.begin(), hem4.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
 	//	+ " maxBukSetSize= " + to_string((*max_element(hem4.bucketSub.begin(), hem4.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
 	//	+ " minBukSetSize= " + to_string(min_element(hem4.bucketSub.begin(), hem4.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
 	//_for(i, 0, hem4.numBucket)
 	//	content += " " + to_string(rb3.bucketSub[i].size());
-	//Util::WriteData2Begin(outputFileName.c_str(), content);
+	// Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "tmpData/HEM4.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
@@ -2673,7 +2110,7 @@ void run_HEM4(const intervalGenerator& gen)
 }
 
 // ����ģʽ
-void run_HEM5(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_HEM5(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	HEM5 hem5(HEM5_DD);
 
@@ -2748,31 +2185,8 @@ void run_HEM5(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 
 	// output
 	string outputFileName = "HEM5.txt";
-	string content = expID
-					 + " bits= " + Util::Int2String(be)
-					 + " memory= " + Util::Int2String(hem5.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList))
-					 + " AvgCmpTime= " + to_string(hem5.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(hem5.markTime / pubs / 1000000)
-					 + " ms OrTime= " + to_string(hem5.orTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(hem5.bitTime / pubs / 1000000)
-					 + " ms avx= " + to_string(BlockSize)
-					 + " numBuk= " + Util::Int2String(hem5.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " bits= " + Util::Int2String(be) + " memory= " + Util::Int2String(hem5.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList)) + " AvgCmpTime= " + to_string(hem5.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(hem5.markTime / pubs / 1000000) + " ms OrTime= " + to_string(hem5.orTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hem5.bitTime / pubs / 1000000) + " ms avx= " + to_string(BlockSize) + " numBuk= " + Util::Int2String(hem5.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -2783,15 +2197,15 @@ void run_HEM5(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 #endif // DEBUG
 
-	//outputFileName = "HEM5BucketSize.txt";
-	//hem5.calBucketSize();
-	//content = expID + " numBucket= " + Util::Int2String(hem5.numBucket)
+	// outputFileName = "HEM5BucketSize.txt";
+	// hem5.calBucketSize();
+	// content = expID + " numBucket= " + Util::Int2String(hem5.numBucket)
 	//	//+ " sumBukSetSize= " + to_string(accumulate(hem5.bucketSub.begin(), hem5.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
 	//	+ " maxBukSetSize= " + to_string((*max_element(hem5.bucketSub.begin(), hem5.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
 	//	+ " minBukSetSize= " + to_string(min_element(hem5.bucketSub.begin(), hem5.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
 	//_for(i, 0, hem5.numBucket)
 	//	content += " " + to_string(hem5.bucketSub[i].size());
-	//Util::WriteData2Begin(outputFileName.c_str(), content);
+	// Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "tmpData/HEM5.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
@@ -2799,7 +2213,7 @@ void run_HEM5(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 }
 
 // ����ģʽ + avxָ��
-void run_HEM5_avxOR(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_HEM5_avxOR(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	HEM5_avxOR hem5_avxor;
 
@@ -2852,7 +2266,7 @@ void run_HEM5_avxOR(const intervalGenerator& gen, unordered_map<int, bool> delet
 		hem5_avxor.match_debug(gen.pubList[i], matchSubs);
 #else
 		hem5_avxor.match(gen.pubList[i], matchSubs);
-#endif // DEBUG
+#endif												   // DEBUG
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
@@ -2872,30 +2286,8 @@ void run_HEM5_avxOR(const intervalGenerator& gen, unordered_map<int, bool> delet
 
 	// output
 	string outputFileName = "HEM5_avxOR.txt";
-	string content = expID
-					 + " bits= " + Util::Int2String(be)
-					 + " memory= " + Util::Int2String(hem5_avxor.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(hem5_avxor.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(hem5_avxor.markTime / pubs / 1000000)
-					 + " ms OrTime= " + to_string(hem5_avxor.orTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(hem5_avxor.bitTime / pubs / 1000000)
-					 + " ms avx= " + to_string(BlockSize)
-					 + " numBuk= " + Util::Int2String(hem5_avxor.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " bits= " + Util::Int2String(be) + " memory= " + Util::Int2String(hem5_avxor.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgCmpTime= " + to_string(hem5_avxor.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(hem5_avxor.markTime / pubs / 1000000) + " ms OrTime= " + to_string(hem5_avxor.orTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hem5_avxor.bitTime / pubs / 1000000) + " ms avx= " + to_string(BlockSize) + " numBuk= " + Util::Int2String(hem5_avxor.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -2906,22 +2298,22 @@ void run_HEM5_avxOR(const intervalGenerator& gen, unordered_map<int, bool> delet
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 #endif // DEBUG
 
-	//outputFileName = "HEM5BucketSize.txt";
-	//hem5_avxor.calBucketSize();
-	//content = expID + " numBucket= " + Util::Int2String(hem5_avxor.numBucket)
+	// outputFileName = "HEM5BucketSize.txt";
+	// hem5_avxor.calBucketSize();
+	// content = expID + " numBucket= " + Util::Int2String(hem5_avxor.numBucket)
 	//	//+ " sumBukSetSize= " + to_string(accumulate(hem5_avxor.bucketSub.begin(), hem5_avxor.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
 	//	+ " maxBukSetSize= " + to_string((*max_element(hem5_avxor.bucketSub.begin(), hem5_avxor.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
 	//	+ " minBukSetSize= " + to_string(min_element(hem5_avxor.bucketSub.begin(), hem5_avxor.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
 	//_for(i, 0, hem5_avxor.numBucket)
 	//	content += " " + to_string(hem5_avxor.bucketSub[i].size());
-	//Util::WriteData2Begin(outputFileName.c_str(), content);
+	// Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "tmpData/HEM5_avxOR.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_HEM5_parallel(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_HEM5_parallel(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	HEM5 hem5_p(HEM5_DD_PARALLEL);
 
@@ -2992,29 +2384,8 @@ void run_HEM5_parallel(const intervalGenerator& gen, unordered_map<int, bool> de
 
 	// output
 	string outputFileName = "pHEM5.txt";
-	string content = expID
-					 + " bits= " + Util::Int2String(be)
-					 + " memory= " + Util::Int2String(hem5_p.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList))
-					 + " ms MergeTime= " + to_string(hem5_p.mergeTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(hem5_p.bitTime / pubs / 1000000)
-					 + " ms pD= " + to_string(parallelDegree)
-					 + " numBuk= " + Util::Int2String(hem5_p.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " bits= " + Util::Int2String(be) + " memory= " + Util::Int2String(hem5_p.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList)) + " ms MergeTime= " + to_string(hem5_p.mergeTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hem5_p.bitTime / pubs / 1000000) + " ms pD= " + to_string(parallelDegree) + " numBuk= " + Util::Int2String(hem5_p.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -3030,7 +2401,7 @@ void run_HEM5_parallel(const intervalGenerator& gen, unordered_map<int, bool> de
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_HEM5_avxOR_parallel(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_HEM5_avxOR_parallel(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	HEM5 hem5_avxOR_p(HEM5_DD_AVXOR_PARALLEL);
 
@@ -3102,30 +2473,8 @@ void run_HEM5_avxOR_parallel(const intervalGenerator& gen, unordered_map<int, bo
 
 	// output
 	string outputFileName = "pHEM5_avxOR.txt";
-	string content = expID
-					 + " bits= " + Util::Int2String(be)
-					 + " memory= " + Util::Int2String(hem5_avxOR_p.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList))
-					 + " ms MergeTime= " + to_string(hem5_avxOR_p.mergeTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(hem5_avxOR_p.bitTime / pubs / 1000000)
-					 + " ms pD= " + to_string(parallelDegree)
-					 + " avx= " + to_string(BlockSize)
-					 + " numBuk= " + Util::Int2String(hem5_avxOR_p.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " bits= " + Util::Int2String(be) + " memory= " + Util::Int2String(hem5_avxOR_p.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList)) + " ms MergeTime= " + to_string(hem5_avxOR_p.mergeTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hem5_avxOR_p.bitTime / pubs / 1000000) + " ms pD= " + to_string(parallelDegree) + " avx= " + to_string(BlockSize) + " numBuk= " + Util::Int2String(hem5_avxOR_p.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -3142,7 +2491,7 @@ void run_HEM5_avxOR_parallel(const intervalGenerator& gen, unordered_map<int, bo
 }
 
 // HEM5_DD_VAS
-void run_HEM5_VAS(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_HEM5_VAS(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	HEM5_AS hem5_vas(HEM5_DD_VAS);
 
@@ -3202,42 +2551,20 @@ void run_HEM5_VAS(const intervalGenerator& gen, unordered_map<int, bool> deleteN
 			cout << "HEM5DD_VAS Event " << i << " is matched.\n";
 	}
 
-	if (display)
-		hem5_vas.printRelation(1);
-	cout << endl;
-
 #ifdef DEBUG
 	cout << "HEM5DD_VAS: matchNum= " << Util::Average(matchSubList) << ", matchTime= "
 		 << Util::Double2String(Util::Average(matchTimeList))
 		 << " ms\n";
 #endif
 
+	if (display)
+		hem5_vas.printRelation(1);
+	cout << endl;
+
 	// output
 	string outputFileName = "HEM5_VAS.txt";
-	string content = expID
-					 + " bits= " + Util::Int2String(be)
-					 + " memory= " + Util::Int2String(hem5_vas.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList))
-					 + " AvgCmpTime= " + to_string(hem5_vas.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(hem5_vas.markTime / pubs / 1000000)
-					 + " ms OrTime= " + to_string(hem5_vas.orTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(hem5_vas.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(hem5_vas.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " bits= " + Util::Int2String(be) + " memory= " + Util::Int2String(hem5_vas.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList)) + " AvgCmpTime= " + to_string(hem5_vas.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(hem5_vas.markTime / pubs / 1000000) + " ms OrTime= " + to_string(hem5_vas.orTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hem5_vas.bitTime / pubs / 1000000) + " ms numBuk= " + Util::Int2String(hem5_vas.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -3254,7 +2581,7 @@ void run_HEM5_VAS(const intervalGenerator& gen, unordered_map<int, bool> deleteN
 }
 
 // ����ģʽ + ʵ������(�����¼������ĵ�����������ĳ����������)�汾
-void run_HEM5_RAS(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_HEM5_RAS(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	HEM5_AS hem5_ras(HEM5_DD_RAS);
 
@@ -3314,42 +2641,20 @@ void run_HEM5_RAS(const intervalGenerator& gen, unordered_map<int, bool> deleteN
 			cout << "HEM5DD_RAS Event " << i << " is matched.\n";
 	}
 
-	if (display)
-		hem5_ras.printRelation(1);
-	cout << endl;
-
 #ifdef DEBUG
 	cout << "HEM5DD_RAS: matchNum= " << Util::Average(matchSubList) << ", matchTime= "
 		 << Util::Double2String(Util::Average(matchTimeList))
 		 << " ms\n";
 #endif
 
+	if (display)
+		hem5_ras.printRelation(1);
+	cout << endl;
+
 	// output
 	string outputFileName = "HEM5_RAS.txt";
-	string content = expID
-					 + " bits= " + Util::Int2String(be)
-					 + " memory= " + Util::Int2String(hem5_ras.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList))
-					 + " AvgCmpTime= " + to_string(hem5_ras.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(hem5_ras.markTime / pubs / 1000000)
-					 + " ms OrTime= " + to_string(hem5_ras.orTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(hem5_ras.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(hem5_ras.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " bits= " + Util::Int2String(be) + " memory= " + Util::Int2String(hem5_ras.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList)) + " AvgCmpTime= " + to_string(hem5_ras.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(hem5_ras.markTime / pubs / 1000000) + " ms OrTime= " + to_string(hem5_ras.orTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hem5_ras.bitTime / pubs / 1000000) + " ms numBuk= " + Util::Int2String(hem5_ras.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -3365,7 +2670,7 @@ void run_HEM5_RAS(const intervalGenerator& gen, unordered_map<int, bool> deleteN
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_HEM5_RAS_avxOR_parallel(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_HEM5_RAS_avxOR_parallel(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	HEM5_AS hem5_ras_a_p(HEM5_DD_RAS_AVXOR_PARALLEL);
 
@@ -3437,30 +2742,8 @@ void run_HEM5_RAS_avxOR_parallel(const intervalGenerator& gen, unordered_map<int
 
 	// output
 	string outputFileName = "pHEM5_RAS_avxOR.txt";
-	string content = expID
-					 + " bits= " + Util::Int2String(be)
-					 + " memory= " + Util::Int2String(hem5_ras_a_p.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList))
-					 + " ms MergeTime= " + to_string(hem5_ras_a_p.mergeTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(hem5_ras_a_p.bitTime / pubs / 1000000)
-					 + " ms pD= " + to_string(parallelDegree)
-					 + " avx= " + to_string(BlockSize)
-					 + " numBuk= " + Util::Int2String(hem5_ras_a_p.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " bits= " + Util::Int2String(be) + " memory= " + Util::Int2String(hem5_ras_a_p.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList)) + " ms MergeTime= " + to_string(hem5_ras_a_p.mergeTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hem5_ras_a_p.bitTime / pubs / 1000000) + " ms pD= " + to_string(parallelDegree) + " avx= " + to_string(BlockSize) + " numBuk= " + Util::Int2String(hem5_ras_a_p.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -3478,268 +2761,269 @@ void run_HEM5_RAS_avxOR_parallel(const intervalGenerator& gen, unordered_map<int
 
 void run_HEM3_D_VASO(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
-    HEM3_ASO hem3_d_vaso(HEM3_D_VASO);
+	HEM3_ASO hem3_d_vaso(HEM3_D_VASO);
 
-    vector<double> insertTimeList;
-    vector<double> deleteTimeList;
-    vector<double> matchTimeList;
-    vector<double> matchInstructionList;
-    vector<double> matchSubList;
+	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchInstructionList;
+	vector<double> matchSubList;
 
-    // insert
-    for (int i = 0; i < subs; i++)
-    {
-        Timer insertStart;
+	// insert
+	for (int i = 0; i < subs; i++)
+	{
+		Timer insertStart;
 
-        hem3_d_vaso.insert_VASO(gen.subList[i]); // Insert sub[i] into data structure.
+		hem3_d_vaso.insert_VASO(gen.subList[i]); // Insert sub[i] into data structure.
 
-        int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
-        insertTimeList.push_back((double)insertTime / 1000000);
-    }
-    cout << "HEM3_D_VASO Insertion Finishes.\n";
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double)insertTime / 1000000);
+	}
+	cout << "HEM3_D_VASO Insertion Finishes.\n";
 
-    double initTime;
-    Timer initStart;
-    hem3_d_vaso.initBits();
-    initTime = (double)initStart.elapsed_nano() / 1000000.0;
+	double initTime;
+	Timer initStart;
+	hem3_d_vaso.initBits();
+	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 
-    if (verifyID)
-    {
-        for (auto kv : deleteNo)
-        {
-            Timer deleteStart;
-            if (!hem3_d_vaso.deleteSubscription_VASO(gen.subList[kv.first]))
-                cout << "HEM3_D_VASO: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
-            deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
-        }
-        cout << "HEM3_D_VASO Deletion Finishes.\n";
-        for (auto kv : deleteNo)
-        {
-            hem3_d_vaso.insert_online_VASO(gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
-        }
-    }
+	if (verifyID)
+	{
+		for (auto kv : deleteNo)
+		{
+			Timer deleteStart;
+			if (!hem3_d_vaso.deleteSubscription_VASO(gen.subList[kv.first]))
+				cout << "HEM3_D_VASO: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+		}
+		cout << "HEM3_D_VASO Deletion Finishes.\n";
+		for (auto kv : deleteNo)
+		{
+			hem3_d_vaso.insert_online_VASO(gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
+		}
+	}
 
-    // match
-    for (int i = 0; i < pubs; i++)
-    {
-        int matchSubs = 0; // Record the number of matched subscriptions.
-        Timer matchStart;
-        // int64_t begin = GetCPUCycle();
-        hem3_d_vaso.match_VASO(gen.pubList[i], matchSubs);
-        // matchInstructionList.push_back(GetCPUCycle() - begin);
-        int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-        matchTimeList.push_back((double)eventTime / 1000000);
-        matchSubList.push_back(matchSubs);
-        if (i % interval == 0)
-            cout << "HEM5DD_VAS Event " << i << " is matched.\n";
-    }
-
-    if (display)
-        hem3_d_vaso.printRelation(1);
-    cout << endl;
+	// match
+	for (int i = 0; i < pubs; i++)
+	{
+		int matchSubs = 0; // Record the number of matched subscriptions.
+		Timer matchStart;
+		// int64_t begin = GetCPUCycle();
+		hem3_d_vaso.match_VASO(gen.pubList[i], matchSubs);
+		// matchInstructionList.push_back(GetCPUCycle() - begin);
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double)eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "HEM3_D_VASO Event " << i << " is matched.\n";
+	}
 
 #ifdef DEBUG
-    cout << "HEM3_D_VASO: avgMatchNum= " << Util::Average(matchSubList) << ", matchTime= "
-         << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
+	cout << "HEM3_D_VASO: avgMatchNum= " << Util::Average(matchSubList) << ", matchTime= "
+		 << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
 #endif
 
-    // output
-    string outputFileName = "HEM3_D_VASO.txt";
-    string content = expID + " bits= " + Util::Int2String(be) + " memory= " + Util::Int2String(hem3_d_vaso.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + \
-    " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " + \
-                     Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + \ 
-                     Util::Double2String(Util::Average(matchTimeList)) + " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList)) + " AvgCmpTime= " + \
-                     to_string(hem3_d_vaso.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(hem3_d_vaso.markTime / pubs / 1000000) + " ms OrTime= " + \
-                     to_string(hem3_d_vaso.orTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hem3_d_vaso.bitTime / pubs / 1000000) + " ms numBuk= " + Util::Int2String(hem3_d_vaso.numBucket) + \
-                     " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + \
-                     " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
-    Util::WriteData2Begin(outputFileName.c_str(), content);
+	if (display)
+		hem3_d_vaso.printRelation(1);
+	cout << endl;
+
+	// output
+	string outputFileName = "HEM3_D_VASO.txt";
+	string content = expID + " bits= " + Util::Int2String(be) + " memory= " + Util::Int2String(hem3_d_vaso.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) +
+					 " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + \ 
+                     Util::Double2String(Util::Average(matchTimeList)) +
+					 " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList)) + " AvgCmpTime= " +
+					 to_string(hem3_d_vaso.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(hem3_d_vaso.markTime / pubs / 1000000) + " ms OrTime= " +
+					 to_string(hem3_d_vaso.orTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hem3_d_vaso.bitTime / pubs / 1000000) + " ms numBuk= " + Util::Int2String(hem3_d_vaso.numBucket) +
+					 " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) +
+					 " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
-    outputFileName = "ComprehensiveExpTime.txt";
-    content = "HEM3_D_VASO= [";
-    _for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
-    content[content.length() - 2] = ']';
-    Util::WriteData2Begin(outputFileName.c_str(), content);
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "HEM3_D_VASO= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 #endif // DEBUG
 
-    outputFileName = "tmpData/HEM5_VAS.txt";
-    content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
-    Util::WriteData2End(outputFileName.c_str(), content);
+	outputFileName = "tmpData/HEM5_VAS.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
 void run_HEM3_D_RASO(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
-    HEM3_ASO hem3_d_ras(HEM3_D_RASO);
+	HEM3_ASO hem3_d_ras(HEM3_D_RASO);
 
-    vector<double> insertTimeList;
-    vector<double> deleteTimeList;
-    vector<double> matchTimeList;
-    vector<double> matchInstructionList;
-    vector<double> matchSubList;
+	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchInstructionList;
+	vector<double> matchSubList;
 
-    // insert
-    for (int i = 0; i < subs; i++)
-    {
-        Timer insertStart;
+	// insert
+	for (int i = 0; i < subs; i++)
+	{
+		Timer insertStart;
 
-        hem3_d_ras.insert_RASO(gen.subList[i]); // Insert sub[i] into data structure.
+		hem3_d_ras.insert_RASO(gen.subList[i]); // Insert sub[i] into data structure.
 
-        int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
-        insertTimeList.push_back((double)insertTime / 1000000);
-    }
-    cout << "HEM3_D_RASO Insertion Finishes.\n";
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double)insertTime / 1000000);
+	}
+	cout << "HEM3_D_RASO Insertion Finishes.\n";
 
-    double initTime;
-    Timer initStart;
-    hem3_d_ras.initBits();
-    initTime = (double)initStart.elapsed_nano() / 1000000.0;
+	double initTime;
+	Timer initStart;
+	hem3_d_ras.initBits();
+	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 
-    if (verifyID)
-    {
-        for (auto kv : deleteNo)
-        {
-            Timer deleteStart;
-            if (!hem3_d_ras.deleteSubscription_RASO(gen.subList[kv.first]))
-                cout << "HEM3_D_RASO: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
-            deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
-        }
-        cout << "HEM3_D_RASO Deletion Finishes.\n";
-        for (auto kv : deleteNo)
-        {
-            hem3_d_ras.insert_online_RASO(
-                gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
-        }
-    }
+	if (verifyID)
+	{
+		for (auto kv : deleteNo)
+		{
+			Timer deleteStart;
+			if (!hem3_d_ras.deleteSubscription_RASO(gen.subList[kv.first]))
+				cout << "HEM3_D_RASO: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+		}
+		cout << "HEM3_D_RASO Deletion Finishes.\n";
+		for (auto kv : deleteNo)
+		{
+			hem3_d_ras.insert_online_RASO(
+				gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
+		}
+	}
 
-    // match
-    for (int i = 0; i < pubs; i++)
-    {
-        int matchSubs = 0; // Record the number of matched subscriptions.
-        Timer matchStart;
-        // int64_t begin = GetCPUCycle();
-        hem3_d_ras.match_RASO(gen.pubList[i], matchSubs);
-        // matchInstructionList.push_back(GetCPUCycle() - begin);
-        int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-        matchTimeList.push_back((double)eventTime / 1000000);
-        matchSubList.push_back(matchSubs);
-        if (i % interval == 0)
-            cout << "HEM3_D_RASO Event " << i << " is matched.\n";
-    }
-
-    if (display)
-        hem3_d_ras.printRelation(1);
-    cout << endl;
+	// match
+	for (int i = 0; i < pubs; i++)
+	{
+		int matchSubs = 0; // Record the number of matched subscriptions.
+		Timer matchStart;
+		// int64_t begin = GetCPUCycle();
+		hem3_d_ras.match_RASO(gen.pubList[i], matchSubs);
+		// matchInstructionList.push_back(GetCPUCycle() - begin);
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double)eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "HEM3_D_RASO Event " << i << " is matched.\n";
+	}
 
 #ifdef DEBUG
-    cout << "HEM3_D_RASO: matchNum= " << Util::Average(matchSubList) << ", matchTime= " << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
+	cout << "HEM3_D_RASO: matchNum= " << Util::Average(matchSubList) << ", matchTime= " << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
 #endif
 
-    string outputFileName = "HEM3_D_RASO.txt";
-    string content = expID + " bits= " + Util::Int2String(be) + " memory= " + Util::Int2String(hem3_d_ras.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
-                     Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList)) + " AvgCmpTime= " + to_string(hem3_d_ras.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(hem3_d_ras.markTime / pubs / 1000000) + " ms OrTime= " + to_string(hem3_d_ras.orTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hem3_d_ras.bitTime / pubs / 1000000) + " ms numBuk= " + Util::Int2String(hem3_d_ras.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
-    Util::WriteData2Begin(outputFileName.c_str(), content);
+	if (display)
+		hem3_d_ras.printRelation(1);
+	cout << endl;
+
+	string outputFileName = "HEM3_D_RASO.txt";
+	string content = expID + " bits= " + Util::Int2String(be) + " memory= " + Util::Int2String(hem3_d_ras.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList)) + " AvgCmpTime= " + to_string(hem3_d_ras.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(hem3_d_ras.markTime / pubs / 1000000) + " ms OrTime= " + to_string(hem3_d_ras.orTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hem3_d_ras.bitTime / pubs / 1000000) + " ms numBuk= " + Util::Int2String(hem3_d_ras.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
-    outputFileName = "ComprehensiveExpTime.txt";
-    content = "HEM3_D_RASO= [";
-    _for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
-    content[content.length() - 2] = ']';
-    Util::WriteData2Begin(outputFileName.c_str(), content);
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "HEM3_D_RASO= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 #endif // DEBUG
 
-    outputFileName = "tmpData/HEM3_D_RASO.txt";
-    content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
-    Util::WriteData2End(outputFileName.c_str(), content);
+	outputFileName = "tmpData/HEM3_D_RASO.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
 void run_HEM3_D_RASO_parallel(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
-    HEM3_ASO hem3_d_ras_p(HEM3_D_RASO_AVXOR_PARALLEL);
+	HEM3_ASO hem3_d_ras_p(HEM3_D_RASO_AVXOR_PARALLEL);
 
-    vector<double> insertTimeList;
-    vector<double> deleteTimeList;
-    vector<double> matchTimeList;
-    vector<double> matchInstructionList;
-    vector<double> matchSubList;
+	vector<double> insertTimeList;
+	vector<double> deleteTimeList;
+	vector<double> matchTimeList;
+	vector<double> matchInstructionList;
+	vector<double> matchSubList;
 
-    // insert
-    for (int i = 0; i < subs; i++)
-    {
-        Timer insertStart;
+	// insert
+	for (int i = 0; i < subs; i++)
+	{
+		Timer insertStart;
 
-        hem3_d_ras_p.insert_RASO(gen.subList[i]); // Insert sub[i] into data structure.
+		hem3_d_ras_p.insert_RASO(gen.subList[i]); // Insert sub[i] into data structure.
 
-        int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
-        insertTimeList.push_back((double)insertTime / 1000000);
-    }
-    cout << "HEM3_D_RASO_AVXOR_PARALLEL Insertion Finishes.\n";
+		int64_t insertTime = insertStart.elapsed_nano(); // Record inserting time in nanosecond.
+		insertTimeList.push_back((double)insertTime / 1000000);
+	}
+	cout << "HEM3_D_RASO_AVXOR_PARALLEL Insertion Finishes.\n";
 
-    double initTime;
-    Timer initStart;
-    hem3_d_ras_p.initBits();
-    initTime = (double)initStart.elapsed_nano() / 1000000.0;
+	double initTime;
+	Timer initStart;
+	hem3_d_ras_p.initBits();
+	initTime = (double)initStart.elapsed_nano() / 1000000.0;
 
-    if (verifyID)
-    {
-        for (auto kv : deleteNo)
-        {
-            Timer deleteStart;
-            if (!hem3_d_ras_p.deleteSubscription_RASO(gen.subList[kv.first]))
-                cout << "HEM3_D_RASO_AVXOR_PARALLEL: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
-            deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
-        }
-        cout << "HEM3_D_RASO_AVXOR_PARALLEL Deletion Finishes.\n";
-        for (auto kv : deleteNo)
-        {
-            hem3_d_ras_p.insert_online_RASO(gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
-        }
-    }
+	if (verifyID)
+	{
+		for (auto kv : deleteNo)
+		{
+			Timer deleteStart;
+			if (!hem3_d_ras_p.deleteSubscription_RASO(gen.subList[kv.first]))
+				cout << "HEM3_D_RASO_AVXOR_PARALLEL: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+		}
+		cout << "HEM3_D_RASO_AVXOR_PARALLEL Deletion Finishes.\n";
+		for (auto kv : deleteNo)
+		{
+			hem3_d_ras_p.insert_online_RASO(gen.subList[kv.first]); // Bug: should use insert_online other than insert function!
+		}
+	}
 
-    // match
-    for (int i = 0; i < pubs; i++)
-    {
-        int matchSubs = 0; // Record the number of matched subscriptions.
-        Timer matchStart;
-        // int64_t begin = GetCPUCycle();
-        hem3_d_ras_p.match_RASO_parallel(gen.pubList[i], matchSubs);
-        // matchInstructionList.push_back(GetCPUCycle() - begin);
-        int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
-        matchTimeList.push_back((double)eventTime / 1000000);
-        matchSubList.push_back(matchSubs);
-        if (i % interval == 0)
-            cout << "HEM3_D_RASO_AVXOR_P" + to_string(BlockSize) + ": Event " << i << " is matched.\n";
-    }
-
-    if (display)
-        hem3_d_ras_p.printRelation(1);
-    cout << endl;
+	// match
+	for (int i = 0; i < pubs; i++)
+	{
+		int matchSubs = 0; // Record the number of matched subscriptions.
+		Timer matchStart;
+		// int64_t begin = GetCPUCycle();
+		hem3_d_ras_p.match_RASO_parallel(gen.pubList[i], matchSubs);
+		// matchInstructionList.push_back(GetCPUCycle() - begin);
+		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
+		matchTimeList.push_back((double)eventTime / 1000000);
+		matchSubList.push_back(matchSubs);
+		if (i % interval == 0)
+			cout << "HEM3_D_RASO_AVXOR_P" + to_string(BlockSize) + ": Event " << i << " is matched.\n";
+	}
 
 #ifdef DEBUG
-    cout << "HEM3_D_RASO_AVXOR_PARALLEL: matchNum= " << Util::Average(matchSubList) << ", matchTime= " << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
+	cout << "HEM3_D_RASO_AVXOR_PARALLEL: matchNum= " << Util::Average(matchSubList) << ", matchTime= " << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
 #endif
 
-    // output
-    string outputFileName = "HEM3_D_RASO_AVXOR_PARALLEL.txt";
-    string content = expID + " bits= " + Util::Int2String(be) + " memory= " + Util::Int2String(hem3_d_ras_p.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
-                     Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList)) + " ms MergeTime= " + to_string(hem3_d_ras_p.mergeTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hem3_d_ras_p.bitTime / pubs / 1000000) + " ms pD= " + to_string(parallelDegree) + " avx= " + to_string(BlockSize) + " numBuk= " + Util::Int2String(hem3_d_ras_p.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
-    Util::WriteData2Begin(outputFileName.c_str(), content);
+	if (display)
+		hem3_d_ras_p.printRelation(1);
+	cout << endl;
+
+	// output
+	string outputFileName = "HEM3_D_RASO_AVXOR_PARALLEL.txt";
+	string content = expID + " bits= " + Util::Int2String(be) + " memory= " + Util::Int2String(hem3_d_ras_p.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgMatchInst= " + Util::Double2String(Util::Average(matchInstructionList)) + " ms MergeTime= " + to_string(hem3_d_ras_p.mergeTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hem3_d_ras_p.bitTime / pubs / 1000000) + " ms pD= " + to_string(parallelDegree) + " avx= " + to_string(BlockSize) + " numBuk= " + Util::Int2String(hem3_d_ras_p.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
-    outputFileName = "ComprehensiveExpTime.txt";
-    content = "HEM3_D_RASO_AVXOR_PARALLEL= [";
-    _for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
-    content[content.length() - 2] = ']';
-    Util::WriteData2Begin(outputFileName.c_str(), content);
+	outputFileName = "ComprehensiveExpTime.txt";
+	content = "HEM3_D_RASO_AVXOR_PARALLEL= [";
+	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
+	content[content.length() - 2] = ']';
+	Util::WriteData2Begin(outputFileName.c_str(), content);
 #endif // DEBUG
 
-    outputFileName = "tmpData/HEM3_D_RASO_AVXOR_PARALLEL.txt";
-    content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
-    Util::WriteData2End(outputFileName.c_str(), content);
+	outputFileName = "tmpData/HEM3_D_RASO_AVXOR_PARALLEL.txt";
+	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
+	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
 // 基于 HEM5-DD 的订阅分类+动动模式 Subscriptions Classification
-void run_HEMSC(const intervalGenerator& gen)
+void run_HEMSC(const intervalGenerator &gen)
 {
 	HEMSC hem_sc;
 
@@ -3774,7 +3058,7 @@ void run_HEMSC(const intervalGenerator& gen)
 		hem_sc.match_debug(gen.pubList[i], matchSubs);
 #else
 		hem_sc.match(gen.pubList[i], matchSubs);
-#endif // DEBUG
+#endif												   // DEBUG
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
@@ -3788,28 +3072,8 @@ void run_HEMSC(const intervalGenerator& gen)
 
 	// output
 	string outputFileName = "HEMSC.txt";
-	string content = expID
-					 + " bits= " + Util::Int2String(be)
-					 + " memory= " + Util::Int2String(hem_sc.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(hem_sc.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(hem_sc.markTime / pubs / 1000000)
-					 + " ms OrTime= " + to_string(hem_sc.orTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(hem_sc.bitTime / pubs / 1000000)
-					 + " ms numBuk= " + Util::Int2String(hem_sc.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " lvls=" + Util::Int2String(lvls);
+	string content = expID + " bits= " + Util::Int2String(be) + " memory= " + Util::Int2String(hem_sc.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgCmpTime= " + to_string(hem_sc.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(hem_sc.markTime / pubs / 1000000) + " ms OrTime= " + to_string(hem_sc.orTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hem_sc.bitTime / pubs / 1000000) + " ms numBuk= " + Util::Int2String(hem_sc.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " lvls=" + Util::Int2String(lvls);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -3820,15 +3084,15 @@ void run_HEMSC(const intervalGenerator& gen)
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 #endif // DEBUG
 
-	//outputFileName = "HEMSCBucketSize.txt";
-	//hem_sc.calBucketSize();
-	//content = expID + " numBucket= " + Util::Int2String(hem_sc.numBucket)
+	// outputFileName = "HEMSCBucketSize.txt";
+	// hem_sc.calBucketSize();
+	// content = expID + " numBucket= " + Util::Int2String(hem_sc.numBucket)
 	//	//+ " sumBukSetSize= " + to_string(accumulate(hem_sc.bucketSub.begin(), hem_sc.bucketSub.end(), 0, [=](int acc, const auto& u) {return acc + u.size(); }))
 	//	+ " maxBukSetSize= " + to_string((*max_element(hem_sc.bucketSub.begin(), hem_sc.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })).size())
 	//	+ " minBukSetSize= " + to_string(min_element(hem_sc.bucketSub.begin(), hem_sc.bucketSub.end(), [](const unordered_set<int>& u, const unordered_set<int>& v) {return u.size() < v.size(); })->size()) + " BucketSize:";
 	//_for(i, 0, hem_sc.numBucket)
 	//	content += " " + to_string(hem_sc.bucketSub[i].size());
-	//Util::WriteData2Begin(outputFileName.c_str(), content);
+	// Util::WriteData2Begin(outputFileName.c_str(), content);
 
 	outputFileName = "tmpData/HEMSC.txt";
 	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
@@ -3836,7 +3100,7 @@ void run_HEMSC(const intervalGenerator& gen)
 }
 
 // ״̬ѹ��
-void run_HEMSR(const intervalGenerator& gen)
+void run_HEMSR(const intervalGenerator &gen)
 {
 	HEMSR hem_sr;
 
@@ -3871,7 +3135,7 @@ void run_HEMSR(const intervalGenerator& gen)
 		hem_sr.match_debug(gen.pubList[i], matchSubs);
 #else
 		hem_sr.match(gen.pubList[i], matchSubs);
-#endif // DEBUG
+#endif												   // DEBUG
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
 		matchSubList.push_back(matchSubs);
@@ -3885,28 +3149,8 @@ void run_HEMSR(const intervalGenerator& gen)
 
 	// output
 	string outputFileName = "HEMSR.txt";
-	string content = expID
-					 + " bits= " + Util::Int2String(be)
-					 + " memory= " + Util::Int2String(hem_sr.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms AvgCmpTime= " + to_string(hem_sr.compareTime / pubs / 1000000)
-					 + " ms AvgMarkTime= " + to_string(hem_sr.markTime / pubs / 1000000)
-					 + " ms OrTime= " + to_string(hem_sr.orTime / pubs / 1000000)
-					 + " ms AvgBitTime= " + to_string(hem_sr.bitTime / pubs / 1000000)
-					 + " ms GroupSize=" + Util::Int2String(gs)
-					 + " numBuk= " + Util::Int2String(hem_sr.numBucket)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType);
+	string content = expID + " bits= " + Util::Int2String(be) + " memory= " + Util::Int2String(hem_sr.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms AvgCmpTime= " + to_string(hem_sr.compareTime / pubs / 1000000) + " ms AvgMarkTime= " + to_string(hem_sr.markTime / pubs / 1000000) + " ms OrTime= " + to_string(hem_sr.orTime / pubs / 1000000) + " ms AvgBitTime= " + to_string(hem_sr.bitTime / pubs / 1000000) + " ms GroupSize=" + Util::Int2String(gs) + " numBuk= " + Util::Int2String(hem_sr.numBucket) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -3923,7 +3167,7 @@ void run_HEMSR(const intervalGenerator& gen)
 }
 
 // �����ж�
-void run_Simple(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_Simple(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	Simple simple;
 
@@ -3983,19 +3227,7 @@ void run_Simple(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 
 	// output
 	string outputFileName = "Simple.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(simple.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType);
+	string content = expID + " memory= " + Util::Int2String(simple.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -4012,7 +3244,7 @@ void run_Simple(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 }
 
 // ��ν�ʿ�����������+�����ж�
-void run_Simple2(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_Simple2(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	Simple2 simple2;
 
@@ -4072,19 +3304,7 @@ void run_Simple2(const intervalGenerator& gen, unordered_map<int, bool> deleteNo
 
 	// output
 	string outputFileName = "Simple2.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(simple2.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType);
+	string content = expID + " memory= " + Util::Int2String(simple2.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -4100,7 +3320,7 @@ void run_Simple2(const intervalGenerator& gen, unordered_map<int, bool> deleteNo
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_tama_forward_native(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_tama_forward_native(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	//	printf("123\n");
 	//	fflush(stdout);
@@ -4148,7 +3368,7 @@ void run_tama_forward_native(const intervalGenerator& gen, unordered_map<int, bo
 		Timer matchStart;
 
 		tama.match_accurate(gen.pubList[i], matchSubs, gen.subList);
-		//tama.match_vague(gen.pubList[i], matchSubs, gen.subList);
+		// tama.match_vague(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
@@ -4165,24 +3385,7 @@ void run_tama_forward_native(const intervalGenerator& gen, unordered_map<int, bo
 
 	// output
 	string outputFileName = "Tama.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(tama.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms level= " + Util::Int2String(level)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha);
+	string content = expID + " memory= " + Util::Int2String(tama.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms level= " + Util::Int2String(level) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -4198,7 +3401,7 @@ void run_tama_forward_native(const intervalGenerator& gen, unordered_map<int, bo
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_tama_forward_native_parallel_lock(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_tama_forward_native_parallel_lock(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	Tama pTama_l(TAMA_PARALLEL_LOCK);
 
@@ -4259,25 +3462,7 @@ void run_tama_forward_native_parallel_lock(const intervalGenerator& gen, unorder
 
 	// output
 	string outputFileName = "pTama_Lock.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(pTama_l.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms pD= " + to_string(parallelDegree)
-					 + " level= " + Util::Int2String(level)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha);
+	string content = expID + " memory= " + Util::Int2String(pTama_l.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms pD= " + to_string(parallelDegree) + " level= " + Util::Int2String(level) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -4293,7 +3478,7 @@ void run_tama_forward_native_parallel_lock(const intervalGenerator& gen, unorder
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_tama_forward_native_parallel_reduce(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_tama_forward_native_parallel_reduce(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	Tama pTama_r(TAMA_PARALLEL_REDUCE);
 
@@ -4354,25 +3539,7 @@ void run_tama_forward_native_parallel_reduce(const intervalGenerator& gen, unord
 
 	// output
 	string outputFileName = "pTama_Reduce.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(pTama_r.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms pD= " + to_string(parallelDegree)
-					 + " level= " + Util::Int2String(level)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha);
+	string content = expID + " memory= " + Util::Int2String(pTama_r.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms pD= " + to_string(parallelDegree) + " level= " + Util::Int2String(level) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -4388,7 +3555,7 @@ void run_tama_forward_native_parallel_reduce(const intervalGenerator& gen, unord
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_tama_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_tama_forward_C_BOMP(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	bTama btama_fc(TAMA_FORWARD_CBOMP); // bTAMA6
 
@@ -4431,7 +3598,7 @@ void run_tama_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, bo
 		Timer matchStart;
 
 		btama_fc.match_forward_CBOMP_accurate(gen.pubList[i], matchSubs, gen.subList);
-		//tama.match_vague(gen.pubList[i], matchSubs, gen.subList);
+		// tama.match_vague(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
@@ -4448,24 +3615,7 @@ void run_tama_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, bo
 
 	// output
 	string outputFileName = "bTama6.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(btama_fc.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms level= " + Util::Int2String(level)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha);
+	string content = expID + " memory= " + Util::Int2String(btama_fc.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms level= " + Util::Int2String(level) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -4481,7 +3631,7 @@ void run_tama_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, bo
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_tama_forward_C_BOMP_parallel(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_tama_forward_C_BOMP_parallel(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	bTama btama_fcp(TAMA_FORWARD_CBOMP_PARALLEL); // TAMA6-CFP
 
@@ -4542,25 +3692,7 @@ void run_tama_forward_C_BOMP_parallel(const intervalGenerator& gen, unordered_ma
 
 	// output
 	string outputFileName = "bTama6_p.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(btama_fcp.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms pD= " + to_string(parallelDegree)
-					 + " level= " + Util::Int2String(level)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha);
+	string content = expID + " memory= " + Util::Int2String(btama_fcp.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms pD= " + to_string(parallelDegree) + " level= " + Util::Int2String(level) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -4576,7 +3708,7 @@ void run_tama_forward_C_BOMP_parallel(const intervalGenerator& gen, unordered_ma
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_tama_backward1_DMFT_TAMA_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_tama_backward1_DMFT_TAMA_C_BOMP(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	bTama btama_b1c(TAMA_BACKWARD1_DMFT); // bTAMA7
 
@@ -4635,24 +3767,7 @@ void run_tama_backward1_DMFT_TAMA_C_BOMP(const intervalGenerator& gen, unordered
 
 	// output
 	string outputFileName = "bTama7.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(btama_b1c.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms level= " + Util::Int2String(level)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha);
+	string content = expID + " memory= " + Util::Int2String(btama_b1c.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms level= " + Util::Int2String(level) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -4668,7 +3783,7 @@ void run_tama_backward1_DMFT_TAMA_C_BOMP(const intervalGenerator& gen, unordered
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_tama_backward2_DMFT_TAMA_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_tama_backward2_DMFT_TAMA_CBOMP(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	bTama btama_b2c(TAMA_BACKWARD2_DMFT); // bTAMA8
 
@@ -4711,7 +3826,7 @@ void run_tama_backward2_DMFT_TAMA_CBOMP(const intervalGenerator& gen, unordered_
 		Timer matchStart;
 
 		btama_b2c.match_backward2_DMFT_TAMA_CBOMP_accurate(gen.pubList[i], matchSubs, gen.subList);
-		//tama.match_vague(gen.pubList[i], matchSubs, gen.subList);
+		// tama.match_vague(gen.pubList[i], matchSubs, gen.subList);
 
 		int64_t eventTime = matchStart.elapsed_nano(); // Record matching time in nanosecond.
 		matchTimeList.push_back((double)eventTime / 1000000);
@@ -4728,25 +3843,7 @@ void run_tama_backward2_DMFT_TAMA_CBOMP(const intervalGenerator& gen, unordered_
 
 	// output
 	string outputFileName = "bTama8.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(btama_b2c.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms level= " + Util::Int2String(level)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(btama_b2c.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms level= " + Util::Int2String(level) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -4762,7 +3859,7 @@ void run_tama_backward2_DMFT_TAMA_CBOMP(const intervalGenerator& gen, unordered_
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_tama_backward2_DMFT_TAMA_CBOMP_parallel(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_tama_backward2_DMFT_TAMA_CBOMP_parallel(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	bTama btama_b2cp(TAMA_BACKWARD2_DMFT_PARALLEL); // bTAMA8
 
@@ -4821,26 +3918,7 @@ void run_tama_backward2_DMFT_TAMA_CBOMP_parallel(const intervalGenerator& gen, u
 
 	// output
 	string outputFileName = "bTama8_p.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(btama_b2cp.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms pD= " + to_string(parallelDegree)
-					 + " level= " + Util::Int2String(level)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(btama_b2cp.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms pD= " + to_string(parallelDegree) + " level= " + Util::Int2String(level) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -4856,7 +3934,7 @@ void run_tama_backward2_DMFT_TAMA_CBOMP_parallel(const intervalGenerator& gen, u
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_btama_backward(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) // bTAMA
+void run_btama_backward(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) // bTAMA
 {
 	bTama btama_b(bTAMA_BACKWARD); // bTAMA-B
 
@@ -4906,31 +3984,13 @@ void run_btama_backward(const intervalGenerator& gen, unordered_map<int, bool> d
 	}
 #ifdef DEBUG
 	cout << "bTama-B: AvgMatchNum= " << Util::Average(matchSubList) << ", matchTime= "
-		 << Util::Double2String(Util::Average(matchTimeList) << " ms\n";
+		 << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
 #endif
 	cout << endl;
 
 	// output
 	string outputFileName = "bTama.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(btama_b.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms level= " + Util::Int2String(level)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(btama_b.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms level= " + Util::Int2String(level) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -4946,7 +4006,7 @@ void run_btama_backward(const intervalGenerator& gen, unordered_map<int, bool> d
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_btama_forward_DMFT(const intervalGenerator& gen, unordered_map<int, bool> deleteNo) // bTAMA-F
+void run_btama_forward_DMFT(const intervalGenerator &gen, unordered_map<int, bool> deleteNo) // bTAMA-F
 {
 	bTama btama_f(bTAMA_FORWARD_DMFT); // bTAMA-F
 
@@ -4996,31 +4056,13 @@ void run_btama_forward_DMFT(const intervalGenerator& gen, unordered_map<int, boo
 	}
 #ifdef DEBUG
 	cout << "bTama-F: AvgMatchNum= " << Util::Average(matchSubList) << ", matchTime= "
-		 << Util::Double2String(Util::Average(matchTimeList) << " ms\n";
+		 << Util::Double2String(Util::Average(matchTimeList)) << " ms\n";
 #endif
 	cout << endl;
 
 	// output
 	string outputFileName = "bTama_F.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(btama_f.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms level= " + Util::Int2String(level)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(btama_f.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms level= " + Util::Int2String(level) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -5036,7 +4078,7 @@ void run_btama_forward_DMFT(const intervalGenerator& gen, unordered_map<int, boo
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_OpIndex(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_OpIndex(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	OpIndex2 opindex2;
 
@@ -5065,13 +4107,15 @@ void run_OpIndex(const intervalGenerator& gen, unordered_map<int, bool> deleteNo
 	cout << "OpIndex2 Insertion Finishes.\n";
 
 	if (display)
-	{// show pivot attribute
+	{ // show pivot attribute
 		int counter = 0;
 		for (int i = 0; i < atts; i++)
 		{
 			cout << "Att " << i << ": " << opindex2.isPivot[i] << ", ";
-			if (opindex2.isPivot[i])counter++;
-			if (i > 0 && i % 5 == 0) cout << endl;
+			if (opindex2.isPivot[i])
+				counter++;
+			if (i > 0 && i % 5 == 0)
+				cout << endl;
 		}
 		cout << "\nTotal pivot attribute: " << counter << endl;
 	}
@@ -5116,23 +4160,8 @@ void run_OpIndex(const intervalGenerator& gen, unordered_map<int, bool> deleteNo
 
 	// output
 	string outputFileName = "OpIndex2.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(opindex2.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(opindex2.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -5148,7 +4177,7 @@ void run_OpIndex(const intervalGenerator& gen, unordered_map<int, bool> deleteNo
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_bOpIndex2(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_bOpIndex2(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	bOpIndex2 bOpindex2; // Opindex2 with CBOMP
 
@@ -5177,13 +4206,15 @@ void run_bOpIndex2(const intervalGenerator& gen, unordered_map<int, bool> delete
 	cout << "bOpIndex2 (C-BOMP) Insertion Finishes.\n";
 
 	if (display)
-	{// show pivot attribute
+	{ // show pivot attribute
 		int counter = 0;
 		for (int i = 0; i < atts; i++)
 		{
 			cout << "Att " << i << ": " << bOpindex2.isPivot[i] << ", ";
-			if (bOpindex2.isPivot[i])counter++;
-			if (i > 0 && i % 5 == 0) cout << endl;
+			if (bOpindex2.isPivot[i])
+				counter++;
+			if (i > 0 && i % 5 == 0)
+				cout << endl;
 		}
 		cout << "\nTotal pivot attribute: " << counter << endl;
 	}
@@ -5228,23 +4259,8 @@ void run_bOpIndex2(const intervalGenerator& gen, unordered_map<int, bool> delete
 
 	// output
 	string outputFileName = "bOpIndex2.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(bOpindex2.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms InitTime= " + Util::Double2String(initTime)
-					 + " ms AvgConstructionTime= " +
-					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs)
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(bOpindex2.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms InitTime= " + Util::Double2String(initTime) + " ms AvgConstructionTime= " +
+					 Util::Double2String(Util::Average(insertTimeList) + initTime / subs) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -5260,7 +4276,7 @@ void run_bOpIndex2(const intervalGenerator& gen, unordered_map<int, bool> delete
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_BGTREE_forward_native(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_BGTREE_forward_native(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	BGTree bgTree;
 
@@ -5323,31 +4339,7 @@ void run_BGTREE_forward_native(const intervalGenerator& gen, unordered_map<int, 
 		bgTree.printBGTree();
 	// output
 	string outputFileName = "fBGTree.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(bgTree.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms height = " + Util::Int2String(bgTree.getHeight())
-					 + " numNode = " + Util::Int2String(bgTree.getNumNode())
-					 + " BNS = " + Util::Int2String(bgTree.getBoundaryNumSub())
-					 + " AvgHit = " + Util::Int2String(bgTree.hit / pubs)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(bgTree.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms height = " + Util::Int2String(bgTree.getHeight()) + " numNode = " + Util::Int2String(bgTree.getNumNode()) + " BNS = " + Util::Int2String(bgTree.getBoundaryNumSub()) + " AvgHit = " + Util::Int2String(bgTree.hit / pubs) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -5363,7 +4355,7 @@ void run_BGTREE_forward_native(const intervalGenerator& gen, unordered_map<int, 
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_BGTREE_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_BGTREE_forward_C_BOMP(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	BGTree bgTree_c;
 
@@ -5424,31 +4416,7 @@ void run_BGTREE_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, 
 
 	// output
 	string outputFileName = "fBGTree_C.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(bgTree_c.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms height = " + Util::Int2String(bgTree_c.getHeight())
-					 + " numNode = " + Util::Int2String(bgTree_c.getNumNode())
-					 + " BNS = " + Util::Int2String(bgTree_c.getBoundaryNumSub())
-					 + " AvgHit = " + Util::Int2String(bgTree_c.hit / pubs)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(bgTree_c.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms height = " + Util::Int2String(bgTree_c.getHeight()) + " numNode = " + Util::Int2String(bgTree_c.getNumNode()) + " BNS = " + Util::Int2String(bgTree_c.getBoundaryNumSub()) + " AvgHit = " + Util::Int2String(bgTree_c.hit / pubs) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -5464,7 +4432,7 @@ void run_BGTREE_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, 
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_BGTREE_backward_DMFT_fBGTree_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_BGTREE_backward_DMFT_fBGTree_CBOMP(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	BGTree fBGTree_cb;
 
@@ -5474,7 +4442,7 @@ void run_BGTREE_backward_DMFT_fBGTree_CBOMP(const intervalGenerator& gen, unorde
 	vector<double> matchSubList;
 
 	// insert
-	for (auto&& sub : gen.subList)
+	for (auto &&sub : gen.subList)
 	{
 		Timer insertStart;
 
@@ -5526,31 +4494,7 @@ void run_BGTREE_backward_DMFT_fBGTree_CBOMP(const intervalGenerator& gen, unorde
 
 	// output
 	string outputFileName = "fBGTree_CB.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(fBGTree_cb.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms height = " + Util::Int2String(fBGTree_cb.getHeight())
-					 + " numNode = " + Util::Int2String(fBGTree_cb.getNumNode())
-					 + " BNS = " + Util::Int2String(fBGTree_cb.getBoundaryNumSub())
-					 + " AvgHit = " + Util::Int2String(fBGTree_cb.hit / pubs)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(fBGTree_cb.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms height = " + Util::Int2String(fBGTree_cb.getHeight()) + " numNode = " + Util::Int2String(fBGTree_cb.getNumNode()) + " BNS = " + Util::Int2String(fBGTree_cb.getBoundaryNumSub()) + " AvgHit = " + Util::Int2String(fBGTree_cb.hit / pubs) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -5566,7 +4510,7 @@ void run_BGTREE_backward_DMFT_fBGTree_CBOMP(const intervalGenerator& gen, unorde
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_BGTREE_backward_native(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_BGTREE_backward_native(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	BGTree bBGTree;
 
@@ -5576,7 +4520,7 @@ void run_BGTREE_backward_native(const intervalGenerator& gen, unordered_map<int,
 	vector<double> matchSubList;
 
 	// insert
-	for (auto&& sub : gen.subList)
+	for (auto &&sub : gen.subList)
 	{
 		Timer insertStart;
 
@@ -5627,31 +4571,7 @@ void run_BGTREE_backward_native(const intervalGenerator& gen, unordered_map<int,
 
 	// output
 	string outputFileName = "bBGTree.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(bBGTree.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms height = " + Util::Int2String(bBGTree.getHeight())
-					 + " numNode = " + Util::Int2String(bBGTree.getNumNode())
-					 + " BNS = " + Util::Int2String(bBGTree.getBoundaryNumSub())
-					 + " AvgHit = " + Util::Int2String(bBGTree.hit / pubs)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(bBGTree.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms height = " + Util::Int2String(bBGTree.getHeight()) + " numNode = " + Util::Int2String(bBGTree.getNumNode()) + " BNS = " + Util::Int2String(bBGTree.getBoundaryNumSub()) + " AvgHit = " + Util::Int2String(bBGTree.hit / pubs) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -5667,7 +4587,7 @@ void run_BGTREE_backward_native(const intervalGenerator& gen, unordered_map<int,
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_BGTREE_forward_DMFT_bBGTree(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_BGTREE_forward_DMFT_bBGTree(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	BGTree bBGTree_F;
 
@@ -5677,7 +4597,7 @@ void run_BGTREE_forward_DMFT_bBGTree(const intervalGenerator& gen, unordered_map
 	vector<double> matchSubList;
 
 	// insert
-	for (auto&& sub : gen.subList)
+	for (auto &&sub : gen.subList)
 	{
 		Timer insertStart;
 
@@ -5728,31 +4648,7 @@ void run_BGTREE_forward_DMFT_bBGTree(const intervalGenerator& gen, unordered_map
 
 	// output
 	string outputFileName = "bBGTree_F.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(bBGTree_F.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms height = " + Util::Int2String(bBGTree_F.getHeight())
-					 + " numNode = " + Util::Int2String(bBGTree_F.getNumNode())
-					 + " BNS = " + Util::Int2String(bBGTree_F.getBoundaryNumSub())
-					 + " AvgHit = " + Util::Int2String(bBGTree_F.hit / pubs)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(bBGTree_F.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms height = " + Util::Int2String(bBGTree_F.getHeight()) + " numNode = " + Util::Int2String(bBGTree_F.getNumNode()) + " BNS = " + Util::Int2String(bBGTree_F.getBoundaryNumSub()) + " AvgHit = " + Util::Int2String(bBGTree_F.hit / pubs) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -5768,7 +4664,7 @@ void run_BGTREE_forward_DMFT_bBGTree(const intervalGenerator& gen, unordered_map
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_BGTREE_d_forward_native(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_BGTREE_d_forward_native(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	BGTree_d fBGTree_d;
 
@@ -5831,31 +4727,7 @@ void run_BGTREE_d_forward_native(const intervalGenerator& gen, unordered_map<int
 		fBGTree_d.printBGTree();
 	// output
 	string outputFileName = "fBGTree_d.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(fBGTree_d.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms height = " + Util::Int2String(fBGTree_d.getHeight())
-					 + " numNode = " + Util::Int2String(fBGTree_d.getNumNode())
-					 + "  maxNodeSize = " + Util::Int2String(MAXNodeSIZE)
-					 + " AvgHit = " + Util::Int2String(fBGTree_d.hit / pubs)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(fBGTree_d.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms height = " + Util::Int2String(fBGTree_d.getHeight()) + " numNode = " + Util::Int2String(fBGTree_d.getNumNode()) + "  maxNodeSize = " + Util::Int2String(MAXNodeSIZE) + " AvgHit = " + Util::Int2String(fBGTree_d.hit / pubs) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -5871,7 +4743,7 @@ void run_BGTREE_d_forward_native(const intervalGenerator& gen, unordered_map<int
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_BGTREE_d_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_BGTREE_d_forward_C_BOMP(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	BGTree_d fBGTree_d_C;
 
@@ -5934,31 +4806,7 @@ void run_BGTREE_d_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int
 		fBGTree_d_C.printBGTree();
 	// output
 	string outputFileName = "fBGTree_d_C.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(fBGTree_d_C.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms height = " + Util::Int2String(fBGTree_d_C.getHeight())
-					 + " numNode = " + Util::Int2String(fBGTree_d_C.getNumNode())
-					 + "  maxNodeSize = " + Util::Int2String(MAXNodeSIZE)
-					 + " AvgHit = " + Util::Int2String(fBGTree_d_C.hit / pubs)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(fBGTree_d_C.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms height = " + Util::Int2String(fBGTree_d_C.getHeight()) + " numNode = " + Util::Int2String(fBGTree_d_C.getNumNode()) + "  maxNodeSize = " + Util::Int2String(MAXNodeSIZE) + " AvgHit = " + Util::Int2String(fBGTree_d_C.hit / pubs) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -5974,7 +4822,7 @@ void run_BGTREE_d_forward_C_BOMP(const intervalGenerator& gen, unordered_map<int
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_BGTREE_d_backward_DMFT_fBGTree_CBOMP(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_BGTREE_d_backward_DMFT_fBGTree_CBOMP(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	BGTree_d fBGTree_d_CB;
 
@@ -6037,31 +4885,7 @@ void run_BGTREE_d_backward_DMFT_fBGTree_CBOMP(const intervalGenerator& gen, unor
 		fBGTree_d_CB.printBGTree();
 	// output
 	string outputFileName = "fBGTree_d_CB.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(fBGTree_d_CB.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms height = " + Util::Int2String(fBGTree_d_CB.getHeight())
-					 + " numNode = " + Util::Int2String(fBGTree_d_CB.getNumNode())
-					 + "  maxNodeSize = " + Util::Int2String(MAXNodeSIZE)
-					 + " AvgHit = " + Util::Int2String(fBGTree_d_CB.hit / pubs)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(fBGTree_d_CB.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms height = " + Util::Int2String(fBGTree_d_CB.getHeight()) + " numNode = " + Util::Int2String(fBGTree_d_CB.getNumNode()) + "  maxNodeSize = " + Util::Int2String(MAXNodeSIZE) + " AvgHit = " + Util::Int2String(fBGTree_d_CB.hit / pubs) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -6077,7 +4901,7 @@ void run_BGTREE_d_backward_DMFT_fBGTree_CBOMP(const intervalGenerator& gen, unor
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_BGTREE_d_backward_native(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_BGTREE_d_backward_native(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	BGTree_d bBGTree_d;
 
@@ -6140,32 +4964,7 @@ void run_BGTREE_d_backward_native(const intervalGenerator& gen, unordered_map<in
 		bBGTree_d.printBGTree();
 	// output
 	string outputFileName = "bBGTree_d.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(bBGTree_d.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms height = " + Util::Int2String(bBGTree_d.getHeight())
-					 + " numNode = " + Util::Int2String(bBGTree_d.getNumNode())
-					 + "  maxNodeSize = " + Util::Int2String(MAXNodeSIZE)
-					 + " BNS = " + Util::Int2String(BoundaryNumSub)
-					 + " AvgHit = " + Util::Int2String(bBGTree_d.hit / pubs)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(bBGTree_d.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms height = " + Util::Int2String(bBGTree_d.getHeight()) + " numNode = " + Util::Int2String(bBGTree_d.getNumNode()) + "  maxNodeSize = " + Util::Int2String(MAXNodeSIZE) + " BNS = " + Util::Int2String(BoundaryNumSub) + " AvgHit = " + Util::Int2String(bBGTree_d.hit / pubs) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -6181,7 +4980,7 @@ void run_BGTREE_d_backward_native(const intervalGenerator& gen, unordered_map<in
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_BGTREE_d_forward_DMFT_bBGTree(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_BGTREE_d_forward_DMFT_bBGTree(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	BGTree_d bBGTree_d_F;
 
@@ -6243,32 +5042,7 @@ void run_BGTREE_d_forward_DMFT_bBGTree(const intervalGenerator& gen, unordered_m
 		bBGTree_d_F.printBGTree();
 	// output
 	string outputFileName = "bBGTree_d_F.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(bBGTree_d_F.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms height = " + Util::Int2String(bBGTree_d_F.getHeight())
-					 + " numNode = " + Util::Int2String(bBGTree_d_F.getNumNode())
-					 + "  maxNodeSize = " + Util::Int2String(MAXNodeSIZE)
-					 + " BNS = " + Util::Int2String(BoundaryNumSub)
-					 + " AvgHit = " + Util::Int2String(bBGTree_d_F.hit / pubs)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(bBGTree_d_F.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms height = " + Util::Int2String(bBGTree_d_F.getHeight()) + " numNode = " + Util::Int2String(bBGTree_d_F.getNumNode()) + "  maxNodeSize = " + Util::Int2String(MAXNodeSIZE) + " BNS = " + Util::Int2String(BoundaryNumSub) + " AvgHit = " + Util::Int2String(bBGTree_d_F.hit / pubs) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -6284,7 +5058,7 @@ void run_BGTREE_d_forward_DMFT_bBGTree(const intervalGenerator& gen, unordered_m
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_BGTREE_d_vrs_forward_native(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_BGTREE_d_vrs_forward_native(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	//	BGTree_d_vrs bgTree_d_vrs;
 	//
@@ -6365,20 +5139,20 @@ void run_BGTREE_d_vrs_forward_native(const intervalGenerator& gen, unordered_map
 	//					 + " valDom= " + Util::Double2String(valDom);
 	//	Util::WriteData2Begin(outputFileName.c_str(), content);
 	//
-	//#ifdef DEBUG
+	// #ifdef DEBUG
 	//	outputFileName = "ComprehensiveExpTime.txt";
 	//	content = "BGTree_d_vrs_f= [";
 	//	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	//	content[content.length() - 2] = ']';
 	//	Util::WriteData2Begin(outputFileName.c_str(), content);
-	//#endif
+	// #endif
 	//
 	//	outputFileName = "tmpData/BGTree_d_vrs_f.txt";
 	//	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	//	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_BGTREE_d_vrs_backward_native(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_BGTREE_d_vrs_backward_native(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	//	BGTree_d_vrs bgTree_d_vrs;
 	//
@@ -6460,20 +5234,20 @@ void run_BGTREE_d_vrs_backward_native(const intervalGenerator& gen, unordered_ma
 	//					 + " valDom= " + Util::Double2String(valDom);
 	//	Util::WriteData2Begin(outputFileName.c_str(), content);
 	//
-	//#ifdef DEBUG
+	// #ifdef DEBUG
 	//	outputFileName = "ComprehensiveExpTime.txt";
 	//	content = "BGTree_d_vrs_b= [";
 	//	_for(i, 0, pubs) content += Util::Double2String(matchTimeList[i]) + ", ";
 	//	content[content.length() - 2] = ']';
 	//	Util::WriteData2Begin(outputFileName.c_str(), content);
-	//#endif
+	// #endif
 	//
 	//	outputFileName = "tmpData/BGTree_d_vrs_b.txt";
 	//	content = Util::Double2String(Util::Average(matchTimeList)) + ", ";
 	//	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_PSTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_PSTREE(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	PSTree psTree;
 
@@ -6486,12 +5260,12 @@ void run_PSTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 	Cnt2 cnt2;
 	cnt2.op = 3;
 	vector<Sub2> subList;
-	for (auto& iSub : gen.subList)
+	for (auto &iSub : gen.subList)
 	{
 		sub.id = iSub.id;
 		sub.size = iSub.size;
 		sub.constraints.resize(0);
-		for (auto& iCnt : iSub.constraints)
+		for (auto &iCnt : iSub.constraints)
 		{
 			cnt2.att = iCnt.att;
 			cnt2.value[0] = iCnt.lowValue;
@@ -6521,13 +5295,13 @@ void run_PSTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 	// ��֤����ɾ����ȷ��
 	if (verifyID)
 	{
-		//for (auto kv : deleteNo) {
+		// for (auto kv : deleteNo) {
 		//	Timer deleteStart;
 		//	if (!psTree.deleteSubscription_backward_original(gen.subList[kv.first]))
 		//		cout << "PS-Tree: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
 		//	deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
-		//}
-		//cout << "PS-Tree Deletion Finishes.\n";
+		// }
+		// cout << "PS-Tree Deletion Finishes.\n";
 		////for (auto kv : deleteNo) {
 		////	psTree.insert(gen.subList[kv.first]);
 		////}
@@ -6558,28 +5332,7 @@ void run_PSTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 
 	// output
 	string outputFileName = "PSTB.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(psTree.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms level = " + Util::Int2String(PSTree_level)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(psTree.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms level = " + Util::Int2String(PSTree_level) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -6595,7 +5348,7 @@ void run_PSTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_AWBTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_AWBTREE(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	AWBTree awbTree(AWBPTREE);
 
@@ -6605,7 +5358,7 @@ void run_AWBTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo
 	vector<double> matchSubList;
 
 	// insert
-	for (auto&& sub : gen.subList)
+	for (auto &&sub : gen.subList)
 	{
 		Timer insertStart;
 
@@ -6620,16 +5373,16 @@ void run_AWBTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo
 	// ��֤����ɾ����ȷ��
 	if (verifyID)
 	{
-//		for (auto kv : deleteNo) {
-//			Timer deleteStart;
-//			if (!awbTree.deleteSubscription(gen.subList[kv.first]))
-//				cout << "AWB+Tree Hybrid_opt: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
-//			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
-//		}
-//		cout << "AWB+Tree Hybrid_opt Deletion Finishes.\n";
-//		for (auto kv : deleteNo) {
-//			awbTree.insert(gen.subList[kv.first]);
-//		}
+		//		for (auto kv : deleteNo) {
+		//			Timer deleteStart;
+		//			if (!awbTree.deleteSubscription(gen.subList[kv.first]))
+		//				cout << "AWB+Tree Hybrid_opt: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+		//			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+		//		}
+		//		cout << "AWB+Tree Hybrid_opt Deletion Finishes.\n";
+		//		for (auto kv : deleteNo) {
+		//			awbTree.insert(gen.subList[kv.first]);
+		//		}
 	}
 
 	// match
@@ -6656,30 +5409,7 @@ void run_AWBTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo
 
 	// output
 	string outputFileName = "AWBTree.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(awbTree.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms awbTree_Ppoint = " + Util::Double2String(awbTree_Ppoint)
-					 + " WCsize = " + Util::Int2String(WCsize)
-					 + " branch = " + Util::Int2String(awbTree_branch)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(awbTree.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms awbTree_Ppoint = " + Util::Double2String(awbTree_Ppoint) + " WCsize = " + Util::Int2String(WCsize) + " branch = " + Util::Int2String(awbTree_branch) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -6695,7 +5425,7 @@ void run_AWBTREE(const intervalGenerator& gen, unordered_map<int, bool> deleteNo
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void run_AWBTREE_parallel(const intervalGenerator& gen, unordered_map<int, bool> deleteNo)
+void run_AWBTREE_parallel(const intervalGenerator &gen, unordered_map<int, bool> deleteNo)
 {
 	AWBTree awbTree_p(AWBPTREE_PARALLEL);
 
@@ -6705,7 +5435,7 @@ void run_AWBTREE_parallel(const intervalGenerator& gen, unordered_map<int, bool>
 	vector<double> matchSubList;
 
 	// insert
-	for (auto&& sub : gen.subList)
+	for (auto &&sub : gen.subList)
 	{
 		Timer insertStart;
 
@@ -6720,16 +5450,16 @@ void run_AWBTREE_parallel(const intervalGenerator& gen, unordered_map<int, bool>
 	// ��֤����ɾ����ȷ��
 	if (verifyID)
 	{
-//		for (auto kv : deleteNo) {
-//			Timer deleteStart;
-//			if (!awbTree_p.deleteSubscription(gen.subList[kv.first]))
-//				cout << "AWB+Tree Hybrid_opt: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
-//			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
-//		}
-//		cout << "AWB+Tree Hybrid_opt Deletion Finishes.\n";
-//		for (auto kv : deleteNo) {
-//			awbTree_p.insert(gen.subList[kv.first]);
-//		}
+		//		for (auto kv : deleteNo) {
+		//			Timer deleteStart;
+		//			if (!awbTree_p.deleteSubscription(gen.subList[kv.first]))
+		//				cout << "AWB+Tree Hybrid_opt: sub" << gen.subList[kv.first].id << " is failled to be deleted.\n";
+		//			deleteTimeList.push_back((double)deleteStart.elapsed_nano() / 1000000);
+		//		}
+		//		cout << "AWB+Tree Hybrid_opt Deletion Finishes.\n";
+		//		for (auto kv : deleteNo) {
+		//			awbTree_p.insert(gen.subList[kv.first]);
+		//		}
 	}
 
 	// match
@@ -6756,30 +5486,7 @@ void run_AWBTREE_parallel(const intervalGenerator& gen, unordered_map<int, bool>
 
 	// output
 	string outputFileName = "AWBTree_p.txt";
-	string content = expID
-					 + " memory= " + Util::Int2String(awbTree_p.calMemory())
-					 + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList))
-					 + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList))
-					 + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList))
-					 + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList))
-					 + " ms awbTree_Ppoint = " + Util::Double2String(awbTree_Ppoint)
-					 + " WCsize = " + Util::Int2String(WCsize)
-					 + " branch = " + Util::Int2String(awbTree_branch)
-					 + " numSub= " + Util::Int2String(subs)
-					 + " subSize= " + Util::Int2String(cons)
-					 + " numPub= " + Util::Int2String(pubs)
-					 + " pubSize= " + Util::Int2String(m)
-					 + " attTypes= " + Util::Int2String(atts)
-					 + " attGroup= " + Util::Int2String(attrGroup)
-					 + " attNumType= " + Util::Int2String(attNumType)
-					 + " attDis= " + Util::Int2String(attDis)
-					 + " valDis= " + Util::Int2String(valDis)
-					 + " width= " + Util::Double2String(width)
-					 + " alpha= " + Util::Double2String(alpha)
-					 + " subp= " + Util::Double2String(subp)
-					 + " mean= " + Util::Double2String(mean)
-					 + " stddev= " + Util::Double2String(stddev)
-					 + " valDom= " + Util::Double2String(valDom);
+	string content = expID + " memory= " + Util::Int2String(awbTree_p.calMemory()) + " MB AvgMatchNum= " + Util::Double2String(Util::Average(matchSubList)) + " AvgInsertTime= " + Util::Double2String(Util::Average(insertTimeList)) + " ms AvgDeleteTime= " + Util::Double2String(Util::Average(deleteTimeList)) + " ms AvgMatchTime= " + Util::Double2String(Util::Average(matchTimeList)) + " ms awbTree_Ppoint = " + Util::Double2String(awbTree_Ppoint) + " WCsize = " + Util::Int2String(WCsize) + " branch = " + Util::Int2String(awbTree_branch) + " numSub= " + Util::Int2String(subs) + " subSize= " + Util::Int2String(cons) + " numPub= " + Util::Int2String(pubs) + " pubSize= " + Util::Int2String(m) + " attTypes= " + Util::Int2String(atts) + " attGroup= " + Util::Int2String(attrGroup) + " attNumType= " + Util::Int2String(attNumType) + " attDis= " + Util::Int2String(attDis) + " valDis= " + Util::Int2String(valDis) + " width= " + Util::Double2String(width) + " alpha= " + Util::Double2String(alpha) + " subp= " + Util::Double2String(subp) + " mean= " + Util::Double2String(mean) + " stddev= " + Util::Double2String(stddev) + " valDom= " + Util::Double2String(valDom);
 	Util::WriteData2Begin(outputFileName.c_str(), content);
 
 #ifdef DEBUG
@@ -6795,7 +5502,7 @@ void run_AWBTREE_parallel(const intervalGenerator& gen, unordered_map<int, bool>
 	Util::WriteData2End(outputFileName.c_str(), content);
 }
 
-void measure_numMark(const intervalGenerator& gen)
+void measure_numMark(const intervalGenerator &gen)
 {
 	for (be = 0; be < 10; be++)
 	{

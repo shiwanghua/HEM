@@ -35,8 +35,8 @@ int main(int argc, char** argv)
 	intervalGenerator gen(subs, pubs, atts, attrGroup, cons, m, attNumType, attDis, valDis, valDom, alpha, subp, width);
 	gen.GenSubList();
 	gen.GenPubList();
-//	gen.GenSubList_g();
-//	gen.GenPubList_g();
+	// gen.GenSubList_g();
+	// gen.GenPubList_g();
 
 	unordered_map<int, bool> deleteNo;
 	if (verifyID)
@@ -75,18 +75,18 @@ int main(int argc, char** argv)
 //	run_AdaRein_DSS_W(gen, deleteNo);
 //	run_AdaRein_DSS_B(gen, deleteNo);
 
-//	run_HEM(gen);
-	//	run_HEM1(gen);
+	run_HEM(gen);
+	// run_HEM1(gen);
 	//	run_HEM2(gen);
-	//	run_HEM3(gen);
+	run_HEM3(gen);
 	//	run_HEM4(gen);
 	run_HEM5(gen, deleteNo);
 //	run_HEM5_avxOR(gen, deleteNo);
 //	 run_HEM5_parallel(gen, deleteNo);
-//	 run_HEM5_avxOR_parallel(gen, deleteNo);
-//	run_HEM5_VAS(gen, deleteNo);
-//	run_HEM5_RAS(gen, deleteNo);
-//	run_HEM5_RAS_avxOR_parallel(gen, deleteNo);
+	//  run_HEM5_avxOR_parallel(gen, deleteNo);
+	run_HEM5_VAS(gen, deleteNo);
+	run_HEM5_RAS(gen, deleteNo);
+	run_HEM5_RAS_avxOR_parallel(gen, deleteNo);
     run_HEM3_D_VASO(gen, deleteNo);
     run_HEM3_D_RASO(gen, deleteNo);
     run_HEM3_D_RASO_parallel(gen, deleteNo);
